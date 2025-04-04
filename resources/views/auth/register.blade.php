@@ -297,7 +297,8 @@
                             <i class="fas fa-info-circle me-2"></i> Chỉ tài khoản email của trường mới được đăng ký.
                         </div>
 
-                        <form action="#" method="POST">
+                        <form action="{{ route('register') }}" method="POST">
+                            @csrf
                             <div class="form-floating">
                                 <input type="email" class="form-control" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@tlu\.edu\.vn$">
                                 <label for="email"><i class="fas fa-envelope me-2"></i>Email (@tlu.edu.vn)</label>

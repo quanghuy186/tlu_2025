@@ -3,61 +3,43 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Pest\Support\View;
-use Artesaos\SEOTools\Facades\SEOTools as SEO;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\VerificationEmail;
 
-class RegisterController extends Controller
+class VerificationController extends Controller
 {
+    // Hiển thị form đăng ký
     public function showRegistrationForm()
     {
         return view('auth.register');
     }
 
-    /**
-     * Xử lý đăng ký tài khoản
-     */
+    // Xử lý đăng ký
     public function register(Request $request)
     {
-        // Validate đầu vào
+        // Validate dữ liệu đầu vào
         $request->validate([
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                'unique:users',
-                'regex:/[a-z0-9._%+-]+@tlu\.edu\.vn$/'
-            ],
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'terms' => 'required',
-        ], [
-            'email.regex' => 'Email phải có định dạng @tlu.edu.vn',
-            'email.unique' => 'Email này đã được đăng ký trước đó',
-            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
-            'password.confirmed' => 'Xác nhận mật khẩu không khớp',
-            'terms.required' => 'Bạn phải đồng ý với điều khoản sử dụng và chính sách bảo mật',
+            'phone' => 'nullable|string|max:20',
         ]);
 
         // Tạo token xác thực và thời gian hết hạn
         $verificationToken = Str::random(64);
         $tokenExpiry = Carbon::now()->addDays(3);
 
-        // Tạo tên người dùng từ email
-        $fullName = explode('@', $request->email)[0];
-        $fullName = ucwords(str_replace(['.', '_'], ' ', $fullName));
-
-        // Tạo user mới
+        // Tạo người dùng mới
         $user = User::create([
-            'full_name' => $fullName,
+            'full_name' => $request->full_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'phone' => $request->phone,
             'is_active' => false,
             'verification_token' => $verificationToken,
             'verification_token_expiry' => $tokenExpiry,
@@ -65,46 +47,23 @@ class RegisterController extends Controller
         ]);
 
         // Gửi email xác thực
-        try {
-            Mail::to($user->email)->send(new VerificationEmail($user));
-        } catch (\Exception $e) {
-            // Log lỗi email
-            // Log::error('Không thể gửi email xác thực: ' . $e->getMessage());
-
-            // Xóa user nếu không gửi được email
-            // $user->delete();
-
-            // Thông báo lỗi cho người dùng nhưng vẫn tiếp tục
-            return redirect()->route('verification.notice')
-                ->with('warning', 'Tài khoản đã được tạo nhưng có lỗi khi gửi email xác thực. Vui lòng thử gửi lại sau.');
-        }
+        $this->sendVerificationEmail($user);
 
         // Chuyển hướng với thông báo
-        return redirect()->route('verification.notice')
-            ->with('status', 'Vui lòng kiểm tra email của bạn để xác thực tài khoản!');
+        return redirect()->route('verification.notice')->with('status', 'Vui lòng kiểm tra email của bạn để xác thực tài khoản!');
     }
 
-    /**
-     * Hiển thị trang thông báo xác thực
-     */
+    // Hiển thị thông báo xác thực
     public function notice()
     {
         return view('auth.verify');
     }
 
-    /**
-     * Gửi lại email xác thực
-     */
-    public function resendVerificationEmail(Request $request)
+    // Gửi lại email xác thực
+    public function resend(Request $request)
     {
         $request->validate([
-            'email' => [
-                'required',
-                'email',
-                'regex:/[a-z0-9._%+-]+@tlu\.edu\.vn$/'
-            ],
-        ], [
-            'email.regex' => 'Email phải có định dạng @tlu.edu.vn',
+            'email' => 'required|email',
         ]);
 
         $user = User::where('email', $request->email)->first();
@@ -114,8 +73,7 @@ class RegisterController extends Controller
         }
 
         if ($user->email_verified) {
-            return redirect()->route('login')
-                ->with('status', 'Email của bạn đã được xác thực. Vui lòng đăng nhập.');
+            return redirect()->route('login')->with('status', 'Email của bạn đã được xác thực. Vui lòng đăng nhập.');
         }
 
         // Giới hạn số lần gửi lại email
@@ -142,19 +100,13 @@ class RegisterController extends Controller
         $user->save();
 
         // Gửi email xác thực
-        try {
-            Mail::to($user->email)->send(new VerificationEmail($user));
-        } catch (\Exception $e) {
-            return back()->withErrors(['email' => 'Có lỗi khi gửi email xác thực. Vui lòng thử lại sau.']);
-        }
+        $this->sendVerificationEmail($user);
 
-        return back()->with('status', 'Email xác thực đã được gửi lại thành công!');
+        return back()->with('status', 'Link xác thực đã được gửi lại vào email của bạn!');
     }
 
-    /**
-     * Xác thực email
-     */
-    public function verifyEmail($token)
+    // Xác thực email
+    public function verify(Request $request, $token)
     {
         $user = User::where('verification_token', $token)->first();
 
@@ -176,5 +128,11 @@ class RegisterController extends Controller
 
         return redirect()->route('login')
             ->with('status', 'Tài khoản của bạn đã được xác thực thành công! Vui lòng đăng nhập.');
+    }
+
+    // Hàm gửi email xác thực
+    private function sendVerificationEmail(User $user)
+    {
+        Mail::to($user->email)->send(new VerificationEmail($user));
     }
 }
