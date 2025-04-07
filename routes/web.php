@@ -43,5 +43,5 @@ Route::get('/notification', [NotificationController::class, 'index'])->name('not
 Route::get('/admin', [DashboardController::class, 'index']);
 
 Route::get('/test', function(){
-    return view('pages.message');
+    return view('admin.dashboard.home');
 });
