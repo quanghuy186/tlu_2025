@@ -10,12 +10,23 @@ use App\Http\Controllers\Message\MessageController;
 use App\Http\Controllers\Notification\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Models\Role;
+use App\Models\User;
 
+// Route::get('/', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+// Route::post('/', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::get('/', [LoginController::class, 'index'])->name('login.index');
+Route::get('/', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])
+    ->name('login')
+    ->middleware('guest');
+
+Route::post('/', [App\Http\Controllers\Auth\LoginController::class, 'login'])
+    ->middleware('guest');
+
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
+
+Route::get('/home', [IndexController::class, 'index'])->name('home.index')->middleware('auth');
 
 //verify email -------------------
 Route::prefix('/email')->name('verification.')->group(function(){
@@ -23,9 +34,6 @@ Route::prefix('/email')->name('verification.')->group(function(){
     Route::get('/verify/{token}', [RegisterController::class, 'verifyEmail'])->name('verify');
     Route::post('/resend', [RegisterController::class, 'resendVerificationEmail'])->name('resend');
 });
-
-
-Route::get('/home', [IndexController::class, 'index'])->name('home.index');
 
 //contact -----------------------------
 Route::prefix('/contact')->name('contact.')->group(function(){
@@ -41,7 +49,4 @@ Route::get('/notification', [NotificationController::class, 'index'])->name('not
 
 
 Route::get('/admin', [DashboardController::class, 'index']);
-
-Route::get('/test', function(){
-    return view('admin.dashboard.home');
-});
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

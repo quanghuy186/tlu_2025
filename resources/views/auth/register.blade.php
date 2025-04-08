@@ -343,7 +343,7 @@
                         </form>
 
                         <div class="login-link">
-                            <p>Đã có tài khoản? <a href="{{ route('login.index') }}">Đăng nhập ngay</a></p>
+                            <p>Đã có tài khoản? <a href="{{ route('login') }}">Đăng nhập ngay</a></p>
                         </div>
                     </div>
                 </div>

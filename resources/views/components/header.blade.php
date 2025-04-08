@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-     :root {
+:root {
     --primary-color: #005baa;
     --secondary-color: #00a8e8;
     --accent-color: #ff5722;
@@ -108,6 +108,30 @@ body {
     max-width: 700px;
     margin: 0 auto 30px;
     opacity: 0.9;
+}
+
+/* Hero actions */
+.hero-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.hero-actions .btn {
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.hero-actions .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-outline {
+    border: 2px solid;
 }
 
 /* Page Title & Header Styles */
@@ -1294,7 +1318,7 @@ body {
     margin: 0;
 }
 
-/* User Profile Info (Initially Hidden) */
+/* User Profile Info */
 .user-info-modal .modal-header {
     background-color: var(--primary-color);
     color: white;
@@ -1346,101 +1370,6 @@ body {
     width: 25px;
     text-align: center;
     margin-right: 10px;
-}
-
-/* Footer */
-footer {
-    background-color: var(--dark-color);
-    color: white;
-    padding: 70px 0 0;
-    margin-top: 50px;
-}
-
-.footer-about img {
-    width: 200px;
-    margin-bottom: 20px;
-}
-
-.footer-about p {
-    opacity: 0.8;
-    margin-bottom: 20px;
-}
-
-.footer-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 25px;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-.footer-title::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 30px;
-    height: 2px;
-    background-color: var(--accent-color);
-}
-
-.footer-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer-links li {
-    margin-bottom: 10px;
-}
-
-.footer-links a {
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    transition: all 0.3s;
-}
-
-.footer-links a:hover {
-    color: white;
-    padding-left: 5px;
-}
-
-.footer-contact i {
-    width: 30px;
-    color: var(--accent-color);
-}
-
-.footer-bottom {
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 20px 0;
-    margin-top: 50px;
-    text-align: center;
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
-
-.social-icons {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 10px;
-}
-
-.social-icons li a {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-}
-
-.social-icons li a:hover {
-    background-color: var(--accent-color);
-    transform: translateY(-3px);
 }
 
 /* Messages Container */
@@ -1804,6 +1733,101 @@ footer {
 
 .message-image:hover {
     opacity: 0.9;
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-color);
+    color: white;
+    padding: 70px 0 0;
+    margin-top: 50px;
+}
+
+.footer-about img {
+    width: 200px;
+    margin-bottom: 20px;
+}
+
+.footer-about p {
+    opacity: 0.8;
+    margin-bottom: 20px;
+}
+
+.footer-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 30px;
+    height: 2px;
+    background-color: var(--accent-color);
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.footer-links a:hover {
+    color: white;
+    padding-left: 5px;
+}
+
+.footer-contact i {
+    width: 30px;
+    color: var(--accent-color);
+}
+
+.footer-bottom {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 20px 0;
+    margin-top: 50px;
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.social-icons {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 10px;
+}
+
+.social-icons li a {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.social-icons li a:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-3px);
 }
 
 /* Responsive */

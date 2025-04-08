@@ -1,4 +1,9 @@
+@if (Auth::check())
+    <p>Xin chào, {{ Auth::user()->name }}</p>
 
+@else
+    <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để tiếp tục.</p>
+@endif
 <body>
     <!-- Top Bar -->
     <div class="top-bar">
@@ -54,7 +59,22 @@
                         <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Cài đặt tài khoản</a></li>
                         <li><a class="dropdown-item" href="#"><i class="fas fa-bell"></i> Thông báo</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="index.html"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                        {{-- <li><a class="dropdown-item" href="index.html"><i class="fas fa-sign-out-alt"></i>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit">Đăng xuất</button>
+                            </form>
+                        </a></li> --}}
+
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}" class="dropdown-item p-0">
+                                @csrf
+                                <button type="submit" class="btn btn-link dropdown-item w-100 text-left">
+                                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                </button>
+                            </form>
+                        </li>
+
                     </ul>
                 </div>
             </div>

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\VerificationEmail;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -25,7 +26,7 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        // Validate đầu vào
+        // Validate đầu vào - Chấp nhận cả @tlu.edu.vn và @e.tlu.edu.vn
         $request->validate([
             'email' => [
                 'required',
@@ -33,12 +34,12 @@ class RegisterController extends Controller
                 'email',
                 'max:255',
                 'unique:users',
-                'regex:/[a-z0-9._%+-]+@tlu\.edu\.vn$/'
+                'regex:/[a-z0-9._%+-]+@(tlu\.edu\.vn|e\.tlu\.edu\.vn)$/',
             ],
             'password' => 'required|string|min:8|confirmed',
             'terms' => 'required',
         ], [
-            'email.regex' => 'Email phải có định dạng @tlu.edu.vn',
+            'email.regex' => 'Email phải có định dạng @tlu.edu.vn hoặc @e.tlu.edu.vn',
             'email.unique' => 'Email này đã được đăng ký trước đó',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
             'password.confirmed' => 'Xác nhận mật khẩu không khớp',
@@ -53,40 +54,47 @@ class RegisterController extends Controller
         $fullName = explode('@', $request->email)[0];
         $fullName = ucwords(str_replace(['.', '_'], ' ', $fullName));
 
-        // Tạo user mới
-        $user = User::create([
-            'full_name' => $fullName,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'is_active' => false,
-            'verification_token' => $verificationToken,
-            'verification_token_expiry' => $tokenExpiry,
-            'email_verified' => false,
-        ]);
+        // Xác định role_id dựa trên tên miền email
+        $emailDomain = explode('@', $request->email)[1];
+        $roleId = ($emailDomain === 'tlu.edu.vn') ? 1 : 2;
 
-        // Gửi email xác thực
+        // Bắt đầu transaction để đảm bảo tính nhất quán dữ liệu
+        DB::beginTransaction();
+
         try {
+            // Tạo user mới
+            $user = User::create([
+                'full_name' => $fullName,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'is_active' => false,
+                'verification_token' => $verificationToken,
+                'verification_token_expiry' => $tokenExpiry,
+                'email_verified' => false,
+            ]);
+
+            // Thêm vào bảng user_has_roles
+            DB::table('user_has_roles')->insert([
+                'user_id' => $user->id,
+                'role_id' => $roleId,
+            ]);
+
+            // Gửi email xác thực
             Mail::to($user->email)->send(new VerificationEmail($user));
-        } catch (\Exception $e) {
-            // Log lỗi email
-            // Log::error('Không thể gửi email xác thực: ' . $e->getMessage());
 
-            // Xóa user nếu không gửi được email
-            // $user->delete();
+            DB::commit();
 
-            // Thông báo lỗi cho người dùng nhưng vẫn tiếp tục
             return redirect()->route('verification.notice')
-                ->with('warning', 'Tài khoản đã được tạo nhưng có lỗi khi gửi email xác thực. Vui lòng thử gửi lại sau.');
-        }
+                ->with('status', 'Vui lòng kiểm tra email của bạn để xác thực tài khoản!');
 
-        // Chuyển hướng với thông báo
-        return redirect()->route('verification.notice')
-            ->with('status', 'Vui lòng kiểm tra email của bạn để xác thực tài khoản!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->route('verification.notice')
+                ->with('warning', 'Có lỗi xảy ra khi tạo tài khoản. Vui lòng thử lại sau.');
+        }
     }
 
-    /**
-     * Hiển thị trang thông báo xác thực
-     */
     public function notice()
     {
         return view('auth.verify');
@@ -101,10 +109,10 @@ class RegisterController extends Controller
             'email' => [
                 'required',
                 'email',
-                'regex:/[a-z0-9._%+-]+@tlu\.edu\.vn$/'
+                'regex:/[a-z0-9._%+-]+@(tlu\.edu\.vn|e\.tlu\.edu\.vn)$/',
             ],
         ], [
-            'email.regex' => 'Email phải có định dạng @tlu.edu.vn',
+            'email.regex' => 'Email phải có định dạng @tlu.edu.vn hoặc @e.tlu.edu.vn',
         ]);
 
         $user = User::where('email', $request->email)->first();

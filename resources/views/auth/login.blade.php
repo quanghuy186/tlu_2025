@@ -295,7 +295,8 @@
                     <div class="right-panel">
                         <h4>Đăng nhập</h4>
 
-                        <form action="#" method="POST">
+                        <form action="{{ route('login') }}" method="POST">
+                            @csrf
                             <div class="form-floating">
                                 <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
                                 <label for="email"><i class="fas fa-envelope me-2"></i>Email</label>

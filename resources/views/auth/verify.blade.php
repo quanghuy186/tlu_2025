@@ -118,21 +118,10 @@
 
                 <p>Cảm ơn bạn đã đăng ký tài khoản trên Hệ thống tra cứu và trao đổi thông tin nội bộ của Trường Đại học Thủy Lợi.</p>
 
-                <p>Để hoàn tất quá trình đăng ký và kích hoạt tài khoản của bạn, vui lòng nhấp vào nút bên dưới:</p>
-
-                <div class="verify-button">
-                    <a href="{{ route('verification.verify', $user->verification_token) }}" class="button">Xác thực tài khoản</a>
-                </div>
+                <p>Để hoàn tất quá trình đăng ký và kích hoạt tài khoản của bạn, vui lòng kiểm tra thông tin email để xác nhận:</p>
 
                 <p>Nếu bạn không thể nhấp vào nút trên, vui lòng sao chép và dán liên kết sau vào trình duyệt của bạn:</p>
 
-                <div class="alternative-link">
-                    <a href="{{ route('verification.verify', $user->verification_token) }}">{{ route('verification.verify', $user->verification_token) }}</a>
-                </div>
-
-                <p>Nếu bạn không tạo tài khoản này, vui lòng bỏ qua email này.</p>
-
-                <p class="expire-notice">Liên kết này sẽ hết hạn sau 3 ngày.</p>
             </div>
 
             <div class="footer">
