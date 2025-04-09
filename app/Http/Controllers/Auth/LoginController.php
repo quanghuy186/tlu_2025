@@ -25,7 +25,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $user = Auth::user();
 
-            if ($user->email_verified == 0) {
+            if ($user->email_verified == 0 || $user->is_active == 0) {
                 Auth::logout();
                 return back()->withErrors([
                     'email' => 'Email chưa được xác thực. Vui lòng xác thực email trước khi đăng nhập.',
@@ -33,7 +33,13 @@ class LoginController extends Controller
             }
 
             $request->session()->regenerate();
-            // return redirect()->intended('home');
+
+            $isAdmin = $user->roles()->where('role_id', 999)->exists();
+
+            if ($isAdmin) {
+                return redirect()->route('admin.dashboard');
+            }
+
             return redirect()->route('home.index');
         }
 

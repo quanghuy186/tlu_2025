@@ -46,4 +46,4 @@ Route::get('/notification', [NotificationController::class, 'index'])->name('not
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/admin', [DashboardController::class, 'index']);
+Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');

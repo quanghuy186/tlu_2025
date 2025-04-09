@@ -296,6 +296,14 @@
                         {{-- <div class="alert alert-info" role="alert">
                             <i class="fas fa-info-circle me-2"></i> Chỉ tài khoản email của trường mới được đăng ký.
                         </div> --}}
+                        @if(session('duplicate_email'))
+                            <div class="alert alert-warning">
+                                <p>Email này đã được đăng ký trước đó nhưng chưa xác thực.</p>
+                                <p>Bạn có muốn:</p>
+                                <a href="{{ route('verification.resend.form') }}" class="btn btn-primary">Gửi lại email xác thực</a>
+                                <a href="{{ route('account.refresh.form') }}" class="btn btn-secondary">Đăng ký lại với email này</a>
+                            </div>
+                        @endif
 
                         <form action="{{ route('register') }}" method="POST">
                             @csrf
