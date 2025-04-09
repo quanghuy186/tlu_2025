@@ -10,11 +10,6 @@ use App\Http\Controllers\Message\MessageController;
 use App\Http\Controllers\Notification\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Models\Role;
-use App\Models\User;
-
-// Route::get('/', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
-// Route::post('/', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 
 Route::get('/', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])
     ->name('login')
@@ -23,8 +18,10 @@ Route::get('/', [App\Http\Controllers\Auth\LoginController::class, 'showLoginFor
 Route::post('/', [App\Http\Controllers\Auth\LoginController::class, 'login'])
     ->middleware('guest');
 
-Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [RegisterController::class, 'register']);
+Route::prefix('/register')->group(function(){
+    Route::get('/', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/', [RegisterController::class, 'register']);
+});
 
 Route::get('/home', [IndexController::class, 'index'])->name('home.index')->middleware('auth');
 
@@ -47,6 +44,6 @@ Route::get('/message', [MessageController::class, 'index'])->name('message.index
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
 
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/admin', [DashboardController::class, 'index']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

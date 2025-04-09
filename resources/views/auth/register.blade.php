@@ -300,7 +300,7 @@
                         <form action="{{ route('register') }}" method="POST">
                             @csrf
                             <div class="form-floating">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@tlu\.edu\.vn$">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@e\.tlu\.edu\.vn$">
                                 <label for="email"><i class="fas fa-envelope me-2"></i>Email (@tlu.edu.vn)</label>
                                 <div class="form-text">Sử dụng email do trường cấp để đăng ký.</div>
                             </div>
@@ -445,7 +445,7 @@
         // Validate email format
         const emailInput = document.getElementById('email');
         emailInput.addEventListener('input', function() {
-            const isValid = /[a-z0-9._%+-]+@tlu\.edu\.vn$/.test(this.value);
+            const isValid = /[a-z0-9._%+-]+@e\.tlu\.edu\.vn$/.test(this.value);
             if (!isValid) {
                 this.setCustomValidity('Email phải có định dạng @tlu.edu.vn');
             } else {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    // Hiển thị form đăng nhập
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('admin.login');
     }
 
     // Xử lý đăng nhập
@@ -33,11 +32,9 @@ class LoginController extends Controller
             }
 
             $request->session()->regenerate();
-            // return redirect()->intended('home');
             return redirect()->route('home.index');
         }
 
-        // Xác thực thất bại
         return back()->withErrors([
             'email' => 'Thông tin đăng nhập không chính xác.',
         ])->withInput($request->only('email'));

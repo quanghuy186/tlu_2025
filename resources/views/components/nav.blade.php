@@ -1,5 +1,4 @@
 @if (Auth::check())
-    <p>Xin chào, {{ Auth::user()->name }}</p>
 
 @else
     <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để tiếp tục.</p>
@@ -51,7 +50,7 @@
                 <div class="dropdown">
                     <a href="#" class="user-menu dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="modal" data-bs-target="#userInfoModal">
                         <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png" alt="User Avatar" class="user-avatar">
-                        <span>Nguyễn Văn A</span>
+                        <span>{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li class="dropdown-header">Thông tin tài khoản</li>

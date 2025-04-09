@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [
-            // 'auth' middleware đã được Laravel tự động đăng ký
+
         ]);
 
         $middleware->alias([
