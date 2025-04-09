@@ -293,12 +293,18 @@
                     <div class="right-panel">
                         <h4>Đăng ký tài khoản</h4>
 
-                        <div class="alert alert-info" role="alert">
+                        {{-- <div class="alert alert-info" role="alert">
                             <i class="fas fa-info-circle me-2"></i> Chỉ tài khoản email của trường mới được đăng ký.
-                        </div>
+                        </div> --}}
 
                         <form action="{{ route('register') }}" method="POST">
                             @csrf
+                            <div class="form-floating">
+                                <input type="full_name" class="form-control" id="full_name" name="full_name" placeholder="Full name" required>
+                                <label for="full_name"><i class="fas fa-envelope me-2"></i>Full name</label>
+                                <div class="form-text">Sử dụng tên thật của bản thân để đăng ký.</div>
+                            </div>
+
                             <div class="form-floating">
                                 <input type="email" class="form-control" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@e\.tlu\.edu\.vn$">
                                 <label for="email"><i class="fas fa-envelope me-2"></i>Email (@tlu.edu.vn)</label>

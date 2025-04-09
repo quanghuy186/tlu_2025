@@ -51,8 +51,8 @@ class RegisterController extends Controller
         $tokenExpiry = Carbon::now()->addDays(3);
 
         // Tạo tên người dùng từ email
-        $fullName = explode('@', $request->email)[0];
-        $fullName = ucwords(str_replace(['.', '_'], ' ', $fullName));
+        // $fullName = explode('@', $request->email)[0];
+        // $fullName = ucwords(str_replace(['.', '_'], ' ', $fullName));
 
         // Xác định role_id dựa trên tên miền email
         $emailDomain = explode('@', $request->email)[1];
@@ -64,7 +64,7 @@ class RegisterController extends Controller
         try {
             // Tạo user mới
             $user = User::create([
-                'full_name' => $fullName,
+                'name' => $request->full_name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'is_active' => false,
@@ -116,6 +116,7 @@ class RegisterController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->first();
+        dd($user);
 
         if (!$user) {
             return back()->withErrors(['email' => 'Không tìm thấy email này trong hệ thống.']);
@@ -128,7 +129,7 @@ class RegisterController extends Controller
 
         // Giới hạn số lần gửi lại email
         $resendLimit = 5;
-        $cooldownPeriod = 15; // minutes
+        $cooldownPeriod = 5; // minutes
 
         if ($user->verification_resent_count >= $resendLimit) {
             $lastResent = $user->last_verification_resent_at;
