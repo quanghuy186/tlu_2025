@@ -65,6 +65,22 @@ class User extends Authenticatable
         ];
     }
 
+    public function getEmailForPasswordReset()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param string $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \Illuminate\Auth\Notifications\ResetPassword($token));
+    }
+
     public function roles(){
         return $this->hasMany(UserHasRole::class, 'user_id', 'id');
     }

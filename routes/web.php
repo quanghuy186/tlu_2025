@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Contact\ContactController;
@@ -9,7 +10,8 @@ use App\Http\Controllers\Home\IndexController;
 use App\Http\Controllers\Message\MessageController;
 use App\Http\Controllers\Notification\NotificationController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 
 Route::get('/', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])
     ->name('login')
@@ -47,3 +49,38 @@ Route::get('/notification', [NotificationController::class, 'index'])->name('not
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+Route::get('/admin/user', [UserController::class, 'index'])->name('admin.user.index');
+
+// Route::middleware('guest')->group(function () {
+//     Route::get('forgot-password', [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'create'])
+//         ->name('password.request');
+//     Route::post('forgot-password', [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'store'])
+//         ->name('password.email');
+//     Route::get('reset-password/{token}', [\App\Http\Controllers\Auth\NewPasswordController::class, 'create'])
+//         ->name('password.reset');
+//     Route::post('reset-password', [\App\Http\Controllers\Auth\NewPasswordController::class, 'store'])
+//         ->name('password.update');
+// });
+
+
+Route::middleware('guest')->group(function () {
+    // ... Các routes khác ...
+
+    // Routes cho quên mật khẩu
+    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+        ->name('password.request');
+    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+        ->name('password.email');
+    // Routes cho quên mật khẩu
+    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+        ->name('password.request');
+    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+        ->name('password.email');
+    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+        ->name('password.reset');
+    Route::post('reset-password', [NewPasswordController::class, 'store'])
+        ->name('password.update');
+    Route::post('reset-password', [NewPasswordController::class, 'store'])
+        ->name('password.update');
+});

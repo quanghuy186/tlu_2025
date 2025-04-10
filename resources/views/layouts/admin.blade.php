@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Dashboard - NiceAdmin Bootstrap Template</title>
+  <title>Quản trị hệ thống</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -21,10 +21,22 @@
     <link href="{{ asset('assets/admin/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/admin/vendor/simple-datatables/style.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/admin/css/style.css') }}" rel="stylesheet">
+
+            <!-- toastr.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- toastr.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 </head>
 
 <body>
-
+    <script>
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+    </script>
   <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top d-flex align-items-center">
 
@@ -260,7 +272,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="index.html">
+        <a class="nav-link" href="{{ route('admin.dashboard') }}">
           <i class="bi bi-grid"></i>
           <span>Bảng điều khiển</span>
         </a>
@@ -268,17 +280,22 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>Quản lý người dùng</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-menu-button-wide"></i><span>Người dùng</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="components-alerts.html">
-              <i class="bi bi-circle"></i><span>Thêm người dùng</span>
+            <a href="{{ route('admin.user.index') }}">
+              <i class="bi bi-circle"></i><span>Quản lý người dùng</span>
             </a>
           </li>
           <li>
             <a href="components-accordion.html">
-              <i class="bi bi-circle"></i><span>Phân quyền</span>
+              <i class="bi bi-circle"></i><span>Quản lý vai trò người dùng</span>
+            </a>
+          </li>
+          <li>
+            <a href="components-accordion.html">
+              <i class="bi bi-circle"></i><span>Quản lý phân quyền</span>
             </a>
           </li>
         </ul>
@@ -391,15 +408,7 @@
 
   <main id="main" class="main">
 
-    <div class="pagetitle">
-      <h1>Dashboard</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item active">Dashboard</li>
-        </ol>
-      </nav>
-    </div>
+
 
     {{-- extent layouts --}}
     @yield('content')
@@ -416,18 +425,15 @@
   </footer><!-- End Footer -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <script src="assets/admin/vendor/apexcharts/apexcharts.min.js"></script>
-  <script src="assets/admin//vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/admin/vendor/chart.js/chart.umd.js"></script>
-  <script src="assets/admin/vendor/echarts/echarts.min.js"></script>
-  <script src="assets/admin/vendor/quill/quill.js"></script>
-  <script src="assets/admin/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="assets/admin/vendor/tinymce/tinymce.min.js"></script>
-  <script src="assets/admin/vendor/php-email-form/validate.js"></script>
-
-  <script src="assets/admin/js/main.js"></script>
-
+    <script src="{{ asset('assets/admin/vendor/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/chart.js/chart.umd.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/echarts/echarts.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/quill/quill.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/simple-datatables/simple-datatables.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/php-email-form/validate.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/main.js') }}"></script>
 </body>
 
 </html>

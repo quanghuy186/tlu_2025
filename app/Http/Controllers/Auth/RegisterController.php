@@ -118,7 +118,7 @@ class RegisterController extends Controller
 
     public function notice()
     {
-        return view('auth.verify');
+        return view('auth.verify')->with('success', 'Đăng ký thành công vui lòng kiểm tra email để xác thực!');
     }
 
     /**

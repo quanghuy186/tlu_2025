@@ -7,6 +7,13 @@
     <title>{{ SEO::getTitle() }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- toastr.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- toastr.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <style>
         :root {
             --primary-color: #005baa;
@@ -320,8 +327,14 @@
                             </button>
                         </form>
 
+                        <script>
+                            @if (session('error'))
+                                toastr.error("{{ session('error') }}");
+                            @endif
+                        </script>
+
                         <div class="forgot-link">
-                            <a href="#">Quên mật khẩu?</a>
+                            <a href="{{ route('password.request') }}">Quên mật khẩu?</a>
                         </div>
 
                         <div class="register-link">

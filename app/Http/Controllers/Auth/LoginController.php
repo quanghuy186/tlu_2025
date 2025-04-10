@@ -27,26 +27,38 @@ class LoginController extends Controller
 
             if ($user->email_verified == 0 || $user->is_active == 0) {
                 Auth::logout();
-                return back()->withErrors([
-                    'email' => 'Email chưa được xác thực. Vui lòng xác thực email trước khi đăng nhập.',
-                ])->withInput($request->only('email'));
+
+                // return back()->withErrors([
+                //     'email' => 'Email chưa được xác thực. Vui lòng xác thực email trước khi đăng nhập.',
+                // ])->withInput($request->only('email'));
+
+                return back()
+                ->with('error', 'Email chưa được xác thực. Vui lòng xác thực email trước khi đăng nhập.')
+                ->withInput($request->only('email'));
+
             }
 
             $request->session()->regenerate();
 
-            $isAdmin = $user->roles()->where('role_id', 999)->exists();
+            // $isAdmin = $user->roles()->where('role_id', 999)->exists();
+            $isAdmin = $user->roles->contains('role_id', 999);
 
             if ($isAdmin) {
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.dashboard')->with('success', 'Đăng nhập thành công!');
             }
 
-            return redirect()->route('home.index');
+            return redirect()->route('home.index')->with('success', 'Đăng nhập thành công!');;
         }
 
         // Xác thực thất bại
-        return back()->withErrors([
-            'email' => 'Thông tin đăng nhập không chính xác.',
-        ])->withInput($request->only('email'));
+        // return back()->withErrors([
+        //     'email' => 'Thông tin đăng nhập không chính xác.',
+        // ])->withInput($request->only('email'));
+
+
+        return back()
+        ->with('error', 'Thông tin đăng nhập không chính xác.')
+        ->withInput($request->only('email'));
     }
 
     public function logout(Request $request)
