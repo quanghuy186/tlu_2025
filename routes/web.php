@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\UserHasRoleController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Contact\ContactController;
@@ -13,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 
-Route::get('/', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])
+Route::get('/', [LoginController::class, 'showLoginForm'])
     ->name('login')
     ->middleware('guest');
 
-Route::post('/', [App\Http\Controllers\Auth\LoginController::class, 'login'])
+Route::post('/', [LoginController::class, 'login'])
     ->middleware('guest');
 
 Route::prefix('/register')->group(function(){
@@ -34,6 +35,30 @@ Route::prefix('/email')->name('verification.')->group(function(){
     Route::post('/resend', [RegisterController::class, 'resendVerificationEmail'])->name('resend');
 });
 
+// forgot password
+Route::middleware('guest')->group(function () {
+    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+        ->name('password.request');
+    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+        ->name('password.email');
+    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+        ->name('password.request');
+    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+        ->name('password.email');
+    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+        ->name('password.reset');
+    Route::post('reset-password', [NewPasswordController::class, 'store'])
+        ->name('password.update');
+    Route::post('reset-password', [NewPasswordController::class, 'store'])
+        ->name('password.update');
+});
+
+Route::prefix('admin')->name('admin.')->group(function(){
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/user-has-role', [UserHasRoleController::class, 'create'])->name('user_has_role');
+    Route::get('/user', [UserController::class, 'index'])->name('user.index');
+});
+
 //contact -----------------------------
 Route::prefix('/contact')->name('contact.')->group(function(){
     Route::get('/', [ContactController::class, 'index'])->name('index');
@@ -47,40 +72,3 @@ Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
-
-Route::get('/admin/user', [UserController::class, 'index'])->name('admin.user.index');
-
-// Route::middleware('guest')->group(function () {
-//     Route::get('forgot-password', [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'create'])
-//         ->name('password.request');
-//     Route::post('forgot-password', [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'store'])
-//         ->name('password.email');
-//     Route::get('reset-password/{token}', [\App\Http\Controllers\Auth\NewPasswordController::class, 'create'])
-//         ->name('password.reset');
-//     Route::post('reset-password', [\App\Http\Controllers\Auth\NewPasswordController::class, 'store'])
-//         ->name('password.update');
-// });
-
-
-Route::middleware('guest')->group(function () {
-    // ... Các routes khác ...
-
-    // Routes cho quên mật khẩu
-    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-        ->name('password.request');
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->name('password.email');
-    // Routes cho quên mật khẩu
-    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-        ->name('password.request');
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->name('password.email');
-    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-        ->name('password.reset');
-    Route::post('reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.update');
-    Route::post('reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.update');
-});

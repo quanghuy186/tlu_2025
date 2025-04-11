@@ -308,21 +308,27 @@
                         <form action="{{ route('register') }}" method="POST">
                             @csrf
                             <div class="form-floating">
-                                <input type="full_name" class="form-control" id="full_name" name="full_name" placeholder="Full name" required>
+                                <input type="full_name" class="form-control" id="full_name" name="full_name" placeholder="Full name" >
                                 <label for="full_name"><i class="fas fa-envelope me-2"></i>Full name</label>
                                 <div class="form-text">Sử dụng tên thật của bản thân để đăng ký.</div>
                             </div>
 
+                            @if ($errors->has('name'))
+                                <div class="text-danger alert alert-danger">{{ $errors->first('name') }}</div>
+                            @endif
+
+
                             <div class="form-floating">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@e\.tlu\.edu\.vn$">
-                                <label for="email"><i class="fas fa-envelope me-2"></i>Email (@tlu.edu.vn)</label>
+                                {{-- <input type="email" class="form-control" id="email" name="email" placeholder="Email" pattern="[a-z0-9._%+-]+@e\.tlu\.edu\.vn$"> --}}
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                                <label for="email"><i class="fas fa-envelope me-2"></i>Email</label>
                                 <div class="form-text">Sử dụng email do trường cấp để đăng ký.</div>
                             </div>
 
                             <div class="d-flex flex-column flex-md-row gap-md-3">
                                 <div class="flex-grow-1 mb-3 mb-md-0">
                                     <div class="form-floating password-field">
-                                        <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" required minlength="8">
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" minlength="8">
                                         <label for="password"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
                                         <button type="button" class="password-toggle" id="passwordToggle">
                                             <i class="fas fa-eye"></i>
@@ -330,10 +336,9 @@
                                     </div>
                                 </div>
 
-
                                 <div class="flex-grow-1">
                                     <div class="form-floating password-field">
-                                        <input type="password" class="form-control" id="passwordConfirm" name="password_confirmation" placeholder="Xác nhận mật khẩu" required minlength="8">
+                                        <input type="password" class="form-control" id="passwordConfirm" name="password_confirmation" placeholder="Xác nhận mật khẩu" minlength="8">
                                         <label for="passwordConfirm"><i class="fas fa-lock me-2"></i>Xác nhận mật khẩu</label>
                                         <button type="button" class="password-toggle" id="passwordConfirmToggle">
                                             <i class="fas fa-eye"></i>
@@ -343,13 +348,20 @@
                             </div>
 
                             <div class="form-text mb-3">Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số.</div>
+                            @if ($errors->has('password'))
+								<div class="text-danger alert alert-danger">{{ $errors->first('password') }}</div>
+							@endif
 
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                                <input class="form-check-input" type="checkbox" id="terms" name="terms">
                                 <label class="form-check-label" for="terms">
                                     Tôi đồng ý với <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Điều khoản sử dụng</a> và <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">Chính sách bảo mật</a>
                                 </label>
                             </div>
+
+                            @if ($errors->has('terms'))
+								<div class="text-danger alert alert-danger">{{ $errors->first('terms') }}</div>
+							@endif
 
                             <button type="submit" class="btn btn-primary w-100 register-btn">
                                 <i class="fas fa-user-plus me-2"></i> Đăng ký
@@ -427,13 +439,11 @@
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
 
-            // Toggle eye icon
             const icon = this.querySelector('i');
             icon.classList.toggle('fa-eye');
             icon.classList.toggle('fa-eye-slash');
         });
 
-        // Toggle confirm password visibility
         const passwordConfirmToggle = document.getElementById('passwordConfirmToggle');
         const passwordConfirmInput = document.getElementById('passwordConfirm');
 
@@ -441,31 +451,29 @@
             const type = passwordConfirmInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordConfirmInput.setAttribute('type', type);
 
-            // Toggle eye icon
             const icon = this.querySelector('i');
             icon.classList.toggle('fa-eye');
             icon.classList.toggle('fa-eye-slash');
         });
 
-        // Check password match
-        passwordConfirmInput.addEventListener('input', function() {
-            if (this.value !== passwordInput.value) {
-                this.setCustomValidity('Mật khẩu không khớp');
-            } else {
-                this.setCustomValidity('');
-            }
-        });
+        // passwordConfirmInput.addEventListener('input', function() {
+        //     if (this.value !== passwordInput.value) {
+        //         this.setCustomValidity('Mật khẩu không khớp');
+        //     } else {
+        //         this.setCustomValidity('');
+        //     }
+        // });
 
         // Validate email format
-        const emailInput = document.getElementById('email');
-        emailInput.addEventListener('input', function() {
-            const isValid = /[a-z0-9._%+-]+@e\.tlu\.edu\.vn$/.test(this.value);
-            if (!isValid) {
-                this.setCustomValidity('Email phải có định dạng @tlu.edu.vn');
-            } else {
-                this.setCustomValidity('');
-            }
-        });
+        // const emailInput = document.getElementById('email');
+        // emailInput.addEventListener('input', function() {
+        //     const isValid = /[a-z0-9._%+-]+@e\.tlu\.edu\.vn$/.test(this.value);
+        //     if (!isValid) {
+        //         this.setCustomValidity('Email phải có định dạng @tlu.edu.vn');
+        //     } else {
+        //         this.setCustomValidity('');
+        //     }
+        // });
     </script>
 </body>
 </html>

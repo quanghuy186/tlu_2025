@@ -17,10 +17,20 @@ class LoginController extends Controller
     // Xử lý đăng nhập
     public function login(Request $request)
     {
+        // $credentials = $request->validate([
+        //     'email' => 'required|email',
+        //     'password' => 'required',
+        // ]);
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+        ], [
+            'email.required' => 'Vui lòng nhập địa chỉ email.',
+            'email.email' => 'Địa chỉ email không hợp lệ.',
+            'password.required' => 'Vui lòng nhập mật khẩu.',
         ]);
+
+
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $user = Auth::user();
@@ -28,14 +38,9 @@ class LoginController extends Controller
             if ($user->email_verified == 0 || $user->is_active == 0) {
                 Auth::logout();
 
-                // return back()->withErrors([
-                //     'email' => 'Email chưa được xác thực. Vui lòng xác thực email trước khi đăng nhập.',
-                // ])->withInput($request->only('email'));
-
                 return back()
                 ->with('error', 'Email chưa được xác thực. Vui lòng xác thực email trước khi đăng nhập.')
                 ->withInput($request->only('email'));
-
             }
 
             $request->session()->regenerate();
@@ -49,12 +54,6 @@ class LoginController extends Controller
 
             return redirect()->route('home.index')->with('success', 'Đăng nhập thành công!');;
         }
-
-        // Xác thực thất bại
-        // return back()->withErrors([
-        //     'email' => 'Thông tin đăng nhập không chính xác.',
-        // ])->withInput($request->only('email'));
-
 
         return back()
         ->with('error', 'Thông tin đăng nhập không chính xác.')

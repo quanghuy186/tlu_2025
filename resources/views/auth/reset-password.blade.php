@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.email')
 
 @section('content')
 <div class="auth-card card">

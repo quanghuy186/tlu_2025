@@ -305,17 +305,25 @@
                         <form action="{{ route('login') }}" method="POST">
                             @csrf
                             <div class="form-floating">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
                                 <label for="email"><i class="fas fa-envelope me-2"></i>Email</label>
                             </div>
 
+                            @if ($errors->has('email'))
+								<div class="text-danger alert alert-danger">{{ $errors->first('email') }}</div>
+							@endif
+
                             <div class="form-floating password-field">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" required>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
                                 <label for="password"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
                                 <button type="button" class="password-toggle" id="passwordToggle">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
+
+                            @if ($errors->has('password'))
+                                <div class="text-danger alert alert-danger">{{ $errors->first('password') }}</div>
+                            @endif
 
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="remember" name="remember">

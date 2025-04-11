@@ -3,6 +3,7 @@
 @else
     <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để tiếp tục.</p>
 @endif
+
 <body>
     <!-- Top Bar -->
     <div class="top-bar">
@@ -50,7 +51,7 @@
                 <div class="dropdown">
                     <a href="#" class="user-menu dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="modal" data-bs-target="#userInfoModal">
                         <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png" alt="User Avatar" class="user-avatar">
-                        {{-- <span>{{ Auth::user()->name }}</span> --}}
+                        <span>{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li class="dropdown-header">Thông tin tài khoản</li>
@@ -58,13 +59,6 @@
                         <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Cài đặt tài khoản</a></li>
                         <li><a class="dropdown-item" href="#"><i class="fas fa-bell"></i> Thông báo</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        {{-- <li><a class="dropdown-item" href="index.html"><i class="fas fa-sign-out-alt"></i>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit">Đăng xuất</button>
-                            </form>
-                        </a></li> --}}
-
                         <li>
                             <form method="POST" action="{{ route('logout') }}" class="dropdown-item p-0">
                                 @csrf

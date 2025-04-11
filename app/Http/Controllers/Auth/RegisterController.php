@@ -26,7 +26,6 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        // Validate đầu vào - Chấp nhận cả @tlu.edu.vn và @e.tlu.edu.vn
         $request->validate([
             'email' => [
                 'required',
@@ -35,13 +34,16 @@ class RegisterController extends Controller
                 'max:255',
                 'regex:/[a-z0-9._%+-]+@(tlu\.edu\.vn|e\.tlu\.edu\.vn)$/',
             ],
+            'name' => 'required',
             'password' => 'required|string|min:8|confirmed',
             'terms' => 'required',
         ], [
             'email.regex' => 'Email phải có định dạng @tlu.edu.vn hoặc @e.tlu.edu.vn',
+            'name.required' => 'Vui lòng nhập họ và tên',
+            'password.required' => 'Mật khẩu không được để trống',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
-            'password.confirmed' => 'Xác nhận mật khẩu không khớp',
-            'terms.required' => 'Bạn phải đồng ý với điều khoản sử dụng và chính sách bảo mật',
+            'password.confirmed' => 'Mật khẩu không khớp vui lòng nhập lại',
+            'terms.required' => 'Vui lòng chấp nhận điều khoản sử dụng',
         ]);
 
         // Kiểm tra xem email đã tồn tại trong hệ thống nhưng chưa được xác thực chưa
