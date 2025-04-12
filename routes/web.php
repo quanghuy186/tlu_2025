@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\RoleHasPermissionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserHasRoleController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -55,7 +56,12 @@ Route::middleware('guest')->group(function () {
 
 Route::prefix('admin')->name('admin.')->group(function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/user-has-role', [UserHasRoleController::class, 'create'])->name('user_has_role');
+    Route::get('/user-has-role', [UserHasRoleController::class, 'index'])->name('user_has_role');
+    Route::get('/user-has-role/create', [UserHasRoleController::class, 'create'])->name('user_has_role.create');
+    Route::get('/user-has-role/{id}/create', [UserHasRoleController::class, 'create_with_user'])->name('user_has_role.create_with_user');
+    Route::post('/user-has-role/create', [UserHasRoleController::class, 'store'])->name('user_has_role.create');
+    // Route::post('/user-has-role/{id}/create', [UserHasRoleController::class, 'store'])->name('user_has_role.create');
+    Route::get('/role-has-permission', [RoleHasPermissionController::class, 'index'])->name('role_has_permission');
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
 });
 

@@ -296,12 +296,12 @@
             </a>
           </li>
           <li>
-            <a href="components-accordion.html">
+            <a href="{{ route('admin.user_has_role') }}">
               <i class="bi bi-circle"></i><span>Quản lý vai trò người dùng</span>
             </a>
           </li>
           <li>
-            <a href="components-accordion.html">
+            <a href="{{ route('admin.role_has_permission') }}">
               <i class="bi bi-circle"></i><span>Quản lý phân quyền</span>
             </a>
           </li>

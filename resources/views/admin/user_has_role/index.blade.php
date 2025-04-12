@@ -2,8 +2,14 @@
 
 @section('content')
 
+{{-- <script>
+    @if (session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
+</script> --}}
+
 <div class="pagetitle">
-    <h1>Quản lý tài khoản</h1>
+    <h1>Danh sách các vai trò của người dùng</h1>
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -19,9 +25,9 @@
         <div class="col-lg-12">
           <div class="card shadow-sm border-0">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-              <h5 class="card-title m-0 fw-bold text-primary">Danh sách tài khoản</h5>
-              <a href="#" class="btn btn-success btn-sm d-flex align-items-center">
-                <i class="bi bi-plus-circle me-2"></i>Thêm tài khoản
+              <h5 class="card-title m-0 fw-bold text-primary">Danh sách vai trò</h5>
+              <a href="{{ route('admin.user_has_role.create') }}" class="btn btn-success btn-sm d-flex align-items-center">
+                <i class="bi bi-plus-circle me-2"></i>Thêm vai trò
               </a>
             </div>
             <div class="card-body p-0">
@@ -30,33 +36,19 @@
                   <thead class="table-light">
                     <tr>
                       <th class="text-center" width="5%">ID</th>
-                      <th>Họ và tên</th>
-                      <th>Email</th>
-                      <th class="text-center">Trạng thái kích hoạt</th>
-                      <th class="text-center">Trạng thái tài khoản</th>
+                      <th>Tên vai trò</th>
+                      <th>Mô tả</th>
+                      <th>Thời gian thêm</th>
                       <th class="text-center" width="15%">Hành động</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach ($users as $user)
+                    @foreach ($list_roles as $role)
                     <tr>
-                      <td class="text-center fw-bold">{{ $user->id }}</td>
-                      <td>{{ $user->name }}</td>
-                      <td><span class="text-muted">{{ $user->email }}</span></td>
-                      <td class="text-center">
-                        @if ($user->email_verified == 1)
-                        <span class="badge bg-success rounded-pill px-3">Đã kích hoạt</span>
-                        @elseif ($user->email_verified == 0)
-                        <span class="badge bg-danger rounded-pill px-3">Chưa kích hoạt</span>
-                        @endif
-                      </td>
-                      <td class="text-center">
-                        @if ($user->is_active == 1)
-                        <span class="badge bg-success rounded-pill px-3">Hoạt động</span>
-                        @elseif ($user->is_active == 0)
-                        <span class="badge bg-danger rounded-pill px-3">Ngừng hoạt động</span>
-                        @endif
-                      </td>
+                      <td class="text-center fw-bold">{{ $role->id }}</td>
+                      <td>{{ $role->roles_name }}</td>
+                      <td><span class="text-muted">{{ $role->description }}</span></td>
+                      <td><span class="text-muted">{{ $role->created_at }}</span></td>
                       <td>
                         <div class="d-flex justify-content-center gap-2">
                           <a href="#" data-bs-toggle="tooltip" data-bs-title="Chỉnh sửa" class="btn btn-sm btn-primary">
@@ -97,16 +89,6 @@
       </div>
     </div>
   </section>
-
-  <!-- Thêm script để kích hoạt tooltip -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-      var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-      });
-    });
-  </script>
 
 
 @endsection

@@ -26,12 +26,7 @@
                 @csrf
                 <div class="mb-4">
                   <label for="userSelect" class="form-label fw-bold">Người dùng</label>
-                  <select class="form-select form-select-lg mb-3" name="user_id" id="userSelect" aria-label="Chọn người dùng">
-                    <option selected disabled>-- Chọn người dùng --</option>
-                    @foreach ($list_users as $user)
-                      <option value="{{ $user->id }}">{{ $user->email }} - {{ $user->name }}</option>
-                    @endforeach
-                  </select>
+                    <h2>{{ $user->email }} - {{ $user->name }}</h2>
                 </div>
 
                 <div class="mt-4 mb-4">
