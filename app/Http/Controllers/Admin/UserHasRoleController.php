@@ -35,11 +35,12 @@ class UserHasRoleController extends Controller
     }
 
     public function create_with_user($id){
-        $list_users = User::all();
         $user = User::find($id);
         $list_roles = Role::all();
-        return view('admin.user_has_role.create_with_user')->with('list_users', $list_users)
+        $list_user_has_roles = UserHasRole::where('user_id', $user->id)->pluck('role_id')->toArray();
+        return view('admin.user_has_role.create_with_user')
         ->with('list_roles', $list_roles)
-        ->with('id', $id)->with('user', $user);
+        ->with('id', $id)->with('user', $user)
+        ->with('list_user_has_roles', $list_user_has_roles);
     }
 }

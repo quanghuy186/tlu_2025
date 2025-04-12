@@ -27,6 +27,7 @@
                 <div class="mb-4">
                   <label for="userSelect" class="form-label fw-bold">Người dùng</label>
                     <h2>{{ $user->email }} - {{ $user->name }}</h2>
+                    <input type="hidden" name="user_id" value="{{ $user->id }}">
                 </div>
 
                 <div class="mt-4 mb-4">
@@ -35,15 +36,28 @@
                     <div class="card-body">
                       <div class="row">
                         @foreach ($list_roles as $i => $role)
-                          <div class="col-md-6 mb-2">
-                            <div class="form-check">
-                              <input class="form-check-input" name="role_id[]" type="checkbox" value="{{ $role->id }}" id="role_id_{{ $i }}">
-                              <label class="form-check-label" for="role_id_{{ $i }}">
-                                {{ $role->description }}
-                              </label>
-                            </div>
-                          </div>
+                            @if (in_array($role->id, $list_user_has_roles))
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                    <input class="form-check-input" name="role_id[]" type="checkbox" value="{{ $role->id }}" id="role_id_{{ $i }}" checked>
+                                    <label class="form-check-label" for="role_id_{{ $i }}">
+                                        {{ $role->description }}
+                                    </label>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                    <input class="form-check-input" name="role_id[]" type="checkbox" value="{{ $role->id }}" id="role_id_{{ $i }}">
+                                    <label class="form-check-label" for="role_id_{{ $i }}">
+                                        {{ $role->description }}
+                                    </label>
+                                    </div>
+                                </div>
+                            @endif
                         @endforeach
+
+
                       </div>
                     </div>
                   </div>
