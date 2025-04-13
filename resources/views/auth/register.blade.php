@@ -308,8 +308,8 @@
                         <form action="{{ route('register') }}" method="POST">
                             @csrf
                             <div class="form-floating">
-                                <input type="full_name" class="form-control" id="full_name" name="full_name" placeholder="Full name" >
-                                <label for="full_name"><i class="fas fa-envelope me-2"></i>Full name</label>
+                                <input type="name" class="form-control" id="name" name="name" placeholder="Full name" >
+                                <label for="name"><i class="fas fa-envelope me-2"></i>Full name</label>
                                 <div class="form-text">Sử dụng tên thật của bản thân để đăng ký.</div>
                             </div>
 

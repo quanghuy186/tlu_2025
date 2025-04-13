@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\RoleHasPermissionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserHasRoleController;
+use App\Http\Controllers\API\ApiRoleHasPermissionController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Contact\ContactController;
@@ -56,14 +57,25 @@ Route::middleware('guest')->group(function () {
 
 Route::prefix('admin')->name('admin.')->group(function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/user', [UserController::class, 'index'])->name('user.index');
     Route::get('/user-has-role', [UserHasRoleController::class, 'index'])->name('user_has_role');
     Route::get('/user-has-role/create', [UserHasRoleController::class, 'create'])->name('user_has_role.create');
     Route::get('/user-has-role/{id}/create', [UserHasRoleController::class, 'create_with_user'])->name('user_has_role.create_with_user');
     Route::post('/user-has-role/create', [UserHasRoleController::class, 'store'])->name('user_has_role.create');
-    // Route::post('/user-has-role/{id}/create', [UserHasRoleController::class, 'store'])->name('user_has_role.create');
     Route::get('/role-has-permission', [RoleHasPermissionController::class, 'index'])->name('role_has_permission');
-    Route::get('/user', [UserController::class, 'index'])->name('user.index');
+    Route::get('/role-has-permission/create', [RoleHasPermissionController::class, 'create'])->name('role_has_permission.create');
+    Route::post('/role-has-permission/create', [RoleHasPermissionController::class, 'store'])->name('role_has_permission.create');
+
+    //API ajax Role has permission
+    Route::get('/api/role_has_permission/getByRoleId/{role_id?}', [ApiRoleHasPermissionController::class, 'getByRoleId'])->name('api.role_has_permission.getRoleId');
+    // Route::get('/role-permission', [RoleHasPermissionController::class, 'create'])->name('role_permission.index');
+    // Route::post('/role-permission/create', [RoleHasPermissionController::class, 'store'])->name('role_has_permission.create');
+    
+    // // API routes cho AJAX
+    // Route::get('/get-role-permissions', [RoleHasPermissionController::class, 'getRolePermissions'])->name('get_role_permissions');
+    // Route::get('/get-all-permissions', [RoleHasPermissionController::class, 'getAllPermissions'])->name('get_all_permissions');
 });
+
 
 //contact -----------------------------
 Route::prefix('/contact')->name('contact.')->group(function(){
@@ -76,5 +88,4 @@ Route::prefix('/contact')->name('contact.')->group(function(){
 Route::get('/message', [MessageController::class, 'index'])->name('message.index');
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
-
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

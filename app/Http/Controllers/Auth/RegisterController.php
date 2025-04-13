@@ -55,7 +55,7 @@ class RegisterController extends Controller
             $tokenExpiry = Carbon::now()->addDays(3);
 
             // Cập nhật thông tin người dùng
-            $existingUser->name = $request->full_name;
+            // $existingUser->name = $request->full_name;
             $existingUser->password = Hash::make($request->password);
             $existingUser->verification_token = $verificationToken;
             $existingUser->verification_token_expiry = $tokenExpiry;
@@ -87,7 +87,7 @@ class RegisterController extends Controller
         try {
             // Tạo user mới
             $user = User::create([
-                'name' => $request->full_name,
+                'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'is_active' => false,
@@ -203,6 +203,6 @@ class RegisterController extends Controller
         $user->save();
 
         return redirect()->route('login')
-            ->with('status', 'Tài khoản của bạn đã được xác thực thành công! Vui lòng đăng nhập.');
+            ->with('success', 'Tài khoản của bạn đã được xác thực thành công! Vui lòng đăng nhập.');
     }
 }
