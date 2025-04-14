@@ -68,12 +68,6 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
     //API ajax Role has permission
     Route::get('/api/role_has_permission/getByRoleId/{role_id?}', [ApiRoleHasPermissionController::class, 'getByRoleId'])->name('api.role_has_permission.getRoleId');
-    // Route::get('/role-permission', [RoleHasPermissionController::class, 'create'])->name('role_permission.index');
-    // Route::post('/role-permission/create', [RoleHasPermissionController::class, 'store'])->name('role_has_permission.create');
-    
-    // // API routes cho AJAX
-    // Route::get('/get-role-permissions', [RoleHasPermissionController::class, 'getRolePermissions'])->name('get_role_permissions');
-    // Route::get('/get-all-permissions', [RoleHasPermissionController::class, 'getAllPermissions'])->name('get_all_permissions');
 });
 
 
