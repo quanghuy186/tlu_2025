@@ -55,7 +55,7 @@ Route::middleware('guest')->group(function () {
         ->name('password.update');
 });
 
-Route::prefix('admin')->name('admin.')->group(function(){
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
     Route::get('/user-has-role', [UserHasRoleController::class, 'index'])->name('user_has_role');
