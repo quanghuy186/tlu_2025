@@ -12,11 +12,11 @@ class RoleHasPermissionController extends Controller
 {
     public function index()
     {
-        $list_roles = Role::all();
-        $list_permissions = Permission::all();
-        
-        return view('admin.role_has_permission.index')->with('list_permissions', $list_permissions)
-        ->with('list_roles', $list_roles); 
+        //eager loadding
+        $list_role_has_permission = RoleHasPermission::with('role')->with('permission')->get();
+        $grouped_role_has_permission = $list_role_has_permission->groupBy('role.description');
+        return view('admin.role_has_permission.index')
+        ->with('grouped_role_has_permission', $grouped_role_has_permission); 
     }
 
     public function create(){

@@ -302,7 +302,7 @@
           </li>
           <li>
             <a href="{{ route('admin.role_has_permission') }}">
-              <i class="bi bi-circle"></i><span>Quản lý phân quyền</span>
+              <i class="bi bi-circle"></i><span>Phân quyền cho vai trò</span>
             </a>
           </li>
         </ul>

@@ -12,6 +12,7 @@ class ContactController extends Controller
     }
 
     public function student(){
+        // if(!Gate::allows('view-contact-student')){ abort(403); }
         return view('contact.student.index');
     }
 

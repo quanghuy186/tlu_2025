@@ -29,7 +29,7 @@
                   <select class="form-select form-select-lg mb-3" name="role_id" id="role_id" aria-label="Chọn vai trò">
                     <option value="">-- Chọn vai trò --</option>
                     @foreach ($list_roles as $role)
-                      <option value="{{ $role->id }}">{{ $role->roles_name }} - {{ $role->description }}</option>
+                      <option value="{{ $role->id }}">{{ $role->description }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="d-flex justify-content-between mt-4">
-                  <a href="#" class="btn btn-outline-secondary">
+                  <a href="{{ route('admin.role_has_permission') }}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i> Quay lại
                   </a>
                   <button type="submit" class="btn btn-primary">
@@ -99,6 +99,17 @@ $(function(){
             });
         });
     });
+
+      <?php
+          $role_id = request()->query('role_id');
+          if (!empty($role_id)): 
+      ?>
+          $('#role_id').val(<?php echo $role_id; ?>);
+          $('#role_id').trigger('change');
+      <?php endif; ?>
+
+        
+    
     $('#role_id').trigger('change');
 });
 </script>

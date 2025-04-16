@@ -41,5 +41,7 @@ class AppServiceProvider extends ServiceProvider
 
         //dinh nghia với policy
         Gate::define('update-user', [UserHasRolePolicy::class,'update']);
+
+        // Gate::define('view-contact-student');
     }
 }

@@ -20,8 +20,8 @@
           <div class="card shadow-sm border-0">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
               <h5 class="card-title m-0 fw-bold text-primary">Danh sách quyền</h5>
-              <a href="#" class="btn btn-success btn-sm d-flex align-items-center">
-                <i class="bi bi-plus-circle me-2"></i>Thêm quyền
+              <a href="{{ route('admin.role_has_permission.create') }}" class="btn btn-success btn-sm d-flex align-items-center">
+                <i class="bi bi-plus-circle me-2"></i>Cấp quyền cho vai trò
               </a>
             </div>
             <div class="card-body p-0">
@@ -29,28 +29,34 @@
                 <table class="table table-hover align-middle mb-0">
                   <thead class="table-light">
                     <tr>
-                      <th class="text-center" width="5%">ID</th>
+                      <!-- <th class="text-center" width="5%">ID</th>  -->
+                      <th>Tên vai trò</th>
                       <th>Tên quyền</th>
-                      <th>Mô tả</th>
-                      <th>Thời gian thêm</th>
                       <th class="text-center" width="15%">Hành động</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach ($list_permissions as $permission)
+                    @foreach ($grouped_role_has_permission as $key => $grhp)
+                    <?php
+                      $role_id = $grhp->first()->role_id;
+                    ?>
                     <tr>
-                      <td class="text-center fw-bold">{{ $permission->id }}</td>
-                      <td>{{ $permission->permission_name }}</td>
-                      <td><span class="text-muted">{{ $permission->description }}</span></td>
-                      <td><span class="text-muted">{{ $permission->created_at }}</span></td>
+                      <td class="fw-bold">{{ $key }}</td>
+                      <td>
+                        @foreach ($grhp as $rhp)
+                          <ul>
+                            <li>{{ $rhp->permission->description }}</li>
+                          </ul>
+                        @endforeach
+                      </td>
                       <td>
                         <div class="d-flex justify-content-center gap-2">
-                          <a href="#" data-bs-toggle="tooltip" data-bs-title="Chỉnh sửa" class="btn btn-sm btn-primary">
+                          <a href="{{ route('admin.role_has_permission.create', ['role_id' => $role_id]) }}" data-bs-toggle="tooltip" data-bs-title="Chỉnh sửa" class="btn btn-sm btn-primary">
                             <i class="bi bi-pencil-square"></i>
                           </a>
-                          <a href="#" data-bs-toggle="tooltip" data-bs-title="Xem chi tiết" class="btn btn-sm btn-info text-white">
+                          <!-- <a href="#" data-bs-toggle="tooltip" data-bs-title="Xem chi tiết" class="btn btn-sm btn-info text-white">
                             <i class="bi bi-eye-fill"></i>
-                          </a>
+                          </a> -->
                           <a href="#" data-bs-toggle="tooltip" data-bs-title="Xóa" class="btn btn-sm btn-danger">
                             <i class="bi bi-trash-fill"></i>
                           </a>

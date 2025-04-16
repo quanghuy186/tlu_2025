@@ -65,11 +65,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::get('/role-has-permission', [RoleHasPermissionController::class, 'index'])->name('role_has_permission');
     Route::get('/role-has-permission/create', [RoleHasPermissionController::class, 'create'])->name('role_has_permission.create');
     Route::post('/role-has-permission/create', [RoleHasPermissionController::class, 'store'])->name('role_has_permission.create');
+    // Route::post('/role-has-permission/create/{id}', [RoleHasPermissionController::class, 'store'])->name('role_has_permission.create');
 
     //API ajax Role has permission
     Route::get('/api/role_has_permission/getByRoleId/{role_id?}', [ApiRoleHasPermissionController::class, 'getByRoleId'])->name('api.role_has_permission.getRoleId');
 });
-
 
 //contact -----------------------------
 Route::prefix('/contact')->name('contact.')->group(function(){

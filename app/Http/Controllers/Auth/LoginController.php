@@ -40,6 +40,7 @@ class LoginController extends Controller
 
             // $isAdmin = $user->roles()->where('role_id', 999)->exists();
             $isAdmin = $user->roles->contains('role_id', 999);
+            // $isAdmin = $user->roles->contains('name', 'admin');
             if ($isAdmin) {
                 return redirect()->route('admin.dashboard')->with('success', 'Đăng nhập thành công!');
             }
