@@ -3,12 +3,12 @@
 @section('content')
 
 <div class="pagetitle">
-    <h1>Quản lý tài khoản</h1>
+    <h1>Quản lý vai trò</h1>
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item">Tables</li>
-        <li class="breadcrumb-item active">General</li>
+        <li class="breadcrumb-item">Hệ thống</li>
+        <li class="breadcrumb-item active">Vai trò</li>
       </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -19,9 +19,9 @@
         <div class="col-lg-12">
           <div class="card shadow-sm border-0">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-              <h5 class="card-title m-0 fw-bold text-primary">Danh sách tài khoản</h5>
-              <a href="{{ route('admin.user.create') }}" class="btn btn-success btn-sm d-flex align-items-center">
-                <i class="bi bi-plus-circle me-2"></i>Thêm tài khoản
+              <h5 class="card-title m-0 fw-bold text-primary">Danh sách vai trò</h5>
+              <a href="{{ route('admin.role.create') }}" class="btn btn-success btn-sm d-flex align-items-center">
+                <i class="bi bi-plus-circle me-2"></i>Thêm vai trò
               </a>
             </div>
             <div class="card-body p-0">
@@ -29,53 +29,37 @@
                 <table class="table table-hover align-middle mb-0">
                   <thead class="table-light">
                     <tr>
-                      <!-- <th class="text-center" width="5%">ID</th> -->
-                      <th>Họ và tên</th>
-                      <th>Email</th>
-                      <th class="text-center">Trạng thái kích hoạt</th>
-                      <th class="text-center">Trạng thái tài khoản</th>
+                      <th>Tên vai trò</th>
+                      <th>Mô tả</th>
+                      <th class="text-center">Ngày tạo</th>
                       <th class="text-center" width="15%">Hành động</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach ($users as $user)
+                    @foreach ($roles as $role)
                     <tr>
-                      <!-- <td class="text-center fw-bold">{{ $user->id }}</td> -->
-                      <td>{{ $user->name }}</td>
-                      <td><span class="text-muted">{{ $user->email }}</span></td>
-                      <td class="text-center">
-                        @if ($user->email_verified == 1)
-                        <span class="badge bg-success rounded-pill px-3">Đã kích hoạt</span>
-                        @elseif ($user->email_verified == 0)
-                        <span class="badge bg-danger rounded-pill px-3">Chưa kích hoạt</span>
-                        @endif
-                      </td>
-                      <td class="text-center">
-                        @if ($user->is_active == 1)
-                        <span class="badge bg-success rounded-pill px-3">Hoạt động</span>
-                        @elseif ($user->is_active == 0)
-                        <span class="badge bg-danger rounded-pill px-3">Ngừng hoạt động</span>
-                        @endif
-                      </td>
+                      <td><span class="fw-bold">{{ $role->role_name }}</span></td>
+                      <td>{{ $role->description }}</td>
+                      <td class="text-center">{{ $role->created_at }}</td>
                       <td>
                         <div class="d-flex justify-content-center gap-2">
-                          <a href="{{ route('admin.user.edit', $user->id) }}" data-bs-toggle="tooltip" data-bs-title="Chỉnh sửa" class="btn btn-sm btn-primary">
+                          <a href="{{ route('admin.role.edit', $role->id) }}" data-bs-toggle="tooltip" data-bs-title="Chỉnh sửa" class="btn btn-sm btn-primary">
                             <i class="bi bi-pencil-square"></i>
+                          </a>
+
+                          <a href="" data-bs-toggle="tooltip" data-bs-title="Phân quyền" class="btn btn-sm btn-info">
+                            <i class="bi bi-shield-lock"></i>
                           </a>
 
                           <a href="#" 
                             data-bs-toggle="modal" 
                             data-bs-target="#deleteConfirmModal"
-                            data-user-id="{{ $user->id }}"
-                            data-user-name="{{ $user->name }}"
-                            data-delete-url="{{ route('admin.user.destroy', $user->id) }}"
+                            data-role-id="{{ $role->id }}"
+                            data-role-name="{{ $role->role_name }}"
+                            data-delete-url="{{ route('admin.role.destroy', $role->id) }}"
                             class="btn btn-sm btn-danger">
                             <i class="bi bi-trash-fill"></i>
                           </a>
-
-                          <!-- <a href="#" data-bs-toggle="tooltip" data-bs-title="Xóa" class="btn btn-sm btn-danger">
-                            <i class="bi bi-trash-fill"></i>
-                          </a> -->
                         </div>
                       </td>
                     </tr>
@@ -85,7 +69,7 @@
               </div>
             </div>
             <div class="card-footer bg-white py-3">
-              <!-- Có thể thêm phân trang ở đây -->
+              <!-- Phân trang thủ công -->
               <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-end mb-0">
                   <li class="page-item disabled">
@@ -106,24 +90,24 @@
     </div>
   </section>
 
-  <!-- Modal Xác nhận xóa tài khoản -->
+  <!-- Modal Xác nhận xóa vai trò -->
   <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteConfirmModalLabel">Xác nhận xóa tài khoản</h5>
+          <h5 class="modal-title" id="deleteConfirmModalLabel">Xác nhận xóa vai trò</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Bạn có chắc chắn muốn xóa tài khoản <strong id="deleteUserName"></strong>?</p>
-          <p class="text-danger">Lưu ý: Hành động này không thể hoàn tác.</p>
+          <p>Bạn có chắc chắn muốn xóa vai trò <strong id="deleteRoleName"></strong>?</p>
+          <p class="text-danger">Lưu ý: Hành động này sẽ ảnh hưởng đến tất cả người dùng đang sử dụng vai trò này.</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-          <form id="deleteUserForm" method="POST" class="d-inline">
+          <form id="deleteRoleForm" method="POST" class="d-inline">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-danger">Xóa tài khoản</button>
+            <button type="submit" class="btn btn-danger">Xóa vai trò</button>
           </form>
         </div>
       </div>
@@ -141,16 +125,16 @@
       if (deleteModal) {
         deleteModal.addEventListener('show.bs.modal', function(event) {
           const button = event.relatedTarget;
-          const userId = button.getAttribute('data-user-id');
-          const userName = button.getAttribute('data-user-name');
+          const roleId = button.getAttribute('data-role-id');
+          const roleName = button.getAttribute('data-role-name');
           const deleteUrl = button.getAttribute('data-delete-url');
           
-          const userNameElement = deleteModal.querySelector('#deleteUserName');
-          if (userNameElement) {
-            userNameElement.textContent = userName;
+          const roleNameElement = deleteModal.querySelector('#deleteRoleName');
+          if (roleNameElement) {
+            roleNameElement.textContent = roleName;
           }
           
-          const deleteForm = deleteModal.querySelector('#deleteUserForm');
+          const deleteForm = deleteModal.querySelector('#deleteRoleForm');
           if (deleteForm) {
             deleteForm.action = deleteUrl;
           }
@@ -158,16 +142,5 @@
       }
     });
   </script>
-
-  <!-- Thêm script để kích hoạt tooltip -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-      var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-      });
-    });
-  </script>
-
 
 @endsection

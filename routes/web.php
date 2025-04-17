@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RoleHasPermissionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserHasRoleController;
@@ -57,22 +58,36 @@ Route::middleware('guest')->group(function () {
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    //user
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/user/create', [UserController::class, 'store'])->name('user.create');
+    Route::post('/user/create', [UserController::class, 'store'])->name('user.create');
+    Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/admin/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
+    Route::get('/role', [RoleController::class, 'index'])->name('role.index');
+    Route::get('/role/create', [RoleController::class, 'create'])->name('role.create');
+    Route::get('/role/edit', [RoleController::class, 'edit'])->name('role.edit');
+    Route::delete('/admin/role/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
+
     Route::get('/user-has-role', [UserHasRoleController::class, 'index'])->name('user_has_role');
     Route::get('/user-has-role/create', [UserHasRoleController::class, 'create'])->name('user_has_role.create');
     Route::get('/user-has-role/{id}/create', [UserHasRoleController::class, 'create_with_user'])->name('user_has_role.create_with_user');
     Route::post('/user-has-role/create', [UserHasRoleController::class, 'store'])->name('user_has_role.create');
+
     Route::get('/role-has-permission', [RoleHasPermissionController::class, 'index'])->name('role_has_permission');
     Route::get('/role-has-permission/create', [RoleHasPermissionController::class, 'create'])->name('role_has_permission.create');
     Route::post('/role-has-permission/create', [RoleHasPermissionController::class, 'store'])->name('role_has_permission.create');
-    // Route::post('/role-has-permission/create/{id}', [RoleHasPermissionController::class, 'store'])->name('role_has_permission.create');
-
+    
     //API ajax Role has permission
     Route::get('/api/role_has_permission/getByRoleId/{role_id?}', [ApiRoleHasPermissionController::class, 'getByRoleId'])->name('api.role_has_permission.getRoleId');
 });
 
 //contact -----------------------------
-Route::prefix('/contact')->name('contact.')->group(function(){
+Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(){
     Route::get('/', [ContactController::class, 'index'])->name('index');
     Route::get('/student', [ContactController::class, 'student'])->name('student');
     Route::get('/teacher', [ContactController::class, 'teacher'])->name('teacher');

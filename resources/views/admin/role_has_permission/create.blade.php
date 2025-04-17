@@ -2,6 +2,11 @@
 
 @section('content')
 
+<?php
+    $role_id = request()->query('role_id');
+?>
+
+
 <div class="pagetitle">
     <h1>Cấp quyền cho vai trò người dùng</h1>
     <nav>
@@ -24,15 +29,29 @@
             <div class="card-body">
               <form action="{{ route('admin.role_has_permission.create') }}" method="POST" id="rolePermissionForm">
                 @csrf
-                <div class="mb-4">
-                  <label for="role_id" class="form-label fw-bold">Vai trò</label>
-                  <select class="form-select form-select-lg mb-3" name="role_id" id="role_id" aria-label="Chọn vai trò">
-                    <option value="">-- Chọn vai trò --</option>
-                    @foreach ($list_roles as $role)
-                      <option value="{{ $role->id }}">{{ $role->description }}</option>
-                    @endforeach
-                  </select>
-                </div>
+
+                @if (!empty($role_id))
+                  <div class="mb-4">
+                    <label for="role_id" class="form-label fw-bold">Vai trò</label>
+                    <select disabled class="form-select form-select-lg mb-3" name="role_id" id="role_id" aria-label="Chọn vai trò">
+                      <option value="">-- Chọn vai trò --</option>
+                      @foreach ($list_roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->description }}</option>
+                      @endforeach
+                    </select>
+                    <input type="hidden" name="role_id" value="{{ $role_id }}">
+                  </div>
+                @else
+                  <div class="mb-4">
+                    <label for="role_id" class="form-label fw-bold">Vai trò</label>
+                    <select class="form-select form-select-lg mb-3" name="role_id" id="role_id" aria-label="Chọn vai trò">
+                      <option value="">-- Chọn vai trò --</option>
+                      @foreach ($list_roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->description }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                @endif
 
                 <div class="mt-4 mb-4" id="permission_id">
                   <h6 class="fw-bold mb-3">Danh sách quyền</h6>
@@ -101,15 +120,12 @@ $(function(){
     });
 
       <?php
-          $role_id = request()->query('role_id');
           if (!empty($role_id)): 
       ?>
           $('#role_id').val(<?php echo $role_id; ?>);
           $('#role_id').trigger('change');
       <?php endif; ?>
 
-        
-    
     $('#role_id').trigger('change');
 });
 </script>

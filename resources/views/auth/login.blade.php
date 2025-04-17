@@ -335,11 +335,11 @@
                             </button>
                         </form>
 
-                        <script>
+                        <!-- <script> -->
                             @if (session('error'))
                                 toastr.error("{{ session('error') }}");
                             @endif
-                        </script>
+                        <!-- </script> -->
 
                         <div class="forgot-link">
                             <a href="{{ route('password.request') }}">Quên mật khẩu?</a>

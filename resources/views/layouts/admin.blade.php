@@ -43,7 +43,7 @@
     <div class="d-flex align-items-center justify-content-between">
       <a href="index.html" class="logo d-flex align-items-center">
         <img src="{{ asset('assets/admin/img/logo.png') }} " alt="">
-        <span class="d-none d-lg-block">NiceAdmin</span>
+        <span class="d-none d-lg-block">Hệ thống TLU</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -262,7 +262,7 @@
                 <button type="submit" class="btn btn-link dropdown-item w-100 text-left">
                     <i class="fas fa-sign-out-alt"></i> Đăng xuất
                 </button>
-            </form>
+              </form>
             </li>
 
           </ul><!-- End Profile Dropdown Items -->
@@ -296,13 +296,28 @@
             </a>
           </li>
           <li>
+            <a href="{{ route('admin.role.index') }}">
+              <i class="bi bi-circle"></i><span>Quản lý danh sách vai trò</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ route('admin.user.index') }}">
+              <i class="bi bi-circle"></i><span>Quản lý danh sách quyền</span>
+            </a>
+          </li>
+          <li>
             <a href="{{ route('admin.user_has_role') }}">
-              <i class="bi bi-circle"></i><span>Quản lý vai trò người dùng</span>
+              <i class="bi bi-circle"></i><span>Phân vai trò người dùng</span>
             </a>
           </li>
           <li>
             <a href="{{ route('admin.role_has_permission') }}">
               <i class="bi bi-circle"></i><span>Phân quyền cho vai trò</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ route('admin.role_has_permission') }}">
+              <i class="bi bi-circle"></i><span>Phân quyền cho người dùng</span>
             </a>
           </li>
         </ul>
@@ -316,22 +331,22 @@
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="forms-elements.html">
-              <i class="bi bi-circle"></i><span>Form Elements</span>
+              <i class="bi bi-circle"></i><span>Đơn vị</span>
             </a>
           </li>
           <li>
             <a href="forms-layouts.html">
-              <i class="bi bi-circle"></i><span>Form Layouts</span>
+              <i class="bi bi-circle"></i><span>Lớp học</span>
             </a>
           </li>
           <li>
             <a href="forms-editors.html">
-              <i class="bi bi-circle"></i><span>Form Editors</span>
+              <i class="bi bi-circle"></i><span>Cán bộ giảng viên</span>
             </a>
           </li>
           <li>
             <a href="forms-validation.html">
-              <i class="bi bi-circle"></i><span>Form Validation</span>
+              <i class="bi bi-circle"></i><span>Sinh viên</span>
             </a>
           </li>
         </ul>
@@ -364,17 +379,17 @@
         <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="charts-chartjs.html">
-              <i class="bi bi-circle"></i><span>Chart.js</span>
+              <i class="bi bi-circle"></i><span>Danh mục</span>
             </a>
           </li>
           <li>
             <a href="charts-apexcharts.html">
-              <i class="bi bi-circle"></i><span>ApexCharts</span>
+              <i class="bi bi-circle"></i><span>Bài viết</span>
             </a>
           </li>
           <li>
             <a href="charts-echarts.html">
-              <i class="bi bi-circle"></i><span>ECharts</span>
+              <i class="bi bi-circle"></i><span>Bình luận</span>
             </a>
           </li>
         </ul>

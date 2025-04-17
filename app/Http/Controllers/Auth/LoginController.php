@@ -38,12 +38,15 @@ class LoginController extends Controller
             }
             $request->session()->regenerate();
 
-            // $isAdmin = $user->roles()->where('role_id', 999)->exists();
-            $isAdmin = $user->roles->contains('role_id', 999);
-            // $isAdmin = $user->roles->contains('name', 'admin');
+            $userRoles = $user->roles()->with('role')->get();
+            $isAdmin = $userRoles->contains(function($userRole) {
+                return $userRole->role->role_name === 'admin';
+            });
+
             if ($isAdmin) {
                 return redirect()->route('admin.dashboard')->with('success', 'Đăng nhập thành công!');
             }
+
             return redirect()->route('home.index')->with('success', 'Đăng nhập thành công!');;
         }
 

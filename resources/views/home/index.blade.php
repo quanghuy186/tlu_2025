@@ -18,7 +18,7 @@
     <!-- Directory Section -->
     <section class="directory-section">
         <div class="container">
-            <div class="section-title">
+            <div class="section-title text-center">
                 <h2>Tính năng chính</h2>
                 <p>Tra cứu thông tin liên lạc của đơn vị, giảng viên, sinh viên và trao đổi thông tin một cách nhanh chóng và dễ dàng</p>
             </div>
@@ -76,16 +76,14 @@
     </section>
 
     <!-- Announcements Section -->
-    <section class="announcement-section">
+    <section class="announcement-section mt-3">
         <div class="container">
-            <div class="section-title">
+            <div class="section-title text-center">
                 <h2>Thông báo mới nhất</h2>
                 <p>Cập nhật những thông tin mới nhất từ hệ thống danh bạ điện tử Đại học Thủy Lợi</p>
             </div>
 
             <div class="row">
-
-
                 <div class="col-lg-6">
                     <div class="announcement-card">
                         <div class="card-body">

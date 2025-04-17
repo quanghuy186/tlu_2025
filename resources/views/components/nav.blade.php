@@ -85,7 +85,7 @@
                 <div class="modal-body">
                     <img src="https://via.placeholder.com/200x200?text=User" alt="User Profile" class="avatar">
                     <div class="user-details">
-                        <h4>Nguyễn Văn A</h4>
+                        <h4>{{ Auth::user()->name }}</h4>
                         <span class="badge rounded-pill">Sinh viên</span>
                     </div>
                     <ul class="info-list">
