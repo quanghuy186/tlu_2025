@@ -353,14 +353,14 @@
                 </div>
 
                 <!-- Subscribe -->
-                <div class="sidebar-card">
+                <!-- <div class="sidebar-card">
                     <h3 class="sidebar-title">Đăng ký nhận thông báo</h3>
                     <p>Đăng ký nhận thông báo mới nhất qua email.</p>
                     <form class="subscribe-form">
                         <input type="email" placeholder="Nhập email của bạn">
                         <button type="submit"><i class="fas fa-paper-plane"></i></button>
                     </form>
-                </div>
+                </div> -->
 
                 <!-- Tags -->
                 <div class="sidebar-card">

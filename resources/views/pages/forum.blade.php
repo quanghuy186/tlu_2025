@@ -227,7 +227,7 @@
 
             <!-- Latest Posts -->
             <div class="latest-posts">
-                <h4 class="section-title">Bài viết mới nhất</h4>
+                <h4 class="section-title text-center">Bài viết mới nhất</h4>
 
                 <div class="post-card">
                     <div class="post-header">
@@ -361,7 +361,7 @@
                 </div>
 
                 <!-- Active Members Card -->
-                <div class="card">
+                <!-- <div class="card">
                     <div class="card-header">
                         <i class="fas fa-medal me-2"></i> Thành viên tích cực
                     </div>
@@ -402,7 +402,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Category Card -->
                 <div class="card">

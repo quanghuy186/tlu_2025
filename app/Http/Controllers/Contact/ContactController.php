@@ -13,14 +13,14 @@ class ContactController extends Controller
 
     public function student(){
         // if(!Gate::allows('view-contact-student')){ abort(403); }
-        return view('contact.student.index');
+        return view('pages.contact.student');
     }
 
     public function teacher(){
-        return view('contact.teacher.index');
+        return view('pages.contact.teacher');
     }
 
     public function department(){
-        return view('contact.department.index');
+        return view('pages.contact.department');
     }
 }
