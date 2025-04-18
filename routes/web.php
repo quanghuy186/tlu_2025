@@ -70,8 +70,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
 
     Route::get('/role', [RoleController::class, 'index'])->name('role.index');
     Route::get('/role/create', [RoleController::class, 'create'])->name('role.create');
-    Route::get('/role/edit', [RoleController::class, 'edit'])->name('role.edit');
-    Route::delete('/admin/role/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
+    Route::post('/role/create', [RoleController::class, 'store'])->name('role.create');
+    Route::get('/role/{id}/edit', [RoleController::class, 'edit'])->name('role.edit');
+    Route::put('/role/{id}', [RoleController::class, 'update'])->name('update');
+    Route::delete('/destroy/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
 
     Route::get('/user-has-role', [UserHasRoleController::class, 'index'])->name('user_has_role');
     Route::get('/user-has-role/create', [UserHasRoleController::class, 'create'])->name('user_has_role.create');
