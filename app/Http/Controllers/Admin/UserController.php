@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
+use App\Models\UserHasPermission;
 use App\Models\UserHasRole;
 use Illuminate\Support\Facades\Hash;
 
@@ -109,6 +110,27 @@ class UserController extends Controller
 
         return redirect()->route('admin.user.index')
             ->with('success', 'Thông tin tài khoản đã được cập nhật thành công.');
+    }
+
+    public function detail($id)
+    {
+        $user = User::findOrFail($id);
+        
+        $userRoles = UserHasRole::where('user_id', $id)->with('role')->get();
+        
+        $userPermissions = UserHasPermission::where('user_id', $id)->with('permission')->get();
+        
+        // Nếu bạn cần danh sách các Role và Permission objects để hiển thị
+        // chứ không phải UserHasRole và UserHasPermission
+        $roles = $userRoles->map(function($userRole) {
+            return $userRole->role;
+        });
+        
+        $permissions = $userPermissions->map(function($userPermission) {
+            return $userPermission->permission;
+        });
+        
+        return view('admin.user.detail', compact('user', 'roles', 'permissions'));
     }
 
     public function destroy($id)

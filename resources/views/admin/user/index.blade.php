@@ -59,8 +59,28 @@
                       </td>
                       <td>
                         <div class="d-flex justify-content-center gap-2">
+                          <!-- 1. Edit User - Keep as is with pencil icon -->
                           <a href="{{ route('admin.user.edit', $user->id) }}" data-bs-toggle="tooltip" data-bs-title="Chỉnh sửa" class="btn btn-sm btn-primary">
                             <i class="bi bi-pencil-square"></i>
+                          </a>
+
+                          <!-- 2. Assign Roles - Using person-gear icon -->
+                          <a href="{{ route('admin.user_has_role.create_with_user', $user->id) }}" data-bs-toggle="tooltip" data-bs-title="Phân vai trò" class="btn btn-sm btn-info">
+                            <i class="bi bi-person-gear"></i>
+                          </a>
+
+                          <!-- 3. Assign Permissions - Using key icon -->
+                          <a href="{{ route('admin.user_has_permission.create_with_user', $user->id) }}" data-bs-toggle="tooltip" data-bs-title="Phân quyền" class="btn btn-sm btn-warning">
+                            <i class="bi bi-key"></i>
+                          </a>
+
+                          <!-- 4. View User Info - Using eye icon -->
+                          <!-- <a href="{{ route('admin.user_has_role.create_with_user', $user->id) }}" data-bs-toggle="tooltip" data-bs-title="Xem thông tin" class="btn btn-sm btn-success">
+                            <i class="bi bi-eye"></i>
+                          </a> -->
+
+                          <a href="{{ route('admin.user.detail', $user->id) }}" data-bs-toggle="tooltip" data-bs-title="Xem thông tin" class="btn btn-sm btn-success">
+                            <i class="bi bi-eye"></i>
                           </a>
 
                           <a href="#" 

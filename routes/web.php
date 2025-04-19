@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RoleHasPermissionController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\UserHasPermissionController;
 use App\Http\Controllers\Admin\UserHasRoleController;
 use App\Http\Controllers\API\ApiRoleHasPermissionController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -16,6 +18,7 @@ use App\Http\Controllers\Notification\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Models\UserHasPermission;
 
 Route::get('/', [LoginController::class, 'showLoginForm'])
     ->name('login')
@@ -58,7 +61,6 @@ Route::middleware('guest')->group(function () {
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
     //user
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
@@ -66,19 +68,31 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::post('/user/create', [UserController::class, 'store'])->name('user.create');
     Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::get('/user/{id}', [UserController::class, 'detail'])->name('user.detail');
     Route::delete('/admin/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
+    // Route::prefix('/role')
     Route::get('/role', [RoleController::class, 'index'])->name('role.index');
     Route::get('/role/create', [RoleController::class, 'create'])->name('role.create');
     Route::post('/role/create', [RoleController::class, 'store'])->name('role.create');
     Route::get('/role/{id}/edit', [RoleController::class, 'edit'])->name('role.edit');
-    Route::put('/role/{id}', [RoleController::class, 'update'])->name('update');
-    Route::delete('/destroy/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
+    Route::put('/role/{id}', [RoleController::class, 'update'])->name('role.update');
+    Route::delete('admin/destroy/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
+
+    Route::get('/permission', [PermissionController::class, 'index'])->name('permission.index');
+    Route::get('/permission/create', [PermissionController::class, 'create'])->name('permission.create');
+    Route::post('/permission/create', [PermissionController::class, 'store'])->name('permission.store');
+    Route::get('/permission/{id}/edit', [PermissionController::class, 'edit'])->name('permission.edit');
+    Route::put('/permission/{id}', [PermissionController::class, 'update'])->name('permission.update');
+    Route::delete('/destroy/{id}', [PermissionController::class, 'destroy'])->name('permission.destroy');
 
     Route::get('/user-has-role', [UserHasRoleController::class, 'index'])->name('user_has_role');
     Route::get('/user-has-role/create', [UserHasRoleController::class, 'create'])->name('user_has_role.create');
     Route::get('/user-has-role/{id}/create', [UserHasRoleController::class, 'create_with_user'])->name('user_has_role.create_with_user');
     Route::post('/user-has-role/create', [UserHasRoleController::class, 'store'])->name('user_has_role.create');
+
+    Route::get('/user-has-permission/{id}/create', [UserHasPermissionController::class, 'create_with_user'])->name('user_has_permission.create_with_user');
+    Route::post('/user-has-permission/create', [UserHasPermissionController::class, 'store'])->name('user_has_permission.create');
 
     Route::get('/role-has-permission', [RoleHasPermissionController::class, 'index'])->name('role_has_permission');
     Route::get('/role-has-permission/create', [RoleHasPermissionController::class, 'create'])->name('role_has_permission.create');

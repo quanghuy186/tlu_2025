@@ -84,4 +84,10 @@ class User extends Authenticatable
     public function roles(){
         return $this->hasMany(UserHasRole::class, 'user_id', 'id');
     }
+
+    public function permissions()
+    {
+        // Assuming you have a user_has_permissions pivot table
+        return $this->hasMany(UserHasPermission::class, 'user_id', 'id');
+    }
 }

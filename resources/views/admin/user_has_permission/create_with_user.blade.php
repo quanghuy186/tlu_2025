@@ -19,10 +19,10 @@
         <div class="col-lg-8">
           <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-              <h5 class="card-title mb-0">Gán vai trò cho người dùng</h5>
+              <h5 class="card-title mb-0">Gán quyền cho người dùng</h5>
             </div>
             <div class="card-body">
-              <form action="{{ route('admin.user_has_role.create') }}" method="POST">
+              <form action="{{ route('admin.user_has_permission.create') }}" method="POST">
                 @csrf
                 <div class="mb-4">
                   <label for="userSelect" class="form-label fw-bold">Người dùng</label>
@@ -31,33 +31,31 @@
                 </div>
 
                 <div class="mt-4 mb-4">
-                  <h6 class="fw-bold mb-3">Danh sách vai trò</h6>
+                  <h6 class="fw-bold mb-3">Danh sách các quyền</h6>
                   <div class="card">
                     <div class="card-body">
                       <div class="row">
-                        @foreach ($list_roles as $i => $role)
-                            @if (in_array($role->id, $list_user_has_roles))
+                        @foreach ($list_permissions as $i => $permission)
+                            @if (in_array($permission->id, $list_user_has_permissions))
                                 <div class="col-md-6 mb-2">
                                     <div class="form-check">
-                                    <input class="form-check-input" name="role_id[]" type="checkbox" value="{{ $role->id }}" id="role_id_{{ $i }}" checked>
-                                    <label class="form-check-label" for="role_id_{{ $i }}">
-                                        {{ $role->description }}
+                                    <input class="form-check-input" name="permission_id[]" type="checkbox" value="{{ $permission->id }}" id="permission_id_{{ $i }}" checked>
+                                    <label class="form-check-label" for="permission_id_{{ $i }}">
+                                        {{ $permission->description }}
                                     </label>
                                     </div>
                                 </div>
                             @else
                                 <div class="col-md-6 mb-2">
                                     <div class="form-check">
-                                    <input class="form-check-input" name="role_id[]" type="checkbox" value="{{ $role->id }}" id="role_id_{{ $i }}">
-                                    <label class="form-check-label" for="role_id_{{ $i }}">
-                                        {{ $role->description }}
+                                    <input class="form-check-input" name="permission_id[]" type="checkbox" value="{{ $permission->id }}" id="permission_id_{{ $i }}">
+                                    <label class="form-check-label" for="permission_id_{{ $i }}">
+                                        {{ $permission->description }}
                                     </label>
                                     </div>
                                 </div>
                             @endif
                         @endforeach
-
-
                       </div>
                     </div>
                   </div>

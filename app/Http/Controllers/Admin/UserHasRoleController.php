@@ -31,7 +31,7 @@ class UserHasRoleController extends Controller
                 'role_id' => $role_id,
             ]);
         }
-        return redirect(route('admin.user_has_role'))->with('success', "Gán vai trò thành công");
+        return redirect(route('admin.user.index'))->with('success', "Gán vai trò thành công");
     }
 
     public function create_with_user($id){
