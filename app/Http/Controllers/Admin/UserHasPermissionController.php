@@ -10,16 +10,17 @@ use Illuminate\Http\Request;
 
 class UserHasPermissionController extends Controller
 {
-
     public function store(Request $request){
         UserHasPermission::where('user_id', $request->user_id)->delete();
-        foreach ($request->permission_id as $permission_id) {
-            UserHasPermission::create([
-                'user_id' => $request->user_id,
-                'permission_id' => $permission_id,
-            ]);
+        if($request->has('permission_id') && is_array($request->permission_id)){
+            foreach ($request->permission_id as $permission_id) {
+                UserHasPermission::create([
+                    'user_id' => $request->user_id,
+                    'permission_id' => $permission_id,
+                ]);
+            }
         }
-        return redirect(route('admin.user.index'))->with('success', "Gán quyền thành công");
+        return redirect(route('admin.user.index'))->with('success', "Cập nhật quyền truy cập thành công");
     }
 
     public function create_with_user($id){

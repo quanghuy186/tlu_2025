@@ -40,7 +40,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        // Validation
         $validated = $request->validate([
             'fullname' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -52,8 +51,6 @@ class UserController extends Controller
 
         try {
             DB::beginTransaction();
-            
-            // Create a new user
             $user = new User();
             $user->name = $request->fullname;
             $user->email = $request->email;
@@ -66,16 +63,11 @@ class UserController extends Controller
             }
             
             $user->save();
-            
-            // Assign role to user
             $userHasRole = new UserHasRole();
             $userHasRole->user_id = $user->id;
             $userHasRole->role_id = $request->role_id;
             $userHasRole->save();
-            
-            // Commit transaction
             DB::commit();
-            
             return redirect()->route('admin.user.index')
                 ->with('success', 'Tài khoản đã được tạo thành công!');
             
@@ -120,8 +112,6 @@ class UserController extends Controller
         
         $userPermissions = UserHasPermission::where('user_id', $id)->with('permission')->get();
         
-        // Nếu bạn cần danh sách các Role và Permission objects để hiển thị
-        // chứ không phải UserHasRole và UserHasPermission
         $roles = $userRoles->map(function($userRole) {
             return $userRole->role;
         });
@@ -136,26 +126,22 @@ class UserController extends Controller
     public function destroy($id)
     {
         try {
-            // Bắt đầu một transaction để đảm bảo tính toàn vẹn dữ liệu
+            if (Auth::user()->id == $id) {
+                return redirect()->route('admin.user.index')
+                    ->with('error', 'Bạn không thể xóa tài khoản của chính mình.');
+            }
+    
             DB::beginTransaction();
-            
             $user = User::findOrFail($id);
             $userName = $user->name;
-            
-            // Xóa các bản ghi liên quan trong bảng user_has_roles trước
             DB::table('user_has_roles')->where('user_id', $id)->delete();
-            
-            // Sau đó xóa người dùng
             $user->delete();
-            
-            // Commit transaction nếu mọi thứ thành công
             DB::commit();
             
             return redirect()->route('admin.user.index')
                 ->with('success', "Tài khoản '{$userName}' đã được xóa thành công.");
         } catch (\Exception $e) {
             DB::rollBack();
-            
             return redirect()->route('admin.user.index')
                 ->with('error', "Không thể xóa tài khoản. Lỗi: " . $e->getMessage());
         }

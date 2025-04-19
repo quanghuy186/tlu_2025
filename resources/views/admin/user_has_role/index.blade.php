@@ -2,12 +2,6 @@
 
 @section('content')
 
-{{-- <script>
-    @if (session('success'))
-        toastr.success("{{ session('success') }}");
-    @endif
-</script> --}}
-
 <div class="pagetitle">
     <h1>Danh sách các vai trò của người dùng</h1>
     <nav>

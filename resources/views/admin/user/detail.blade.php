@@ -182,6 +182,12 @@
                     <!-- If not implemented yet, you can remove this section or show a placeholder -->
                     <p class="text-muted text-center py-3">Chưa có dữ liệu hoạt động</p>
                     
+                    <!-- Sample activity log implementation if you have it -->
+                    <!--
+                    <div class="table-responsive">
+                      
+                    </div>
+                    -->
                   </div>
                 </div>
               </div>

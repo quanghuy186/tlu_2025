@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\NotificationCategoryController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RoleHasPermissionController;
@@ -14,11 +16,11 @@ use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Forum\ForumController;
 use App\Http\Controllers\Home\IndexController;
 use App\Http\Controllers\Message\MessageController;
-use App\Http\Controllers\Notification\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Models\UserHasPermission;
+use App\Http\Controllers\Notification\NotificationController as UserNotificationController; 
 
 Route::get('/', [LoginController::class, 'showLoginForm'])
     ->name('login')
@@ -100,6 +102,21 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     
     //API ajax Role has permission
     Route::get('/api/role_has_permission/getByRoleId/{role_id?}', [ApiRoleHasPermissionController::class, 'getByRoleId'])->name('api.role_has_permission.getRoleId');
+
+    Route::get('/notification-categories', [NotificationCategoryController::class, 'index'])->name('notification-category.index');
+    Route::get('/notification-categories/create', [NotificationCategoryController::class, 'create'])->name('notification-category.create');
+    Route::post('/notification-categories', [NotificationCategoryController::class, 'store'])->name('notification-category.store');
+    Route::get('/notification-categories/{id}/edit', [NotificationCategoryController::class, 'edit'])->name('notification-category.edit');
+    Route::put('/notification-categories/{id}', [NotificationCategoryController::class, 'update'])->name('notification-category.update');
+    Route::delete('/notification-categories/{id}', [NotificationCategoryController::class, 'destroy'])->name('notification-category.destroy');
+
+    Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
+    Route::get('/notifications/create', [NotificationController::class, 'create'])->name('notification.create');
+    Route::post('/notifications', [NotificationController::class, 'store'])->name('notification.store');
+    Route::get('/notifications/{id}', [NotificationController::class, 'detail'])->name('notification.detail');
+    Route::get('/notifications/{id}/edit', [NotificationController::class, 'edit'])->name('notification.edit');
+    Route::put('/notifications/{id}', [NotificationController::class, 'update'])->name('notification.update');
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notification.destroy');
 });
 
 //contact -----------------------------
@@ -112,5 +129,5 @@ Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(
 
 Route::get('/message', [MessageController::class, 'index'])->name('message.index');
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
-Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
+Route::get('/user/notification', [UserNotificationController::class, 'index'])->name('notification.index');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

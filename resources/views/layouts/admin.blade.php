@@ -35,6 +35,8 @@
     <script>
         @if(session('success'))
             toastr.success("{{ session('success') }}");
+        @elseif(session('error'))
+          toastr.error("{{ session('error') }}");
         @endif
     </script>
   <!-- ======= Header ======= -->
@@ -214,8 +216,8 @@
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>Kevin Anderson</h6>
-              <span>Web Designer</span>
+              <h6>{{ Auth::user()->name }}</h6>
+              <span>Quản trị hệ thống</span>
             </li>
             <li>
               <hr class="dropdown-divider">
@@ -287,7 +289,7 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>Người dùng</span><i class="bi bi-chevron-down ms-auto"></i>
+        <i class="bi bi-person"></i><span>Người dùng</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
@@ -397,33 +399,29 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-gem"></i><span>Quản lý thông báo</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-gem"></i><span>Thông báo</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="icons-bootstrap.html">
-              <i class="bi bi-circle"></i><span>Bootstrap Icons</span>
+            <a href="{{ route('admin.notification.index') }}">
+              <i class="bi bi-circle"></i><span>Quản lý thông báo</span>
             </a>
           </li>
+
           <li>
-            <a href="icons-remix.html">
-              <i class="bi bi-circle"></i><span>Remix Icons</span>
-            </a>
-          </li>
-          <li>
-            <a href="icons-boxicons.html">
-              <i class="bi bi-circle"></i><span>Boxicons</span>
+            <a href="{{ route('admin.notification-category.index') }}">
+              <i class="bi bi-circle"></i><span>Quản lý danh mục</span>
             </a>
           </li>
         </ul>
-      </li><!-- End Icons Nav -->
+      </li>
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="users-profile.html">
-          <i class="bi bi-person"></i>
+          <i class="bi bi-gear"></i>
           <span>Cài đặt</span>
         </a>
-      </li><!-- End Profile Page Nav -->
+      </li>
     </ul>
 
   </aside><!-- End Sidebar-->
@@ -457,6 +455,40 @@
     <script src="{{ asset('assets/admin/vendor/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ asset('assets/admin/vendor/php-email-form/validate.js') }}"></script>
     <script src="{{ asset('assets/admin/js/main.js') }}"></script>
+
+    
+<script type="text/javascript">
+    function ChangeToSlug() {
+        var slug;
+        //Lấy text từ thẻ input title
+        slug = document.getElementById("name").value;
+        slug = slug.toLowerCase();
+        //Đổi ký tự có dấu thành không dấu
+        slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+        slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+        slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+        slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+        slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+        slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+        slug = slug.replace(/đ/gi, 'd');
+        //Xóa các ký tự đặt biệt
+        slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
+        //Đổi khoảng trắng thành ký tự gạch ngang
+        slug = slug.replace(/ /gi, "-");
+        //Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
+        //Phòng trường hợp người nhập vào quá nhiều ký tự trắng
+        slug = slug.replace(/\-\-\-\-\-/gi, '-');
+        slug = slug.replace(/\-\-\-\-/gi, '-');
+        slug = slug.replace(/\-\-\-/gi, '-');
+        slug = slug.replace(/\-\-/gi, '-');
+        //Xóa các ký tự gạch ngang ở đầu và cuối
+        slug = '@' + slug + '@';
+        slug = slug.replace(/\@\-|\-\@|\@/gi, '');
+        //In slug ra textbox có id "slug"
+        document.getElementById('slug').value = slug;
+    }
+</script>
+   
 
     @yield('custom-js');
 </body>

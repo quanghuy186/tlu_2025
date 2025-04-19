@@ -47,10 +47,6 @@
                             <i class="bi bi-pencil-square"></i>
                           </a>
 
-                          <a href="" data-bs-toggle="tooltip" data-bs-title="Phân quyền" class="btn btn-sm btn-info">
-                            <i class="bi bi-shield-lock"></i>
-                          </a>
-
                           <a href="#" 
                             data-bs-toggle="modal" 
                             data-bs-target="#deleteConfirmModal"

@@ -23,14 +23,23 @@ class UserHasRoleController extends Controller
         return view('admin.user_has_role.create')->with('list_users', $list_users)->with('list_roles', $list_roles);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+        
         UserHasRole::where('user_id', $request->user_id)->delete();
-        foreach ($request->role_id as $role_id) {
-            UserHasRole::create([
-                'user_id' => $request->user_id,
-                'role_id' => $role_id,
-            ]);
+        
+        if ($request->has('role_id') && is_array($request->role_id)) {
+            foreach ($request->role_id as $role_id) {
+                UserHasRole::create([
+                    'user_id' => $request->user_id,
+                    'role_id' => $role_id,
+                ]);
+            }
         }
+        
         return redirect(route('admin.user.index'))->with('success', "Gán vai trò thành công");
     }
 

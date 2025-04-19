@@ -71,7 +71,7 @@
                         <i class="fas fa-star me-1"></i> Nổi bật
                     </div>
                     <div class="featured-announcement-image">
-                        <img src="https://via.placeholder.com/800x400?text=Featured+Announcement" alt="Featured Announcement">
+                        <img src="https://images2.thanhnien.vn/528068263637045248/2024/1/25/3b690baedbd9a609207c76684a3413d0-65a11b0a7e79d880-17061562931311973368410.jpg" alt="Featured Announcement">
                         <div class="featured-announcement-overlay">
                             <div class="featured-announcement-date">
                                 <i class="far fa-calendar-alt me-1"></i> 05/03/2025
@@ -245,7 +245,7 @@
                     <div class="col-md-6 mb-4">
                         <div class="announcement-card">
                             <div class="announcement-header">
-                                <img src="https://via.placeholder.com/600x300?text=Announcement+6" alt="Announcement">
+                                <img src="https://images2.thanhnien.vn/528068263637045248/2024/1/25/3b690baedbd9a609207c76684a3413d0-65a11b0a7e79d880-17061562931311973368410.jpg" alt="Announcement">
                                 <span class="announcement-category">Tuyển sinh</span>
                             </div>
                             <div class="announcement-body">
@@ -260,7 +260,7 @@
                                 </div>
                                 <div class="announcement-footer">
                                     <div class="announcement-author">
-                                        <img src="https://via.placeholder.com/100x100?text=TS" alt="Author">
+                                        <img src="https://images2.thanhnien.vn/528068263637045248/2024/1/25/3b690baedbd9a609207c76684a3413d0-65a11b0a7e79d880-17061562931311973368410.jpg" alt="Author">
                                         <span>Ban Tuyển sinh</span>
                                     </div>
                                     <a href="#" class="read-more">
@@ -318,7 +318,7 @@
                         </li>
                         <li class="recent-post-item">
                             <div class="recent-post-image">
-                                <img src="https://via.placeholder.com/100x100?text=Recent+2" alt="Recent Announcement">
+                                <img src="https://images2.thanhnien.vn/528068263637045248/2024/1/25/3b690baedbd9a609207c76684a3413d0-65a11b0a7e79d880-17061562931311973368410.jpg" alt="Recent Announcement">
                             </div>
                             <div class="recent-post-content">
                                 <h5><a href="#">Yêu cầu cập nhật thông tin cá nhân</a></h5>
