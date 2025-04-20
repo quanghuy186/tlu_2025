@@ -73,6 +73,15 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::get('/user/{id}', [UserController::class, 'detail'])->name('user.detail');
     Route::delete('/admin/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
+    // Route để hiển thị form nhập Excel
+    Route::get('/users/import-excel', [UserController::class, 'showImportForm'])->name('user.import-excel');
+
+    // Route để xử lý file Excel được upload
+    Route::post('/users/import-excel', [UserController::class, 'processImportExcel'])->name('user.process-import-excel');
+
+    // Route để tải mẫu file Excel
+    Route::get('/users/download-excel-template', [UserController::class, 'downloadExcelTemplate'])->name('user.download-excel-template');
+
     // Route::prefix('/role')
     Route::get('/role', [RoleController::class, 'index'])->name('role.index');
     Route::get('/role/create', [RoleController::class, 'create'])->name('role.create');

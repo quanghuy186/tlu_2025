@@ -18,12 +18,17 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-              <h5 class="card-title m-0 fw-bold text-primary">Danh sách tài khoản</h5>
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="card-title m-0 fw-bold text-primary">Danh sách tài khoản</h5>
+            <div class="d-flex gap-2">
+              <a href="{{ route('admin.user.import-excel') }}" class="btn btn-primary btn-sm d-flex align-items-center">
+                <i class="bi bi-file-earmark-excel me-2"></i>Nhập từ Excel
+              </a>
               <a href="{{ route('admin.user.create') }}" class="btn btn-success btn-sm d-flex align-items-center">
                 <i class="bi bi-plus-circle me-2"></i>Thêm tài khoản
               </a>
             </div>
+          </div>
             <div class="card-body p-0">
               <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
