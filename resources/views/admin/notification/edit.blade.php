@@ -45,13 +45,15 @@
                                 </div>
                             </div>
 
+
                             <div class="row mb-3">
                                 <label for="category" class="col-md-2 col-form-label">Danh mục</label>
                                 <div class="col-md-10">
                                     <select class="form-select @error('category') is-invalid @enderror" id="category" name="category_id">
                                         <option value="">-- Chọn danh mục --</option>
                                         @foreach($categories as $key => $value)
-                                            <option value="{{ $key }}" {{ old('category', $notification->category) == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                             <option value="{{ $key }}" {{ old('category_id', $notification->category_id) == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                            <!-- <option value="{{ $key }}" {{ old('category', $notification->category) == $key ? 'selected' : '' }}>{{ $value }}</option> -->
                                         @endforeach
                                     </select>
                                     @error('category')
