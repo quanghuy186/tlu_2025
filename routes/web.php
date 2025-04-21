@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Models\UserHasPermission;
-use App\Http\Controllers\Notification\NotificationController as UserNotificationController; 
+use App\Http\Controllers\Notification\NotificationController as UserNotificationController;
+use App\Http\Controllers\Page\IndexController as PageIndexController;
 
 Route::get('/', [LoginController::class, 'showLoginForm'])
     ->name('login')
@@ -32,7 +33,7 @@ Route::post('/', [LoginController::class, 'login'])
 Route::prefix('/register')->group(function(){
     Route::get('/', [RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('/', [RegisterController::class, 'register']);
-});
+})->middleware('guest');
 
 Route::get('/home', [IndexController::class, 'index'])->name('home.index')->middleware('auth');
 
@@ -138,5 +139,7 @@ Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(
 
 Route::get('/message', [MessageController::class, 'index'])->name('message.index');
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
-Route::get('/user/notification', [UserNotificationController::class, 'index'])->name('notification.index');
+// Route::get('/notification', [UserNotificationController::class, 'index'])->name('notification.index');
+Route::get('/notification', [PageIndexController::class, 'notification'])->name('notification.index');
+
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
