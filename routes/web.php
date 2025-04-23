@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserHasPermissionController;
 use App\Http\Controllers\Admin\UserHasRoleController;
 use App\Http\Controllers\API\ApiRoleHasPermissionController;
+use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Contact\ContactController;
@@ -23,29 +24,11 @@ use App\Models\UserHasPermission;
 use App\Http\Controllers\Notification\NotificationController as UserNotificationController;
 use App\Http\Controllers\Page\IndexController as PageIndexController;
 
-Route::get('/', [LoginController::class, 'showLoginForm'])
-    ->name('login')
-    ->middleware('guest');
-
-Route::post('/', [LoginController::class, 'login'])
-    ->middleware('guest');
-
-Route::prefix('/register')->group(function(){
-    Route::get('/', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/', [RegisterController::class, 'register']);
-})->middleware('guest');
-
-Route::get('/home', [IndexController::class, 'index'])->name('home.index')->middleware('auth');
-
-//verify email -------------------
-Route::prefix('/email')->name('verification.')->group(function(){
-    Route::get('/verify', [RegisterController::class, 'notice'])->name('notice');
-    Route::get('/verify/{token}', [RegisterController::class, 'verifyEmail'])->name('verify');
-    Route::post('/resend', [RegisterController::class, 'resendVerificationEmail'])->name('resend');
-});
-
 // forgot password
 Route::middleware('guest')->group(function () {
+    Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/', [LoginController::class, 'login']);
+
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
@@ -61,6 +44,28 @@ Route::middleware('guest')->group(function () {
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.update');
 });
+
+Route::prefix('/register')->group(function(){
+    Route::get('/', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/', [RegisterController::class, 'register']);
+})->middleware('guest');
+
+Route::get('/home', [IndexController::class, 'index'])->name('home.index')->middleware('auth');
+
+//verify email -------------------
+Route::prefix('/email')->name('verification.')->group(function(){
+    Route::get('/verify', [RegisterController::class, 'notice'])->name('notice');
+    Route::get('/verify/{token}', [RegisterController::class, 'verifyEmail'])->name('verify');
+    Route::post('/resend', [RegisterController::class, 'resendVerificationEmail'])->name('resend');
+});
+
+
+Route::get('/change-password', [ChangePasswordController::class, 'show_form'])
+        ->name('password.form');
+    
+    // Xử lý đổi mật khẩu
+Route::post('/change-password', [ChangePasswordController::class, 'changePassword'])
+        ->name('password.change');
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

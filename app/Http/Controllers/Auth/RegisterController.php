@@ -21,9 +21,6 @@ class RegisterController extends Controller
         return view('auth.register');
     }
 
-    /**
-     * Xử lý đăng ký tài khoản
-     */
     public function register(Request $request)
     {
         $request->validate([
@@ -55,7 +52,7 @@ class RegisterController extends Controller
             $tokenExpiry = Carbon::now()->addDays(3);
 
             // Cập nhật thông tin người dùng
-            // $existingUser->name = $request->full_name;
+            $existingUser->name = $request->full_name;
             $existingUser->password = Hash::make($request->password);
             $existingUser->verification_token = $verificationToken;
             $existingUser->verification_token_expiry = $tokenExpiry;
@@ -77,15 +74,12 @@ class RegisterController extends Controller
         $verificationToken = Str::random(64);
         $tokenExpiry = Carbon::now()->addDays(3);
 
-        // Xác định role_id dựa trên tên miền email
         $emailDomain = explode('@', $request->email)[1];
         $roleId = ($emailDomain === 'tlu.edu.vn') ? 1 : 2;
 
-        // Bắt đầu transaction để đảm bảo tính nhất quán dữ liệu
         DB::beginTransaction();
 
         try {
-            // Tạo user mới
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -96,11 +90,20 @@ class RegisterController extends Controller
                 'email_verified' => false,
             ]);
 
-            // Thêm vào bảng user_has_roles
             DB::table('user_has_roles')->insert([
                 'user_id' => $user->id,
                 'role_id' => $roleId,
             ]);
+
+            // if($roleId == 1){
+            //     DB::table('staffs')->insert([
+
+            //     ]);
+            // }else{
+            //     DB::table('students')->insert([
+
+            //     ]);
+            // }
 
             // Gửi email xác thực
             Mail::to($user->email)->send(new VerificationEmail($user));
@@ -179,9 +182,6 @@ class RegisterController extends Controller
         return back()->with('status', 'Email xác thực đã được gửi lại thành công!');
     }
 
-    /**
-     * Xác thực email
-     */
     public function verifyEmail($token)
     {
         $user = User::where('verification_token', $token)->first();

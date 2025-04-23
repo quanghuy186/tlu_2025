@@ -11,39 +11,47 @@ use Illuminate\Support\Facades\Hash;
 class ChangePasswordController extends Controller
 {
     /**
- * Thay đổi mật khẩu người dùng
- */
-    public function changePassword(Request $request)
+     * Hiển thị form đổi mật khẩu
+     *
+     * @return \Illuminate\View\View
+     */
+    public function show_form()
     {
-        // Validate đầu vào
-        $request->validate([
-            'current_password' => 'required',
-            'new_password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|confirmed',
-        ]);
-
-        // Kiểm tra mật khẩu hiện tại
-        $user = Auth::user();
-        if (!Hash::check($request->current_password, $user->password)) {
-            return response()->json([
-                'message' => 'Mật khẩu hiện tại không đúng'
-            ], 400);
-        }
-
-        // Cập nhật mật khẩu mới
-        $user->password = Hash::make($request->new_password);
-        $user->save();
-        
-        // Ghi log hệ thống
-        $this->logPasswordChange($user->id);
-
-        return response()->json([
-            'message' => 'Thay đổi mật khẩu thành công'
-        ]);
+        return view("auth.change-password");
     }
 
     /**
-     * Ghi log thay đổi mật khẩu
+     * Xử lý thay đổi mật khẩu
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|confirmed',
+        ], [
+            'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại',
+            'new_password.required' => 'Vui lòng nhập mật khẩu mới',
+            'new_password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
+            'new_password.regex' => 'Mật khẩu phải có ít nhất 1 chữ hoa, 1 chữ thường và 1 số',
+            'new_password.confirmed' => 'Xác nhận mật khẩu không khớp',
+        ]);
+
+        $user = Auth::user();
+        
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->with('error', 'Mật khẩu hiện tại không chính xác');
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+            
+        // $this->logPasswordChange($user->id);
+
+        return redirect()->route('home.index')->with('success', 'Thay đổi mật khẩu thành công vui lòng đăng xuất để cập nhật');
+    }
     private function logPasswordChange($userId)
     {
         DB::table('system_logs')->insert([

@@ -4,6 +4,12 @@
     <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để tiếp tục.</p>
 @endif
 
+<script>
+    @if (session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
+</script>
+
 <body>
     <!-- Top Bar -->
     <div class="top-bar">
@@ -56,7 +62,7 @@
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li class="dropdown-header">Thông tin tài khoản</li>
                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#userInfoModal"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i>Đổi mật khẩu</a></li>
+                        <li><a class="dropdown-item" href="{{ route('password.form') }}"><i class="fas fa-cog"></i>Đổi mật khẩu</a></li>
                         <li><a class="dropdown-item" href="#"><i class="fas fa-bell"></i> Thông báo</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
