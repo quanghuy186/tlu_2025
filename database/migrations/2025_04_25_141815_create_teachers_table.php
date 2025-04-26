@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('teachers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('department_id');
+            $table->unsignedBigInteger('department_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->string('teacher_code', 20)->nullable();
             $table->string('academic_rank', 50)->nullable();

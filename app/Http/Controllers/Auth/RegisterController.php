@@ -95,15 +95,15 @@ class RegisterController extends Controller
                 'role_id' => $roleId,
             ]);
 
-            // if($roleId == 1){
-            //     DB::table('staffs')->insert([
-
-            //     ]);
-            // }else{
-            //     DB::table('students')->insert([
-
-            //     ]);
-            // }
+            if($roleId == 1){
+                DB::table('teachers')->insert([
+                    'user_id' => $user->id,
+                ]);
+            }else{
+                DB::table('students')->insert([
+                    'user_id' => $user->id,
+                ]);
+            }
 
             // Gửi email xác thực
             Mail::to($user->email)->send(new VerificationEmail($user));
