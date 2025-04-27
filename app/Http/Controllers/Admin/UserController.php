@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SchoolClass;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -208,8 +209,9 @@ class UserController extends Controller
     }
 
     public function create(){
+        $list_classes = SchoolClass::all();
         $list_roles = Role::all();
-        return view('admin.user.create')->with('list_roles', $list_roles);
+        return view('admin.user.create')->with('list_roles', $list_roles)->with('list_classes', $list_classes);
     }
 
     public function store(Request $request)

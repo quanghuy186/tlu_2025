@@ -77,7 +77,19 @@
               
               <!-- Role Information Section -->
               <div class="mb-4">
-                <h6 class="fw-bold pb-2 border-bottom mb-3">Phân quyền</h6>
+                {{-- <h6 class="fw-bold pb-2 border-bottom mb-3">Lớp học</h6> --}}
+                <div class="mb-3">
+                  <label class="form-label">Chọn lớp học <span class="text-danger"></span></label>
+                  <select id="role_id" class="form-select" name="role_id" required>
+                        <option value="1">Chọn lớp học</option>
+                         @foreach ($list_classes as $c)
+                            <option name="role_id" value="{{ $c->id }}">{{ $c->class_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+
+                {{-- <h6 class="fw-bold pb-2 border-bottom mb-3">Phân quyền</h6> --}}
                 <div class="mb-3">
                   <label class="form-label">Chọn vai trò <span class="text-danger">*</span></label>
                   <select id="role_id" class="form-select" name="role_id" required>
@@ -87,6 +99,8 @@
                         @endforeach
                     </select>
                 </div>
+
+
                 
                 <div class="mb-3">
                   <label class="form-label d-block">Trạng thái tài khoản</label>

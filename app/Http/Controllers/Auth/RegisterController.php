@@ -74,8 +74,7 @@ class RegisterController extends Controller
         $verificationToken = Str::random(64);
         $tokenExpiry = Carbon::now()->addDays(3);
 
-        $emailDomain = explode('@', $request->email)[1];
-        $roleId = ($emailDomain === 'tlu.edu.vn') ? 1 : 2;
+        
 
         DB::beginTransaction();
 
@@ -89,21 +88,6 @@ class RegisterController extends Controller
                 'verification_token_expiry' => $tokenExpiry,
                 'email_verified' => false,
             ]);
-
-            DB::table('user_has_roles')->insert([
-                'user_id' => $user->id,
-                'role_id' => $roleId,
-            ]);
-
-            if($roleId == 1){
-                DB::table('teachers')->insert([
-                    'user_id' => $user->id,
-                ]);
-            }else{
-                DB::table('students')->insert([
-                    'user_id' => $user->id,
-                ]);
-            }
 
             // Gửi email xác thực
             Mail::to($user->email)->send(new VerificationEmail($user));
@@ -185,24 +169,52 @@ class RegisterController extends Controller
     public function verifyEmail($token)
     {
         $user = User::where('verification_token', $token)->first();
-
+        
         if (!$user) {
             return redirect()->route('verification.notice')
                 ->withErrors(['error' => 'Token xác thực không hợp lệ.']);
         }
-
+        
         if (Carbon::now()->isAfter($user->verification_token_expiry)) {
             return redirect()->route('verification.notice')
                 ->withErrors(['error' => 'Token xác thực đã hết hạn. Vui lòng yêu cầu gửi lại email xác thực.']);
         }
-
-        $user->email_verified = true;
-        $user->is_active = true;
-        $user->verification_token = null;
-        $user->verification_token_expiry = null;
-        $user->save();
-
-        return redirect()->route('login')
-            ->with('success', 'Tài khoản của bạn đã được xác thực thành công! Vui lòng đăng nhập.');
+        
+        DB::beginTransaction();
+        try {
+            $user->email_verified = true;
+            $user->email_verified_at = now(); // Thêm timestamp xác thực
+            $user->is_active = true;
+            $user->verification_token = null;
+            $user->verification_token_expiry = null;
+            $user->save();
+            
+            $email_domain = explode('@', $user->email)[1];
+            $roleId = ($email_domain === 'tlu.edu.vn') ? 1 : 2;
+            
+            DB::table('user_has_roles')->insert([
+                'user_id' => $user->id,
+                'role_id' => $roleId,
+            ]);
+            
+            if($roleId == 1){
+                DB::table('teachers')->insert([
+                    'user_id' => $user->id,
+                ]);
+            } else {
+                DB::table('students')->insert([
+                    'user_id' => $user->id,
+                ]);
+            }
+            
+            DB::commit();
+            
+            return redirect()->route('login')
+                ->with('success', 'Tài khoản của bạn đã được xác thực thành công! Vui lòng đăng nhập.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('verification.notice')
+                ->withErrors(['error' => 'Đã xảy ra lỗi khi xác thực tài khoản: ' . $e->getMessage()]);
+        }
     }
 }
