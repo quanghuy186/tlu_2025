@@ -190,14 +190,14 @@ class RegisterController extends Controller
             $user->save();
             
             $email_domain = explode('@', $user->email)[1];
-            $roleId = ($email_domain === 'tlu.edu.vn') ? 1 : 2;
+            $roleId = ($email_domain === 'e.tlu.edu.vn') ? 1 : 2;
             
             DB::table('user_has_roles')->insert([
                 'user_id' => $user->id,
                 'role_id' => $roleId,
             ]);
             
-            if($roleId == 1){
+            if($roleId == 2){
                 DB::table('teachers')->insert([
                     'user_id' => $user->id,
                 ]);

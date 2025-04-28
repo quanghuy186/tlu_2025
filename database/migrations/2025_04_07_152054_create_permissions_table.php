@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('permissions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('permission_name', '100');
-            $table->string('description', '255');
+            $table->string('permission_name', 100);
+            $table->string('description', 255);
             $table->timestamps();
         });
     }
