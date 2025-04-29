@@ -80,10 +80,10 @@
                 {{-- <h6 class="fw-bold pb-2 border-bottom mb-3">Lớp học</h6> --}}
                 <div class="mb-3">
                   <label class="form-label">Chọn lớp học <span class="text-danger"></span></label>
-                  <select id="role_id" class="form-select" name="role_id" required>
+                  <select id="class_id" class="form-select" name="class_id" required>
                         <option value="1">Chọn lớp học</option>
                          @foreach ($list_classes as $c)
-                            <option name="role_id" value="{{ $c->id }}">{{ $c->class_name }}</option>
+                            <option name="class_id" value="{{ $c->id }}">{{ $c->class_name }}</option>
                         @endforeach
                     </select>
                 </div>
