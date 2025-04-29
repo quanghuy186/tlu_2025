@@ -262,6 +262,11 @@
         }
     </style>
 </head>
+<script>
+    @if (session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
+</script>
 <body>
     <div class="container register-container">
         <div class="logo-header">

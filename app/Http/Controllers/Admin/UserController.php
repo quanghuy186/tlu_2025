@@ -223,11 +223,12 @@ class UserController extends Controller
             'phone' => 'nullable|string',
             'role_id' => 'required|exists:roles,id',
             'class_id' => 'required',
-            'status' => 'required|in:active,inactive', // Sửa từ is_active thành status nếu form của bạn dùng status
+            'status' => 'required|in:active,inactive',
         ]);
-
+        
         try {
             DB::beginTransaction();
+            
             $user = new User();
             $user->name = $request->fullname;
             $user->email = $request->email;
@@ -238,44 +239,30 @@ class UserController extends Controller
                 $user->is_active = ($request->status === 'active') ? 1 : 0;
                 $user->email_verified = ($request->status === 'active') ? 1 : 0;
             }
-
+            
+            // Save the user first to get an ID
+            $user->save();
+            
             $user_role_id = $request->role_id;
-
+            
+            // Now we can use $user->id
             if ($user_role_id == 1) {
                 DB::table('students')->insert([
                     'user_id' => $user->id,
                 ]);
-            }else{
+            } else {
                 DB::table('teachers')->insert([
                     'user_id' => $user->id,
                 ]);
             }
-
-            // $email_domain = explode('@', $request->email)[1];
-            // $roleId = ($email_domain === 'e.tlu.edu.vn') ? 1 : 2;
             
-            // DB::table('user_has_roles')->insert([
-            //     'user_id' => $user->id,
-            //     'role_id' => $roleId,
-            // ]);
-            
-            // if($roleId == 2){
-            //     DB::table('teachers')->insert([
-            //         'user_id' => $user->id,
-            //     ]);
-            // } else {
-            //     DB::table('students')->insert([
-            //         'user_id' => $user->id,
-            //     ]);
-            // }
-            
-            
-            $user->save();
             $userHasRole = new UserHasRole();
             $userHasRole->user_id = $user->id;
             $userHasRole->role_id = $user_role_id;
             $userHasRole->save();
+            
             DB::commit();
+            
             return redirect()->route('admin.user.index')
                 ->with('success', 'Tài khoản đã được tạo thành công!');
             
