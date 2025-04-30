@@ -52,7 +52,7 @@ class RegisterController extends Controller
             $tokenExpiry = Carbon::now()->addDays(3);
 
             // Cập nhật thông tin người dùng
-            $existingUser->name = $request->full_name;
+            $existingUser->name = $request->name;
             $existingUser->password = Hash::make($request->password);
             $existingUser->verification_token = $verificationToken;
             $existingUser->verification_token_expiry = $tokenExpiry;
@@ -62,19 +62,17 @@ class RegisterController extends Controller
             Mail::to($existingUser->email)->send(new VerificationEmail($existingUser));
 
             return redirect()->route('verification.notice')
-                ->with('status', 'Tài khoản của bạn đã tồn tại nhưng chưa được xác thực. Vui lòng kiểm tra email để xác thực tài khoản!');
+                ->with('success', 'Tài khoản của bạn đã tồn tại nhưng chưa được xác thực. Vui lòng kiểm tra email để xác thực tài khoản!');
         }
 
         // Nếu email chưa tồn tại hoặc đã được xác thực (không xử lý ở trên), thì kiểm tra unique
         if ($existingUser) {
-            return back()->withErrors(['email' => 'Email này đã được đăng ký trước đó'])->withInput();
+            return back()->with('error', 'Email này đã được đăng ký trước đó');
         }
 
         // Tạo token xác thực và thời gian hết hạn
         $verificationToken = Str::random(64);
         $tokenExpiry = Carbon::now()->addDays(3);
-
-        
 
         DB::beginTransaction();
 
@@ -95,7 +93,7 @@ class RegisterController extends Controller
             DB::commit();
 
             return redirect()->route('verification.notice')
-                ->with('status', 'Vui lòng kiểm tra email của bạn để xác thực tài khoản!');
+                ->with('warning', 'Vui lòng kiểm tra email của bạn để xác thực tài khoản!');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -133,7 +131,7 @@ class RegisterController extends Controller
 
         if ($user->email_verified) {
             return redirect()->route('login')
-                ->with('status', 'Email của bạn đã được xác thực. Vui lòng đăng nhập.');
+                ->with('success', 'Email của bạn đã được xác thực. Vui lòng đăng nhập.');
         }
 
         $resendLimit = 5;
@@ -163,7 +161,7 @@ class RegisterController extends Controller
             return back()->withErrors(['email' => 'Có lỗi khi gửi email xác thực. Vui lòng thử lại sau.']);
         }
 
-        return back()->with('status', 'Email xác thực đã được gửi lại thành công!');
+        return back()->with('error', 'Email xác thực đã được gửi lại thành công!');
     }
 
     public function verifyEmail($token)
