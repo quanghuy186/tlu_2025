@@ -21,6 +21,12 @@
           <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
             <h5 class="card-title m-0 fw-bold text-primary">Danh sách tài khoản</h5>
             <div class="d-flex gap-2">
+              {{-- <a href="{{ route('admin.user.department') }}" class="btn btn-warning btn-sm d-flex align-items-center">
+                Quản lý tài khoản đơn vị
+              </a> --}}
+              <a href="{{ route('admin.user.department') }}" class="btn btn-success btn-sm d-flex align-items-center">
+                <i class="bi bi-plus-circle me-2"></i>Quản lý tài khoản đơn vị
+              </a>
               <a href="{{ route('admin.user.import-excel') }}" class="btn btn-primary btn-sm d-flex align-items-center">
                 <i class="bi bi-file-earmark-excel me-2"></i>Nhập từ Excel
               </a>

@@ -90,4 +90,9 @@ class User extends Authenticatable
         // Assuming you have a user_has_permissions pivot table
         return $this->hasMany(UserHasPermission::class, 'user_id', 'id');
     }
+
+    public function department(){
+        return $this->hasOne(Department::class,'user_id', 'id');
+    }
+
 }

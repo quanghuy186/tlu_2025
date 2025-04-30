@@ -38,6 +38,13 @@ class UserController extends Controller
         return view('admin.user.index', compact('users'));
     }
 
+    public function showDepartment(){
+        $users = DB::table('users')->get();
+
+
+        return view('admin.user.department.index')->with('users', $users);
+    }
+
     public function showImportForm()
     {
         return view('admin.user.import-excel');
@@ -249,17 +256,20 @@ class UserController extends Controller
             if ($user_role_id == 1) {
                 DB::table('students')->insert([
                     'user_id' => $user->id,
+                    'class_id' => $request->class_id,
                 ]);
             } else {
                 DB::table('teachers')->insert([
                     'user_id' => $user->id,
                 ]);
             }
-            
+
             $userHasRole = new UserHasRole();
             $userHasRole->user_id = $user->id;
             $userHasRole->role_id = $user_role_id;
             $userHasRole->save();
+
+
             
             DB::commit();
             
@@ -341,4 +351,6 @@ class UserController extends Controller
                 ->with('error', "Không thể xóa tài khoản. Lỗi: " . $e->getMessage());
         }
     }
+
+    
 }

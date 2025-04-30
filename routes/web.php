@@ -67,6 +67,10 @@ Route::get('/change-password', [ChangePasswordController::class, 'show_form'])
 Route::post('/change-password', [ChangePasswordController::class, 'changePassword'])
         ->name('password.change');
 
+Route::get('admin/user/department', [UserController::class, 'showDepartment'])->name('admin.user.department');
+Route::get('admin/user/department/create', [UserController::class, 'create'])->name('admin.user.department.create');
+
+
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     //user
@@ -78,6 +82,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
     Route::get('/user/{id}', [UserController::class, 'detail'])->name('user.detail');
     Route::delete('/admin/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
 
     // Route để hiển thị form nhập Excel
     Route::get('/users/import-excel', [UserController::class, 'showImportForm'])->name('user.import-excel');
