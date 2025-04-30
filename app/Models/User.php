@@ -91,7 +91,7 @@ class User extends Authenticatable
         return $this->hasMany(UserHasPermission::class, 'user_id', 'id');
     }
 
-    public function department(){
+    public function managedDepartment(){
         return $this->hasOne(Department::class,'user_id', 'id');
     }
 

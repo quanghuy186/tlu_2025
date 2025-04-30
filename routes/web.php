@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\NotificationCategoryController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -67,8 +68,26 @@ Route::get('/change-password', [ChangePasswordController::class, 'show_form'])
 Route::post('/change-password', [ChangePasswordController::class, 'changePassword'])
         ->name('password.change');
 
-Route::get('admin/user/department', [UserController::class, 'showDepartment'])->name('admin.user.department');
-Route::get('admin/user/department/create', [UserController::class, 'create'])->name('admin.user.department.create');
+// Route::get('admin/contact/department', [DepartmentController::class, 'index'])->name('admin.contact.department');
+// Route::get('admin/contact/department', [DepartmentController::class, 'index'])->name('admin.department.index');
+// Route::get('admin/contact/department/create', [DepartmentController::class, 'create'])->name('admin.department.create');
+// Route::get('admin/contact/department/create', [DepartmentController::class, 'create'])->name('admin.department.store');
+// Route::get('admin/contact/department/edit', [DepartmentController::class, 'edit'])->name('admin.department.edit');
+// Route::get('admin/contact/department/delete', [DepartmentController::class, 'edit'])->name('admin.department.destroy');
+
+Route::prefix('/admin')->name('admin.')->group(function(){
+    Route::get('/departments', [DepartmentController::class, 'index'])->name('department.index');
+    Route::get('/departments/create', [DepartmentController::class, 'create'])->name('department.create');
+    Route::post('/departments', [DepartmentController::class, 'store'])->name('department.store');
+    Route::get('/departments/{id}', [DepartmentController::class, 'detail'])->name('department.detail');
+    Route::get('/departments/{id}/edit', [DepartmentController::class, 'edit'])->name('department.edit');
+    Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('department.update');
+    Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('department.destroy');
+
+});  // Department routes
+    
+
+// Route::get('admin/user/department/create', [UserController::class, 'create'])->name('admin.user.department.create');
 
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
