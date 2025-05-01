@@ -73,23 +73,76 @@
                             <div class="col-md-6">
                                 <div class="card border-0 shadow-sm mb-4">
                                     <div class="card-header bg-light">
+                                        <h6 class="card-title mb-0">Thông tin quản lý</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        @if($department->manager)
+                                            <div class="text-center mb-3">
+                                                @if($department->manager->avatar)
+                                                    <img src="{{ asset('storage/avatars/' . $department->manager->avatar) }}" 
+                                                        alt="{{ $department->manager->name }}" 
+                                                        class="rounded-circle img-thumbnail mb-2"
+                                                        style="width: 128px; height: 128px; object-fit: cover;">
+                                                @else
+                                                    <div class="mx-auto rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mb-2"
+                                                        style="width: 128px; height: 128px; font-size: 48px;">
+                                                        {{ strtoupper(substr($department->manager->name, 0, 1)) }}
+                                                    </div>
+                                                @endif
+                                                <h5 class="mb-1">{{ $department->manager->name }}</h5>
+                                                <p class="text-muted mb-0">Trưởng đơn vị</p>
+                                            </div>
+                                            
+                                            <hr>
+                                            
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                                    <span class="fw-bold">Email:</span>
+                                                    <span>{{ $department->manager->email }}</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                                    <span class="fw-bold">Trạng thái tài khoản:</span>
+                                                    @if($department->manager->is_active)
+                                                        <span class="badge bg-success rounded-pill">Đang hoạt động</span>
+                                                    @else
+                                                        <span class="badge bg-danger rounded-pill">Ngừng hoạt động</span>
+                                                    @endif
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                                    <span class="fw-bold">Trạng thái xác thực:</span>
+                                                    @if($department->manager->email_verified)
+                                                        <span class="badge bg-success rounded-pill">Đã xác thực</span>
+                                                    @else
+                                                        <span class="badge bg-warning rounded-pill">Chưa xác thực</span>
+                                                    @endif
+                                                </li>
+                                            </ul>
+                                        @else
+                                            <div class="text-center py-4">
+                                                <div class="mb-3">
+                                                    <i class="bi bi-person-x text-muted" style="font-size: 48px;"></i>
+                                                </div>
+                                                <p class="mb-0">Đơn vị này chưa có người quản lý.</p>
+                                                <p class="mb-0">
+                                                    <a href="{{ route('admin.department.edit', $department->id) }}" class="btn btn-sm btn-primary mt-2">
+                                                        <i class="bi bi-person-plus-fill me-1"></i> Phân công người quản lý
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm mb-4">
+                                    <div class="card-header bg-light">
                                         <h6 class="card-title mb-0">Thông tin liên hệ</h6>
                                     </div>
                                     <div class="card-body">
                                         <ul class="list-group list-group-flush">
-                                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                                <span class="fw-bold">Trưởng đơn vị:</span>
-                                                @if($department->manager)
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="avatar avatar-sm bg-primary text-white rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                                            {{ strtoupper(substr($department->manager->name, 0, 1)) }}
-                                                        </span>
-                                                        <span>{{ $department->manager->name }}</span>
-                                                    </div>
-                                                @else
-                                                    <span class="text-muted">Chưa phân công</span>
-                                                @endif
-                                            </li>
                                             <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                                 <span class="fw-bold">Số điện thoại:</span>
                                                 <span>{{ $department->phone ?: 'Chưa cập nhật' }}</span>
@@ -105,7 +158,9 @@
                                         </ul>
                                     </div>
                                 </div>
-                                
+                            </div>
+                            
+                            <div class="col-md-6">
                                 <div class="card border-0 shadow-sm">
                                     <div class="card-header bg-light">
                                         <h6 class="card-title mb-0">Mô tả</h6>
@@ -144,7 +199,19 @@
                                                         <td><span class="badge bg-light text-dark">{{ $child->code }}</span></td>
                                                         <td>
                                                             @if($child->manager)
-                                                                {{ $child->manager->name }}
+                                                                <div class="d-flex align-items-center">
+                                                                    @if($child->manager->avatar)
+                                                                        <img src="{{ asset('storage/avatars/'.$child->manager->avatar) }}" 
+                                                                            alt="{{ $child->manager->name }}" 
+                                                                            class="rounded-circle me-2"
+                                                                            style="width: 32px; height: 32px; object-fit: cover;">
+                                                                    @else
+                                                                        <span class="avatar avatar-sm bg-primary text-white rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                                                            {{ strtoupper(substr($child->manager->name, 0, 1)) }}
+                                                                        </span>
+                                                                    @endif
+                                                                    <span>{{ $child->manager->name }}</span>
+                                                                </div>
                                                             @else
                                                                 <span class="text-muted">Chưa phân công</span>
                                                             @endif

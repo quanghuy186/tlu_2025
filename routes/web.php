@@ -14,7 +14,7 @@ use App\Http\Controllers\API\ApiRoleHasPermissionController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Contact\ContactController;
+use App\Http\Controllers\Page\ContactController;
 use App\Http\Controllers\Forum\ForumController;
 use App\Http\Controllers\Home\IndexController;
 use App\Http\Controllers\Message\MessageController;
@@ -68,13 +68,6 @@ Route::get('/change-password', [ChangePasswordController::class, 'show_form'])
 Route::post('/change-password', [ChangePasswordController::class, 'changePassword'])
         ->name('password.change');
 
-// Route::get('admin/contact/department', [DepartmentController::class, 'index'])->name('admin.contact.department');
-// Route::get('admin/contact/department', [DepartmentController::class, 'index'])->name('admin.department.index');
-// Route::get('admin/contact/department/create', [DepartmentController::class, 'create'])->name('admin.department.create');
-// Route::get('admin/contact/department/create', [DepartmentController::class, 'create'])->name('admin.department.store');
-// Route::get('admin/contact/department/edit', [DepartmentController::class, 'edit'])->name('admin.department.edit');
-// Route::get('admin/contact/department/delete', [DepartmentController::class, 'edit'])->name('admin.department.destroy');
-
 Route::prefix('/admin')->name('admin.')->group(function(){
     Route::get('/departments', [DepartmentController::class, 'index'])->name('department.index');
     Route::get('/departments/create', [DepartmentController::class, 'create'])->name('department.create');
@@ -83,13 +76,8 @@ Route::prefix('/admin')->name('admin.')->group(function(){
     Route::get('/departments/{id}/edit', [DepartmentController::class, 'edit'])->name('department.edit');
     Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('department.update');
     Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('department.destroy');
-
 });  // Department routes
     
-
-// Route::get('admin/user/department/create', [UserController::class, 'create'])->name('admin.user.department.create');
-
-
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     //user
@@ -166,6 +154,8 @@ Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(
     Route::get('/department', [ContactController::class, 'department'])->name('department');
 });
 
+
+// -------------
 Route::get('/message', [MessageController::class, 'index'])->name('message.index');
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 // Route::get('/notification', [UserNotificationController::class, 'index'])->name('notification.index');

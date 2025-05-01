@@ -22,7 +22,7 @@
                         <h5 class="card-title m-0 fw-bold text-primary">Thông tin đơn vị mới</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('admin.department.store') }}" method="POST">
+                        <form action="{{ route('admin.department.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             
                             <div class="mb-4">
@@ -124,6 +124,23 @@
                                 </div>
                             </div>
                             
+                            <div class="mb-3">
+                                <label for="manager_avatar" class="form-label">Ảnh đại diện</label>
+                                <input type="file" class="form-control @error('manager_avatar') is-invalid @enderror" 
+                                    id="manager_avatar" name="manager_avatar" accept="image/*">
+                                <div class="form-text">Chấp nhận định dạng: JPG, PNG, GIF. Kích thước tối đa: 2MB.</div>
+                                @error('manager_avatar')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                
+                                <div class="mt-3" id="avatar-preview-container" style="display: none;">
+                                    <p class="mb-2">Xem trước:</p>
+                                    <div class="border rounded p-2 d-inline-block">
+                                        <img src="" id="avatar-preview" style="max-width: 150px; max-height: 150px;" class="img-thumbnail">
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="alert alert-info">
                                 <i class="bi bi-info-circle-fill me-2"></i> Mật khẩu tạm thời sẽ được tạo tự động và hiển thị sau khi tạo đơn vị thành công.
                             </div>
@@ -166,6 +183,26 @@
                 code += randomNum;
                 
                 codeInput.value = code;
+            }
+        });
+        
+        // Xem trước ảnh đại diện
+        const avatarInput = document.getElementById('manager_avatar');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const previewContainer = document.getElementById('avatar-preview-container');
+        
+        avatarInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                }
+                
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                previewContainer.style.display = 'none';
             }
         });
     });

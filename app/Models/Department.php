@@ -226,4 +226,19 @@ class Department extends Model
     {
         return $this->manager ? $this->manager->email : null;
     }
+
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->avatar) {
+            return asset('storage/avatars/' . $this->avatar);
+        }
+        
+        // Avatar mặc định dựa trên chữ cái đầu của tên
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=4e73df&color=ffffff&size=150';
+    }
+
+    public function getInitialAttribute()
+    {
+        return strtoupper(substr($this->name, 0, 1));
+    }
 }

@@ -75,9 +75,16 @@
                                             <td>
                                                 @if($department->manager)
                                                     <div class="d-flex align-items-center">
-                                                        <span class="avatar avatar-sm bg-primary text-white rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                                            {{ strtoupper(substr($department->manager->name, 0, 1)) }}
-                                                        </span>
+                                                        @if($department->manager->avatar)
+                                                            <img src="{{ asset('storage/avatars/'.$department->manager->avatar) }}" 
+                                                                alt="{{ $department->manager->name }}" 
+                                                                class="rounded-circle me-2"
+                                                                style="width: 38px; height: 38px; object-fit: cover;">
+                                                        @else
+                                                            <span class="avatar avatar-sm bg-primary text-white rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                                                                {{ strtoupper(substr($department->manager->name, 0, 1)) }}
+                                                            </span>
+                                                        @endif
                                                         <span>{{ $department->manager->name }}</span>
                                                     </div>
                                                 @else
@@ -108,11 +115,6 @@
                                                         <i class="bi bi-pencil-square"></i>
                                                     </a>
                                                     
-                                                    <!-- Manage Department Users -->
-                                                    {{-- <a href="{{ route('admin.department.users', $department->id) }}" data-bs-toggle="tooltip" data-bs-title="Quản lý thành viên" class="btn btn-sm btn-info">
-                                                        <i class="bi bi-people"></i>
-                                                    </a> --}}
-                                                    
                                                     <!-- View Department Info -->
                                                     <a href="{{ route('admin.department.detail', $department->id) }}" data-bs-toggle="tooltip" data-bs-title="Xem thông tin" class="btn btn-sm btn-success">
                                                         <i class="bi bi-eye"></i>
@@ -141,8 +143,6 @@
         </div>
     </div>
 </section>
-
-
 <!-- Modal Xác nhận xóa đơn vị -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -153,13 +153,13 @@
             </div>
             <div class="modal-body">
                 <p>Bạn có chắc chắn muốn xóa đơn vị <strong id="deleteDepartmentName"></strong>?</p>
-                <p class="text-danger">Lưu ý: Không thể xóa đơn vị có đơn vị con hoặc có người dùng thuộc đơn vị.</p>
+                <p class="text-danger">Lưu ý: Không thể xóa đơn vị có đơn vị con và tài khoản quản lý của đơn vị này cũng sẽ bị xóa.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                 <form id="deleteDepartmentForm" method="POST" class="d-inline">
                     @csrf
-                    @method('DELETE') <!-- Quan trọng: Sử dụng method spoofing cho DELETE -->
+                    @method('DELETE') <!-- Đây là dòng quan trọng -->
                     <button type="submit" class="btn btn-danger">Xóa đơn vị</button>
                 </form>
             </div>
@@ -172,6 +172,11 @@
 @section('custom-js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
         const deleteModal = document.getElementById('deleteConfirmModal');
         if (deleteModal) {
             deleteModal.addEventListener('show.bs.modal', function(event) {
