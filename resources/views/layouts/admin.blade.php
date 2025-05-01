@@ -196,7 +196,7 @@
             </a>
           </li>
           <li>
-            <a href="forms-layouts.html">
+            <a href=" {{route('admin.class.index')}}">
               <i class="bi bi-circle"></i><span>Lớp học</span>
             </a>
           </li>
@@ -206,7 +206,7 @@
             </a>
           </li>
           <li>
-            <a href="forms-validation.html">
+            <a href="{{route('admin.student.index')}}">
               <i class="bi bi-circle"></i><span>Sinh viên</span>
             </a>
           </li>

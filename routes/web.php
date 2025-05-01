@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\NotificationCategoryController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RoleHasPermissionController;
+use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserHasPermissionController;
@@ -85,6 +87,24 @@ Route::prefix('/admin')->name('admin.')->group(function(){
     Route::get('/teachers/{id}/edit', [TeacherController::class, 'edit'])->name('teacher.edit');
     Route::put('/teachers/{id}', [TeacherController::class, 'update'])->name('teacher.update');
     Route::delete('/teachers/{id}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
+
+    // Routes quản lý lớp học
+    Route::get('/classes', [ClassController::class, 'index'])->name('class.index');
+    Route::get('/classes/create', [ClassController::class, 'create'])->name('class.create');
+    Route::post('/classes', [ClassController::class, 'store'])->name('class.store');
+    Route::get('/classes/{id}', [ClassController::class, 'show'])->name('class.show');
+    Route::get('/classes/{id}/edit', [ClassController::class, 'edit'])->name('class.edit');
+    Route::put('/classes/{id}', [ClassController::class, 'update'])->name('class.update');
+    Route::delete('/classes/{id}', [ClassController::class, 'destroy'])->name('class.destroy');
+
+    // Routes quản lý sinh viên
+    Route::get('/students', [StudentController::class, 'index'])->name('student.index');
+    Route::get('/students/create', [StudentController::class, 'create'])->name('student.create');
+    Route::post('/students', [StudentController::class, 'store'])->name('student.store');
+    Route::get('/students/{id}', [StudentController::class, 'show'])->name('student.show');
+    Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('student.edit');
+    Route::put('/students/{id}', [StudentController::class, 'update'])->name('student.update');
+    Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('student.destroy');
 });  // Department routes
 
 
