@@ -201,7 +201,7 @@
             </a>
           </li>
           <li>
-            <a href="forms-editors.html">
+            <a href="{{route('admin.teacher.index')}}">
               <i class="bi bi-circle"></i><span>Cán bộ giảng viên</span>
             </a>
           </li>

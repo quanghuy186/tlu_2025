@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RoleHasPermissionController;
+use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserHasPermissionController;
 use App\Http\Controllers\Admin\UserHasRoleController;
@@ -76,7 +77,17 @@ Route::prefix('/admin')->name('admin.')->group(function(){
     Route::get('/departments/{id}/edit', [DepartmentController::class, 'edit'])->name('department.edit');
     Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('department.update');
     Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('department.destroy');
+
+    Route::get('/teachers', [TeacherController::class, 'index'])->name('teacher.index');
+    Route::get('/teachers/create', [TeacherController::class, 'create'])->name('teacher.create');
+    Route::post('/teachers', [TeacherController::class, 'store'])->name('teacher.store');
+    Route::get('/teachers/{id}', [TeacherController::class, 'show'])->name('teacher.show');
+    Route::get('/teachers/{id}/edit', [TeacherController::class, 'edit'])->name('teacher.edit');
+    Route::put('/teachers/{id}', [TeacherController::class, 'update'])->name('teacher.update');
+    Route::delete('/teachers/{id}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
 });  // Department routes
+
+
     
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
