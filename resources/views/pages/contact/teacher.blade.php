@@ -75,39 +75,93 @@
 
         <!-- Teacher List Items -->
         <div class="teacher-list">
-            <!-- Teacher Item 1 -->
-            <div class="teacher-item">
-                <img src="https://via.placeholder.com/150x150?text=GV1" alt="Giảng viên" class="teacher-avatar">
-                <div class="teacher-info">
-                    <div class="teacher-name">PGS.TS. Nguyễn Văn An</div>
-                    <div class="teacher-position">Trưởng khoa</div>
-                    <div class="teacher-department">Đơn vị: <a href="#">Khoa Công nghệ thông tin</a></div>
+            @foreach($teachers as $teacher)
+                <div class="teacher-item">
+                    <img src="{{ asset('storage/avatars/'.($teacher->user->avatar ?? 'default.png')) }}" alt="Giảng viên" class="teacher-avatar">
+                    <div class="teacher-info">
+                        <div class="teacher-name">{{ $teacher->user->name ?? 'Chưa cập nhật' }}</div>
+                        <div class="teacher-position">{{ $teacher->position ?? 'Chưa cập nhật' }}</div>
+                        <div class="teacher-department">
+                            Đơn vị: 
+                            @if($teacher->department)
+                                <a href="#">{{ $teacher->department->name }}</a>
+                            @else
+                                <span>Chưa cập nhật</span>
+                            @endif
+                        </div>
+                    </div>
+                    {{-- <div class="teacher-actions">
+                        <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal1">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div> --}}
+                    <div class="teacher-actions">
+                        <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal{{ $teacher->id }}">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="teacher-actions">
-                    <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal1">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                </div>
-            </div>
 
-            <!-- Teacher Item 2 -->
-            <div class="teacher-item">
-                <img src="https://via.placeholder.com/150x150?text=GV2" alt="Giảng viên" class="teacher-avatar">
-                <div class="teacher-info">
-                    <div class="teacher-name">TS. Trần Thị Bình</div>
-                    <div class="teacher-position">Phó Trưởng khoa</div>
-                    <div class="teacher-department">Đơn vị: <a href="#">Khoa Công nghệ thông tin</a></div>
-                </div>
-                <div class="teacher-actions">
-                    <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal2">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                </div>
-            </div>
-
+                <div class="modal fade" id="teacherDetailModal{{ $teacher->id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Thông tin Cán bộ Giảng viên</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="teacher-detail">
+                                    <img src="{{ asset('storage/avatars/'.($teacher->user->avatar ?? 'default.png')) }}" alt="Giảng viên" class="teacher-detail-avatar">
+                                    <div class="teacher-detail-name">{{ $teacher->user->name ?? 'Chưa cập nhật' }}</div>
+                                    <div class="teacher-detail-position">{{ $teacher->position ?? 'Chưa cập nhật' }}</div>
             
-
-            <!-- More teacher items can be added here -->
+                                    <ul class="teacher-detail-info">
+                                        <li>
+                                            <i class="fas fa-id-card"></i>
+                                            <span class="detail-label">Mã cán bộ:</span>
+                                            <span class="detail-value">{{ $teacher->code ?? 'Chưa cập nhật' }}</span>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-envelope"></i>
+                                            <span class="detail-label">Email:</span>
+                                            <span class="detail-value">{{ $teacher->user->email ?? 'Chưa cập nhật' }}</span>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-phone"></i>
+                                            <span class="detail-label">Điện thoại:</span>
+                                            <span class="detail-value">{{ $teacher->phone ?? 'Chưa cập nhật' }}</span>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-building"></i>
+                                            <span class="detail-label">Đơn vị:</span>
+                                            <span class="detail-value">
+                                                @if($teacher->department)
+                                                    <a href="#">{{ $teacher->department->name }}</a>
+                                                @else
+                                                    Chưa cập nhật
+                                                @endif
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span class="detail-label">Địa chỉ:</span>
+                                            <span class="detail-value">{{ $teacher->address ?? 'Chưa cập nhật' }}</span>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-briefcase"></i>
+                                            <span class="detail-label">Chuyên môn:</span>
+                                            <span class="detail-value">{{ $teacher->specialization ?? 'Chưa cập nhật' }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
         </div>
 
         <!-- Pagination -->
@@ -136,7 +190,7 @@
 </div>
 
 <!-- Teacher Detail Modal 1 -->
-<div class="modal fade" id="teacherDetailModal1" tabindex="-1" aria-labelledby="teacherDetailModalLabel1" aria-hidden="true">
+{{-- <div class="modal fade" id="teacherDetailModal1" tabindex="-1" aria-labelledby="teacherDetailModalLabel1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -146,7 +200,7 @@
             <div class="modal-body">
                 <div class="teacher-detail">
                     <img src="https://via.placeholder.com/250x250?text=GV1" alt="Giảng viên" class="teacher-detail-avatar">
-                    <div class="teacher-detail-name">PGS.TS. Nguyễn Văn An</div>
+                    <div class="teacher-detail-name">name</div>
                     <div class="teacher-detail-position">Trưởng khoa</div>
 
                     <ul class="teacher-detail-info">
@@ -188,60 +242,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
-<!-- Teacher Detail Modal 2 -->
-<div class="modal fade" id="teacherDetailModal2" tabindex="-1" aria-labelledby="teacherDetailModalLabel2" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="teacherDetailModalLabel2">Thông tin Cán bộ Giảng viên</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="teacher-detail">
-                    <img src="https://via.placeholder.com/250x250?text=GV2" alt="Giảng viên" class="teacher-detail-avatar">
-                    <div class="teacher-detail-name">TS. Trần Thị Bình</div>
-                    <div class="teacher-detail-position">Phó Trưởng khoa</div>
 
-                    <ul class="teacher-detail-info">
-                        <li>
-                            <i class="fas fa-id-card"></i>
-                            <span class="detail-label">Mã cán bộ:</span>
-                            <span class="detail-value">CB12345679</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-envelope"></i>
-                            <span class="detail-label">Email:</span>
-                            <span class="detail-value">tranthib@tlu.edu.vn</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-phone"></i>
-                            <span class="detail-label">Điện thoại:</span>
-                            <span class="detail-value">024.3852.2201 (máy lẻ: 124)</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-building"></i>
-                            <span class="detail-label">Đơn vị:</span>
-                            <span class="detail-value"><a href="#">Khoa Công nghệ thông tin</a></span>
-                        </li>
-                        <li>
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span class="detail-label">Địa chỉ:</span>
-                            <span class="detail-value">Phòng 306, Tầng 3, Nhà C1, TLU</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-briefcase"></i>
-                            <span class="detail-label">Chuyên môn:</span>
-                            <span class="detail-value">Công nghệ phần mềm, Học máy</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection

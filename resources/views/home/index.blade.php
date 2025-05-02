@@ -33,7 +33,7 @@
                             <p>Tra cứu thông tin liên lạc của các đơn vị, cán bộ giảng viên và sinh viên một cách nhanh chóng, chính xác</p>
                         </div>
                         <div class="card-footer">
-                            <a href="#" class="btn btn-outline-primary w-100">
+                            <a href="{{route('contact.index')}}" class="btn btn-outline-primary w-100">
                                 <i class="fas fa-arrow-right me-2"></i> Xem danh bạ
                             </a>
                         </div>
@@ -49,7 +49,7 @@
                             <p>Nhắn tin trực tiếp với các người dùng khác để có thể trao đổi thông tin</p>
                         </div>
                         <div class="card-footer">
-                            <a href="#" class="btn btn-outline-primary w-100">
+                            <a href="{{route('message.index')}}" class="btn btn-outline-primary w-100">
                                 <i class="fas fa-arrow-right me-2"></i> Xem tin nhắn
                             </a>
                         </div>
@@ -65,7 +65,7 @@
                             <p>Hỏi và giải đáp thắc mắc nơi mà cộng đồng TLU có thể trao đổi thông tin trực tiếp với nhau</p>
                         </div>
                         <div class="card-footer">
-                            <a href="#" class="btn btn-outline-primary w-100">
+                            <a href="{{route('forum.index')}}" class="btn btn-outline-primary w-100">
                                 <i class="fas fa-arrow-right me-2"></i> Xem diễn đàn
                             </a>
                         </div>
@@ -152,7 +152,7 @@
             </div>
 
             <div class="text-center mt-4">
-                <a href="#" class="btn btn-outline-primary">
+                <a href="{{route('notification.index')}}" class="btn btn-outline-primary">
                     <i class="fas fa-bell me-2"></i> Xem tất cả thông báo
                 </a>
             </div>

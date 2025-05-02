@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Page;
 
 use App\Http\Controllers\Controller;
 use App\Models\Department;
+use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
@@ -21,13 +23,13 @@ class ContactController extends Controller
 
     public function teacher(){
         
-        $departments = Department::all();
-        return view('pages.contact.teacher')->with('departments', $departments);
+        $teachers = Teacher::all();
+        return view('pages.contact.teacher')->with('teachers',$teachers);
     }
 
     public function student(){
         
-        $departments = Department::all();
-        return view('pages.contact.student')->with('departments', $departments);
+        $students = Student::all();
+        return view('pages.contact.student')->with('students', $students);
     }
 }

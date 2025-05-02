@@ -62,7 +62,7 @@ class StudentController extends Controller
         // Upload avatar nếu có
         if ($request->hasFile('avatar')) {
             $avatarName = time() . '.' . $request->avatar->extension();
-            $request->avatar->storeAs('public/avatars', $avatarName);
+            $request->avatar->storeAs('avatars', $avatarName);
             $user->avatar = $avatarName;
             $user->save();
         }
@@ -149,11 +149,11 @@ class StudentController extends Controller
         if ($request->hasFile('avatar')) {
             // Xóa avatar cũ nếu có
             if ($user->avatar) {
-                Storage::delete('public/avatars/' . $user->avatar);
+                Storage::delete('avatars/' . $user->avatar);
             }
             
             $avatarName = time() . '.' . $request->avatar->extension();
-            $request->avatar->storeAs('public/avatars', $avatarName);
+            $request->avatar->storeAs('avatars', $avatarName);
             $user->avatar = $avatarName;
         }
         
