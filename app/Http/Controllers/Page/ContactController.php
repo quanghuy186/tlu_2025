@@ -17,19 +17,19 @@ class ContactController extends Controller
 
     public function department(){
         
-        $departments = Department::all();
+        $departments = Department::paginate(10);
         return view('pages.contact.department')->with('departments', $departments);
     }
 
     public function teacher(){
         
-        $teachers = Teacher::all();
+        $teachers = Teacher::paginate(10);
         return view('pages.contact.teacher')->with('teachers',$teachers);
     }
 
-    public function student(){
-        
-        $students = Student::all();
+    public function student()
+    {
+        $students = Student::paginate(10); 
         return view('pages.contact.student')->with('students', $students);
     }
 }

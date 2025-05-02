@@ -165,17 +165,36 @@
         </div>
 
         <!-- Pagination -->
-        <div class="pagination-container">
-            <ul class="pagination">
-                <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
-                <li><a href="#" class="active">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
-            </ul>
-        </div>
+        @if ($teachers->hasPages())
+            <div class="pagination-container">
+                <ul class="pagination">
+                    {{-- Liên kết trang trước --}}
+                    @if ($teachers->onFirstPage())
+                        <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
+                    @else
+                        <li><a href="{{ $teachers->previousPageUrl() }}"><i class="fas fa-angle-double-left"></i></a></li>
+                    @endif
+
+                    {{-- Các phần tử phân trang --}}
+                    @foreach ($teachers->getUrlRange(1, $teachers->lastPage()) as $page => $url)
+                        @if ($page == $teachers->currentPage())
+                            <li><a href="#" class="active">{{ $page }}</a></li>
+                        @else
+                            <li><a href="{{ $url }}">{{ $page }}</a></li>
+                        @endif
+                    @endforeach
+
+                    {{-- Liên kết trang tiếp theo --}}
+                    @if ($teachers->hasMorePages())
+                        <li><a href="{{ $teachers->nextPageUrl() }}"><i class="fas fa-angle-double-right"></i></a></li>
+                    @else
+                        <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
+                    @endif
+                </ul>
+            </div>
+        @endif
+            {{-- </div>
+        </div> --}}
     </div>
 </div>
 

@@ -106,187 +106,38 @@
                 </div>
             @endforeach
            
-
-            <!-- Unit Item 2 - Faculty -->
-            {{-- <div class="unit-item">
-                <img src="https://via.placeholder.com/150x150?text=KT" alt="Khoa Kinh tế" class="unit-logo">
-                <div class="unit-info">
-                    <div class="unit-name">Khoa Kinh tế và Quản lý</div>
-                    <div class="unit-type">Đơn vị đào tạo</div>
-                    <div class="unit-meta">
-                        <div class="unit-meta-item">
-                            <i class="fas fa-user-tie"></i>
-                            <span>Trưởng đơn vị: PGS.TS. Trần Thị Lan</span>
-                        </div>
-                        <div class="unit-meta-item">
-                            <i class="fas fa-users"></i>
-                            <span>Số cán bộ: 38</span>
-                        </div>
-                        <div class="unit-meta-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Cơ sở: Hà Nội</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="unit-actions">
-                    <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#unitDetailModal2">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Unit Item 3 - Faculty -->
-            <div class="unit-item">
-                <img src="https://via.placeholder.com/150x150?text=XD" alt="Khoa Xây dựng" class="unit-logo">
-                <div class="unit-info">
-                    <div class="unit-name">Khoa Xây dựng</div>
-                    <div class="unit-type">Đơn vị đào tạo</div>
-                    <div class="unit-meta">
-                        <div class="unit-meta-item">
-                            <i class="fas fa-user-tie"></i>
-                            <span>Trưởng đơn vị: GS.TS. Phạm Văn Hùng</span>
-                        </div>
-                        <div class="unit-meta-item">
-                            <i class="fas fa-users"></i>
-                            <span>Số cán bộ: 52</span>
-                        </div>
-                        <div class="unit-meta-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Cơ sở: Hà Nội</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="unit-actions">
-                    <a href="#" class="action-btn">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Unit Item 4 - Faculty -->
-            <div class="unit-item">
-                <img src="https://via.placeholder.com/150x150?text=MT" alt="Khoa Môi trường" class="unit-logo">
-                <div class="unit-info">
-                    <div class="unit-name">Khoa Môi trường</div>
-                    <div class="unit-type">Đơn vị đào tạo</div>
-                    <div class="unit-meta">
-                        <div class="unit-meta-item">
-                            <i class="fas fa-user-tie"></i>
-                            <span>Trưởng đơn vị: PGS.TS. Lê Thị Hương</span>
-                        </div>
-                        <div class="unit-meta-item">
-                            <i class="fas fa-users"></i>
-                            <span>Số cán bộ: 35</span>
-                        </div>
-                        <div class="unit-meta-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Cơ sở: Hà Nội</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="unit-actions">
-                    <a href="#" class="action-btn">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Unit Item 5 - Department -->
-            <div class="unit-item">
-                <img src="https://via.placeholder.com/150x150?text=TCHC" alt="Phòng Tổ chức" class="unit-logo">
-                <div class="unit-info">
-                    <div class="unit-name">Phòng Tổ chức Hành chính</div>
-                    <div class="unit-type">Đơn vị hành chính</div>
-                    <div class="unit-meta">
-                        <div class="unit-meta-item">
-                            <i class="fas fa-user-tie"></i>
-                            <span>Trưởng đơn vị: ThS. Vũ Minh Hiển</span>
-                        </div>
-                        <div class="unit-meta-item">
-                            <i class="fas fa-users"></i>
-                            <span>Số cán bộ: 18</span>
-                        </div>
-                        <div class="unit-meta-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Cơ sở: Hà Nội</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="unit-actions">
-                    <a href="#" class="action-btn">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Unit Item 6 - Department -->
-            <div class="unit-item">
-                <img src="https://via.placeholder.com/150x150?text=ĐTĐH" alt="Phòng Đào tạo" class="unit-logo">
-                <div class="unit-info">
-                    <div class="unit-name">Phòng Đào tạo Đại học</div>
-                    <div class="unit-type">Đơn vị hành chính</div>
-                    <div class="unit-meta">
-                        <div class="unit-meta-item">
-                            <i class="fas fa-user-tie"></i>
-                            <span>Trưởng đơn vị: TS. Nguyễn Văn Lâm</span>
-                        </div>
-                        <div class="unit-meta-item">
-                            <i class="fas fa-users"></i>
-                            <span>Số cán bộ: 15</span>
-                        </div>
-                        <div class="unit-meta-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Cơ sở: Hà Nội</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="unit-actions">
-                    <a href="#" class="action-btn">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Unit Item 7 - Research Center -->
-            <div class="unit-item">
-                <img src="https://via.placeholder.com/150x150?text=NCPT" alt="Trung tâm nghiên cứu" class="unit-logo">
-                <div class="unit-info">
-                    <div class="unit-name">Trung tâm Nghiên cứu và Phát triển</div>
-                    <div class="unit-type">Đơn vị nghiên cứu</div>
-                    <div class="unit-meta">
-                        <div class="unit-meta-item">
-                            <i class="fas fa-user-tie"></i>
-                            <span>Giám đốc: PGS.TS. Đỗ Xuân Thành</span>
-                        </div>
-                        <div class="unit-meta-item">
-                            <i class="fas fa-users"></i>
-                            <span>Số cán bộ: 28</span>
-                        </div>
-                        <div class="unit-meta-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Cơ sở: Hà Nội</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="unit-actions">
-                    <a href="#" class="action-btn">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                </div>
-            </div> --}}
-
             <!-- More units can be added here -->
         </div>
 
-        <!-- Pagination -->
-        <div class="pagination-container">
-            <ul class="pagination">
-                <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
-                <li><a href="#" class="active">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
-            </ul>
+        @if ($departments->hasPages())
+            <div class="pagination-container">
+                <ul class="pagination">
+                    {{-- Liên kết trang trước --}}
+                    @if ($departments->onFirstPage())
+                        <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
+                    @else
+                        <li><a href="{{ $departments->previousPageUrl() }}"><i class="fas fa-angle-double-left"></i></a></li>
+                    @endif
+
+                    {{-- Các phần tử phân trang --}}
+                    @foreach ($departments->getUrlRange(1, $departments->lastPage()) as $page => $url)
+                        @if ($page == $departments->currentPage())
+                            <li><a href="#" class="active">{{ $page }}</a></li>
+                        @else
+                            <li><a href="{{ $url }}">{{ $page }}</a></li>
+                        @endif
+                    @endforeach
+
+                    {{-- Liên kết trang tiếp theo --}}
+                    @if ($departments->hasMorePages())
+                        <li><a href="{{ $departments->nextPageUrl() }}"><i class="fas fa-angle-double-right"></i></a></li>
+                    @else
+                        <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
+                    @endif
+                </ul>
+            </div>
+        @endif
+            </div>
         </div>
     </div>
 </div>
