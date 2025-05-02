@@ -1841,6 +1841,807 @@
         transform: translateY(-3px);
     }
 
+    /* Teacher List */
+    .teacher-list-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .teacher-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .teacher-count {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .view-options button {
+            background-color: var(--light-color);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin-left: 10px;
+            color: var(--dark-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-options button.active, .view-options button:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .teacher-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .teacher-item:hover {
+            background-color: var(--light-color);
+        }
+
+        .teacher-item:last-child {
+            border-bottom: none;
+        }
+
+        .teacher-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 3px solid white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .teacher-info {
+            flex: 1;
+        }
+
+        .teacher-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .teacher-position {
+            color: var(--accent-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .teacher-department {
+            color: var(--dark-color);
+            font-size: 0.9rem;
+        }
+
+        .teacher-department a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .teacher-department a:hover {
+            text-decoration: underline;
+        }
+
+        .teacher-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            background-color: var(--primary-color);
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .action-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        
+        /* Modal styles */
+        .modal-content {
+            border-radius: 10px;
+            overflow: hidden;
+            border: none;
+        }
+
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-bottom: none;
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .teacher-detail {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .teacher-detail-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 5px solid white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .teacher-detail-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .teacher-detail-position {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .teacher-detail-info {
+            width: 100%;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .teacher-detail-info li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .teacher-detail-info li:last-child {
+            border-bottom: none;
+        }
+
+        .teacher-detail-info i {
+            color: var(--primary-color);
+            width: 30px;
+            font-size: 1.1rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            width: 120px;
+            color: var(--dark-color);
+        }
+
+        .detail-value {
+            flex: 1;
+        }
+
+        .detail-value a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .detail-value a:hover {
+            text-decoration: underline;
+        }
+
+        .modal-footer {
+            border-top: none;
+            padding: 15px 30px 30px;
+        }
+
+        /* Access Denied */
+        .access-denied {
+            background-color: white;
+            border-radius: 10px;
+            padding: 50px 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin: 30px 0;
+        }
+
+        .access-denied i {
+            font-size: 5rem;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .access-denied h2 {
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .access-denied p {
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        /* Student List */
+        .student-list-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .student-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .student-count {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+
+        .student-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .student-item:hover {
+            background-color: var(--light-color);
+        }
+
+        .student-item:last-child {
+            border-bottom: none;
+        }
+
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 3px solid white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .student-id {
+            color: var(--accent-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .student-class {
+            color: var(--dark-color);
+            font-size: 0.9rem;
+        }
+
+        .student-class a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .student-class a:hover {
+            text-decoration: underline;
+        }
+
+        .student-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Grid View */
+        .student-list.grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .student-list.grid-view .student-item {
+            flex-direction: column;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .student-list.grid-view .student-avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+        }
+
+        .student-list.grid-view .student-actions {
+            margin-top: 15px;
+        }
+
+
+        .student-detail {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .student-detail-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 5px solid white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-detail-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .student-detail-id {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .student-detail-info {
+            width: 100%;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .student-detail-info li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .student-detail-info li:last-child {
+            border-bottom: none;
+        }
+
+        .student-detail-info i {
+            color: var(--primary-color);
+            width: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* Access Restricted */
+        .access-restricted {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin: 30px 0;
+        }
+
+        .access-restricted i {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .access-restricted h3 {
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
+        .access-restricted p {
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        /* Unit Card Styles */
+        .unit-list-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .unit-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .unit-count {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        
+        /* Unit List View */
+        .unit-item {
+            display: flex;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .unit-item:hover {
+            background-color: var(--light-color);
+        }
+
+        .unit-item:last-child {
+            border-bottom: none;
+        }
+
+        .unit-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 1px solid var(--border-color);
+            padding: 5px;
+            background-color: white;
+        }
+
+        .unit-info {
+            flex: 1;
+        }
+
+        .unit-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .unit-type {
+            color: var(--accent-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .unit-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            color: var(--dark-color);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .unit-meta-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .unit-meta-item i {
+            margin-right: 5px;
+            color: var(--primary-color);
+        }
+
+        .unit-actions {
+            display: flex;
+            gap: 10px;
+            align-self: center;
+        }
+
+        /* Grid View */
+        .unit-list.grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .unit-list.grid-view .unit-item {
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+        }
+
+        .unit-list.grid-view .unit-logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+        }
+
+        .unit-list.grid-view .unit-info {
+            text-align: center;
+        }
+
+        .unit-list.grid-view .unit-meta {
+            justify-content: center;
+        }
+
+        .unit-list.grid-view .unit-actions {
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .unit-detail {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .unit-detail-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .unit-detail-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-right: 30px;
+            border: 3px solid white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 5px;
+            background-color: white;
+        }
+
+        .unit-detail-title {
+            flex: 1;
+        }
+
+        .unit-detail-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .unit-detail-type {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .unit-detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 0.95rem;
+        }
+
+        .unit-detail-meta-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .unit-detail-meta-item i {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
+        .unit-detail-info {
+            margin-bottom: 30px;
+        }
+
+        .unit-detail-section {
+            margin-bottom: 25px;
+        }
+
+        .unit-detail-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .unit-detail-description {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .leader-list, .staff-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .leader-item, .staff-item {
+            display: flex;
+            align-items: center;
+            width: calc(50% - 10px);
+            padding: 10px;
+            border-radius: 5px;
+            background-color: var(--light-color);
+        }
+
+        .leader-avatar, .staff-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 3px solid white;
+        }
+
+        .leader-info, .staff-info {
+            flex: 1;
+        }
+
+        .leader-name, .staff-name {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 3px;
+        }
+
+        .leader-position, .staff-position {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+        }
+
+        .contact-info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .contact-info-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-info-item i {
+            color: var(--primary-color);
+            width: 30px;
+            font-size: 1.1rem;
+        }
+
+        .contact-label {
+            font-weight: 600;
+            width: 120px;
+            color: var(--dark-color);
+        }
+
+        .contact-value {
+            flex: 1;
+        }
+
+        .contact-value a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .contact-value a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 992px) {
+            .student-list.grid-view {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .unit-list.grid-view {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            .leader-item, .staff-item {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .filter-options {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filter-group {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+
+            .teacher-item {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: center;
+            }
+
+            .teacher-avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .teacher-actions {
+                margin-top: 15px;
+            }
+
+            .unit-item {
+                flex-direction: column;
+            }
+
+            .unit-logo {
+                margin: 0 0 15px 0;
+            }
+
+            .unit-detail-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .unit-detail-logo {
+                margin: 0 0 15px 0;
+            }
+
+            .unit-detail-meta {
+                justify-content: center;
+            }
+        }
+
     /* Responsive */
     @media (max-width: 992px) {
         .stat-item {
@@ -1886,6 +2687,24 @@
     }
 
     @media (max-width: 768px) {
+        .student-item {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: center;
+            }
+
+            .student-avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .student-actions {
+                margin-top: 15px;
+            }
+
+            .student-list.grid-view {
+                grid-template-columns: 1fr;
+            }
         .forum-header {
             padding: 40px 0;
         }
@@ -1960,11 +2779,29 @@
         }
     }
 
+
+
     @media (max-width: 576px) {
         .top-bar {
             display: none;
         }
 
+        .page-title h1 {
+                font-size: 1.8rem;
+            }
+
+            .student-list-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .view-options {
+                align-self: flex-end;
+            }
+            .unit-list-header {
+                flex-direction: column;
+                gap: 10px;
+            }
         .post-footer {
             flex-direction: column;
             align-items: flex-start;
@@ -2011,6 +2848,7 @@
         .announcement-header img {
             height: 160px;
         }
+
     }
 
     </style>

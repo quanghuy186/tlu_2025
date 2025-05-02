@@ -18,4 +18,16 @@ class ContactController extends Controller
         $departments = Department::all();
         return view('pages.contact.department')->with('departments', $departments);
     }
+
+    public function teacher(){
+        
+        $departments = Department::all();
+        return view('pages.contact.teacher')->with('departments', $departments);
+    }
+
+    public function student(){
+        
+        $departments = Department::all();
+        return view('pages.contact.student')->with('departments', $departments);
+    }
 }

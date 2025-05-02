@@ -56,7 +56,7 @@
                 </ul>
                 <div class="dropdown">
                     <a href="#" class="user-menu dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="modal" data-bs-target="#userInfoModal">
-                        <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png" alt="User Avatar" class="user-avatar">
+                        <img src="{{ asset('storage/avatars/'.Auth::user()->avatar) }}" alt="User Avatar" class="user-avatar">
                         <span>{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -124,7 +124,7 @@
                         
                         <div class="text-center mb-4">
                             <div class="position-relative d-inline-block">
-                                <img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://via.placeholder.com/200x200?text=User' }}" 
+                                <img src="{{ Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar)  : 'https://via.placeholder.com/200x200?text=User' }}" 
                                      alt="User Profile" class="avatar" id="avatarPreview">
                                 <label for="avatarInput" class="avatar-upload-btn">
                                     <i class="fas fa-camera"></i>
