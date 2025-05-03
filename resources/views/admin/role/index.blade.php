@@ -65,20 +65,34 @@
               </div>
             </div>
             <div class="card-footer bg-white py-3">
-              <!-- Phân trang thủ công -->
-              <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-end mb-0">
-                  <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Trước</a>
-                  </li>
-                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">Sau</a>
-                  </li>
-                </ul>
-              </nav>
+              @if ($roles->hasPages())
+                <div class="pagination-container">
+                    <ul class="pagination">
+                        {{-- Liên kết trang trước --}}
+                        @if ($roles->onFirstPage())
+                            <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
+                        @else
+                            <li><a href="{{ $roles->previousPageUrl() }}"><i class="fas fa-angle-double-left"></i></a></li>
+                        @endif
+
+                        {{-- Các phần tử phân trang --}}
+                        @foreach ($roles->getUrlRange(1, $roles->lastPage()) as $page => $url)
+                            @if ($page == $roles->currentPage())
+                                <li><a href="#" class="active">{{ $page }}</a></li>
+                            @else
+                                <li><a href="{{ $url }}">{{ $page }}</a></li>
+                            @endif
+                        @endforeach
+
+                        {{-- Liên kết trang tiếp theo --}}
+                        @if ($roles->hasMorePages())
+                            <li><a href="{{ $roles->nextPageUrl() }}"><i class="fas fa-angle-double-right"></i></a></li>
+                        @else
+                            <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
+                        @endif
+                    </ul>
+                </div>
+            @endif
             </div>
           </div>
         </div>

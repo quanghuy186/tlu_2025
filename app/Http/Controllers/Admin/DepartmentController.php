@@ -20,7 +20,7 @@ class DepartmentController extends Controller
         $departments = Department::with('manager', 'parent', 'children')
             ->orderBy('level')
             ->orderBy('name')
-            ->get();
+            ->paginate(10);
             
         return view('admin.contact.department.index', compact('departments'));
     }

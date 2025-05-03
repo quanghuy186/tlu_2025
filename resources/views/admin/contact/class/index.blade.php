@@ -127,12 +127,40 @@
                             </table>
                         </div>
                         
-                        <div class="d-flex justify-content-center mt-4 mb-4">
+                        {{-- <div class="d-flex justify-content-center mt-4 mb-4">
                             {{ $classes->links() }}
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
+            @if ($classes->hasPages())
+                <div class="pagination-container">
+                    <ul class="pagination">
+                        {{-- Liên kết trang trước --}}
+                        @if ($classes->onFirstPage())
+                            <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
+                        @else
+                            <li><a href="{{ $classes->previousPageUrl() }}"><i class="fas fa-angle-double-left"></i></a></li>
+                        @endif
+
+                        {{-- Các phần tử phân trang --}}
+                        @foreach ($classes->getUrlRange(1, $classes->lastPage()) as $page => $url)
+                            @if ($page == $classes->currentPage())
+                                <li><a href="#" class="active">{{ $page }}</a></li>
+                            @else
+                                <li><a href="{{ $url }}">{{ $page }}</a></li>
+                            @endif
+                        @endforeach
+
+                        {{-- Liên kết trang tiếp theo --}}
+                        @if ($classes->hasMorePages())
+                            <li><a href="{{ $classes->nextPageUrl() }}"><i class="fas fa-angle-double-right"></i></a></li>
+                        @else
+                            <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
+                        @endif
+                    </ul>
+                </div>
+            @endif
         </div>
     </div>
 </section>
@@ -158,6 +186,7 @@
                 </form>
             </div>
         </div>
+        
     </div>
 </div>
 

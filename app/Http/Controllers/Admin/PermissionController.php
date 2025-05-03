@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class PermissionController extends Controller
 {
     public function index(){
-        $permissions = Permission::all();
+        $permissions = Permission::paginate(10);
         return view("admin.permission.index")->with("permissions", $permissions);
     }
 

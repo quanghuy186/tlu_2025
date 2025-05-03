@@ -13,7 +13,7 @@ class ClassController extends Controller
 {
     public function index()
     {
-        $classes = ClassRoom::with(['department', 'teacherWithUser'])->paginate(30);
+        $classes = ClassRoom::with(['department', 'teacherWithUser'])->paginate(10);
         return view('admin.contact.class.index', compact('classes'));
     }
 

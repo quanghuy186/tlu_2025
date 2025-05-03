@@ -15,7 +15,7 @@ class StudentController extends Controller
 {
     public function index()
     {
-        $students = Student::with(['user', 'classWithDetails'])->paginate(15);
+        $students = Student::with(['user', 'classWithDetails'])->paginate(10);
         return view('admin.contact.student.index', compact('students'));
     }
 

@@ -117,19 +117,34 @@
             </div>
             <div class="card-footer bg-white py-3">
               <!-- Có thể thêm phân trang ở đây -->
-              <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-end mb-0">
-                  <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Trước</a>
-                  </li>
-                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">Sau</a>
-                  </li>
-                </ul>
-              </nav>
+              @if ($users->hasPages())
+                <div class="pagination-container">
+                    <ul class="pagination">
+                        {{-- Liên kết trang trước --}}
+                        @if ($users->onFirstPage())
+                            <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
+                        @else
+                            <li><a href="{{ $users->previousPageUrl() }}"><i class="fas fa-angle-double-left"></i></a></li>
+                        @endif
+
+                        {{-- Các phần tử phân trang --}}
+                        @foreach ($users->getUrlRange(1, $users->lastPage()) as $page => $url)
+                            @if ($page == $users->currentPage())
+                                <li><a href="#" class="active">{{ $page }}</a></li>
+                            @else
+                                <li><a href="{{ $url }}">{{ $page }}</a></li>
+                            @endif
+                        @endforeach
+
+                        {{-- Liên kết trang tiếp theo --}}
+                        @if ($users->hasMorePages())
+                            <li><a href="{{ $users->nextPageUrl() }}"><i class="fas fa-angle-double-right"></i></a></li>
+                        @else
+                            <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
+                        @endif
+                    </ul>
+                </div>
+            @endif
             </div>
           </div>
         </div>
