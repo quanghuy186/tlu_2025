@@ -182,6 +182,8 @@ Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(
     Route::get('/', [ContactController::class, 'index'])->name('index');
     Route::get('/student', [ContactController::class, 'student'])->name('student');
     Route::get('/teacher', [ContactController::class, 'teacher'])->name('teacher');
+    Route::get('/teacher/search', [ContactController::class, 'search_teacher'])->name('teacher.search');
+
     Route::get('/department', [ContactController::class, 'department'])->name('department');
 });
 

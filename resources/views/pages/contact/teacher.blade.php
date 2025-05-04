@@ -21,30 +21,22 @@
 <div class="container mb-5" id="cbgv-access">
     <!-- Search and Filter Section -->
     <div class="search-filter-container">
-        <div class="search-box">
-            <i class="fas fa-search me-2"></i>
-            <input type="text" placeholder="Tìm kiếm theo tên, chức vụ hoặc mã cán bộ...">
-            <button type="button"><i class="fas fa-arrow-right"></i></button>
-        </div>
-        <div class="filter-options">
+        
+        <div class="filter-options" >
             <div class="filter-group">
                 <span class="filter-label">Sắp xếp theo:</span>
                 <select class="filter-select">
                     <option value="name">Tên (A-Z)</option>
                     <option value="name-desc">Tên (Z-A)</option>
-                    <option value="position">Chức vụ</option>
-                    <option value="department">Đơn vị</option>
                 </select>
             </div>
             <div class="filter-group">
                 <span class="filter-label">Đơn vị:</span>
                 <select class="filter-select">
                     <option value="all">Tất cả đơn vị</option>
-                    <option value="cntt">Khoa Công nghệ thông tin</option>
-                    <option value="kinhte">Khoa Kinh tế và Quản lý</option>
-                    <option value="xaydung">Khoa Xây dựng</option>
-                    <option value="moitruong">Khoa Môi trường</option>
-                    <option value="dientapthu">Khoa Điện - Tự động hóa</option>
+                    @foreach ($departments as $d)
+                        <option value="dientapthu">{{$d->name}}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="filter-group">
@@ -59,6 +51,15 @@
                 </select>
             </div>
         </div>
+
+        <form action="{{ route('contact.teacher.search') }}" method="GET">
+            <div class="search-box mt-5">
+                <i class="fas fa-search me-2"></i>
+                <input name="search" value="{{ $search ?? '' }}" type="text" placeholder="Tìm kiếm theo tên hoặc mã cán bộ...">
+                <button type="submit"><i class="fas fa-arrow-right"></i></button>
+            </div>
+        </form>
+        
     </div>
 
     <!-- Teacher List -->
