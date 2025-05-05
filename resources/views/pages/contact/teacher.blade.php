@@ -29,24 +29,29 @@
                     <option value="name">Tên (A-Z)</option>
                     <option value="name-desc">Tên (Z-A)</option>
                 </select>
-            </div>  
+            </div> 
+
             <div class="filter-group">
                 <span class="filter-label">Đơn vị:</span>
-                <select class="filter-select">
+                <select class="filter-select" id="departmentSelect" name="department_id">
                     <option value="all">Tất cả đơn vị</option>
                     @foreach ($departments as $d)
-                        <option value="dientapthu">{{$d->name}}</option>
+                        <option value="{{ $d->id }}" {{ isset($department_id) && $department_id == $d->id ? 'selected' : '' }}>
+                            {{ $d->name }}
+                        </option>
                     @endforeach
                 </select>
             </div>
+
             <div class="filter-group">
                 <span class="filter-label">Chức vụ:</span>
-                <select class="filter-select">
+                <select class="filter-select" id="rankSelect" name="academic_rank">
                     <option value="all">Tất cả chức vụ</option>
                     @foreach ($academic_rank as $a)
-                        <option value="truongkhoa">{{$a->academic_rank}}</option>
+                        <option value="{{ $a->academic_rank }}" {{ isset($selected_rank) && $selected_rank == $a->academic_rank ? 'selected' : '' }}>
+                            {{ $a->academic_rank }}
+                        </option>
                     @endforeach
-                   
                 </select>
             </div>
         </div>
@@ -271,17 +276,49 @@
 // Thêm vào section('custom-js')
 <script>
 $(document).ready(function(){
-    // Biến để lưu trữ từ khóa tìm kiếm hiện tại
+    // Biến để lưu trữ các tham số tìm kiếm hiện tại
     var currentSearch = "{{ $fullname ?? '' }}";
+    var currentDepartment = "{{ $department_id ?? 'all' }}";
+    var currentRank = "{{ $selected_rank ?? 'all' }}";
     
-    function loadData(sortBy) {
+    // Hàm chung để tải dữ liệu khi có thay đổi bất kỳ
+    function loadData(options) {
+        // Cập nhật các biến nếu có tham số tương ứng
+        if (options.sort) {
+            // Chỉ cập nhật sortBy, không cần lưu vào biến toàn cục
+        }
+        if (options.search !== undefined) {
+            currentSearch = options.search;
+        }
+        if (options.department_id !== undefined) {
+            currentDepartment = options.department_id;
+        }
+        if (options.academic_rank !== undefined) {
+            currentRank = options.academic_rank;
+        }
+        
+        // Xác định URL dựa trên loại hành động
+        var url = options.sort 
+            ? "{{ route('contact.teacher.sort') }}" 
+            : "{{ route('contact.teacher.search') }}";
+        
+        // Chuẩn bị dữ liệu gửi đi
+        var data = {
+            fullname: currentSearch,
+            department_id: currentDepartment,
+            academic_rank: currentRank
+        };
+        
+        // Thêm tham số sort nếu có
+        if (options.sort) {
+            data.sort = options.sort;
+        }
+        
+        // Gửi yêu cầu Ajax
         $.ajax({
-            url: "{{ route('contact.teacher.sort') }}",
+            url: url,
             type: "GET",
-            data: {
-                sort: sortBy,
-                search: currentSearch // Gửi kèm từ khóa tìm kiếm
-            },
+            data: data,
             success: function(response) {
                 $(".teacher-list").html(response);
             },
@@ -291,28 +328,56 @@ $(document).ready(function(){
         });
     }
     
-    // Xử lý sự kiện khi select thay đổi
+    // Xử lý sự kiện khi select sắp xếp thay đổi
     $("#sortSelect").change(function() {
-        loadData($(this).val());
+        loadData({
+            sort: $(this).val()
+        });
+    });
+    
+    // Xử lý sự kiện khi select department thay đổi
+    $("#departmentSelect").change(function() {
+        loadData({
+            department_id: $(this).val()
+        });
+    });
+    
+    // Xử lý sự kiện khi select chức vụ thay đổi
+    $("#rankSelect").change(function() {
+        loadData({
+            academic_rank: $(this).val()
+        });
     });
     
     // Xử lý form tìm kiếm bằng Ajax
     $(".search-box form").submit(function(e) {
         e.preventDefault(); // Ngăn chặn hành vi mặc định của form
         
-        currentSearch = $("input[name='fullname']").val();
+        loadData({
+            search: $("input[name='fullname']").val()
+        });
+    });
+    
+    // Xử lý các link phân trang để duy trì tham số tìm kiếm
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        
+        var page = $(this).attr('href').split('page=')[1];
+        var url = "{{ route('contact.teacher.search') }}?page=" + page;
         
         $.ajax({
-            url: "{{ route('contact.teacher.search') }}",
+            url: url,
             type: "GET",
             data: {
-                fullname: currentSearch
+                fullname: currentSearch,
+                department_id: currentDepartment,
+                academic_rank: currentRank
             },
             success: function(response) {
                 $(".teacher-list").html(response);
             },
             error: function(xhr) {
-                console.error("Lỗi khi tìm kiếm:", xhr.responseText);
+                console.error("Lỗi khi chuyển trang:", xhr.responseText);
             }
         });
     });
