@@ -25,11 +25,11 @@
         <div class="filter-options" >
             <div class="filter-group">
                 <span class="filter-label">Sắp xếp theo:</span>
-                <select class="filter-select">
+                <select class="filter-select" id="sortSelect">
                     <option value="name">Tên (A-Z)</option>
                     <option value="name-desc">Tên (Z-A)</option>
                 </select>
-            </div>
+            </div>  
             <div class="filter-group">
                 <span class="filter-label">Đơn vị:</span>
                 <select class="filter-select">
@@ -43,11 +43,10 @@
                 <span class="filter-label">Chức vụ:</span>
                 <select class="filter-select">
                     <option value="all">Tất cả chức vụ</option>
-                    <option value="truongkhoa">Trưởng khoa</option>
-                    <option value="phongkhoa">Phó trưởng khoa</option>
-                    <option value="truongbomon">Trưởng bộ môn</option>
-                    <option value="giangvien">Giảng viên</option>
-                    <option value="trogiang">Trợ giảng</option>
+                    @foreach ($academic_rank as $a)
+                        <option value="truongkhoa">{{$a->academic_rank}}</option>
+                    @endforeach
+                   
                 </select>
             </div>
         </div>
@@ -55,7 +54,7 @@
         <form action="{{ route('contact.teacher.search') }}" method="GET">
             <div class="search-box mt-5">
                 <i class="fas fa-search me-2"></i>
-                <input name="search" value="{{ $search ?? '' }}" type="text" placeholder="Tìm kiếm theo tên hoặc mã cán bộ...">
+                <input name="fullname" value="{{ $fullname ?? '' }}" type="text" placeholder="Tìm kiếm theo tên hoặc mã cán bộ...">
                 <button type="submit"><i class="fas fa-arrow-right"></i></button>
             </div>
         </form>
@@ -163,6 +162,7 @@
                     </div>
                 </div>
             @endforeach
+            
         </div>
 
         <!-- Pagination -->
@@ -265,4 +265,57 @@
 </div> --}}
 
 
+@endsection
+
+@section('custom-js')
+// Thêm vào section('custom-js')
+<script>
+$(document).ready(function(){
+    // Biến để lưu trữ từ khóa tìm kiếm hiện tại
+    var currentSearch = "{{ $fullname ?? '' }}";
+    
+    function loadData(sortBy) {
+        $.ajax({
+            url: "{{ route('contact.teacher.sort') }}",
+            type: "GET",
+            data: {
+                sort: sortBy,
+                search: currentSearch // Gửi kèm từ khóa tìm kiếm
+            },
+            success: function(response) {
+                $(".teacher-list").html(response);
+            },
+            error: function(xhr) {
+                console.error("Lỗi khi tải dữ liệu:", xhr.responseText);
+            }
+        });
+    }
+    
+    // Xử lý sự kiện khi select thay đổi
+    $("#sortSelect").change(function() {
+        loadData($(this).val());
+    });
+    
+    // Xử lý form tìm kiếm bằng Ajax
+    $(".search-box form").submit(function(e) {
+        e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+        
+        currentSearch = $("input[name='fullname']").val();
+        
+        $.ajax({
+            url: "{{ route('contact.teacher.search') }}",
+            type: "GET",
+            data: {
+                fullname: currentSearch
+            },
+            success: function(response) {
+                $(".teacher-list").html(response);
+            },
+            error: function(xhr) {
+                console.error("Lỗi khi tìm kiếm:", xhr.responseText);
+            }
+        });
+    });
+});
+</script>
 @endsection

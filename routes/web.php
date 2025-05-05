@@ -183,6 +183,8 @@ Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(
     Route::get('/student', [ContactController::class, 'student'])->name('student');
     Route::get('/teacher', [ContactController::class, 'teacher'])->name('teacher');
     Route::get('/teacher/search', [ContactController::class, 'search_teacher'])->name('teacher.search');
+    Route::get('/teacher/sort', [ContactController::class, 'sort_teacher'])->name('teacher.sort');
+    
 
     Route::get('/department', [ContactController::class, 'department'])->name('department');
 });
