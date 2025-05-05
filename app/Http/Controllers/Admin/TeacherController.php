@@ -59,7 +59,7 @@ class TeacherController extends Controller
             'role' => 'teacher', // Giả sử bạn có trường role trong bảng users
         ]);
 
-        // Upload avatar nếu có
+
         if ($request->hasFile('avatar')) {
             $avatarName = time() . '.' . $request->avatar->extension();
             $request->avatar->storeAs('avatars', $avatarName);

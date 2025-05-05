@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Page;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClassRoom;
 use App\Models\Department;
 use App\Models\Student;
 use App\Models\Teacher;
@@ -140,7 +141,124 @@ class ContactController extends Controller
 
     public function student()
     {
-        $students = Student::paginate(10); 
-        return view('pages.contact.student')->with('students', $students);
+        $classes = ClassRoom::all();
+        
+        // Lấy danh sách các năm nhập học duy nhất
+        $enrollment_years = Student::select('enrollment_year')
+                            ->whereNotNull('enrollment_year')
+                            ->distinct()
+                            ->orderBy('enrollment_year', 'desc')
+                            ->pluck('enrollment_year')
+                            ->toArray();
+        
+        $students = Student::with(['user', 'class'])->paginate(10);
+        
+        return view('pages.contact.student')
+            ->with('classes', $classes)
+            ->with('enrollment_years', $enrollment_years)
+            ->with('students', $students);
+    }
+
+    public function search_student(Request $request)
+    {
+        $classes = ClassRoom::all();
+        
+        // Lấy danh sách các năm nhập học duy nhất
+        $enrollment_years = Student::select('enrollment_year')
+                            ->whereNotNull('enrollment_year')
+                            ->distinct()
+                            ->orderBy('enrollment_year', 'desc')
+                            ->pluck('enrollment_year')
+                            ->toArray();
+        
+        $fullname = $request->input('fullname');
+        $class_id = $request->input('class_id');
+        $enrollment_year = $request->input('enrollment_year');
+        
+        $query = Student::query()
+            ->join('users', 'students.user_id', '=', 'users.id')
+            ->select('students.*')
+            ->with(['user', 'class']);
+        
+        // Thêm điều kiện tìm kiếm theo tên hoặc mã sinh viên
+        if (!empty($fullname)) {
+            $query->where(function($q) use ($fullname) {
+                $q->where('users.name', 'LIKE', "%{$fullname}%")
+                  ->orWhere('students.student_code', 'LIKE', "%{$fullname}%");
+            });
+        }
+        
+        // Thêm điều kiện lọc theo class_id
+        if (!empty($class_id) && $class_id != 'all') {
+            $query->where('students.class_id', $class_id);
+        }
+        
+        // Thêm điều kiện lọc theo enrollment_year
+        if (!empty($enrollment_year) && $enrollment_year != 'all') {
+            $query->where('students.enrollment_year', $enrollment_year);
+        }
+        
+        $students = $query->paginate(10);
+        
+        // Kiểm tra nếu là yêu cầu Ajax
+        if ($request->ajax()) {
+            return view('partials.student_list', compact('students'));
+        }
+        
+        return view('pages.contact.student')
+            ->with('classes', $classes)
+            ->with('enrollment_years', $enrollment_years)
+            ->with('fullname', $fullname)
+            ->with('class_id', $class_id)
+            ->with('enrollment_year', $enrollment_year)
+            ->with('students', $students);
+    }
+
+    public function sort_student(Request $request)
+    {
+        $sortBy = $request->input('sort', 'name');
+        $fullname = $request->input('fullname', '');
+        $class_id = $request->input('class_id', 'all');
+        $enrollment_year = $request->input('enrollment_year', 'all');
+        
+        $query = Student::query()
+            ->join('users', 'students.user_id', '=', 'users.id')
+            ->select('students.*')
+            ->with(['user', 'class']);
+        
+        // Áp dụng điều kiện tìm kiếm theo tên hoặc mã sinh viên
+        if (!empty($fullname)) {
+            $query->where(function($q) use ($fullname) {
+                $q->where('users.name', 'LIKE', "%{$fullname}%")
+                  ->orWhere('students.student_code', 'LIKE', "%{$fullname}%");
+            });
+        }
+        
+        // Áp dụng điều kiện lọc theo class_id
+        if (!empty($class_id) && $class_id != 'all') {
+            $query->where('students.class_id', $class_id);
+        }
+        
+        // Áp dụng điều kiện lọc theo enrollment_year
+        if (!empty($enrollment_year) && $enrollment_year != 'all') {
+            $query->where('students.enrollment_year', $enrollment_year);
+        }
+        
+        // Áp dụng sắp xếp
+        switch ($sortBy) {
+            case 'name':
+                $query->orderBy('users.name', 'asc');
+                break;
+            case 'name-desc':
+                $query->orderBy('users.name', 'desc');
+                break;
+            default:
+                $query->orderBy('users.name', 'asc');
+        }
+        
+        $students = $query->paginate(10);
+        
+        // Trả về partial view khi được gọi bằng Ajax
+        return view('partials.student_list', compact('students'));
     }
 }

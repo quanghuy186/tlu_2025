@@ -17,65 +17,59 @@
     </div>
 </section>
 
-<!-- Main Content - For CBGV Access -->
+<!-- Main Content - For Students -->
 <div class="container mb-5" id="cbgv-access">
     <!-- Search and Filter Section -->
     <div class="search-filter-container">
-        <div class="search-box">
-            <i class="fas fa-search me-2"></i>
-            <input type="text" placeholder="Tìm kiếm theo tên, mã sinh viên hoặc lớp...">
-            <button type="button"><i class="fas fa-arrow-right"></i></button>
-        </div>
+        
         <div class="filter-options">
             <div class="filter-group">
                 <span class="filter-label">Sắp xếp theo:</span>
-                <select class="filter-select">
+                <select class="filter-select" id="sortSelect" name="sort">
                     <option value="name">Tên (A-Z)</option>
                     <option value="name-desc">Tên (Z-A)</option>
-                    <option value="id">Mã sinh viên</option>
-                    <option value="class">Lớp</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <span class="filter-label">Khoa:</span>
-                <select class="filter-select">
-                    <option value="all">Tất cả khoa</option>
-                    <option value="cntt">Khoa Công nghệ thông tin</option>
-                    <option value="kinhte">Khoa Kinh tế và Quản lý</option>
-                    <option value="xaydung">Khoa Xây dựng</option>
-                    <option value="moitruong">Khoa Môi trường</option>
-                    <option value="dientapthu">Khoa Điện - Tự động hóa</option>
                 </select>
             </div>
             <div class="filter-group">
                 <span class="filter-label">Khóa:</span>
-                <select class="filter-select">
+                <select class="filter-select" id="yearSelect" name="enrollment_year">
                     <option value="all">Tất cả khóa</option>
-                    <option value="k60">K60 (2021-2025)</option>
-                    <option value="k61">K61 (2022-2026)</option>
-                    <option value="k62">K62 (2023-2027)</option>
-                    <option value="k63">K63 (2024-2028)</option>
+                    @foreach ($enrollment_years as $year)
+                        <option value="{{ $year }}" {{ isset($enrollment_year) && $enrollment_year == $year ? 'selected' : '' }}>
+                            K{{ $year - 1958 }} ({{ $year }}-{{ $year + 4 }})
+                        </option>
+                    @endforeach
                 </select>
             </div>
             <div class="filter-group">
                 <span class="filter-label">Lớp:</span>
-                <select class="filter-select">
+                <select class="filter-select" id="classSelect" name="class_id">
                     <option value="all">Tất cả lớp</option>
-                    <option value="60cntt1">60CNTT1</option>
-                    <option value="60cntt2">60CNTT2</option>
-                    <option value="60cntt3">60CNTT3</option>
-                    <option value="60kt1">60KT1</option>
-                    <option value="60kt2">60KT2</option>
+                    @foreach ($classes as $class)
+                        <option value="{{ $class->id }}" {{ isset($class_id) && $class_id == $class->id ? 'selected' : '' }}>
+                            {{ $class->class_name }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
         </div>
+        
+        <form id="searchForm" action="{{ route('contact.student.search') }}" method="GET">
+            <div class="search-box mt-5">
+                <i class="fas fa-search me-2"></i>
+                <input name="fullname" value="{{ $fullname ?? '' }}" type="text" placeholder="Tìm kiếm theo tên, mã sinh viên hoặc lớp...">
+                <button type="submit"><i class="fas fa-arrow-right"></i></button>
+            </div>
+        </form> 
+        
     </div>
 
     <!-- Student List -->
     <div class="student-list-container">
         <div class="student-list-header">
             <div class="student-count">
-                Hiển thị <span class="text-primary">1-10</span> trong tổng số <span class="text-primary">235</span> Sinh viên
+                Hiển thị <span class="text-primary">{{ $students->firstItem() ?? 0 }}-{{ $students->lastItem() ?? 0 }}</span> 
+                trong tổng số <span class="text-primary">{{ $students->total() }}</span> Sinh viên
             </div>
             <div class="view-options">
                 <button type="button" class="active"><i class="fas fa-list"></i></button>
@@ -85,139 +79,139 @@
 
         <!-- Student List Items -->
         <div class="student-list">
-            <!-- Student Item 1 -->
-            @foreach ($students as $student)
-                <div class="student-item">
-                    <img src="{{ $student->user && $student->user->avatar ? asset('storage/avatars/'.$student->user->avatar) : 'https://via.placeholder.com/150x150?text=SV' }}" 
-                        alt="Sinh viên" class="student-avatar">
-                    <div class="student-info">
-                        <div class="student-name">{{ $student->user->name ?? 'Chưa cập nhật' }}</div>
-                        <div class="student-id">
-                            {{ $student->class ? $student->class->name : 'Chưa cập nhật' }} - 
-                            {{ $student->student_code ?? 'Chưa cập nhật' }}
-                        </div>
-                        <div class="student-class">
-                            Lớp: 
-                            @if($student->class)
-                                <a href="#">{{ $student->student_code ?? 'Chưa cập nhật' }}</a>
-                            @else
-                                <span>Chưa cập nhật</span>
-                            @endif
-                            - 
-                            @if($student->department)
-                                {{ $student->department->name }}
-                            @else
-                                Chưa cập nhật
-                            @endif
-                        </div>
-                    </div>
-                    <div class="student-actions">
-                        <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#studentDetailModal{{ $student->id }}">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-
-                <!-- Student Detail Modal 1 -->
-                <div class="modal fade" id="studentDetailModal{{ $student->id }}" tabindex="-1" aria-labelledby="studentDetailModalLabel1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="studentDetailModalLabel1">Thông tin Sinh viên</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="student-detail">
-                                    <img src="{{ $student->user && $student->user->avatar ? asset('storage/avatars/'.$student->user->avatar) : 'https://via.placeholder.com/150x150?text=SV' }}" alt="Sinh viên" class="student-detail-avatar">
-                                    <div class="student-detail-name">{{$student->user->name}}</div>
-                                    <div class="student-detail-id">{{$student->student_code ?? 'Chưa cập nhật' }} </div>
-
-                                    <ul class="student-detail-info">
-                                        <li>
-                                            <i class="fas fa-graduation-cap"></i>
-                                            <span class="detail-label">Lớp:</span>
-                                            <span class="detail-value">{{ $student->class ? $student->class->name : 'Chưa cập nhật' }}</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-user-graduate"></i>
-                                            <span class="detail-label">Khóa:</span>
-                                            <span class="detail-value">K62 (2023-2027)</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-building"></i>
-                                            <span class="detail-label">Khoa:</span>
-                                            <span class="detail-value"><a href="#">Công nghệ thông tin</a></span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-envelope"></i>
-                                            <span class="detail-label">Email:</span>
-                                            <span class="detail-value">a.nv195106001@tlu.edu.vn</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-phone"></i>
-                                            <span class="detail-label">Điện thoại:</span>
-                                            <span class="detail-value">0987.654.321</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-map-marker-alt"></i>
-                                            <span class="detail-label">Địa chỉ:</span>
-                                            <span class="detail-value">Số 123 Đường ABC, Quận Đống Đa, Hà Nội</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-calendar-alt"></i>
-                                            <span class="detail-label">Ngày sinh:</span>
-                                            <span class="detail-value">15/03/2004</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-id-card"></i>
-                                            <span class="detail-label">CCCD:</span>
-                                            <span class="detail-value">001204567890</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
+            @include('partials.student_list', ['students' => $students])
         </div>
+    </div>
+</div>
+@endsection
 
-        <!-- Pagination -->
-            
-        @if ($students->hasPages())
-            <div class="pagination-container">
-                <ul class="pagination">
-                    {{-- Liên kết trang trước --}}
-                    @if ($students->onFirstPage())
-                        <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
-                    @else
-                        <li><a href="{{ $students->previousPageUrl() }}"><i class="fas fa-angle-double-left"></i></a></li>
-                    @endif
-
-                    {{-- Các phần tử phân trang --}}
-                    @foreach ($students->getUrlRange(1, $students->lastPage()) as $page => $url)
-                        @if ($page == $students->currentPage())
-                            <li><a href="#" class="active">{{ $page }}</a></li>
-                        @else
-                            <li><a href="{{ $url }}">{{ $page }}</a></li>
-                        @endif
-                    @endforeach
-
-                    {{-- Liên kết trang tiếp theo --}}
-                    @if ($students->hasMorePages())
-                        <li><a href="{{ $students->nextPageUrl() }}"><i class="fas fa-angle-double-right"></i></a></li>
-                    @else
-                        <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
-                    @endif
-                </ul>
-            </div>
-        @endif
-            </div>
-        </div>
-
-
+@section('custom-js')
+<script>
+$(document).ready(function(){
+    // Biến để lưu trữ các tham số tìm kiếm hiện tại
+    var currentSearch = "{{ $fullname ?? '' }}";
+    var currentClass = "{{ $class_id ?? 'all' }}";
+    var currentYear = "{{ $enrollment_year ?? 'all' }}";
+    
+    // Hàm chung để tải dữ liệu khi có thay đổi bất kỳ
+    function loadData(options) {
+        // Cập nhật các biến nếu có tham số tương ứng
+        if (options.fullname !== undefined) {
+            currentSearch = options.fullname;
+        }
+        if (options.class_id !== undefined) {
+            currentClass = options.class_id;
+        }
+        if (options.enrollment_year !== undefined) {
+            currentYear = options.enrollment_year;
+        }
+        
+        // Xác định URL dựa trên loại hành động
+        var url = options.sort 
+            ? "{{ route('contact.student.sort') }}" 
+            : "{{ route('contact.student.search') }}";
+        
+        // Chuẩn bị dữ liệu gửi đi
+        var data = {
+            fullname: currentSearch,
+            class_id: currentClass,
+            enrollment_year: currentYear
+        };
+        
+        // Thêm tham số sort nếu có
+        if (options.sort) {
+            data.sort = options.sort;
+        }
+        
+        // Thêm tham số page nếu có
+        if (options.page) {
+            data.page = options.page;
+        }
+        
+        // Hiển thị loading indicator (tùy chọn)
+        $(".student-list").addClass("loading");
+        
+        // Gửi yêu cầu Ajax
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: data,
+            success: function(response) {
+                $(".student-list").html(response).removeClass("loading");
+            },
+            error: function(xhr) {
+                console.error("Lỗi khi tải dữ liệu:", xhr.responseText);
+                $(".student-list").removeClass("loading");
+            }
+        });
+    }
+    
+    // Xử lý sự kiện khi select sắp xếp thay đổi
+    $("#sortSelect").change(function() {
+        loadData({
+            sort: $(this).val()
+        });
+    });
+    
+    // Xử lý sự kiện khi select lớp thay đổi
+    $("#classSelect").change(function() {
+        loadData({
+            class_id: $(this).val()
+        });
+    });
+    
+    // Xử lý sự kiện khi select khóa thay đổi
+    $("#yearSelect").change(function() {
+        loadData({
+            enrollment_year: $(this).val()
+        });
+    });
+    
+    // Xử lý form tìm kiếm bằng Ajax
+    $("#searchForm").submit(function(e) {
+        e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+        
+        loadData({
+            fullname: $("input[name='fullname']").val()
+        });
+    });
+    
+    // Xử lý phân trang bằng Ajax
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        
+        var page = $(this).attr('href').split('page=')[1];
+        
+        loadData({
+            page: page
+        });
+        
+        // Cuộn lên đầu danh sách (tùy chọn)
+        $('html, body').animate({
+            scrollTop: $(".student-list-container").offset().top - 100
+        }, 200);
+    });
+    
+    // Thêm loading indicator CSS (tùy chọn)
+    $("<style>")
+        .prop("type", "text/css")
+        .html(`
+            .student-list.loading {
+                position: relative;
+                min-height: 200px;
+            }
+            .student-list.loading:after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.7) url('/images/spinner.gif') no-repeat center center;
+                z-index: 5;
+            }
+        `)
+        .appendTo("head");
+});
+</script>
 @endsection

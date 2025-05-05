@@ -16,6 +16,12 @@
                 @else
                     <span>Chưa cập nhật</span>
                 @endif
+                - 
+                @if($student->department)
+                    {{ $student->department->name }}
+                @else
+                    Chưa cập nhật
+                @endif
             </div>
         </div>
         <div class="student-actions">
@@ -52,6 +58,17 @@
                                 <span class="detail-value">
                                     @if($student->enrollment_year)
                                         K{{ $student->enrollment_year - 1957 }} ({{ $student->enrollment_year }}-{{ $student->enrollment_year + 4 }})
+                                    @else
+                                        Chưa cập nhật
+                                    @endif
+                                </span>
+                            </li>
+                            <li>
+                                <i class="fas fa-building"></i>
+                                <span class="detail-label">Khoa:</span>
+                                <span class="detail-value">
+                                    @if($student->department)
+                                        <a href="#">{{ $student->department->name }}</a>
                                     @else
                                         Chưa cập nhật
                                     @endif
@@ -101,7 +118,9 @@
             @if ($students->onFirstPage())
                 <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
             @else
-                <li><a href="{{ $students->previousPageUrl() }}" class="page-link"><i class="fas fa-angle-double-left"></i></a></li>
+                <li><a href="#" class="page-link" data-page="{{ $students->currentPage() - 1 }}">
+                    <i class="fas fa-angle-double-left"></i>
+                </a></li>
             @endif
 
             {{-- Các phần tử phân trang --}}
@@ -109,13 +128,15 @@
                 @if ($page == $students->currentPage())
                     <li><a href="#" class="active">{{ $page }}</a></li>
                 @else
-                    <li><a href="{{ $url }}" class="page-link">{{ $page }}</a></li>
+                    <li><a href="#" class="page-link" data-page="{{ $page }}">{{ $page }}</a></li>
                 @endif
             @endforeach
 
             {{-- Liên kết trang tiếp theo --}}
             @if ($students->hasMorePages())
-                <li><a href="{{ $students->nextPageUrl() }}" class="page-link"><i class="fas fa-angle-double-right"></i></a></li>
+                <li><a href="#" class="page-link" data-page="{{ $students->currentPage() + 1 }}">
+                    <i class="fas fa-angle-double-right"></i>
+                </a></li>
             @else
                 <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
             @endif

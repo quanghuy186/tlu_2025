@@ -181,12 +181,16 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
 Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(){
     Route::get('/', [ContactController::class, 'index'])->name('index');
     Route::get('/student', [ContactController::class, 'student'])->name('student');
+    Route::get('/student/search', [ContactController::class, 'search_student'])->name('student.search');
+    Route::get('/student/sort', [ContactController::class, 'sort_student'])->name('student.sort');
+
     Route::get('/teacher', [ContactController::class, 'teacher'])->name('teacher');
     Route::get('/teacher/search', [ContactController::class, 'search_teacher'])->name('teacher.search');
     Route::get('/teacher/sort', [ContactController::class, 'sort_teacher'])->name('teacher.sort');
     
 
     Route::get('/department', [ContactController::class, 'department'])->name('department');
+    
 });
 
 
