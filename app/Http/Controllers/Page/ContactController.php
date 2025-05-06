@@ -32,7 +32,7 @@ class ContactController extends Controller
         $query = Department::query()
             ->join('users', 'departments.user_id', '=', 'users.id')
             ->select('departments.*')
-            ->with('user');
+            ->with('manager');
         
         // Thêm điều kiện tìm kiếm theo tên hoặc mã cán bộ
         if (!empty($fullname)) {
@@ -60,7 +60,6 @@ class ContactController extends Controller
         }
         
         return view('pages.contact.department')
-            ->with('departments', $departments)
             ->with('fullname', $fullname)
             ->with('departments', $departments);
     }
@@ -73,7 +72,7 @@ class ContactController extends Controller
         $query = Department::query()
             ->join('users', 'departments.user_id', '=', 'users.id')
             ->select('departments.*')
-            ->with('user');
+            ->with('manager');
         
         // Áp dụng điều kiện tìm kiếm theo tên hoặc mã nếu có
         if (!empty($fullname)) {
