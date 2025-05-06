@@ -29,7 +29,7 @@
             <div class="search-box mt-5">
                 <i class="fas fa-search me-2"></i>
                 <input name="fullname" type="text" placeholder="Tìm kiếm tên đơn vị...">
-                <button type="button"><i class="fas fa-arrow-right"></i></button>
+                <button type="submit"><i class="fas fa-arrow-right"></i></button>
             </div>
         </form>
     </div>
@@ -343,7 +343,7 @@
             }
             
             // Hiển thị loading indicator (tùy chọn)
-            $(".department-list").addClass("loading");
+            $(".unit-list").addClass("loading");
             
             // Gửi yêu cầu Ajax
             $.ajax({
@@ -351,11 +351,11 @@
                 type: "GET",
                 data: data,
                 success: function(response) {
-                    $(".department-list").html(response).removeClass("loading");
+                    $(".unit-list").html(response).removeClass("loading");
                 },
                 error: function(xhr) {
                     console.error("Lỗi khi tải dữ liệu:", xhr.responseText);
-                    $(".department-list").removeClass("loading");
+                    $(".unit-list").removeClass("loading");
                 }
             });
         }
@@ -402,7 +402,7 @@
             
             // Cuộn lên đầu danh sách (tùy chọn)
             $('html, body').animate({
-                scrollTop: $(".student-list-container").offset().top - 100
+                scrollTop: $(".unit-list-container").offset().top - 100
             }, 200);
         });
         
@@ -410,11 +410,11 @@
         $("<style>")
             .prop("type", "text/css")
             .html(`
-                .student-list.loading {
+                .unit-list.loading {
                     position: relative;
                     min-height: 200px;
                 }
-                .student-list.loading:after {
+                .unit-list.loading:after {
                     content: '';
                     position: absolute;
                     top: 0;
