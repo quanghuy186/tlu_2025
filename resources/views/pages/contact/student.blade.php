@@ -87,131 +87,131 @@
 
 @section('custom-js')
 <script>
-$(document).ready(function(){
-    // Biến để lưu trữ các tham số tìm kiếm hiện tại
-    var currentSearch = "{{ $fullname ?? '' }}";
-    var currentClass = "{{ $class_id ?? 'all' }}";
-    var currentYear = "{{ $enrollment_year ?? 'all' }}";
-    
-    // Hàm chung để tải dữ liệu khi có thay đổi bất kỳ
-    function loadData(options) {
-        // Cập nhật các biến nếu có tham số tương ứng
-        if (options.fullname !== undefined) {
-            currentSearch = options.fullname;
-        }
-        if (options.class_id !== undefined) {
-            currentClass = options.class_id;
-        }
-        if (options.enrollment_year !== undefined) {
-            currentYear = options.enrollment_year;
-        }
+    $(document).ready(function(){
+        // Biến để lưu trữ các tham số tìm kiếm hiện tại
+        var currentSearch = "{{ $fullname ?? '' }}";
+        var currentClass = "{{ $class_id ?? 'all' }}";
+        var currentYear = "{{ $enrollment_year ?? 'all' }}";
         
-        // Xác định URL dựa trên loại hành động
-        var url = options.sort 
-            ? "{{ route('contact.student.sort') }}" 
-            : "{{ route('contact.student.search') }}";
-        
-        // Chuẩn bị dữ liệu gửi đi
-        var data = {
-            fullname: currentSearch,
-            class_id: currentClass,
-            enrollment_year: currentYear
-        };
-        
-        // Thêm tham số sort nếu có
-        if (options.sort) {
-            data.sort = options.sort;
-        }
-        
-        // Thêm tham số page nếu có
-        if (options.page) {
-            data.page = options.page;
-        }
-        
-        // Hiển thị loading indicator (tùy chọn)
-        $(".student-list").addClass("loading");
-        
-        // Gửi yêu cầu Ajax
-        $.ajax({
-            url: url,
-            type: "GET",
-            data: data,
-            success: function(response) {
-                $(".student-list").html(response).removeClass("loading");
-            },
-            error: function(xhr) {
-                console.error("Lỗi khi tải dữ liệu:", xhr.responseText);
-                $(".student-list").removeClass("loading");
+        // Hàm chung để tải dữ liệu khi có thay đổi bất kỳ
+        function loadData(options) {
+            // Cập nhật các biến nếu có tham số tương ứng
+            if (options.fullname !== undefined) {
+                currentSearch = options.fullname;
             }
-        });
-    }
-    
-    // Xử lý sự kiện khi select sắp xếp thay đổi
-    $("#sortSelect").change(function() {
-        loadData({
-            sort: $(this).val()
-        });
-    });
-    
-    // Xử lý sự kiện khi select lớp thay đổi
-    $("#classSelect").change(function() {
-        loadData({
-            class_id: $(this).val()
-        });
-    });
-    
-    // Xử lý sự kiện khi select khóa thay đổi
-    $("#yearSelect").change(function() {
-        loadData({
-            enrollment_year: $(this).val()
-        });
-    });
-    
-    // Xử lý form tìm kiếm bằng Ajax
-    $("#searchForm").submit(function(e) {
-        e.preventDefault(); // Ngăn chặn hành vi mặc định của form
-        
-        loadData({
-            fullname: $("input[name='fullname']").val()
-        });
-    });
-    
-    // Xử lý phân trang bằng Ajax
-    $(document).on('click', '.pagination a', function(e) {
-        e.preventDefault();
-        
-        var page = $(this).attr('href').split('page=')[1];
-        
-        loadData({
-            page: page
-        });
-        
-        // Cuộn lên đầu danh sách (tùy chọn)
-        $('html, body').animate({
-            scrollTop: $(".student-list-container").offset().top - 100
-        }, 200);
-    });
-    
-    // Thêm loading indicator CSS (tùy chọn)
-    $("<style>")
-        .prop("type", "text/css")
-        .html(`
-            .student-list.loading {
-                position: relative;
-                min-height: 200px;
+            if (options.class_id !== undefined) {
+                currentClass = options.class_id;
             }
-            .student-list.loading:after {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(255, 255, 255, 0.7) url('/images/spinner.gif') no-repeat center center;
-                z-index: 5;
+            if (options.enrollment_year !== undefined) {
+                currentYear = options.enrollment_year;
             }
-        `)
-        .appendTo("head");
-});
+            
+            // Xác định URL dựa trên loại hành động
+            var url = options.sort 
+                ? "{{ route('contact.student.sort') }}" 
+                : "{{ route('contact.student.search') }}";
+            
+            // Chuẩn bị dữ liệu gửi đi
+            var data = {
+                fullname: currentSearch,
+                class_id: currentClass,
+                enrollment_year: currentYear
+            };
+            
+            // Thêm tham số sort nếu có
+            if (options.sort) {
+                data.sort = options.sort;
+            }
+            
+            // Thêm tham số page nếu có
+            if (options.page) {
+                data.page = options.page;
+            }
+            
+            // Hiển thị loading indicator (tùy chọn)
+            $(".student-list").addClass("loading");
+            
+            // Gửi yêu cầu Ajax
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: data,
+                success: function(response) {
+                    $(".student-list").html(response).removeClass("loading");
+                },
+                error: function(xhr) {
+                    console.error("Lỗi khi tải dữ liệu:", xhr.responseText);
+                    $(".student-list").removeClass("loading");
+                }
+            });
+        }
+        
+        // Xử lý sự kiện khi select sắp xếp thay đổi
+        $("#sortSelect").change(function() {
+            loadData({
+                sort: $(this).val()
+            });
+        });
+        
+        // Xử lý sự kiện khi select lớp thay đổi
+        $("#classSelect").change(function() {
+            loadData({
+                class_id: $(this).val()
+            });
+        });
+        
+        // Xử lý sự kiện khi select khóa thay đổi
+        $("#yearSelect").change(function() {
+            loadData({
+                enrollment_year: $(this).val()
+            });
+        });
+        
+        // Xử lý form tìm kiếm bằng Ajax
+        $("#searchForm").submit(function(e) {
+            e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+            
+            loadData({
+                fullname: $("input[name='fullname']").val()
+            });
+        });
+        
+        // Xử lý phân trang bằng Ajax
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            
+            var page = $(this).attr('href').split('page=')[1];
+            
+            loadData({
+                page: page
+            });
+            
+            // Cuộn lên đầu danh sách (tùy chọn)
+            $('html, body').animate({
+                scrollTop: $(".student-list-container").offset().top - 100
+            }, 200);
+        });
+        
+        // Thêm loading indicator CSS (tùy chọn)
+        $("<style>")
+            .prop("type", "text/css")
+            .html(`
+                .student-list.loading {
+                    position: relative;
+                    min-height: 200px;
+                }
+                .student-list.loading:after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(255, 255, 255, 0.7) url('/images/spinner.gif') no-repeat center center;
+                    z-index: 5;
+                }
+            `)
+            .appendTo("head");
+    });
 </script>
 @endsection

@@ -190,6 +190,8 @@ Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(
     
 
     Route::get('/department', [ContactController::class, 'department'])->name('department');
+    Route::get('/department/search', [ContactController::class, 'search_department'])->name('department.search');
+    Route::get('/department/sort', [ContactController::class, 'sort_department'])->name('department.sort');
     
 });
 

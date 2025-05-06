@@ -23,6 +23,83 @@ class ContactController extends Controller
         return view('pages.contact.department')->with('departments', $departments);
     }
 
+    public function search_department(Request $request)
+    {
+        $departments = Department::paginate(10);
+
+        $fullname = $request->input('fullname');
+        
+        $query = Department::query()
+            ->join('users', 'departments.user_id', '=', 'users.id')
+            ->select('departments.*')
+            ->with('user');
+        
+        // Thêm điều kiện tìm kiếm theo tên hoặc mã cán bộ
+        if (!empty($fullname)) {
+            $query->where(function($q) use ($fullname) {
+                $q->where('users.name', 'LIKE', "%{$fullname}%")
+                ->orWhere('departments.department_code', 'LIKE', "%{$fullname}%");
+            });
+        }
+        
+        // // Thêm điều kiện lọc theo department_id
+        // if (!empty($department_id) && $department_id != 'all') {
+        //     $query->where('teachers.department_id', $department_id);
+        // }
+        
+        // // Thêm điều kiện lọc theo academic_rank
+        // if (!empty($selected_rank) && $selected_rank != 'all') {
+        //     $query->where('teachers.academic_rank', $selected_rank);
+        // }
+        
+        $departments = $query->paginate(10);
+        
+        // Kiểm tra nếu là yêu cầu Ajax
+        if ($request->ajax()) {
+            return view('partials.department_list', compact('departments'));
+        }
+        
+        return view('pages.contact.department')
+            ->with('departments', $departments)
+            ->with('fullname', $fullname)
+            ->with('departments', $departments);
+    }
+
+    public function sort_department(Request $request)
+    {
+        $sortBy = $request->input('sort', 'name');
+        $fullname = $request->input('search', ''); // Lấy từ khóa tìm kiếm (nếu có)
+        
+        $query = Department::query()
+            ->join('users', 'departments.user_id', '=', 'users.id')
+            ->select('departments.*')
+            ->with('user');
+        
+        // Áp dụng điều kiện tìm kiếm theo tên hoặc mã nếu có
+        if (!empty($fullname)) {
+            $query->where(function($q) use ($fullname) {
+                $q->where('users.name', 'LIKE', "%{$fullname}%")
+                ->orWhere('departments.department_code', 'LIKE', "%{$fullname}%");
+            });
+        }
+        
+        switch ($sortBy) {
+            case 'name':
+                $query->orderBy('users.name', 'asc');
+                break;
+            case 'name-desc':
+                $query->orderBy('users.name', 'desc');
+                break;
+            default:
+                $query->orderBy('users.name', 'asc');
+        }
+        
+        $departments = $query->paginate(10);
+        
+        // Trả về partial view khi được gọi bằng Ajax
+        return view('partials.department_list', compact('departments'));
+    }
+
     // Trong ContactController.php
 
     public function teacher()

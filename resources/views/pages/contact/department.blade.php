@@ -1,24 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mb-5">
+<div class="container">
     <!-- Search and Filter Section -->
     <div class="search-filter-container">
-        <div class="search-box">
-            <i class="fas fa-search me-2"></i>
-            <input type="text" placeholder="Tìm kiếm tên đơn vị, phòng ban...">
-            <button type="button"><i class="fas fa-arrow-right"></i></button>
-        </div>
+        
         <div class="filter-options">
             <div class="filter-group">
                 <span class="filter-label">Sắp xếp theo:</span>
-                <select class="filter-select">
+                <select class="filter-select" id="sortSelect" name="sort">
                     <option value="name">Tên (A-Z)</option>
                     <option value="name-desc">Tên (Z-A)</option>
-                    <option value="type">Loại đơn vị</option>
                 </select>
             </div>
-            <div class="filter-group">
+            {{-- <div class="filter-group">
                 <span class="filter-label">Loại đơn vị:</span>
                 <select class="filter-select">
                     <option value="all">Tất cả</option>
@@ -27,17 +22,16 @@
                     <option value="administrative">Đơn vị hành chính</option>
                     <option value="service">Đơn vị dịch vụ</option>
                 </select>
-            </div>
-            <div class="filter-group">
-                <span class="filter-label">Cơ sở:</span>
-                <select class="filter-select">
-                    <option value="all">Tất cả</option>
-                    <option value="hanoi">Hà Nội</option>
-                    <option value="phuly">Phủ Lý</option>
-                    <option value="tphcm">TP. Hồ Chí Minh</option>
-                </select>
-            </div>
+            </div> --}}
         </div>
+
+        <form action="{{route('contact.department.search')}}" method="GET">
+            <div class="search-box mt-5">
+                <i class="fas fa-search me-2"></i>
+                <input name="fullname" type="text" placeholder="Tìm kiếm tên đơn vị...">
+                <button type="button"><i class="fas fa-arrow-right"></i></button>
+            </div>
+        </form>
     </div>
 
     <!-- Unit List -->
@@ -60,8 +54,6 @@
                     @if($department->manager)
                     <div class="d-flex align-items-center">
                         @if($department->manager->avatar)
-                            {{-- <img src="https://via.placeholder.com/150x150?text=CNTT" alt="Khoa CNTT" class="unit-logo"> --}}
-
                             <img src="{{ asset('storage/avatars/'.$department->manager->avatar) }}" 
                                 alt="{{ $department->manager->name }}" style="border-radius : 50%" 
                                 class="unit-logo">
@@ -310,164 +302,130 @@
     </div>
 </div>
 
-<!-- Unit Detail Modal 2 -->
-<div class="modal fade" id="unitDetailModal2" tabindex="-1" aria-labelledby="unitDetailModalLabel2" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="unitDetailModalLabel2">Thông tin Chi tiết Đơn vị</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="unit-detail">
-                    <!-- Unit Header -->
-                    <div class="unit-detail-header">
-                        <img src="https://via.placeholder.com/150x150?text=KT" alt="Khoa Kinh tế" class="unit-detail-logo">
-                        <div class="unit-detail-title">
-                            <div class="unit-detail-name">Khoa Kinh tế và Quản lý</div>
-                            <div class="unit-detail-type">Đơn vị đào tạo</div>
-                            <div class="unit-detail-meta">
-                                <div class="unit-detail-meta-item">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span>Thành lập: 2001</span>
-                                </div>
-                                <div class="unit-detail-meta-item">
-                                    <i class="fas fa-users"></i>
-                                    <span>Số cán bộ: 38</span>
-                                </div>
-                                <div class="unit-detail-meta-item">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Cơ sở: Hà Nội</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+@endsection
 
-                    <!-- Unit Description -->
-                    <div class="unit-detail-section">
-                        <div class="unit-detail-section-title">Giới thiệu</div>
-                        <div class="unit-detail-description">
-                            <p>Khoa Kinh tế và Quản lý được thành lập vào năm 2001, là đơn vị đào tạo về các lĩnh vực kinh tế, quản trị kinh doanh và tài chính của Trường Đại học Thủy Lợi. Khoa đã và đang khẳng định vị thế là một trong những đơn vị đào tạo kinh tế có uy tín tại Việt Nam.</p>
-                            <p>Hiện nay, Khoa Kinh tế và Quản lý đào tạo các chuyên ngành: Quản trị kinh doanh, Kế toán, Kinh tế, Tài chính - Ngân hàng, và Quản lý dự án. Khoa cũng đào tạo ở các bậc: đại học và thạc sĩ.</p>
-                            <p>Với đội ngũ giảng viên có trình độ cao, kinh nghiệm thực tiễn phong phú, Khoa Kinh tế và Quản lý cam kết đào tạo nguồn nhân lực chất lượng cao, đáp ứng nhu cầu của doanh nghiệp và xã hội.</p>
-                        </div>
-                    </div>
 
-                    <!-- Leadership -->
-                    <div class="unit-detail-section">
-                        <div class="unit-detail-section-title">Ban lãnh đạo</div>
-                        <div class="leader-list">
-                            <div class="leader-item">
-                                <img src="https://via.placeholder.com/150x150?text=Leader1" alt="Trưởng khoa" class="leader-avatar">
-                                <div class="leader-info">
-                                    <div class="leader-name">PGS.TS. Trần Thị Lan</div>
-                                    <div class="leader-position">Trưởng khoa</div>
-                                </div>
-                            </div>
-                            <div class="leader-item">
-                                <img src="https://via.placeholder.com/150x150?text=Leader2" alt="Phó trưởng khoa" class="leader-avatar">
-                                <div class="leader-info">
-                                    <div class="leader-name">TS. Đỗ Văn Bình</div>
-                                    <div class="leader-position">Phó Trưởng khoa</div>
-                                </div>
-                            </div>
-                            <div class="leader-item">
-                                <img src="https://via.placeholder.com/150x150?text=Leader3" alt="Phó trưởng khoa" class="leader-avatar">
-                                <div class="leader-info">
-                                    <div class="leader-name">TS. Nguyễn Thị Hương</div>
-                                    <div class="leader-position">Phó Trưởng khoa</div>
-                                </div>
-                            </div>
-                            <div class="leader-item">
-                                <img src="https://via.placeholder.com/150x150?text=Leader4" alt="Trợ lý khoa" class="leader-avatar">
-                                <div class="leader-info">
-                                    <div class="leader-name">ThS. Vũ Thị Mai</div>
-                                    <div class="leader-position">Trợ lý Khoa</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Staff List -->
-                    <div class="unit-detail-section">
-                        <div class="unit-detail-section-title">Bộ môn trực thuộc</div>
-                        <div class="staff-list">
-                            <div class="staff-item">
-                                <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
-                                <div class="staff-info">
-                                    <div class="staff-name">Bộ môn Quản trị kinh doanh</div>
-                                    <div class="staff-position">Trưởng BM: TS. Nguyễn Thị Hồng</div>
-                                </div>
-                            </div>
-                            <div class="staff-item">
-                                <img src="https://via.placeholder.com/150x150?text=BM2" alt="Bộ môn" class="staff-avatar">
-                                <div class="staff-info">
-                                    <div class="staff-name">Bộ môn Kế toán</div>
-                                    <div class="staff-position">Trưởng BM: TS. Lê Văn Quang</div>
-                                </div>
-                            </div>
-                            <div class="staff-item">
-                                <img src="https://via.placeholder.com/150x150?text=BM3" alt="Bộ môn" class="staff-avatar">
-                                <div class="staff-info">
-                                    <div class="staff-name">Bộ môn Kinh tế</div>
-                                    <div class="staff-position">Trưởng BM: PGS.TS. Trịnh Quốc Trung</div>
-                                </div>
-                            </div>
-                            <div class="staff-item">
-                                <img src="https://via.placeholder.com/150x150?text=BM4" alt="Bộ môn" class="staff-avatar">
-                                <div class="staff-info">
-                                    <div class="staff-name">Bộ môn Tài chính - Ngân hàng</div>
-                                    <div class="staff-position">Trưởng BM: TS. Phạm Thị Minh</div>
-                                </div>
-                            </div>
-                            <div class="staff-item">
-                                <img src="https://via.placeholder.com/150x150?text=VP" alt="Văn phòng" class="staff-avatar">
-                                <div class="staff-info">
-                                    <div class="staff-name">Văn phòng Khoa</div>
-                                    <div class="staff-position">Nhân viên: 4 người</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Contact Information -->
-                    <div class="unit-detail-section">
-                        <div class="unit-detail-section-title">Thông tin liên hệ</div>
-                        <ul class="contact-info-list">
-                            <li class="contact-info-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span class="contact-label">Địa chỉ:</span>
-                                <span class="contact-value">Tầng 2, Nhà A5, Trường ĐH Thủy Lợi, 175 Tây Sơn, Đống Đa, Hà Nội</span>
-                            </li>
-                            <li class="contact-info-item">
-                                <i class="fas fa-phone-alt"></i>
-                                <span class="contact-label">Điện thoại:</span>
-                                <span class="contact-value">(024) 3563 2345</span>
-                            </li>
-                            <li class="contact-info-item">
-                                <i class="fas fa-envelope"></i>
-                                <span class="contact-label">Email:</span>
-                                <span class="contact-value">ktql@tlu.edu.vn</span>
-                            </li>
-                            <li class="contact-info-item">
-                                <i class="fas fa-globe"></i>
-                                <span class="contact-label">Website:</span>
-                                <span class="contact-value"><a href="#" target="_blank">fem.tlu.edu.vn</a></span>
-                            </li>
-                            <li class="contact-info-item">
-                                <i class="fab fa-facebook"></i>
-                                <span class="contact-label">Facebook:</span>
-                                <span class="contact-value"><a href="#" target="_blank">facebook.com/fem.tlu</a></span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <a href="#" class="btn btn-primary">Xem trang Khoa Kinh tế</a>
-            </div>
-        </div>
-    </div>
-</div>
+@section('custom-js')
+<script>
+    $(document).ready(function(){
+        // Biến để lưu trữ các tham số tìm kiếm hiện tại
+        var currentSearch = "{{ $fullname ?? '' }}";
+        // var currentClass = "{{ $class_id ?? 'all' }}";
+        
+        // Hàm chung để tải dữ liệu khi có thay đổi bất kỳ
+        function loadData(options) {
+            // Cập nhật các biến nếu có tham số tương ứng
+            if (options.fullname !== undefined) {
+                currentSearch = options.fullname;
+            }
+            // if (options.enrollment_year !== undefined) {
+            //     currentYear = options.enrollment_year;
+            // }
+            
+            // Xác định URL dựa trên loại hành động
+            var url = options.sort 
+                ? "{{ route('contact.department.sort') }}" 
+                : "{{ route('contact.department.search') }}";
+            
+            // Chuẩn bị dữ liệu gửi đi
+            var data = {
+                fullname: currentSearch,
+            };
+            
+            // Thêm tham số sort nếu có
+            if (options.sort) {
+                data.sort = options.sort;
+            }
+            
+            // Thêm tham số page nếu có
+            if (options.page) {
+                data.page = options.page;
+            }
+            
+            // Hiển thị loading indicator (tùy chọn)
+            $(".department-list").addClass("loading");
+            
+            // Gửi yêu cầu Ajax
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: data,
+                success: function(response) {
+                    $(".department-list").html(response).removeClass("loading");
+                },
+                error: function(xhr) {
+                    console.error("Lỗi khi tải dữ liệu:", xhr.responseText);
+                    $(".department-list").removeClass("loading");
+                }
+            });
+        }
+        
+        // Xử lý sự kiện khi select sắp xếp thay đổi
+        $("#sortSelect").change(function() {
+            loadData({
+                sort: $(this).val()
+            });
+        });
+        
+        // Xử lý sự kiện khi select lớp thay đổi
+        // $("#classSelect").change(function() {
+        //     loadData({
+        //         class_id: $(this).val()
+        //     });
+        // });
+        
+        // Xử lý sự kiện khi select khóa thay đổi
+        // $("#yearSelect").change(function() {
+        //     loadData({
+        //         enrollment_year: $(this).val()
+        //     });
+        // });
+        
+        // Xử lý form tìm kiếm bằng Ajax
+        $("#searchForm").submit(function(e) {
+            e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+            
+            loadData({
+                fullname: $("input[name='fullname']").val()
+            });
+        });
+        
+        // Xử lý phân trang bằng Ajax
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            
+            var page = $(this).attr('href').split('page=')[1];
+            
+            loadData({
+                page: page
+            });
+            
+            // Cuộn lên đầu danh sách (tùy chọn)
+            $('html, body').animate({
+                scrollTop: $(".student-list-container").offset().top - 100
+            }, 200);
+        });
+        
+        // Thêm loading indicator CSS (tùy chọn)
+        $("<style>")
+            .prop("type", "text/css")
+            .html(`
+                .student-list.loading {
+                    position: relative;
+                    min-height: 200px;
+                }
+                .student-list.loading:after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(255, 255, 255, 0.7) url('/images/spinner.gif') no-repeat center center;
+                    z-index: 5;
+                }
+            `)
+            .appendTo("head");
+    });
+</script>
 @endsection
