@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\ForumCategoryController;
 use App\Http\Controllers\Admin\NotificationCategoryController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -192,13 +193,30 @@ Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(
     Route::get('/department', [ContactController::class, 'department'])->name('department');
     Route::get('/department/search', [ContactController::class, 'search_department'])->name('department.search');
     Route::get('/department/sort', [ContactController::class, 'sort_department'])->name('department.sort');
-    
 });
 
 
 // -------------
 Route::get('/message', [MessageController::class, 'index'])->name('message.index');
+
+
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
+
+Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
+    // Routes cho danh mục diễn đàn
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::get('/', [ForumCategoryController::class, 'index'])->name('index');
+        Route::get('/create', [ForumCategoryController::class, 'create'])->name('create');
+        Route::post('/store', [ForumCategoryController::class, 'store'])->name('store');
+        Route::get('/{id}', [ForumCategoryController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [ForumCategoryController::class, 'edit'])->name('edit');
+        Route::post('/{id}/update', [ForumCategoryController::class, 'update'])->name('update');
+        Route::post('/{id}/destroy', [ForumCategoryController::class, 'destroy'])->name('destroy');
+    });
+});
+
+
+
 // Route::get('/notification', [UserNotificationController::class, 'index'])->name('notification.index');
 Route::get('/notification', [PageIndexController::class, 'notification'])->name('notification.index');
 

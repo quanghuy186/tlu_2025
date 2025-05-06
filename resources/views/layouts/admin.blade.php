@@ -311,7 +311,7 @@
         </a>
         <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="charts-chartjs.html">
+            <a href="{{route('admin.forum.categories.index')}}">
               <i class="bi bi-circle"></i><span>Danh mục</span>
             </a>
           </li>

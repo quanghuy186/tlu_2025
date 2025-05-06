@@ -80,7 +80,8 @@
 
         <!-- Teacher List Items -->
         <div class="teacher-list">
-            @foreach($teachers as $teacher)
+            @include('partials.teacher_list', ['teachers' => $teachers])
+            {{-- @foreach($teachers as $teacher)
                 <div class="teacher-item">
                     <img src="{{ asset('storage/avatars/'.($teacher->user->avatar ?? 'default.png')) }}" alt="Giảng viên" class="teacher-avatar">
                     <div class="teacher-info">
@@ -95,11 +96,7 @@
                             @endif
                         </div>
                     </div>
-                    {{-- <div class="teacher-actions">
-                        <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal1">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                    </div> --}}
+                   
                     <div class="teacher-actions">
                         <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal{{ $teacher->id }}">
                             <i class="fas fa-eye"></i>
@@ -166,39 +163,13 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @endforeach --}}
             
         </div>
 
+
         <!-- Pagination -->
-        @if ($teachers->hasPages())
-            <div class="pagination-container">
-                <ul class="pagination">
-                    {{-- Liên kết trang trước --}}
-                    @if ($teachers->onFirstPage())
-                        <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
-                    @else
-                        <li><a href="{{ $teachers->previousPageUrl() }}"><i class="fas fa-angle-double-left"></i></a></li>
-                    @endif
-
-                    {{-- Các phần tử phân trang --}}
-                    @foreach ($teachers->getUrlRange(1, $teachers->lastPage()) as $page => $url)
-                        @if ($page == $teachers->currentPage())
-                            <li><a href="#" class="active">{{ $page }}</a></li>
-                        @else
-                            <li><a href="{{ $url }}">{{ $page }}</a></li>
-                        @endif
-                    @endforeach
-
-                    {{-- Liên kết trang tiếp theo --}}
-                    @if ($teachers->hasMorePages())
-                        <li><a href="{{ $teachers->nextPageUrl() }}"><i class="fas fa-angle-double-right"></i></a></li>
-                    @else
-                        <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
-                    @endif
-                </ul>
-            </div>
-        @endif
+        
             {{-- </div>
         </div> --}}
     </div>
@@ -214,66 +185,9 @@
     </div>
 </div>
 
-<!-- Teacher Detail Modal 1 -->
-{{-- <div class="modal fade" id="teacherDetailModal1" tabindex="-1" aria-labelledby="teacherDetailModalLabel1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="teacherDetailModalLabel1">Thông tin Cán bộ Giảng viên</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="teacher-detail">
-                    <img src="https://via.placeholder.com/250x250?text=GV1" alt="Giảng viên" class="teacher-detail-avatar">
-                    <div class="teacher-detail-name">name</div>
-                    <div class="teacher-detail-position">Trưởng khoa</div>
-
-                    <ul class="teacher-detail-info">
-                        <li>
-                            <i class="fas fa-id-card"></i>
-                            <span class="detail-label">Mã cán bộ:</span>
-                            <span class="detail-value">CB12345678</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-envelope"></i>
-                            <span class="detail-label">Email:</span>
-                            <span class="detail-value">nguyenvanan@tlu.edu.vn</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-phone"></i>
-                            <span class="detail-label">Điện thoại:</span>
-                            <span class="detail-value">024.3852.2201 (máy lẻ: 123)</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-building"></i>
-                            <span class="detail-label">Đơn vị:</span>
-                            <span class="detail-value"><a href="#">Khoa Công nghệ thông tin</a></span>
-                        </li>
-                        <li>
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span class="detail-label">Địa chỉ:</span>
-                            <span class="detail-value">Phòng 305, Tầng 3, Nhà C1, TLU</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-briefcase"></i>
-                            <span class="detail-label">Chuyên môn:</span>
-                            <span class="detail-value">Trí tuệ nhân tạo, Khoa học dữ liệu</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
-
-
 @endsection
 
 @section('custom-js')
-// Thêm vào section('custom-js')
 <script>
 $(document).ready(function(){
     // Biến để lưu trữ các tham số tìm kiếm hiện tại
@@ -359,28 +273,40 @@ $(document).ready(function(){
     });
     
     // Xử lý các link phân trang để duy trì tham số tìm kiếm
-    $(document).on('click', '.pagination a', function(e) {
-        e.preventDefault();
-        
-        var page = $(this).attr('href').split('page=')[1];
-        var url = "{{ route('contact.teacher.search') }}?page=" + page;
-        
-        $.ajax({
-            url: url,
-            type: "GET",
-            data: {
-                fullname: currentSearch,
-                department_id: currentDepartment,
-                academic_rank: currentRank
-            },
-            success: function(response) {
-                $(".teacher-list").html(response);
-            },
-            error: function(xhr) {
-                console.error("Lỗi khi chuyển trang:", xhr.responseText);
-            }
-        });
+
+    $(document).on('click', '.page-link', function(e) {
+            e.preventDefault();
+            
+            var page = $(this).data('page');
+            
+            loadData({
+                page: page
+            });
+            
+            // Scroll to top of list (optional)
+            $('html, body').animate({
+                scrollTop: $(".teacher-list-container").offset().top - 100
+            }, 200);
     });
+
+    $("<style>")
+            .prop("type", "text/css")
+            .html(`
+                .student-list.loading {
+                    position: relative;
+                    min-height: 200px;
+                }
+                .student-list.loading:after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(255, 255, 255, 0.7) url('/images/spinner.gif') no-repeat center center;
+                    z-index: 5;
+                }
+            `).appendTo("head");
 });
 </script>
 @endsection

@@ -80,10 +80,14 @@
         <!-- Student List Items -->
         <div class="student-list">
             @include('partials.student_list', ['students' => $students])
+
+            
+        <!-- Pagination -->
+        
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-@endsection
+    @endsection
 
 @section('custom-js')
 <script>
@@ -177,16 +181,16 @@
         });
         
         // Xử lý phân trang bằng Ajax
-        $(document).on('click', '.pagination a', function(e) {
+        $(document).on('click', '.page-link', function(e) {
             e.preventDefault();
             
-            var page = $(this).attr('href').split('page=')[1];
+            var page = $(this).data('page');
             
             loadData({
                 page: page
             });
             
-            // Cuộn lên đầu danh sách (tùy chọn)
+            // Scroll to top of list (optional)
             $('html, body').animate({
                 scrollTop: $(".student-list-container").offset().top - 100
             }, 200);

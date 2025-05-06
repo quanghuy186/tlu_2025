@@ -1,124 +1,120 @@
-{{-- resources/views/partials/student_list.blade.php --}}
-@foreach ($students as $student)
-    <div class="student-item">
-        <img src="{{ $student->user && $student->user->avatar ? asset('storage/avatars/'.$student->user->avatar) : 'https://via.placeholder.com/150x150?text=SV' }}" 
-            alt="Sinh viên" class="student-avatar">
-        <div class="student-info">
-            <div class="student-name">{{ $student->user->name ?? 'Chưa cập nhật' }}</div>
-            <div class="student-id">
-                {{ $student->class ? $student->class->name : 'Chưa cập nhật' }} - 
-                {{ $student->student_code ?? 'Chưa cập nhật' }}
-            </div>
-            <div class="student-class">
-                Lớp: 
-                @if($student->class)
-                    <a href="#">{{ $student->class->name ?? 'Chưa cập nhật' }}</a>
-                @else
-                    <span>Chưa cập nhật</span>
-                @endif
-            </div>
-        </div>
-        <div class="student-actions">
-            <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#studentDetailModal{{ $student->id }}">
-                <i class="fas fa-eye"></i>
-            </a>
-        </div>
-    </div>
-
-    <!-- Student Detail Modal -->
-    <div class="modal fade" id="studentDetailModal{{ $student->id }}" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Thông tin Sinh viên</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="student-detail">
-                        <img src="{{ $student->user && $student->user->avatar ? asset('storage/avatars/'.$student->user->avatar) : 'https://via.placeholder.com/150x150?text=SV' }}" 
-                            alt="Sinh viên" class="student-detail-avatar">
-                        <div class="student-detail-name">{{ $student->user->name ?? 'Chưa cập nhật' }}</div>
-                        <div class="student-detail-id">{{ $student->student_code ?? 'Chưa cập nhật' }}</div>
-
-                        <ul class="student-detail-info">
-                            <li>
-                                <i class="fas fa-graduation-cap"></i>
-                                <span class="detail-label">Lớp:</span>
-                                <span class="detail-value">{{ $student->class ? $student->class->name : 'Chưa cập nhật' }}</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-user-graduate"></i>
-                                <span class="detail-label">Khóa:</span>
-                                <span class="detail-value">
-                                    @if($student->enrollment_year)
-                                        K{{ $student->enrollment_year - 1957 }} ({{ $student->enrollment_year }}-{{ $student->enrollment_year + 4 }})
-                                    @else
-                                        Chưa cập nhật
-                                    @endif
-                                </span>
-                            </li>
-                            <li>
-                                <i class="fas fa-envelope"></i>
-                                <span class="detail-label">Email:</span>
-                                <span class="detail-value">{{ $student->user->email ?? 'Chưa cập nhật' }}</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-phone"></i>
-                                <span class="detail-label">Điện thoại:</span>
-                                <span class="detail-value">{{ $student->phone ?? 'Chưa cập nhật' }}</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span class="detail-label">Địa chỉ:</span>
-                                <span class="detail-value">{{ $student->address ?? 'Chưa cập nhật' }}</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-calendar-alt"></i>
-                                <span class="detail-label">Ngày sinh:</span>
-                                <span class="detail-value">{{ $student->birthday ? date('d/m/Y', strtotime($student->birthday)) : 'Chưa cập nhật' }}</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-id-card"></i>
-                                <span class="detail-label">CCCD:</span>
-                                <span class="detail-value">{{ $student->id_card ?? 'Chưa cập nhật' }}</span>
-                            </li>
-                        </ul>
+@foreach($teachers as $teacher)
+                <div class="teacher-item">
+                    <img src="{{ asset('storage/avatars/'.($teacher->user->avatar ?? 'default.png')) }}" alt="Giảng viên" class="teacher-avatar">
+                    <div class="teacher-info">
+                        <div class="teacher-name">{{ $teacher->user->name ?? 'Chưa cập nhật' }}</div>
+                        <div class="teacher-position">{{ $teacher->position ?? 'Chưa cập nhật' }}</div>
+                        <div class="teacher-department">
+                            Đơn vị: 
+                            @if($teacher->department)
+                                <a href="#">{{ $teacher->department->name }}</a>
+                            @else
+                                <span>Chưa cập nhật</span>
+                            @endif
+                        </div>
+                    </div>
+                    {{-- <div class="teacher-actions">
+                        <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal1">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div> --}}
+                    <div class="teacher-actions">
+                        <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal{{ $teacher->id }}">
+                            <i class="fas fa-eye"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+
+                <div class="modal fade" id="teacherDetailModal{{ $teacher->id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Thông tin Cán bộ Giảng viên</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="teacher-detail">
+                                    <img src="{{ asset('storage/avatars/'.($teacher->user->avatar ?? 'default.png')) }}" alt="Giảng viên" class="teacher-detail-avatar">
+                                    <div class="teacher-detail-name">{{ $teacher->user->name ?? 'Chưa cập nhật' }}</div>
+                                    <div class="teacher-detail-position">{{ $teacher->position ?? 'Chưa cập nhật' }}</div>
+            
+                                    <ul class="teacher-detail-info">
+                                        <li>
+                                            <i class="fas fa-id-card"></i>
+                                            <span class="detail-label">Mã cán bộ:</span>
+                                            <span class="detail-value">{{ $teacher->code ?? 'Chưa cập nhật' }}</span>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-envelope"></i>
+                                            <span class="detail-label">Email:</span>
+                                            <span class="detail-value">{{ $teacher->user->email ?? 'Chưa cập nhật' }}</span>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-phone"></i>
+                                            <span class="detail-label">Điện thoại:</span>
+                                            <span class="detail-value">{{ $teacher->phone ?? 'Chưa cập nhật' }}</span>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-building"></i>
+                                            <span class="detail-label">Đơn vị:</span>
+                                            <span class="detail-value">
+                                                @if($teacher->department)
+                                                    <a href="#">{{ $teacher->department->name }}</a>
+                                                @else
+                                                    Chưa cập nhật
+                                                @endif
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span class="detail-label">Địa chỉ:</span>
+                                            <span class="detail-value">{{ $teacher->address ?? 'Chưa cập nhật' }}</span>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-briefcase"></i>
+                                            <span class="detail-label">Chuyên môn:</span>
+                                            <span class="detail-value">{{ $teacher->specialization ?? 'Chưa cập nhật' }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-@endforeach
-
-<!-- Pagination -->
-@if ($students->hasPages())
-    <div class="pagination-container">
-        <ul class="pagination">
-            {{-- Liên kết trang trước --}}
-            @if ($students->onFirstPage())
-                <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
-            @else
-                <li><a href="{{ $students->previousPageUrl() }}" class="page-link"><i class="fas fa-angle-double-left"></i></a></li>
-            @endif
-
-            {{-- Các phần tử phân trang --}}
-            @foreach ($students->getUrlRange(1, $students->lastPage()) as $page => $url)
-                @if ($page == $students->currentPage())
-                    <li><a href="#" class="active">{{ $page }}</a></li>
-                @else
-                    <li><a href="{{ $url }}" class="page-link">{{ $page }}</a></li>
-                @endif
             @endforeach
 
-            {{-- Liên kết trang tiếp theo --}}
-            @if ($students->hasMorePages())
-                <li><a href="{{ $students->nextPageUrl() }}" class="page-link"><i class="fas fa-angle-double-right"></i></a></li>
-            @else
-                <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
+            @if ($teachers->hasPages())
+            <div class="pagination-container">
+                <ul class="pagination">
+                    {{-- Liên kết trang trước --}}
+                    @if ($teachers->onFirstPage())
+                        <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
+                    @else
+                        <li><a href="#" class="page-link" data-page="{{ $teachers->currentPage() - 1 }}">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a></li>
+                    @endif
+
+                    {{-- Các phần tử phân trang --}}
+                    @foreach ($teachers->getUrlRange(1, $teachers->lastPage()) as $page => $url)
+                        @if ($page == $teachers->currentPage())
+                                <li><a href="#" class="active">{{ $page }}</a></li>
+                        @else
+                                <li><a href="#" class="page-link" data-page="{{ $page }}">{{ $page }}</a></li>
+                        @endif
+                    @endforeach
+
+                    {{-- Liên kết trang tiếp theo --}}
+                    @if ($teachers->hasMorePages())
+                        <li><a href="#" class="page-link" data-page="{{ $teachers->currentPage() + 1 }}">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a></li>
+                    @else
+                        <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
+                    @endif
+                </ul>
+            </div>
             @endif
-        </ul>
-    </div>
-@endif
