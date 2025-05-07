@@ -3,9 +3,272 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ForumCategory;
+use App\Models\ForumPost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class ForumPostController extends Controller
 {
-    //
+    public function index(Request $request)
+    {
+        $query = ForumPost::with(['category', 'author']);
+        
+        // Lọc theo danh mục
+        if ($request->has('category_id') && $request->category_id != '') {
+            $query->where('category_id', $request->category_id);
+        }
+        
+        // Lọc theo trạng thái
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+        
+        // Tìm kiếm theo tiêu đề
+        if ($request->has('search') && $request->search != '') {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+        
+        $posts = $query->orderBy('created_at', 'desc')->paginate(10);
+        $categories = ForumCategory::all();
+        
+        return view('admin.forum.posts.index', compact('posts', 'categories'));
+    }
+
+    /**
+     * Hiển thị form tạo bài viết mới
+     */
+    public function create()
+    {
+        $categories = ForumCategory::all();
+        return view('admin.forum.posts.create', compact('categories'));
+    }
+
+    /**
+     * Lưu bài viết mới vào database
+     */
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:forum_categories,id',
+            'content' => 'required|string',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_anonymous' => 'boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $imagesPath = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('forum/posts', 'public');
+                $imagesPath[] = $path;
+            }
+        }
+
+        $post = ForumPost::create([
+            'title' => $request->title,
+            'category_id' => $request->category_id,
+            'user_id' => Auth::id(),
+            'content' => $request->content,
+            'images' => !empty($imagesPath) ? json_encode($imagesPath) : null,
+            'status' => 'pending',
+            'is_anonymous' => $request->has('is_anonymous') ? true : false,
+        ]);
+
+        return redirect()->route('admin.forum.posts.index')
+            ->with('success', 'Bài viết đã được tạo và đang chờ phê duyệt!');
+    }
+
+    /**
+     * Hiển thị chi tiết bài viết
+     */
+    public function show($id)
+    {
+        $post = ForumPost::with(['category', 'author', 'approver', 'comments'])->findOrFail($id);
+        
+        // Tăng lượt xem nếu không phải là người tạo bài viết
+        if (Auth::id() !== $post->user_id) {
+            $post->increment('view_count');
+        }
+        
+        return view('admin.forum.posts.detail', compact('post'));
+    }
+
+    /**
+     * Hiển thị form chỉnh sửa bài viết
+     */
+    public function edit($id)
+    {
+        $post = ForumPost::findOrFail($id);
+        $categories = ForumCategory::all();
+        
+        return view('admin.forum.posts.edit', compact('post', 'categories'));
+    }
+
+    /**
+     * Cập nhật thông tin bài viết
+     */
+    public function update(Request $request, $id)
+    {
+        $post = ForumPost::findOrFail($id);
+        
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:forum_categories,id',
+            'content' => 'required|string',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_anonymous' => 'boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $imagesPath = $post->images ? json_decode($post->images, true) : [];
+        
+        // Xử lý ảnh mới
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('forum/posts', 'public');
+                $imagesPath[] = $path;
+            }
+        }
+        
+        // Xử lý xóa ảnh
+        if ($request->has('remove_images')) {
+            foreach ($request->remove_images as $index) {
+                if (isset($imagesPath[$index])) {
+                    Storage::disk('public')->delete($imagesPath[$index]);
+                    unset($imagesPath[$index]);
+                }
+            }
+            $imagesPath = array_values($imagesPath); // Reindex array
+        }
+
+        $post->update([
+            'title' => $request->title,
+            'category_id' => $request->category_id,
+            'content' => $request->content,
+            'images' => !empty($imagesPath) ? json_encode($imagesPath) : null,
+            'status' => 'pending', // Cập nhật bài viết sẽ cần duyệt lại
+            'is_anonymous' => $request->has('is_anonymous') ? true : false,
+            'approved_by' => null,
+            'approved_at' => null,
+            'reject_reason' => null,
+        ]);
+
+        return redirect()->route('admin.forum.posts.show', $post->id)
+            ->with('success', 'Bài viết đã được cập nhật và đang chờ phê duyệt lại!');
+    }
+
+    /**
+     * Xóa bài viết khỏi database
+     */
+    public function destroy($id)
+    {
+        $post = ForumPost::findOrFail($id);
+        
+        // Xóa ảnh
+        if ($post->images) {
+            $images = json_decode($post->images, true);
+            foreach ($images as $image) {
+                Storage::disk('public')->delete($image);
+            }
+        }
+        
+        $post->delete();
+
+        return redirect()->route('admin.forum.posts.index')
+            ->with('success', 'Bài viết đã được xóa thành công!');
+    }
+    
+    /**
+     * Phê duyệt bài viết
+     */
+    public function approve($id)
+    {
+        $post = ForumPost::findOrFail($id);
+        
+        $post->update([
+            'status' => 'approved',
+            'approved_by' => Auth::id(),
+            'approved_at' => now(),
+            'reject_reason' => null,
+        ]);
+        
+        return redirect()->route('admin.forum.posts.show', $post->id)
+            ->with('success', 'Bài viết đã được phê duyệt!');
+    }
+    
+    /**
+     * Từ chối bài viết
+     */
+    public function reject(Request $request, $id)
+    {
+        $post = ForumPost::findOrFail($id);
+        
+        $validator = Validator::make($request->all(), [
+            'reject_reason' => 'required|string'
+        ]);
+        
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        
+        $post->update([
+            'status' => 'rejected',
+            'approved_by' => Auth::id(),
+            'approved_at' => now(),
+            'reject_reason' => $request->reject_reason,
+        ]);
+        
+        return redirect()->route('admin.forum.posts.show', $post->id)
+            ->with('success', 'Bài viết đã bị từ chối!');
+    }
+    
+    /**
+     * Ghim/bỏ ghim bài viết
+     */
+    public function togglePin($id)
+    {
+        $post = ForumPost::findOrFail($id);
+        
+        $post->update([
+            'is_pinned' => !$post->is_pinned
+        ]);
+        
+        $message = $post->is_pinned ? 'Bài viết đã được ghim!' : 'Bài viết đã được bỏ ghim!';
+        
+        return redirect()->route('admin.forum.posts.show', $post->id)
+            ->with('success', $message);
+    }
+    
+    /**
+     * Khóa/mở khóa bài viết
+     */
+    public function toggleLock($id)
+    {
+        $post = ForumPost::findOrFail($id);
+        
+        $post->update([
+            'is_locked' => !$post->is_locked
+        ]);
+        
+        $message = $post->is_locked ? 'Bài viết đã bị khóa!' : 'Bài viết đã được mở khóa!';
+        
+        return redirect()->route('admin.forum.posts.show', $post->id)
+            ->with('success', $message);
+    }
 }

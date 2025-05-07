@@ -316,7 +316,7 @@
             </a>
           </li>
           <li>
-            <a href="charts-apexcharts.html">
+            <a href="{{route('admin.forum.posts.index')}}">
               <i class="bi bi-circle"></i><span>Bài viết</span>
             </a>
           </li>

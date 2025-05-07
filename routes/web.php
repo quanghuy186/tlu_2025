@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\ForumCategoryController;
+use App\Http\Controllers\Admin\ForumPostController;
 use App\Http\Controllers\Admin\NotificationCategoryController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -212,6 +213,22 @@ Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
         Route::get('/{id}/edit', [ForumCategoryController::class, 'edit'])->name('edit');
         Route::post('/{id}/update', [ForumCategoryController::class, 'update'])->name('update');
         Route::post('/{id}/destroy', [ForumCategoryController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('posts')->name('posts.')->group(function () {
+        Route::get('/', [ForumPostController::class, 'index'])->name('index');
+        Route::get('/create', [ForumPostController::class, 'create'])->name('create');
+        Route::post('/store', [ForumPostController::class, 'store'])->name('store');
+        Route::get('/{id}', [ForumPostController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [ForumPostController::class, 'edit'])->name('edit');
+        Route::post('/{id}/update', [ForumPostController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ForumPostController::class, 'destroy'])->name('destroy');
+        
+        // Routes cho quản lý bài viết
+        Route::get('/{id}/approve', [ForumPostController::class, 'approve'])->name('approve');
+        Route::post('/{id}/reject', [ForumPostController::class, 'reject'])->name('reject');
+        Route::get('/{id}/toggle-pin', [ForumPostController::class, 'togglePin'])->name('toggle-pin');
+        Route::get('/{id}/toggle-lock', [ForumPostController::class, 'toggleLock'])->name('toggle-lock');
     });
 });
 
