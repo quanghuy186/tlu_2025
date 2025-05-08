@@ -198,7 +198,7 @@
                                                 </td>
                                                 <td>
                                                     <i class="far fa-comment me-1"></i> {{ $post->comments_count ?? 0 }}
-                                                    <i class="far fa-eye ms-2 me-1"></i> {{ $post->views_count ?? 0 }}
+                                                    <i class="far fa-eye ms-2 me-1"></i> {{ $post->view_count ?? 0 }}
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
