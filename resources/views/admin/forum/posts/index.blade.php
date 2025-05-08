@@ -148,14 +148,14 @@
                                                 </a>
                                                 
                                                 <!-- Edit Post (Only author or admin) -->
-                                                @if(auth()->id() == $post->user_id || auth()->user()->hasRole('admin'))
+                                                {{-- @if(auth()->id() == $post->user_id || auth()->user()->hasRole('admin')) --}}
                                                 <a href="{{ route('admin.forum.posts.edit', $post->id) }}" data-bs-toggle="tooltip" data-bs-title="Chỉnh sửa" class="btn btn-sm btn-primary">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>
-                                                @endif
+                                                {{-- @endif --}}
                                                 
                                                 <!-- Delete Post (Only author or admin) -->
-                                                @if(auth()->id() == $post->user_id || auth()->user()->hasRole('admin'))
+                                                {{-- @if(auth()->id() == $post->user_id || auth()->user()->hasRole('admin')) --}}
                                                 <a href="#" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#deleteConfirmModal"
@@ -165,7 +165,7 @@
                                                     class="btn btn-sm btn-danger">
                                                     <i class="bi bi-trash-fill"></i>
                                                 </a>
-                                                @endif
+                                                {{-- @endif --}}
                                             </div>
                                         </td>
                                     </tr>
