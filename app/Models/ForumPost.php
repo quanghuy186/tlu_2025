@@ -88,6 +88,11 @@ class ForumPost extends Model
     {
         return $this->status === 'pending';
     }
+
+    // public function views()
+    // {
+    //     return $this->hasMany(ForumView::class, 'post_id');
+    // }
     
     /**
      * Chuyển đổi chuỗi images thành mảng

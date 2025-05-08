@@ -5,7 +5,7 @@
 @endif
 
 <script>
-    @if (session('success'))
+    @if(session('success'))
         toastr.success("{{ session('success') }}");
     @endif
 </script>

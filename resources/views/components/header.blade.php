@@ -2851,5 +2851,100 @@
 
     }
 
+/* tao bai viet */
+    .new-topic-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    text-decoration: none;
+}
+
+.new-topic-btn:hover {
+    background-color: #0b5ed7;
+    transform: scale(1.05);
+    color: white;
+}
+
+.new-topic-btn i {
+    font-size: 24px;
+}
+
+/* Cải thiện giao diện editor */
+#editor-container {
+    background-color: #fff;
+}
+
+.editor-toolbar {
+    background-color: #f8f9fa;
+}
+
+/* Hiệu ứng hover cho các nút trong thanh công cụ */
+.editor-toolbar button:hover {
+    background-color: #e9ecef;
+}
+
+/* Định dạng preview của file đính kèm */
+.attachment-preview {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.attachment-preview .attachment-icon {
+    margin-right: 10px;
+    color: #6c757d;
+}
+
+.attachment-preview .attachment-name {
+    flex-grow: 1;
+}
+
+.attachment-preview .attachment-remove {
+    color: #dc3545;
+    cursor: pointer;
+}
+
+/* Hiệu ứng cho thẻ tags */
+.tag-badge {
+    display: inline-block;
+    background-color: #e9ecef;
+    padding: 5px 10px;
+    border-radius: 20px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.tag-badge .tag-remove {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+/* Responsive cho modal */
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 10px;
+    }
+    
+    .editor-toolbar button {
+        padding: 0.25rem 0.4rem;
+        margin-bottom: 5px;
+    }
+}
+
     </style>
 </head>

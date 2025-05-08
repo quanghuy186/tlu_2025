@@ -20,7 +20,6 @@ use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Page\ContactController;
-use App\Http\Controllers\Forum\ForumController;
 use App\Http\Controllers\Home\IndexController;
 use App\Http\Controllers\Message\MessageController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +27,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Models\UserHasPermission;
 use App\Http\Controllers\Notification\NotificationController as UserNotificationController;
+use App\Http\Controllers\Page\ForumController;
 use App\Http\Controllers\Page\IndexController as PageIndexController;
 
 // forgot password
@@ -202,6 +202,11 @@ Route::get('/message', [MessageController::class, 'index'])->name('message.index
 
 
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
+Route::post('/forum', [ForumController::class, 'post'])->name('forum.post');
+Route::get('/forum/posts/{id}', [ForumController::class, 'show'])->name('forum.posts.show');
+Route::get('/forum/posts/{id}/edit', [ForumController::class, 'edit'])->name('forum.posts.edit');
+Route::put('/forum/update', [ForumController::class, 'update'])->name('forum.post.update');
+Route::get('/api/forum/posts/{id}', [ForumController::class, 'getPostData']);
 
 Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
     // Routes cho danh mục diễn đàn
