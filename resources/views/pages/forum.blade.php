@@ -117,7 +117,6 @@
     </div>
 </div>
 
-
 <!-- Breadcrumb -->
 <div class="breadcrumb-container">
     <div class="container">
@@ -202,9 +201,9 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                        {{-- <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
                                                             <i class="far fa-eye"></i>
-                                                        </a>
+                                                        </a> --}}
                                                         @if($post->status != 'approved')
                                                             <button type="button" class="btn btn-sm btn-outline-secondary edit-post-btn" data-post-id="{{ $post->id }}" title="Chỉnh sửa">
                                                                 <i class="far fa-edit"></i>
@@ -242,7 +241,7 @@
                                                 <th>Tiêu đề</th>
                                                 <th>Chuyên mục</th>
                                                 <th>Ngày đăng</th>
-                                                <th>Thao tác</th>
+                                                {{-- <th>Thao tác</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -255,9 +254,9 @@
                                                 <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                        {{-- <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
                                                             <i class="far fa-eye"></i>
-                                                        </a>
+                                                        </a> --}}
                                                         <button type="button" class="btn btn-sm btn-outline-secondary edit-post-btn" data-post-id="{{ $post->id }}" title="Chỉnh sửa">
                                                             <i class="far fa-edit"></i>
                                                         </button>
@@ -287,7 +286,7 @@
                                                 <th>Ngày đăng</th>
                                                 <th>Ngày duyệt</th>
                                                 <th>Tương tác</th>
-                                                <th>Thao tác</th>
+                                                {{-- <th>Thao tác</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -301,13 +300,13 @@
                                                 <td>{{ $post->approved_at ? $post->approved_at->format('d/m/Y H:i') : 'N/A' }}</td>
                                                 <td>
                                                     <i class="far fa-comment me-1"></i> {{ $post->comments_count ?? 0 }}
-                                                    <i class="far fa-eye ms-2 me-1"></i> {{ $post->views_count ?? 0 }}
+                                                    <i class="far fa-eye ms-2 me-1"></i> {{ $post->view_count ?? 0 }}
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
                                                         <i class="far fa-eye"></i>
                                                     </a>
-                                                </td>
+                                                </td> --}}
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -833,55 +832,44 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="latest-posts">
                 <h4 class="section-title text-center">Bài viết mới nhất</h4>
 
-                <div class="post-card">
-                    <div class="post-header">
-                        <img src="https://via.placeholder.com/200x200?text=User" alt="User Avatar" class="post-avatar">
-                        <div>
-                            <h6 class="post-author">Nguyễn Văn A</h6>
-                            <span class="post-time">Đăng 2 giờ trước</span>
-                        </div>
-                    </div>
-                    <div class="post-body">
-                        <h5 class="post-title">Cách giải bài tập Toán cao cấp phần đạo hàm</h5>
-                        <p class="post-text">Chào các bạn, mình đang gặp khó khăn với bài tập đạo hàm hàm số nhiều biến trong môn Toán cao cấp. Mình đã thử giải theo phương pháp...</p>
-                        <a href="#" class="btn btn-sm btn-outline-primary">Đọc tiếp <i class="fas fa-arrow-right ms-1"></i></a>
-                    </div>
-                    <div class="post-footer">
-                        <div class="post-actions">
-                            <a href="#"><i class="far fa-comment"></i> 8 bình luận</a>
-                            <a href="#"><i class="far fa-heart"></i> 15 thích</a>
-                            <a href="#"><i class="far fa-bookmark"></i> Lưu</a>
-                        </div>
-                        <div class="post-meta">
-                            <span><i class="fas fa-folder me-1"></i> Học tập & Nghiên cứu</span>
-                        </div>
-                    </div>
-                </div>
+                @foreach ($latestPosts as $p)
+                    <div class="post-card">
+                        <div class="post-header">
+                            {{-- <img src="https://via.placeholder.com/200x200?text=User" alt="User Avatar" class="post-avatar"> --}}
 
-                <div class="post-card">
-                    <div class="post-header">
-                        <img src="https://via.placeholder.com/200x200?text=User" alt="User Avatar" class="post-avatar">
-                        <div>
-                            <h6 class="post-author">Phòng Đào tạo</h6>
-                            <span class="post-time">Đăng 3 giờ trước</span>
+                            @if($p->author->avatar)
+                                <img src="{{ asset('storage/avatars/'.$p->author->avatar) }}" 
+                                alt="{{ $p->author->name }}" style="border-radius : 50%" 
+                                class="unit-logo">
+                            @else
+                                <span class="avatar avatar-sm bg-primary text-white rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                                    {{ strtoupper(substr($p->author->name, 0, 1)) }}
+                                </span>
+                            @endif
+                            <div>
+                                <h6 class="post-author">{{ $p->author->name }}</h6>
+                                <span class="post-time">Đăng 2 giờ trước</span>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            <h5 class="post-title">{{ $p->title }}</h5>
+                            <p class="post-text">{{ $p->content }}</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary">Đọc tiếp <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                        <div class="post-footer">
+                            <div class="post-actions">
+                                <a href="#"><i class="far fa-comment"></i> {{ $p->comments_count }} bình luận</a>
+                                <a href="#"><i class="far fa-heart"></i> 15 thích</a>
+                                <a href="#"><i class="far fa-eye ms-2 me-1"></i>{{ $post->view_count }}</a>
+                                {{-- <a href="#"><i class="far fa-bookmark"></i> Lưu</a> --}}
+                            </div>
+                            <div class="post-meta">
+                                <span><i class="fas fa-folder me-1"></i>{{ $p->category->name ?? '' }}</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="post-body">
-                        <h5 class="post-title">Thông báo lịch thi học kỳ II năm học 2024-2025</h5>
-                        <p class="post-text">Phòng Đào tạo thông báo lịch thi học kỳ II năm học 2024-2025 dành cho các khoa như sau: 1. Khoa Công nghệ thông tin: từ ngày 15/06 đến 30/06/2025...</p>
-                        <a href="#" class="btn btn-sm btn-outline-primary">Đọc tiếp <i class="fas fa-arrow-right ms-1"></i></a>
-                    </div>
-                    <div class="post-footer">
-                        <div class="post-actions">
-                            <a href="#"><i class="far fa-comment"></i> 12 bình luận</a>
-                            <a href="#"><i class="far fa-heart"></i> 34 thích</a>
-                            <a href="#"><i class="far fa-bookmark"></i> Lưu</a>
-                        </div>
-                        <div class="post-meta">
-                            <span><i class="fas fa-folder me-1"></i> Thông báo & Sự kiện</span>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
+                
             </div>
 
             <!-- Pagination -->

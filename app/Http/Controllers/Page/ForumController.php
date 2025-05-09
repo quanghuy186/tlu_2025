@@ -57,6 +57,34 @@ class ForumController extends Controller
             //     $view->save();
             // }
         }
+
+        // if (!Auth::check() || (Auth::id() !== $selectedPost->user_id)) {
+        //     // Kiểm tra xem người dùng đã xem bài viết này chưa (trong vòng 24 giờ)
+        //     $hasViewed = false;
+            
+        //     if (Auth::check()) {
+        //         // Nếu đã đăng nhập, kiểm tra theo user_id
+        //         $hasViewed = ForumView::where('post_id', $selectedPost->id)
+        //             ->where('user_id', Auth::id())
+        //             ->where('created_at', '>', now()->subHours(24))
+        //             ->exists();
+        //     } else {
+        //         // Nếu chưa đăng nhập, kiểm tra theo IP
+        //         $hasViewed = ForumView::where('post_id', $selectedPost->id)
+        //             ->where('ip_address', request()->ip())
+        //             ->where('created_at', '>', now()->subHours(24))
+        //             ->exists();
+        //     }
+            
+        //     // Nếu chưa xem trong 24 giờ qua, tăng lượt xem
+        //     if (!$hasViewed) {
+        //         $view = new ForumView();
+        //         $view->post_id = $selectedPost->id;
+        //         $view->user_id = Auth::check() ? Auth::id() : null;
+        //         $view->ip_address = request()->ip();
+        //         $view->save();
+        //     }
+        // }
         
         // Lấy các bài viết được duyệt cho hiển thị công khai
         $categories = ForumCategory::with(['posts' => function($query) {
