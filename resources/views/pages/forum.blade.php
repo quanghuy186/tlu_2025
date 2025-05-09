@@ -39,7 +39,7 @@
                     <div class="row mb-3">
                         <label for="category_id" class="col-sm-2 col-form-label">Chuyên mục <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
-                            <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
+                            <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id">
                                 <option value="">-- Chọn chuyên mục --</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -634,199 +634,94 @@ document.addEventListener('DOMContentLoaded', function() {
         <!-- Left Column - Categories and Posts -->
         <div class="col-lg-8">
             <!-- Forum Categories -->
-            <div class="forum-card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fas fa-graduation-cap category-icon"></i>
-                        Học tập & Nghiên cứu
+            @foreach($categories as $parentCategory)
+    <div class="forum-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-folder category-icon"></i>
+                <a href="{{ route('forum.category', $parentCategory->slug) }}">{{ $parentCategory->name }}</a>
+            </div>
+            <span class="badge rounded-pill bg-light text-dark">
+                {{ $parentCategory->posts->where('created_at', '>', now()->subDays(7))->count() }} chủ đề mới
+            </span>
+        </div>
+        <div class="card-body p-0">
+            @if($parentCategory->posts->count() > 0)
+                @foreach($parentCategory->posts->take(3) as $post)
+                    <div class="topic-item">
+                        <div class="topic-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="topic-content">
+                            <a href="{{ route('forum.post', $post->id) }}" class="topic-title">{{ $post->title }}</a>
+                            <div class="topic-info">
+                                <span><i class="fas fa-user me-1"></i> {{ $post->author->name }}</span>
+                                <span class="ms-3"><i class="far fa-clock me-1"></i> {{ $post->created_at->diffForHumans() }}</span>
+                            </div>
+                        </div>
+                        <div class="topic-stats">
+                            <div class="stat-item">
+                                <div class="stat-count">{{ $post->comments_count ?? $post->comments->count() }}</div>
+                                <div class="stat-label">Trả lời</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-count">{{ $post->views_count ?? 0 }}</div>
+                                <div class="stat-label">Lượt xem</div>
+                            </div>
+                        </div>
                     </div>
-                    <span class="badge rounded-pill bg-light text-dark">4 chủ đề mới</span>
+                @endforeach
+            @else
+                <div class="p-3 text-center text-muted">Chưa có bài viết nào trong chuyên mục này</div>
+            @endif
+        </div>
+        
+        <!-- Danh mục con (nếu có) -->
+        @if($parentCategory->childCategories && $parentCategory->childCategories->count() > 0)
+            @foreach($parentCategory->childCategories as $childCategory)
+                <div class="card-header child-category d-flex justify-content-between align-items-center">
+                    <div class="ps-4">
+                        <i class="fas fa-angle-right category-icon"></i>
+                        <a href="{{ route('forum.category', $childCategory->slug) }}">{{ $childCategory->name }}</a>
+                    </div>
+                    <span class="badge rounded-pill bg-light text-dark">
+                        {{ $childCategory->posts->where('created_at', '>', now()->subDays(7))->count() }} chủ đề mới
+                    </span>
                 </div>
                 <div class="card-body p-0">
-                    <div class="topic-item">
-                        <div class="topic-icon">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <div class="topic-content">
-                            <a href="#" class="topic-title">Hỏi đáp về môn Toán cao cấp</a>
-                            <div class="topic-info">
-                                <span><i class="fas fa-user me-1"></i> Nguyễn Văn A</span>
-                                <span class="ms-3"><i class="far fa-clock me-1"></i> 2 giờ trước</span>
+                    @if($childCategory->posts->count() > 0)
+                        @foreach($childCategory->posts->take(2) as $post)
+                            <div class="topic-item child-topic">
+                                <div class="topic-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="topic-content">
+                                    <a href="{{ route('forum.post', $post->id) }}" class="topic-title">{{ $post->title }}</a>
+                                    <div class="topic-info">
+                                        <span><i class="fas fa-user me-1"></i> {{ $post->author->name }}</span>
+                                        <span class="ms-3"><i class="far fa-clock me-1"></i> {{ $post->created_at->diffForHumans() }}</span>
+                                    </div>
+                                </div>
+                                <div class="topic-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-count">{{ $post->comments_count ?? $post->comments->count() }}</div>
+                                        <div class="stat-label">Trả lời</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-count">{{ $post->views_count ?? 0 }}</div>
+                                        <div class="stat-label">Lượt xem</div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="topic-stats">
-                            <div class="stat-item">
-                                <div class="stat-count">24</div>
-                                <div class="stat-label">Trả lời</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-count">142</div>
-                                <div class="stat-label">Lượt xem</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="topic-item">
-                        <div class="topic-icon">
-                            <i class="fas fa-flask"></i>
-                        </div>
-                        <div class="topic-content">
-                            <a href="#" class="topic-title">Chia sẻ đề tài nghiên cứu khoa học sinh viên năm 2025</a>
-                            <div class="topic-info">
-                                <span><i class="fas fa-user me-1"></i> Trần Thị B</span>
-                                <span class="ms-3"><i class="far fa-clock me-1"></i> 1 ngày trước</span>
-                            </div>
-                        </div>
-                        <div class="topic-stats">
-                            <div class="stat-item">
-                                <div class="stat-count">18</div>
-                                <div class="stat-label">Trả lời</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-count">203</div>
-                                <div class="stat-label">Lượt xem</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="topic-item">
-                        <div class="topic-icon">
-                            <i class="fas fa-code"></i>
-                        </div>
-                        <div class="topic-content">
-                            <a href="#" class="topic-title">Khó khăn khi học lập trình Java và cách khắc phục</a>
-                            <div class="topic-info">
-                                <span><i class="fas fa-user me-1"></i> Lê Văn C</span>
-                                <span class="ms-3"><i class="far fa-clock me-1"></i> 3 ngày trước</span>
-                            </div>
-                        </div>
-                        <div class="topic-stats">
-                            <div class="stat-item">
-                                <div class="stat-count">36</div>
-                                <div class="stat-label">Trả lời</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-count">310</div>
-                                <div class="stat-label">Lượt xem</div>
-                            </div>
-                        </div>
-                    </div>
+                        @endforeach
+                    @else
+                        <div class="p-3 text-center text-muted">Chưa có bài viết nào trong chuyên mục này</div>
+                    @endif
                 </div>
-            </div>
-
-            <div class="forum-card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fas fa-bullhorn category-icon"></i>
-                        Thông báo & Sự kiện
-                    </div>
-                    <span class="badge rounded-pill bg-light text-dark">2 chủ đề mới</span>
-                </div>
-                <div class="card-body p-0">
-                    <div class="topic-item">
-                        <div class="topic-icon">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div class="topic-content">
-                            <a href="#" class="topic-title">Thông báo lịch thi học kỳ II năm học 2024-2025</a>
-                            <div class="topic-info">
-                                <span><i class="fas fa-user-tie me-1"></i> Phòng Đào tạo</span>
-                                <span class="ms-3"><i class="far fa-clock me-1"></i> 3 giờ trước</span>
-                            </div>
-                        </div>
-                        <div class="topic-stats">
-                            <div class="stat-item">
-                                <div class="stat-count">12</div>
-                                <div class="stat-label">Trả lời</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-count">578</div>
-                                <div class="stat-label">Lượt xem</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="topic-item">
-                        <div class="topic-icon">
-                            <i class="fas fa-gift"></i>
-                        </div>
-                        <div class="topic-content">
-                            <a href="#" class="topic-title">Hội thảo cơ hội việc làm cho sinh viên CNTT 2025</a>
-                            <div class="topic-info">
-                                <span><i class="fas fa-user-tie me-1"></i> Khoa CNTT</span>
-                                <span class="ms-3"><i class="far fa-clock me-1"></i> 2 ngày trước</span>
-                            </div>
-                        </div>
-                        <div class="topic-stats">
-                            <div class="stat-item">
-                                <div class="stat-count">8</div>
-                                <div class="stat-label">Trả lời</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-count">425</div>
-                                <div class="stat-label">Lượt xem</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="forum-card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fas fa-users category-icon"></i>
-                        Đời sống sinh viên
-                    </div>
-                    <span class="badge rounded-pill bg-light text-dark">5 chủ đề mới</span>
-                </div>
-                <div class="card-body p-0">
-                    <div class="topic-item">
-                        <div class="topic-icon">
-                            <i class="fas fa-home"></i>
-                        </div>
-                        <div class="topic-content">
-                            <a href="#" class="topic-title">Chia sẻ kinh nghiệm tìm nhà trọ khu vực Đống Đa</a>
-                            <div class="topic-info">
-                                <span><i class="fas fa-user me-1"></i> Phạm Thị D</span>
-                                <span class="ms-3"><i class="far fa-clock me-1"></i> 5 giờ trước</span>
-                            </div>
-                        </div>
-                        <div class="topic-stats">
-                            <div class="stat-item">
-                                <div class="stat-count">45</div>
-                                <div class="stat-label">Trả lời</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-count">389</div>
-                                <div class="stat-label">Lượt xem</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="topic-item">
-                        <div class="topic-icon">
-                            <i class="fas fa-utensils"></i>
-                        </div>
-                        <div class="topic-content">
-                            <a href="#" class="topic-title">Top 10 quán ăn ngon bổ rẻ gần trường TLU</a>
-                            <div class="topic-info">
-                                <span><i class="fas fa-user me-1"></i> Trần Văn E</span>
-                                <span class="ms-3"><i class="far fa-clock me-1"></i> 2 ngày trước</span>
-                            </div>
-                        </div>
-                        <div class="topic-stats">
-                            <div class="stat-item">
-                                <div class="stat-count">67</div>
-                                <div class="stat-label">Trả lời</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-count">520</div>
-                                <div class="stat-label">Lượt xem</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
+        @endif
+    </div>
+@endforeach
 
             <!-- Latest Posts -->
             <div class="latest-posts">
@@ -919,36 +814,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         <i class="fas fa-fire me-2"></i> Chủ đề nổi bật
                     </div>
                     <div class="list-group list-group-flush">
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-truncate">Chia sẻ kinh nghiệm tìm nhà trọ khu vực Đống Đa</span>
-                                <span class="badge rounded-pill bg-primary">45</span>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-truncate">Top 10 quán ăn ngon bổ rẻ gần trường TLU</span>
-                                <span class="badge rounded-pill bg-primary">67</span>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-truncate">Khó khăn khi học lập trình Java và cách khắc phục</span>
-                                <span class="badge rounded-pill bg-primary">36</span>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-truncate">Thông báo lịch thi học kỳ II năm học 2024-2025</span>
-                                <span class="badge rounded-pill bg-primary">12</span>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-truncate">Hỏi đáp về môn Toán cao cấp</span>
-                                <span class="badge rounded-pill bg-primary">24</span>
-                            </div>
-                        </a>
+                        @forelse($latestPosts as $post)
+                            <a href="{{ route('forum.post', $post->id) }}" class="list-group-item list-group-item-action">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-truncate">{{ $post->title }}</span>
+                                    <span class="badge rounded-pill bg-primary">{{ $post->comments_count }}</span>
+                                </div>
+                            </a>
+                        @empty
+                            <div class="list-group-item">Chưa có bài viết nào.</div>
+                        @endforelse
                     </div>
                 </div>
 
@@ -958,26 +833,29 @@ document.addEventListener('DOMContentLoaded', function() {
                         <i class="fas fa-folder me-2"></i> Chuyên mục
                     </div>
                     <div class="list-group list-group-flush">
-                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-graduation-cap me-2"></i> Học tập & Nghiên cứu</span>
-                            <span class="badge rounded-pill bg-primary">324</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-bullhorn me-2"></i> Thông báo & Sự kiện</span>
-                            <span class="badge rounded-pill bg-primary">156</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-users me-2"></i> Đời sống sinh viên</span>
-                            <span class="badge rounded-pill bg-primary">289</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-briefcase me-2"></i> Việc làm & Thực tập</span>
-                            <span class="badge rounded-pill bg-primary">127</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-lightbulb me-2"></i> Ý tưởng & Sáng tạo</span>
-                            <span class="badge rounded-pill bg-primary">98</span>
-                        </a>
+                        @forelse($categories as $parentCategory)
+                            <!-- Danh mục cha -->
+                            <a href="{{ route('forum.category', $parentCategory->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <span>
+                                    <i class="fas fa-folder me-2"></i> {{ $parentCategory->name }}
+                                </span>
+                                <span class="badge rounded-pill bg-primary">{{ $parentCategory->posts_count ?? $parentCategory->posts->count() }}</span>
+                            </a>
+                            
+                            <!-- Danh mục con (nếu có) -->
+                            @if($parentCategory->childCategories && $parentCategory->childCategories->count() > 0)
+                                @foreach($parentCategory->childCategories as $childCategory)
+                                    <a href="{{ route('forum.category', $childCategory->slug) }}" class="list-group-item list-group-item-action d-flex ps-4 justify-content-between align-items-center">
+                                        <span>
+                                            <i class="fas fa-angle-right me-2"></i> {{ $childCategory->name }}
+                                        </span>
+                                        <span class="badge rounded-pill bg-secondary">{{ $childCategory->posts_count ?? $childCategory->posts->count() }}</span>
+                                    </a>
+                                @endforeach
+                            @endif
+                        @empty
+                            <div class="list-group-item">Chưa có chuyên mục nào.</div>
+                        @endforelse
                     </div>
                 </div>
 

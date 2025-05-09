@@ -207,6 +207,10 @@ Route::get('/forum/posts/{id}', [ForumController::class, 'show'])->name('forum.p
 Route::get('/forum/posts/{id}/edit', [ForumController::class, 'edit'])->name('forum.posts.edit');
 Route::put('/forum/update', [ForumController::class, 'update'])->name('forum.post.update');
 Route::get('/api/forum/posts/{id}', [ForumController::class, 'getPostData']);
+// Route cho trang danh mục theo slug
+Route::get('/forum/category/{slug}', [ForumController::class, 'category'])->name('forum.category');
+
+
 
 Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
     // Routes cho danh mục diễn đàn

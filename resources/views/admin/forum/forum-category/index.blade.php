@@ -47,7 +47,10 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Tên danh mục</th>
+                                        <th>Slug</th>
+                                        <th>Danh mục cha</th>
                                         <th>Mô tả</th>
+                                        <th>Trạng thái</th>
                                         <th>Ngày tạo</th>
                                         <th class="text-center" width="15%">Hành động</th>
                                     </tr>
@@ -57,7 +60,23 @@
                                     <tr>
                                         <td><span class="badge bg-light text-dark">{{ $category->id }}</span></td>
                                         <td>{{ $category->name }}</td>
+                                        <td>{{ $category->slug }}</td>
+                                        <td>
+                                            @if($category->parent_id)
+                                                {{-- {{ optional(ForumCategory::find($category->parent_id))->name ?? 'N/A' }} --}}
+                                                {{ optional($category->parent)->name ?? 'Không có' }}
+                                            @else
+                                                <span class="text-muted">Không có</span>
+                                            @endif
+                                        </td>
                                         <td>{{ $category->description ?? 'Không có mô tả' }}</td>
+                                        <td>
+                                            @if($category->is_active)
+                                                <span class="badge bg-success">Hoạt động</span>
+                                            @else
+                                                <span class="badge bg-danger">Ẩn</span>
+                                            @endif
+                                        </td>
                                         <td>{{ $category->created_at->format('d/m/Y H:i') }}</td>
                                         <td>
                                             <div class="d-flex justify-content-center gap-2">
@@ -86,7 +105,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="5" class="text-center py-4">Không có dữ liệu danh mục</td>
+                                        <td colspan="8" class="text-center py-4">Không có dữ liệu danh mục</td>
                                     </tr>
                                     @endforelse
                                 </tbody>

@@ -16,8 +16,13 @@ class ForumController extends Controller
     public function index()
     {
         // Lấy danh sách chuyên mục
-        $categories = ForumCategory::all();
-        
+        $categories = ForumCategory::where('is_active', true)
+            ->with(['posts' => function($query) {
+                $query->where('status', 'approved')
+                    ->orderBy('created_at', 'desc')
+                    ->take(3); // Chỉ lấy 3 bài viết mới nhất của mỗi chuyên mục
+            }])
+            ->get();
         
         if (Auth::check()) {
             $userId = Auth::id();
