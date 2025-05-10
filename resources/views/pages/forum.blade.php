@@ -620,7 +620,7 @@
                                     {{ strtoupper(substr($p->author->name, 0, 1)) }}
                                 </span>
                             @endif
-                            <div>
+                            <div>       
                                 <h6 class="post-author">{{ $p->is_anonymous == 1 ? "Ẩn danh" : $post->author->name }}</h6>
                                 <span class="post-time">Đăng 2 giờ trước</span>
                             </div>
@@ -647,19 +647,34 @@
             </div>
 
             <!-- Pagination -->
-            <nav aria-label="Forum pagination">
-                <ul class="pagination">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"><i class="fas fa-chevron-left"></i></a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
-                    </li>
-                </ul>
-            </nav>
+            @if ($latestPosts->hasPages())
+                <div class="pagination-container">
+                    <ul class="pagination">
+                        {{-- Liên kết trang trước --}}
+                        @if ($latestPosts->onFirstPage())
+                            <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
+                        @else
+                            <li><a href="{{ $latestPosts->previousPageUrl() }}"><i class="fas fa-angle-double-left"></i></a></li>
+                        @endif
+
+                        {{-- Các phần tử phân trang --}}
+                        @foreach ($latestPosts->getUrlRange(1, $latestPosts->lastPage()) as $page => $url)
+                            @if ($page == $latestPosts->currentPage())
+                                <li><a href="#" class="active">{{ $page }}</a></li>
+                            @else
+                                <li><a href="{{ $url }}">{{ $page }}</a></li>
+                            @endif
+                        @endforeach
+
+                        {{-- Liên kết trang tiếp theo --}}
+                        @if ($latestPosts->hasMorePages())
+                            <li><a href="{{ $latestPosts->nextPageUrl() }}"><i class="fas fa-angle-double-right"></i></a></li>
+                        @else
+                            <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
+                        @endif
+                    </ul>
+                </div>
+            @endif
         </div>
 
         <!-- Right Column - Sidebar -->

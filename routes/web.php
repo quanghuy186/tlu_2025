@@ -209,7 +209,7 @@ Route::get('/forum/posts/{id}/edit', [ForumController::class, 'edit'])->name('fo
 Route::put('/forum/update', [ForumController::class, 'update'])->name('forum.post.update');
 Route::get('/api/forum/posts/{id}', [ForumController::class, 'getPostData']);
 // Route cho trang danh mục theo slug
-Route::get('/forum/category/{slug}', [ForumController::class, 'category'])->name('forum.category');
+Route::get('/forum/category/{slug}', [ForumController::class, 'showCategory'])->name('forum.category');
 
 
 

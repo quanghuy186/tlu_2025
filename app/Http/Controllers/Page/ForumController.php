@@ -96,7 +96,7 @@ class ForumController extends Controller
             // ->withCount('comments')
             ->orderBy('created_at', 'desc')
             ->take(5)
-            ->get();
+            ->paginate(5);
 
         $totalPosts = ForumPost::where('status', 'approved')->count();
         $totalCategories = ForumCategory::where('is_active', 1)->count();
@@ -245,5 +245,62 @@ class ForumController extends Controller
         $categories = ForumCategory::with('children')->whereNull('parent_id')->get();
         
         return view('pages.forum_post_detail', compact('post', 'relatedPosts', 'categories'));
+    }
+
+    public function showCategory($slug)
+    {
+        $category = ForumCategory::where('slug', $slug)->firstOrFail();
+        
+        // Get posts for this category and its children (if any)
+        $postsQuery = ForumPost::with(['author', 'category', 'comments'])
+            ->where('status', 'approved');
+            
+        if ($category->childCategories && $category->childCategories->count() > 0) {
+            // If this is a parent category, include posts from child categories too
+            $categoryIds = collect([$category->id]);
+            $categoryIds = $categoryIds->merge($category->childCategories->pluck('id'));
+            
+            $postsQuery->whereIn('category_id', $categoryIds);
+        } else {
+            // Just use this category's ID
+            $postsQuery->where('category_id', $category->id);
+        }
+        
+        // Apply sorting (default to newest first)
+        $sort = request('sort', 'newest');
+        
+        switch ($sort) {
+            case 'most_viewed':
+                $postsQuery->orderBy('view_count', 'desc');
+                break;
+            case 'most_commented':
+                $postsQuery->withCount('comments')->orderBy('comments_count', 'desc');
+                break;
+            case 'oldest':
+                $postsQuery->oldest();
+                break;
+            case 'newest':
+            default:
+                $postsQuery->latest();
+                break;
+        }
+        
+        // Paginate the results
+        $posts = $postsQuery->paginate(10)->withQueryString();
+        
+        // Get categories for sidebar
+        $categories = ForumCategory::with(['children', 'posts'])
+            ->whereNull('parent_id')
+            ->get();
+        
+        // Get popular tags used in this category
+        // $popularTags = Tag::withCount(['posts' => function($query) use ($category) {
+        //     $query->where('category_id', $category->id);
+        // }])
+        // ->orderBy('posts_count', 'desc')
+        // ->take(10)
+        // ->get();
+        
+        return view('pages.forum_category', compact('category', 'posts', 'categories', 'sort'));
     }
 }
