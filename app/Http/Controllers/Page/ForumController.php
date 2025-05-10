@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Page;
 use App\Http\Controllers\Controller;
 use App\Models\ForumCategory;
 use App\Models\ForumPost;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -15,14 +16,13 @@ class ForumController extends Controller
 {   
     public function index()
     {
-        // Lấy danh sách chuyên mục
         $categories = ForumCategory::where('is_active', true)
-            ->with(['posts' => function($query) {
-                $query->where('status', 'approved')
-                    ->orderBy('created_at', 'desc')
-                    ->take(3); // Chỉ lấy 3 bài viết mới nhất của mỗi chuyên mục
-            }])
-            ->get();
+        ->with(['posts' => function($query) {
+            $query->where('status', 'approved')
+                ->orderBy('created_at', 'desc')
+                ->take(3);
+        }])
+        ->paginate(5);
         
         if (Auth::check()) {
             $userId = Auth::id();
@@ -30,7 +30,6 @@ class ForumController extends Controller
             // Lấy tất cả bài viết của người dùng đăng nhập
             $userPosts = ForumPost::where('user_id', $userId)
                 ->with('category') // Eager loading relationship
-                // ->withCount('comments') // Đếm số lượng comments và views
                 ->orderBy('created_at', 'desc')
                 ->get();
             
@@ -91,27 +90,17 @@ class ForumController extends Controller
         //     }
         // }
         
-        // Lấy các bài viết được duyệt cho hiển thị công khai
-        $categories = ForumCategory::with(['posts' => function($query) {
-            $query->where('status', 'approved')
-                ->orderBy('created_at', 'desc')
-                ->take(3); // Chỉ lấy 3 bài viết mới nhất của mỗi chuyên mục
-        }])->get();
-        
-        // Lấy các bài viết mới nhất đã được duyệt
-        // $latestPosts = ForumPost::where('status', 'approved')
-        //     ->with(['category', 'user'])
-        //     ->withCount(['comments', 'views'])
-        //     ->orderBy('created_at', 'desc')
-        //     ->take(5)
-        //     ->get();
-
         $latestPosts = ForumPost::where('status', 'approved')
             ->with(['category', 'author'])
             ->withCount('comments')
+            // ->withCount('comments')
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
+
+        $totalPosts = ForumPost::where('status', 'approved')->count();
+        $totalCategories = ForumCategory::where('is_active', 1)->count();
+        $totalUsers = User::where('is_active', 1)->count();
 
         return view('pages.forum', [
             'categories' => $categories,
@@ -121,6 +110,9 @@ class ForumController extends Controller
             'rejectedPosts' => $rejectedPosts, // Bài viết bị từ chối
             'selectedPost' => $selectedPost, // Bài viết được chọn để xem chi tiết
             'latestPosts' => $latestPosts, // Các bài viết mới nhất
+            'totalPosts' => $totalPosts,
+            'totalCategories' => $totalCategories,
+            'totalUsers' => $totalUsers
         ]);
     }
 
@@ -226,9 +218,32 @@ class ForumController extends Controller
             'category_id' => $post->category_id,
             'content' => $post->content,
             'images' => $post->images ? json_decode($post->images) : [],
-            'tags' => $post->tags,
+            // 'tags' => $post->tags,
             'is_anonymous' => (bool) $post->is_anonymous,
             'notify_replies' => (bool) $post->notify_replies,
         ]);
+    }
+
+    public function showPost($id)
+    {
+        // Find the post with its relationships
+        $post = ForumPost::with(['author', 'category', 'comments.author'])
+            ->findOrFail($id);
+        
+        // Increment view count
+        $post->increment('view_count');
+        
+        // Get related posts from the same category
+        $relatedPosts = ForumPost::where('category_id', $post->category_id)
+            ->where('id', '!=', $post->id)
+            ->where('status', 'approved')
+            ->latest()
+            ->take(3)
+            ->get();
+        
+        // Get categories for the sidebar
+        $categories = ForumCategory::with('children')->whereNull('parent_id')->get();
+        
+        return view('pages.forum_post_detail', compact('post', 'relatedPosts', 'categories'));
     }
 }

@@ -203,7 +203,8 @@ Route::get('/message', [MessageController::class, 'index'])->name('message.index
 
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 Route::post('/forum', [ForumController::class, 'post'])->name('forum.post');
-Route::get('/forum/posts/{id}', [ForumController::class, 'show'])->name('forum.posts.show');
+Route::get('/forum/post/{id}', [ForumController::class, 'showPost'])->name('forum.post.show');
+// Route::get('/forum/posts/{id}', [ForumController::class, 'show'])->name('forum.posts.show');
 Route::get('/forum/posts/{id}/edit', [ForumController::class, 'edit'])->name('forum.posts.edit');
 Route::put('/forum/update', [ForumController::class, 'update'])->name('forum.post.update');
 Route::get('/api/forum/posts/{id}', [ForumController::class, 'getPostData']);

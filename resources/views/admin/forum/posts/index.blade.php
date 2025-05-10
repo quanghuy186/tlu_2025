@@ -123,11 +123,11 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if($post->is_anonymous && !auth()->user()->hasRole('admin'))
+                                            {{-- @if($post->is_anonymous && !auth()->user()->hasRole('admin'))
                                                 <span class="text-muted">Ẩn danh</span>
-                                            @else
+                                            @else --}}
                                                 {{ $post->author->name ?? 'Không xác định' }}
-                                            @endif
+                                            {{-- @endif --}}
                                         </td>
                                         <td>
                                             @if($post->status == 'pending')

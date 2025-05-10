@@ -201,9 +201,9 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        {{-- <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                        <a href="{{ route('forum.post.show', $post->id) }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
                                                             <i class="far fa-eye"></i>
-                                                        </a> --}}
+                                                        </a>
                                                         @if($post->status != 'approved')
                                                             <button type="button" class="btn btn-sm btn-outline-secondary edit-post-btn" data-post-id="{{ $post->id }}" title="Chỉnh sửa">
                                                                 <i class="far fa-edit"></i>
@@ -509,124 +509,7 @@
     </div>
 </div>
 
-<!-- JavaScript để xử lý chức năng -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Xử lý hiển thị lý do từ chối
-    var currentPostId = null;
-    
-    document.querySelectorAll('.view-rejection-reason').forEach(function(button) {
-        button.addEventListener('click', function() {
-            var rejectionReason = this.getAttribute('data-rejection');
-            currentPostId = this.getAttribute('data-post-id');
-            
-            document.getElementById('rejectionReasonText').textContent = rejectionReason;
-        });
-    });
-    
-    // Xử lý nút chỉnh sửa bài bị từ chối
-    document.querySelector('.edit-rejected-post').addEventListener('click', function() {
-        // Đóng modal hiện tại
-        var currentModal = bootstrap.Modal.getInstance(document.getElementById('rejectionReasonModal'));
-        currentModal.hide();
-        
-        // Hiển thị modal chỉnh sửa bài viết
-        if (currentPostId) {
-            openEditPostModal(currentPostId);
-        }
-    });
-    
-    // Xử lý tất cả các nút chỉnh sửa bài viết
-    document.querySelectorAll('.edit-post-btn').forEach(function(button) {
-        button.addEventListener('click', function() {
-            var postId = this.getAttribute('data-post-id');
-            openEditPostModal(postId);
-        });
-    });
-    
-    // Hàm mở modal chỉnh sửa và tải dữ liệu
-    function openEditPostModal(postId) {
-        if (!postId) return;
-        
-        // Thiết lập ID bài viết cần chỉnh sửa
-        document.getElementById('edit_post_id').value = postId;
-        
-        // Mở modal chỉnh sửa
-        var editModal = new bootstrap.Modal(document.getElementById('editPostModal'));
-        
-        // Tải dữ liệu bài viết bằng AJAX (giả lập)
-        // Trong thực tế, bạn sẽ cần gọi API để lấy dữ liệu bài viết
-        fetch(`/api/forum/posts/${postId}`)
-            .then(response => response.json())
-            .then(data => {
-                // Điền dữ liệu vào form
-                document.getElementById('edit_title').value = data.title;
-                document.getElementById('edit_category_id').value = data.category_id;
-                document.getElementById('edit_content').value = data.content;
-                document.getElementById('edit_tags').value = data.tags;
-                document.getElementById('edit_is_anonymous').checked = data.is_anonymous;
-                document.getElementById('edit_notify_replies').checked = data.notify_replies;
-                
-                // Hiển thị hình ảnh hiện tại (nếu có)
-                var imageContainer = document.getElementById('image_preview_container');
-                imageContainer.innerHTML = '';
-                
-                if (data.images && data.images.length > 0) {
-                    data.images.forEach(function(image, index) {
-                        var col = document.createElement('div');
-                        col.className = 'col-md-3 mb-2';
-                        
-                        var card = document.createElement('div');
-                        card.className = 'card';
-                        
-                        var img = document.createElement('img');
-                        img.className = 'card-img-top';
-                        img.src = `/storage/${image}`;
-                        img.alt = `Hình ảnh ${index + 1}`;
-                        
-                        var cardBody = document.createElement('div');
-                        cardBody.className = 'card-body p-2';
-                        
-                        var removeBtn = document.createElement('button');
-                        removeBtn.className = 'btn btn-sm btn-danger w-100';
-                        removeBtn.textContent = 'Xóa';
-                        removeBtn.setAttribute('data-image-id', index);
-                        removeBtn.addEventListener('click', function() {
-                            // Xử lý xóa hình ảnh
-                            col.remove();
-                        });
-                        
-                        cardBody.appendChild(removeBtn);
-                        card.appendChild(img);
-                        card.appendChild(cardBody);
-                        col.appendChild(card);
-                        imageContainer.appendChild(col);
-                    });
-                } else {
-                    imageContainer.innerHTML = '<p class="text-muted">Không có hình ảnh</p>';
-                }
-                
-                // Mở modal
-                editModal.show();
-            })
-            .catch(error => {
-                console.error('Error fetching post data:', error);
-                // Trong trường hợp thực tế, mở modal với form trống
-                editModal.show();
-            });
-    }
-    
-    // Xử lý cập nhật bài viết
-    document.getElementById('updatePost').addEventListener('click', function() {
-        var form = document.getElementById('editPostForm');
-        if (form.checkValidity()) {
-            form.submit();
-        } else {
-            form.reportValidity();
-        }
-    });
-});
-</script>
+
 
 <!-- Main Content -->
 <div class="container">
@@ -635,103 +518,99 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="col-lg-8">
             <!-- Forum Categories -->
             @foreach($categories as $parentCategory)
-    <div class="forum-card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <div>
-                <i class="fas fa-folder category-icon"></i>
-                <a href="{{ route('forum.category', $parentCategory->slug) }}">{{ $parentCategory->name }}</a>
-            </div>
-            <span class="badge rounded-pill bg-light text-dark">
-                {{ $parentCategory->posts->where('created_at', '>', now()->subDays(7))->count() }} chủ đề mới
-            </span>
-        </div>
-        <div class="card-body p-0">
-            @if($parentCategory->posts->count() > 0)
-                @foreach($parentCategory->posts->take(3) as $post)
-                    <div class="topic-item">
-                        <div class="topic-icon">
-                            <i class="fas fa-file-alt"></i>
+                <div class="forum-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-folder category-icon"></i>
+                            <a class="text-white" href="{{ route('forum.category', $parentCategory->slug) }}">{{ $parentCategory->name }}</a>
                         </div>
-                        <div class="topic-content">
-                            <a href="{{ route('forum.post', $post->id) }}" class="topic-title">{{ $post->title }}</a>
-                            <div class="topic-info">
-                                <span><i class="fas fa-user me-1"></i> {{ $post->author->name }}</span>
-                                <span class="ms-3"><i class="far fa-clock me-1"></i> {{ $post->created_at->diffForHumans() }}</span>
-                            </div>
-                        </div>
-                        <div class="topic-stats">
-                            <div class="stat-item">
-                                <div class="stat-count">{{ $post->comments_count ?? $post->comments->count() }}</div>
-                                <div class="stat-label">Trả lời</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-count">{{ $post->views_count ?? 0 }}</div>
-                                <div class="stat-label">Lượt xem</div>
-                            </div>
-                        </div>
+                        <span class="badge rounded-pill bg-light text-dark">
+                            {{ $parentCategory->posts->where('created_at', '>', now()->subDays(7))->count() }} chủ đề mới
+                        </span>
                     </div>
-                @endforeach
-            @else
-                <div class="p-3 text-center text-muted">Chưa có bài viết nào trong chuyên mục này</div>
-            @endif
-        </div>
-        
-        <!-- Danh mục con (nếu có) -->
-        @if($parentCategory->childCategories && $parentCategory->childCategories->count() > 0)
-            @foreach($parentCategory->childCategories as $childCategory)
-                <div class="card-header child-category d-flex justify-content-between align-items-center">
-                    <div class="ps-4">
-                        <i class="fas fa-angle-right category-icon"></i>
-                        <a href="{{ route('forum.category', $childCategory->slug) }}">{{ $childCategory->name }}</a>
+                    <div class="card-body p-0">
+                        @if($parentCategory->posts->count() > 0)
+                            @foreach($parentCategory->posts->take(3) as $post)
+                                <div class="topic-item">
+                                    <div class="topic-icon">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div class="topic-content">
+                                        <a href="{{ route('forum.post.show', $post->id) }}" class="topic-title">{{ $post->title }}</a>
+                                        <div class="topic-info">
+                                            <span><i class="fas fa-user me-1"></i> {{ $post->is_anonymous == 1 ? "Ẩn danh" : $post->author->name }} </span>
+                                            <span class="ms-3"><i class="far fa-clock me-1"></i> {{ $post->created_at->diffForHumans() }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="topic-stats">
+                                        <div class="stat-item">
+                                            <div class="stat-count">{{ $post->comments_count ?? $post->comments->count() }}</div>
+                                            <div class="stat-label">Trả lời</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-count">{{ $post->views_count ?? 0 }}</div>
+                                            <div class="stat-label">Lượt xem</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="p-3 text-center text-muted">Chưa có bài viết nào trong chuyên mục này</div>
+                        @endif
                     </div>
-                    <span class="badge rounded-pill bg-light text-dark">
-                        {{ $childCategory->posts->where('created_at', '>', now()->subDays(7))->count() }} chủ đề mới
-                    </span>
-                </div>
-                <div class="card-body p-0">
-                    @if($childCategory->posts->count() > 0)
-                        @foreach($childCategory->posts->take(2) as $post)
-                            <div class="topic-item child-topic">
-                                <div class="topic-icon">
-                                    <i class="fas fa-file-alt"></i>
+                    
+                    <!-- Danh mục con (nếu có) -->
+                    @if($parentCategory->childCategories && $parentCategory->childCategories->count() > 0)
+                        @foreach($parentCategory->childCategories as $childCategory)
+                            <div class="card-header child-category d-flex justify-content-between align-items-center">
+                                <div class="ps-4">
+                                    <i class="fas fa-angle-right category-icon"></i>
+                                    <a href="{{ route('forum.category', $childCategory->slug) }}">{{ $childCategory->name }}</a>
                                 </div>
-                                <div class="topic-content">
-                                    <a href="{{ route('forum.post', $post->id) }}" class="topic-title">{{ $post->title }}</a>
-                                    <div class="topic-info">
-                                        <span><i class="fas fa-user me-1"></i> {{ $post->author->name }}</span>
-                                        <span class="ms-3"><i class="far fa-clock me-1"></i> {{ $post->created_at->diffForHumans() }}</span>
-                                    </div>
-                                </div>
-                                <div class="topic-stats">
-                                    <div class="stat-item">
-                                        <div class="stat-count">{{ $post->comments_count ?? $post->comments->count() }}</div>
-                                        <div class="stat-label">Trả lời</div>
-                                    </div>
-                                    <div class="stat-item">
-                                        <div class="stat-count">{{ $post->views_count ?? 0 }}</div>
-                                        <div class="stat-label">Lượt xem</div>
-                                    </div>
-                                </div>
+                                <span class="badge rounded-pill bg-light text-dark">
+                                    {{ $childCategory->posts->where('created_at', '>', now()->subDays(7))->count() }} chủ đề mới
+                                </span>
+                            </div>
+                            <div class="card-body p-0">
+                                @if($childCategory->posts->count() > 0)
+                                    @foreach($childCategory->posts->take(2) as $post)
+                                        <div class="topic-item child-topic">
+                                            <div class="topic-icon">
+                                                <i class="fas fa-file-alt"></i>
+                                            </div>
+                                            <div class="topic-content">
+                                                <a href="{{ route('forum.post', $post->id) }}" class="topic-title">{{ $post->title }}</a>
+                                                <div class="topic-info">
+                                                    <span><i class="fas fa-user me-1"></i> {{ $post->author->name }}</span>
+                                                    <span class="ms-3"><i class="far fa-clock me-1"></i> {{ $post->created_at->diffForHumans() }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="topic-stats">
+                                                <div class="stat-item">
+                                                    <div class="stat-count">{{ $post->comments_count ?? $post->comments->count() }}</div>
+                                                    <div class="stat-label">Trả lời</div>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <div class="stat-count">{{ $post->views_count ?? 0 }}</div>
+                                                    <div class="stat-label">Lượt xem</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="p-3 text-center text-muted">Chưa có bài viết nào trong chuyên mục này</div>
+                                @endif
                             </div>
                         @endforeach
-                    @else
-                        <div class="p-3 text-center text-muted">Chưa có bài viết nào trong chuyên mục này</div>
                     @endif
                 </div>
             @endforeach
-        @endif
-    </div>
-@endforeach
 
-            <!-- Latest Posts -->
             <div class="latest-posts">
-                <h4 class="section-title text-center">Bài viết mới nhất</h4>
 
                 @foreach ($latestPosts as $p)
                     <div class="post-card">
                         <div class="post-header">
-                            {{-- <img src="https://via.placeholder.com/200x200?text=User" alt="User Avatar" class="post-avatar"> --}}
-
                             @if($p->author->avatar)
                                 <img src="{{ asset('storage/avatars/'.$p->author->avatar) }}" 
                                 alt="{{ $p->author->name }}" style="border-radius : 50%" 
@@ -742,14 +621,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </span>
                             @endif
                             <div>
-                                <h6 class="post-author">{{ $p->author->name }}</h6>
+                                <h6 class="post-author">{{ $p->is_anonymous == 1 ? "Ẩn danh" : $post->author->name }}</h6>
                                 <span class="post-time">Đăng 2 giờ trước</span>
                             </div>
                         </div>
                         <div class="post-body">
                             <h5 class="post-title">{{ $p->title }}</h5>
                             <p class="post-text">{{ $p->content }}</p>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Đọc tiếp <i class="fas fa-arrow-right ms-1"></i></a>
+                            <a href="{{ route('forum.post.show', $p->id) }}" class="btn btn-sm btn-outline-primary">Đọc tiếp <i class="fas fa-arrow-right ms-1"></i></a>
                         </div>
                         <div class="post-footer">
                             <div class="post-actions">
@@ -794,16 +673,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="list-group list-group-flush">
                         <div class="list-group-item d-flex justify-content-between align-items-center">
                             <span><i class="fas fa-users"></i> Thành viên</span>
-                            <span class="fw-bold">15,243</span>
+                            <span class="fw-bold">{{ $totalUsers }}</span>
                         </div>
                         <div class="list-group-item d-flex justify-content-between align-items-center">
                             <span><i class="fas fa-comments"></i> Chủ đề</span>
-                            <span class="fw-bold">2,456</span>
+                            <span class="fw-bold">{{ $totalCategories }}</span>
                         </div>
                         <div class="list-group-item d-flex justify-content-between align-items-center">
                             <span><i class="fas fa-reply"></i> Bài viết</span>
-                            <span class="fw-bold">18,789</span>
+                            <span class="fw-bold">  {{ $totalPosts }} </span>
                         </div>
+
 
                     </div>
                 </div>
@@ -870,6 +750,125 @@ document.addEventListener('DOMContentLoaded', function() {
     <i class="fas fa-plus"></i>
 </a>
 
+
+<!-- JavaScript để xử lý chức năng -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Xử lý hiển thị lý do từ chối
+        var currentPostId = null;
+        
+        document.querySelectorAll('.view-rejection-reason').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var rejectionReason = this.getAttribute('data-rejection');
+                currentPostId = this.getAttribute('data-post-id');
+                
+                document.getElementById('rejectionReasonText').textContent = rejectionReason;
+            });
+        });
+        
+        // Xử lý nút chỉnh sửa bài bị từ chối
+        document.querySelector('.edit-rejected-post').addEventListener('click', function() {
+            // Đóng modal hiện tại
+            var currentModal = bootstrap.Modal.getInstance(document.getElementById('rejectionReasonModal'));
+            currentModal.hide();
+            
+            // Hiển thị modal chỉnh sửa bài viết
+            if (currentPostId) {
+                openEditPostModal(currentPostId);
+            }
+        });
+        
+        // Xử lý tất cả các nút chỉnh sửa bài viết
+        document.querySelectorAll('.edit-post-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var postId = this.getAttribute('data-post-id');
+                openEditPostModal(postId);
+            });
+        });
+        
+        // Hàm mở modal chỉnh sửa và tải dữ liệu
+        function openEditPostModal(postId) {
+            if (!postId) return;
+            
+            // Thiết lập ID bài viết cần chỉnh sửa
+            document.getElementById('edit_post_id').value = postId;
+            
+            // Mở modal chỉnh sửa
+            var editModal = new bootstrap.Modal(document.getElementById('editPostModal'));
+            
+            // Tải dữ liệu bài viết bằng AJAX (giả lập)
+            // Trong thực tế, bạn sẽ cần gọi API để lấy dữ liệu bài viết
+            fetch(`/api/forum/posts/${postId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Điền dữ liệu vào form
+                    document.getElementById('edit_title').value = data.title;
+                    document.getElementById('edit_category_id').value = data.category_id;
+                    document.getElementById('edit_content').value = data.content;
+                    document.getElementById('edit_tags').value = data.tags;
+                    document.getElementById('edit_is_anonymous').checked = data.is_anonymous;
+                    document.getElementById('edit_notify_replies').checked = data.notify_replies;
+                    
+                    // Hiển thị hình ảnh hiện tại (nếu có)
+                    var imageContainer = document.getElementById('image_preview_container');
+                    imageContainer.innerHTML = '';
+                    
+                    if (data.images && data.images.length > 0) {
+                        data.images.forEach(function(image, index) {
+                            var col = document.createElement('div');
+                            col.className = 'col-md-3 mb-2';
+                            
+                            var card = document.createElement('div');
+                            card.className = 'card';
+                            
+                            var img = document.createElement('img');
+                            img.className = 'card-img-top';
+                            img.src = `/storage/${image}`;
+                            img.alt = `Hình ảnh ${index + 1}`;
+                            
+                            var cardBody = document.createElement('div');
+                            cardBody.className = 'card-body p-2';
+                            
+                            var removeBtn = document.createElement('button');
+                            removeBtn.className = 'btn btn-sm btn-danger w-100';
+                            removeBtn.textContent = 'Xóa';
+                            removeBtn.setAttribute('data-image-id', index);
+                            removeBtn.addEventListener('click', function() {
+                                // Xử lý xóa hình ảnh
+                                col.remove();
+                            });
+                            
+                            cardBody.appendChild(removeBtn);
+                            card.appendChild(img);
+                            card.appendChild(cardBody);
+                            col.appendChild(card);
+                            imageContainer.appendChild(col);
+                        });
+                    } else {
+                        imageContainer.innerHTML = '<p class="text-muted">Không có hình ảnh</p>';
+                    }
+                    
+                    // Mở modal
+                    editModal.show();
+                })
+                .catch(error => {
+                    console.error('Error fetching post data:', error);
+                    // Trong trường hợp thực tế, mở modal với form trống
+                    editModal.show();
+                });
+        }
+        
+        // Xử lý cập nhật bài viết
+        document.getElementById('updatePost').addEventListener('click', function() {
+            var form = document.getElementById('editPostForm');
+            if (form.checkValidity()) {
+                form.submit();
+            } else {
+                form.reportValidity();
+            }
+        });
+    });
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
