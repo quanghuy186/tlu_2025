@@ -2946,5 +2946,145 @@
     }
 }
 
+
+
+.comment-item {
+    padding: 15px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.comment-item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.avatar-circle-sm {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+}
+
+.avatar-text {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-img-sm {
+    width: 30px;
+    height: 30px;
+}
+
+.comment-content {
+    word-break: break-word;
+    white-space: pre-line;
+}
+
+.comment-actions button, .reply-actions button {
+    color: #6c757d;
+    transition: color 0.2s ease;
+}
+
+.comment-actions button:hover, .reply-actions button:hover {
+    color: #0d6efd;
+}
+
+.comment-actions button.text-danger:hover, .reply-actions button.text-danger:hover {
+    color: #dc3545 !important;
+}
+
+.replies-list {
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.reply-item {
+    padding: 8px 0;
+}
+
+.reply-content {
+    word-break: break-word;
+    white-space: pre-line;
+}
+
+.reply-form {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.reply-form:not(.d-none) {
+    animation: slideDown 0.3s ease forwards;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reply-form textarea:focus, .comment-form textarea:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+#loadMoreComments {
+    transition: all 0.2s ease;
+}
+
+#loadMoreComments:hover {
+    background-color: #0d6efd;
+    color: white;
+}
+
+@media (max-width: 576px) {
+    .avatar-circle {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .avatar-img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .avatar-circle-sm {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .avatar-img-sm {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .comment-item {
+        padding: 10px;
+    }
+    
+    .replies-list {
+        padding-left: 0.75rem !important;
+        margin-left: 0.5rem !important;
+    }
+}
+
     </style>
 </head>

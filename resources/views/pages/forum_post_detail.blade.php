@@ -104,16 +104,15 @@
                 </div>
             </div>
             
+            @include('partials.forum_comments')
             <!-- Comments Section -->
-            <div class="card mb-4">
+            {{-- <div class="card mb-4">
                 <div class="card-header">
                     <i class="far fa-comments me-2"></i> Bình luận ({{ count($post->comments) }})
                 </div>
                 <div class="card-body">
-                    <!-- Comment Form -->
                     @auth
-                        <form action="" method="POST" class="mb-4">
-                        {{-- <form action="{{ route('forum.comment.store') }}" method="POST" class="mb-4"> --}}
+                        <form action="{{ route('forum.comment.store') }}" method="POST" class="mb-4">
 
                             @csrf
                             <input type="hidden" name="post_id" value="{{ $post->id }}">
@@ -188,7 +187,7 @@
                             <!-- Reply Form (hidden by default) -->
                             <div class="reply-form ps-5 mt-2 mb-3 d-none" id="replyForm{{ $comment->id }}">
                                 @auth
-                                    <form action="{{ route('forum.reply.store') }}" method="POST">
+                                    <form action="{{ route('forum.comment.reply') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="post_id" value="{{ $post->id }}">
                                         <input type="hidden" name="parent_id" value="{{ $comment->id }}">
@@ -259,7 +258,7 @@
                         @endforelse
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
         
         <!-- Sidebar -->
@@ -398,6 +397,18 @@
 @endsection
 
 @section('scripts')
+
+<script>
+    // Khai báo các biến cần thiết cho JavaScript
+    const assetPath = "{{ asset('storage/') }}/";
+    const csrfToken = "{{ csrf_token() }}";
+    const postId = "{{ $post->id }}";
+    const deleteCommentRoute = "{{ route('forum.comment.delete') }}";
+    const replyCommentRoute = "{{ route('forum.comment.reply') }}";
+    const loginRoute = "{{ route('login') }}";
+    const isAuthenticated = {{ Auth::check() ? 'true' : 'false' }};
+</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Handle Share Button

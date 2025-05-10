@@ -15,11 +15,11 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('parent_comment_id')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->text('content');
             $table->boolean('is_anonymous')->default(FALSE);
             // $table->unique(['user_id', 'post_id']);
-            $table->foreign('parent_comment_id')->references('id')->on('forum_comments');
+            $table->foreign('parent_id')->references('id')->on('forum_comments');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('post_id')->references('id')->on('forum_posts')->onDelete('cascade');
             $table->timestamps();

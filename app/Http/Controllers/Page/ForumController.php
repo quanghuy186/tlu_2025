@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Page;
 
 use App\Http\Controllers\Controller;
 use App\Models\ForumCategory;
+use App\Models\ForumComment;
 use App\Models\ForumPost;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -303,4 +304,182 @@ class ForumController extends Controller
         
         return view('pages.forum_category', compact('category', 'posts', 'categories', 'sort'));
     }
+
+    public function storeComment(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'post_id' => 'required|exists:forum_posts,id',
+            'content' => 'required|string|min:2|max:1000',
+            'is_anonymous' => 'boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $post = ForumPost::findOrFail($request->post_id);
+        
+        // Chỉ cho phép bình luận trên bài viết đã duyệt
+        if ($post->status != 'approved') {
+            return redirect()->back()
+                ->with('error', 'Không thể bình luận trên bài viết chưa được duyệt.');
+        }
+        
+        $comment = new ForumComment();
+        $comment->post_id = $post->id;
+        $comment->user_id = Auth::id();
+        $comment->content = $request->content;
+        $comment->is_anonymous = $request->has('is_anonymous') ? true : false;
+        $comment->save();
+        
+        // Gửi thông báo cho tác giả bài viết (nếu có cài đặt nhận thông báo)
+        if ($post->notify_replies && $post->user_id != Auth::id()) {
+            // Gọi hàm gửi thông báo ở đây (có thể triển khai sau)
+            // $this->sendCommentNotification($post, $comment);
+        }
+        
+        return redirect()->back()
+            ->with('success', 'Bình luận của bạn đã được đăng thành công.');
+    }
+
+    
+    public function storeReply(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'post_id' => 'required|exists:forum_posts,id',
+            'parent_id ' => 'required|exists:forum_comments,id',
+            'content' => 'required|string|min:2|max:1000',
+            'is_anonymous' => 'boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $post = ForumPost::findOrFail($request->post_id);
+        $parentComment = ForumComment::findOrFail($request->parent_id);
+        
+        // Kiểm tra xem parent comment có thuộc về post này không
+        if ($parentComment->post_id != $post->id) {
+            return redirect()->back()
+                ->with('error', 'Yêu cầu không hợp lệ.');
+        }
+        
+        $reply = new ForumComment();
+        $reply->post_id = $post->id;
+        $reply->user_id = Auth::id();
+        $reply->parent_id = $parentComment->id;
+        $reply->content = $request->content;
+        $reply->is_anonymous = $request->has('is_anonymous') ? true : false;
+        $reply->save();
+        
+        // Gửi thông báo cho người comment gốc
+        if ($parentComment->user_id != Auth::id()) {
+            // Gọi hàm gửi thông báo ở đây (có thể triển khai sau)
+            // $this->sendReplyNotification($parentComment, $reply);
+        }
+        
+        return redirect()->back()
+            ->with('success', 'Phản hồi của bạn đã được đăng thành công.');
+    }
+
+    public function deleteComment(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'comment_id' => 'required|exists:forum_comments,id',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $comment = ForumComment::findOrFail($request->comment_id);
+        
+        // Kiểm tra quyền xóa (chỉ người viết comment hoặc admin mới được xóa)
+        if ($comment->user_id != Auth::id()) {
+            return redirect()->back()
+                ->with('error', 'Bạn không có quyền xóa bình luận này.');
+        }
+        
+        // Nếu có các phản hồi con, xóa chúng trước
+        ForumComment::where('parent_id', $comment->id)->delete();
+        
+        // Sau đó xóa comment chính
+        $comment->delete();
+        
+        return redirect()->back()
+            ->with('success', 'Bình luận đã được xóa thành công.');
+    }
+
+   
+    public function getComments($postId)
+    {
+        $post = ForumPost::findOrFail($postId);
+        $perPage = request('per_page', 10);
+        $page = request('page', 1);
+        
+        // Lấy các bình luận gốc (không có parent)
+        $comments = ForumComment::with(['author', 'replies.author'])
+            ->where('post_id', $postId)
+            ->whereNull('parent_id')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+        
+        // Format dữ liệu cho response
+        $formattedComments = $comments->map(function($comment) {
+            $formattedReplies = $comment->replies->map(function($reply) {
+                return [
+                    'id' => $reply->id,
+                    'content' => $reply->content,
+                    'created_at' => $reply->created_at->format('Y-m-d H:i:s'),
+                    'created_at_human' => $reply->created_at->diffForHumans(),
+                    'is_anonymous' => $reply->is_anonymous,
+                    'user' => $reply->is_anonymous ? [
+                        'name' => 'Ẩn danh',
+                        'avatar' => null
+                    ] : [
+                        'id' => $reply->author->id,
+                        'name' => $reply->author->name,
+                        'avatar' => $reply->author->avatar
+                    ],
+                    'can_delete' => Auth::check() && (Auth::id() == $reply->user_id)
+                ];
+            });
+            
+            return [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'created_at' => $comment->created_at->format('Y-m-d H:i:s'),
+                'created_at_human' => $comment->created_at->diffForHumans(),
+                'is_anonymous' => $comment->is_anonymous,
+                'user' => $comment->is_anonymous ? [
+                    'name' => 'Ẩn danh',
+                    'avatar' => null
+                ] : [
+                    'id' => $comment->author->id,
+                    'name' => $comment->author->name,
+                    'avatar' => $comment->author->avatar
+                ],
+                'replies' => $formattedReplies,
+                'can_delete' => Auth::check() && (Auth::id() == $comment->user_id)
+            ];
+        });
+        
+        return response()->json([
+            'data' => $formattedComments,
+            'meta' => [
+                'current_page' => $comments->currentPage(),
+                'last_page' => $comments->lastPage(),
+                'per_page' => $comments->perPage(),
+                'total' => $comments->total()
+            ]
+        ]);
+    }
+
 }

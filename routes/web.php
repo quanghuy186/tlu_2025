@@ -242,6 +242,18 @@ Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
     });
 });
 
+Route::middleware(['auth'])->group(function () {
+    // Thêm bình luận mới
+    Route::post('/forum/comment', [App\Http\Controllers\Page\ForumController::class, 'storeComment'])->name('forum.comment.store');
+    
+    // Thêm phản hồi cho bình luận
+    Route::post('/forum/comment/reply', [App\Http\Controllers\Page\ForumController::class, 'storeReply'])->name('forum.comment.reply');
+    
+    // Xóa bình luận
+    Route::delete('/forum/comment/delete', [App\Http\Controllers\Page\ForumController::class, 'deleteComment'])->name('forum.comment.delete');
+});
+// API route để lấy comments (có thể sử dụng cho AJAX loading)
+Route::get('/api/forum/post/{id}/comments', [App\Http\Controllers\Page\ForumController::class, 'getComments'])->name('api.forum.comments');
 
 
 // Route::get('/notification', [UserNotificationController::class, 'index'])->name('notification.index');

@@ -65,6 +65,11 @@ class ForumPost extends Model
         return $this->hasMany(ForumComment::class, 'post_id');
     }
 
+    public function parentComments()
+    {
+        return $this->hasMany(ForumComment::class, 'post_id')->whereNull('parent_id');
+    }
+
     /**
      * Kiểm tra trạng thái đã duyệt
      */

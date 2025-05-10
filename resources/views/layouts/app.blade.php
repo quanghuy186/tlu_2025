@@ -11,6 +11,8 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 @yield('custom-js')
 
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -260,7 +262,339 @@
     });
 </script>
 
+<script>
+    // Thêm đoạn code này vào file JavaScript chính hoặc tạo file mới public/js/forum-comments.js
 
+    document.addEventListener('DOMContentLoaded', function() {
+        // Xử lý hiển thị form phản hồi
+        document.querySelectorAll('.reply-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
+                const replyForm = document.getElementById('reply-form-' + commentId);
+                
+                // Ẩn tất cả các form phản hồi khác
+                document.querySelectorAll('.reply-form').forEach(form => {
+                    if (form.id !== 'reply-form-' + commentId) {
+                        form.classList.add('d-none');
+                    }
+                });
+                
+                // Toggle hiển thị form phản hồi hiện tại
+                replyForm.classList.toggle('d-none');
+                
+                // Focus vào textarea nếu form đang hiển thị
+                if (!replyForm.classList.contains('d-none')) {
+                    replyForm.querySelector('textarea').focus();
+                }
+            });
+        });
+        
+        // Xử lý xác nhận xóa bình luận
+        document.querySelectorAll('.delete-comment-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (!confirm('Bạn có chắc chắn muốn xóa bình luận này?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+        
+        // Xử lý tải thêm bình luận
+        const loadMoreBtn = document.getElementById('loadMoreComments');
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', function() {
+                const postId = this.getAttribute('data-post-id');
+                const page = parseInt(this.getAttribute('data-page')) + 1;
+                
+                // Hiển thị trạng thái đang tải
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Đang tải...';
+                this.disabled = true;
+                
+                // Gọi API để lấy thêm bình luận
+                fetch(`/api/forum/post/${postId}/comments?page=${page}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Thêm bình luận vào danh sách
+                        const commentsList = document.querySelector('.comments-list');
+                        
+                        if (data.data.length > 0) {
+                            data.data.forEach(comment => {
+                                const commentHtml = createCommentHtml(comment);
+                                if (commentsList.querySelector('.text-center')) {
+                                    // Nếu có thông báo "chưa có bình luận", xóa nó đi
+                                    commentsList.innerHTML = '';
+                                } else if (commentsList.children.length > 0) {
+                                    // Thêm đường phân cách nếu đã có bình luận khác
+                                    commentsList.insertAdjacentHTML('beforeend', '<hr class="my-3">');
+                                }
+                                
+                                // Thêm bình luận mới
+                                commentsList.insertAdjacentHTML('beforeend', commentHtml);
+                            });
+                            
+                            // Cập nhật trạng thái nút
+                            this.innerHTML = '<i class="fas fa-sync-alt me-1"></i> Tải thêm bình luận';
+                            this.disabled = false;
+                            this.setAttribute('data-page', page);
+                            
+                            // Ẩn nút nếu đã tải hết bình luận
+                            if (page >= data.meta.last_page) {
+                                this.classList.add('d-none');
+                            }
+                            
+                            // Gắn sự kiện cho các phần tử mới
+                            attachCommentEventListeners();
+                        } else {
+                            // Nếu không có thêm bình luận, ẩn nút
+                            this.classList.add('d-none');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading comments:', error);
+                        this.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> Đã xảy ra lỗi, thử lại';
+                        this.disabled = false;
+                    });
+            });
+        }
+        
+        // Hàm tạo HTML cho bình luận từ dữ liệu API
+        function createCommentHtml(comment) {
+            // Tạo HTML cho avatar
+            let avatarHtml = '';
+            if (comment.is_anonymous) {
+                avatarHtml = `
+                    <div class="avatar-circle bg-secondary">
+                        <span class="avatar-text"><i class="fas fa-user"></i></span>
+                    </div>
+                `;
+            } else {
+                if (comment.user && comment.user.avatar) {
+                    avatarHtml = `
+                        <img src="${assetPath}${comment.user.avatar}" 
+                            alt="${comment.user.name}" class="avatar-img">
+                    `;
+                } else {
+                    avatarHtml = `
+                        <div class="avatar-circle bg-primary">
+                            <span class="avatar-text">${comment.user ? comment.user.name.charAt(0) : 'U'}</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Tạo nút xóa (nếu có quyền)
+            let deleteButtonHtml = '';
+            if (comment.can_delete) {
+                deleteButtonHtml = `
+                    <form action="${deleteCommentRoute}" method="POST" class="d-inline delete-comment-form">
+                        <input type="hidden" name="_token" value="${csrfToken}">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="comment_id" value="${comment.id}">
+                        <button type="submit" class="btn btn-sm btn-link text-danger delete-comment-btn">
+                            <i class="far fa-trash-alt"></i> Xóa
+                        </button>
+                    </form>
+                `;
+            }
+            
+            // Tạo HTML cho form phản hồi
+            let replyFormHtml = '';
+            if (isAuthenticated) {
+                replyFormHtml = `
+                    <div class="reply-form mt-3 d-none" id="reply-form-${comment.id}">
+                        <form action="${replyCommentRoute}" method="POST">
+                            <input type="hidden" name="_token" value="${csrfToken}">
+                            <input type="hidden" name="post_id" value="${postId}">
+                            <input type="hidden" name="parent_id" value="${comment.id}">
+                            <div class="mb-2">
+                                <textarea class="form-control form-control-sm" name="content" rows="2" 
+                                    placeholder="Viết phản hồi của bạn..." required></textarea>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="reply_is_anonymous_${comment.id}" name="is_anonymous">
+                                    <label class="form-check-label" for="reply_is_anonymous_${comment.id}">
+                                        Phản hồi ẩn danh
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="far fa-paper-plane me-1"></i> Gửi
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                `;
+            } else {
+                replyFormHtml = `
+                    <div class="reply-form mt-3 d-none" id="reply-form-${comment.id}">
+                        <div class="alert alert-info py-2">
+                            <small>
+                                <i class="fas fa-info-circle me-1"></i> Vui lòng 
+                                <a href="${loginRoute}" class="alert-link">đăng nhập</a> 
+                                để phản hồi.
+                            </small>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Tạo HTML cho các phản hồi
+            let repliesHtml = '';
+            if (comment.replies && comment.replies.length > 0) {
+                let repliesContent = '';
+                
+                comment.replies.forEach(reply => {
+                    // Tạo HTML cho avatar của phản hồi
+                    let replyAvatarHtml = '';
+                    if (reply.is_anonymous) {
+                        replyAvatarHtml = `
+                            <div class="avatar-circle avatar-circle-sm bg-secondary">
+                                <span class="avatar-text"><i class="fas fa-user"></i></span>
+                            </div>
+                        `;
+                    } else {
+                        if (reply.user && reply.user.avatar) {
+                            replyAvatarHtml = `
+                                <img src="${assetPath}${reply.user.avatar}" 
+                                    alt="${reply.user.name}" class="avatar-img avatar-img-sm">
+                            `;
+                        } else {
+                            replyAvatarHtml = `
+                                <div class="avatar-circle avatar-circle-sm bg-primary">
+                                    <span class="avatar-text">${reply.user ? reply.user.name.charAt(0) : 'U'}</span>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    // Tạo nút xóa phản hồi (nếu có quyền)
+                    let replyDeleteButtonHtml = '';
+                    if (reply.can_delete) {
+                        replyDeleteButtonHtml = `
+                            <div class="reply-actions">
+                                <form action="${deleteCommentRoute}" method="POST" class="d-inline delete-comment-form">
+                                    <input type="hidden" name="_token" value="${csrfToken}">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="comment_id" value="${reply.id}">
+                                    <button type="submit" class="btn btn-sm btn-link p-0 text-danger delete-comment-btn">
+                                        <small><i class="far fa-trash-alt"></i> Xóa</small>
+                                    </button>
+                                </form>
+                            </div>
+                        `;
+                    }
+                    
+                    // Tạo HTML cho phản hồi
+                    repliesContent += `
+                        <div class="reply-item mb-2" id="comment-${reply.id}">
+                            <div class="d-flex">
+                                <div class="me-2">
+                                    ${replyAvatarHtml}
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 small fw-bold">
+                                            ${reply.is_anonymous ? 'Ẩn danh' : (reply.user ? reply.user.name : 'Người dùng')}
+                                        </h6>
+                                        <small class="text-muted">${reply.created_at_human}</small>
+                                    </div>
+                                    <div class="reply-content my-1 small">
+                                        ${reply.content}
+                                    </div>
+                                    ${replyDeleteButtonHtml}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                // Ghép HTML phản hồi vào container
+                repliesHtml = `
+                    <div class="replies-list mt-3 ps-3 border-start">
+                        ${repliesContent}
+                    </div>
+                `;
+            }
+            
+            // Tạo HTML hoàn chỉnh cho bình luận
+            return `
+                <div class="comment-item" id="comment-${comment.id}">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            ${avatarHtml}
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">
+                                    ${comment.is_anonymous ? 'Ẩn danh' : (comment.user ? comment.user.name : 'Người dùng')}
+                                </h6>
+                                <small class="text-muted">${comment.created_at_human}</small>
+                            </div>
+                            <div class="comment-content my-2">
+                                ${comment.content}
+                            </div>
+                            <div class="comment-actions">
+                                <button type="button" class="btn btn-sm btn-link ps-0 reply-btn" data-comment-id="${comment.id}">
+                                    <i class="far fa-comment-dots"></i> Phản hồi
+                                </button>
+                                ${deleteButtonHtml}
+                            </div>
+                            ${replyFormHtml}
+                            ${repliesHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Hàm gắn sự kiện cho các phần tử bình luận mới
+        function attachCommentEventListeners() {
+            // Gắn sự kiện cho nút phản hồi
+            document.querySelectorAll('.reply-btn').forEach(button => {
+                button.removeEventListener('click', handleReplyClick);
+                button.addEventListener('click', handleReplyClick);
+            });
+            
+            // Gắn sự kiện cho nút xóa bình luận
+            document.querySelectorAll('.delete-comment-btn').forEach(button => {
+                button.removeEventListener('click', handleDeleteClick);
+                button.addEventListener('click', handleDeleteClick);
+            });
+        }
+        
+        // Hàm xử lý sự kiện click nút phản hồi
+        function handleReplyClick() {
+            const commentId = this.getAttribute('data-comment-id');
+            const replyForm = document.getElementById('reply-form-' + commentId);
+            
+            // Ẩn tất cả các form phản hồi khác
+            document.querySelectorAll('.reply-form').forEach(form => {
+                if (form.id !== 'reply-form-' + commentId) {
+                    form.classList.add('d-none');
+                }
+            });
+            
+            // Toggle hiển thị form phản hồi hiện tại
+            replyForm.classList.toggle('d-none');
+            
+            // Focus vào textarea nếu form đang hiển thị
+            if (!replyForm.classList.contains('d-none')) {
+                replyForm.querySelector('textarea').focus();
+            }
+        }
+        
+        // Hàm xử lý sự kiện click nút xóa bình luận
+        function handleDeleteClick(e) {
+            if (!confirm('Bạn có chắc chắn muốn xóa bình luận này?')) {
+                e.preventDefault();
+            }
+        }
+    });
+</script>
 
 </body>
 </html>
