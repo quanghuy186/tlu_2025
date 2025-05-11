@@ -92,14 +92,14 @@
                             <i class="far fa-eye me-1"></i> {{ number_format($post->view_count) }} lượt xem
                             <i class="far fa-comment ms-3 me-1"></i> {{ count($post->comments) }} bình luận
                         </div>
-                        <div>
+                        {{-- <div>
                             <button class="btn btn-sm btn-outline-primary" id="sharePostBtn">
                                 <i class="fas fa-share-alt me-1"></i> Chia sẻ
                             </button>
                             <button class="btn btn-sm btn-outline-danger ms-2" id="reportPostBtn">
                                 <i class="fas fa-flag me-1"></i> Báo cáo
                             </button>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -308,89 +308,7 @@
                     @endforeach
                 </div>
             </div>
-            
-            <!-- Create New Post Button -->
-            @auth
-                <div class="d-grid gap-2 mb-4">
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#createPostModal">
-                        <i class="fas fa-plus-circle me-2"></i> Tạo bài viết mới
-                    </button>
-                </div>
-            @endauth
         </div>
-    </div>
-</div>
-
-<!-- Modal: Share Post -->
-<div class="modal fade" id="sharePostModal" tabindex="-1" aria-labelledby="sharePostModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="sharePostModalLabel">Chia sẻ bài viết</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Chia sẻ bài viết này tới:</p>
-                <div class="d-flex justify-content-center gap-3 my-3">
-                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}" target="_blank" class="btn btn-outline-primary">
-                        <i class="fab fa-facebook-f"></i> Facebook
-                    </a>
-                    <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}&text={{ urlencode($post->title) }}" target="_blank" class="btn btn-outline-info">
-                        <i class="fab fa-twitter"></i> Twitter
-                    </a>
-                    <a href="mailto:?subject={{ urlencode($post->title) }}&body={{ urlencode('Xem bài viết này tại: ' . request()->url()) }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-envelope"></i> Email
-                    </a>
-                </div>
-                <div class="input-group mt-3">
-                    <input type="text" class="form-control" id="postUrlInput" value="{{ request()->url() }}" readonly>
-                    <button class="btn btn-outline-secondary" type="button" id="copyUrlBtn">
-                        <i class="far fa-copy"></i> Sao chép
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal: Report Post -->
-<div class="modal fade" id="reportPostModal" tabindex="-1" aria-labelledby="reportPostModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="reportPostModalLabel">Báo cáo bài viết</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="reportPostForm" action="" method="POST">
-                {{-- <form id="reportPostForm" action="{{ route('forum.report') }}" method="POST"> --}}
-
-                    @csrf
-                    <input type="hidden" name="post_id" value="{{ $post->id }}">
-                    
-                    <div class="mb-3">
-                        <label for="report_reason" class="form-label">Lý do báo cáo <span class="text-danger">*</span></label>
-                        <select class="form-select" id="report_reason" name="reason" required>
-                            <option value="">-- Chọn lý do --</option>
-                            <option value="spam">Spam / Quảng cáo</option>
-                            <option value="inappropriate">Nội dung không phù hợp</option>
-                            <option value="offensive">Xúc phạm / Quấy rối</option>
-                            <option value="copyright">Vi phạm bản quyền</option>
-                            <option value="other">Lý do khác</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="report_details" class="form-label">Chi tiết (tùy chọn)</label>
-                        <textarea class="form-control" id="report_details" name="details" rows="3" placeholder="Mô tả chi tiết lý do báo cáo..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-danger" id="submitReport">Gửi báo cáo</button>
-            </div>
-        </div> 
     </div>
 </div>
 

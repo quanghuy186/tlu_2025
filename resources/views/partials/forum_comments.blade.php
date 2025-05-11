@@ -101,7 +101,7 @@
                             
                             <!-- Form phản hồi (ẩn mặc định) -->
                             <div class="reply-form mt-3 d-none" id="reply-form-{{ $comment->id }}">
-                                @auth
+                                {{-- @auth --}}
                                     <form action="{{ route('forum.comment.reply') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="post_id" value="{{ $post->id }}">
@@ -126,7 +126,7 @@
                                             </button>
                                         </div>
                                     </form>
-                                @else
+                                {{-- @else
                                     <div class="alert alert-info py-2">
                                         <small>
                                             <i class="fas fa-info-circle me-1"></i> Vui lòng 
@@ -134,12 +134,12 @@
                                             để phản hồi.
                                         </small>
                                     </div>
-                                @endauth
+                                @endauth --}}
                             </div>
                             
                             <!-- Các phản hồi -->
                             @if($comment->replies->count() > 0)
-                                <div class="replies-list mt-3 ps-3 border-start">
+                                <div class="replies-list mt-3 ps-3">
                                     @foreach($comment->replies as $reply)
                                         <div class="reply-item mb-2" id="comment-{{ $reply->id }}">
                                             <div class="d-flex">

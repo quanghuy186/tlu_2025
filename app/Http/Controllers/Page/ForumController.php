@@ -349,7 +349,7 @@ class ForumController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'post_id' => 'required|exists:forum_posts,id',
-            'parent_id ' => 'required|exists:forum_comments,id',
+            'parent_id' => 'required|exists:forum_comments,id',
             'content' => 'required|string|min:2|max:1000',
             'is_anonymous' => 'boolean',
         ]);

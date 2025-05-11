@@ -34,11 +34,11 @@
                             <p class="text-muted mb-0 mt-1">{{ $category->description }}</p>
                         @endif
                     </div>
-                    <div>
+                    {{-- <div>
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPostModal">
                             <i class="fas fa-plus-circle me-1"></i> Tạo bài viết mới
                         </button>
-                    </div>
+                    </div> --}}
                 </div>
                 
                 <!-- Subcategories Display (if any) -->
@@ -76,18 +76,11 @@
                 
                 <!-- Posts List -->
                 <div class="card-body">
-                    <h5 class="mb-3">Bài viết</h5>
                     
                     <!-- Posts Filter & Sorting -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-outline-secondary active">
-                                <i class="fas fa-th-list me-1"></i> Danh sách
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary">
-                                <i class="fas fa-th-large me-1"></i> Lưới
-                            </button>
-                        </div>
+                        <h5 class="mb-3">Bài viết</h5>
+                        
                         
                         <div class="dropdown">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
