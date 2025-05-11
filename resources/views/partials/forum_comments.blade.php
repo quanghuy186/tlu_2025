@@ -17,7 +17,7 @@
                 
                 <div class="mb-3">
                     <textarea class="form-control @error('content') is-invalid @enderror" 
-                        name="content" rows="3" placeholder="Viết bình luận của bạn..." required></textarea>
+                        name="content" rows="3" placeholder="Viết bình luận của bạn..."></textarea>
                     @error('content')
                         {{-- <div class="invalid-feedback">{{ $message }}</div> --}}
                     @enderror
@@ -115,8 +115,7 @@
                                         
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" 
-                                                    id="reply_is_anonymous_{{ $comment->id }}" name="is_anonymous">
+                                                <input class="form-check-input" type="checkbox" id="reply_is_anonymous_{{ $comment->id }}" name="is_anonymous" checked>
                                                 <label class="form-check-label" for="reply_is_anonymous_{{ $comment->id }}">
                                                     Phản hồi ẩn danh
                                                 </label>
@@ -126,15 +125,6 @@
                                             </button>
                                         </div>
                                     </form>
-                                {{-- @else
-                                    <div class="alert alert-info py-2">
-                                        <small>
-                                            <i class="fas fa-info-circle me-1"></i> Vui lòng 
-                                            <a href="{{ route('login') }}" class="alert-link">đăng nhập</a> 
-                                            để phản hồi.
-                                        </small>
-                                    </div>
-                                @endauth --}}
                             </div>
                             
                             <!-- Các phản hồi -->

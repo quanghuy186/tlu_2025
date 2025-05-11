@@ -98,6 +98,16 @@ class ForumPost extends Model
     // {
     //     return $this->hasMany(ForumView::class, 'post_id');
     // }
+
+    public function likes()
+    {
+        return $this->hasMany(ForumLike::class, 'post_id');
+    }
+
+    public function likedByUser($userId)
+    {
+        return $this->likes()->where('user_id', $userId)->exists();
+    }
     
     /**
      * Chuyển đổi chuỗi images thành mảng

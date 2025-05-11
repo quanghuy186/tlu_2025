@@ -74,22 +74,14 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="row mb-3">
-                        <label for="tags" class="col-sm-2 col-form-label">Thẻ</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control @error('tags') is-invalid @enderror" id="tags" name="tags" value="{{ old('tags') }}" placeholder="Thêm thẻ (phân cách bằng dấu phẩy)">
-                            @error('tags')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <small class="text-muted">Ví dụ: toán cao cấp, kinh nghiệm học tập, tài liệu</small>
-                        </div>
+
                     </div>
                     
                     <div class="row mb-3">
                         <div class="col-sm-10 offset-sm-2">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="is_anonymous" name="is_anonymous" {{ old('is_anonymous') ? 'checked' : '' }}>
+                                {{-- <input class="form-check-input" type="checkbox" id="is_anonymous" name="is_anonymous" {{ old('is_anonymous') ? 'checked' : '' }}> --}}
+                                <input class="form-check-input" type="checkbox" id="is_anonymous" name="is_anonymous" value="1" {{ old('is_anonymous') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="is_anonymous">
                                     Đăng ẩn danh (người xem sẽ không thấy tên tác giả)
                                 </label>

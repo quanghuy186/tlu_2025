@@ -255,6 +255,9 @@ Route::middleware(['auth'])->group(function () {
 // API route để lấy comments (có thể sử dụng cho AJAX loading)
 Route::get('/api/forum/post/{id}/comments', [ForumController::class, 'getComments'])->name('api.forum.comments');
 
+// Like functionality
+Route::post('/forum/post/{id}/like', [App\Http\Controllers\Page\ForumController::class, 'toggleLike'])->name('forum.post.like');
+Route::get('/forum/post/{id}/like-info', [App\Http\Controllers\Page\ForumController::class, 'getLikeInfo'])->name('forum.post.like.info');
 
 // Route::get('/notification', [UserNotificationController::class, 'index'])->name('notification.index');
 Route::get('/notification', [PageIndexController::class, 'notification'])->name('notification.index');

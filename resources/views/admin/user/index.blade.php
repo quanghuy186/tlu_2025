@@ -63,9 +63,9 @@
                       </td>
                       <td class="text-center">
                         @if ($user->is_active == 1)
-                        <span class="badge bg-success rounded-pill px-3">Hoạt động</span>
+                          <span class="badge bg-success rounded-pill px-3">Hoạt động</span>
                         @elseif ($user->is_active == 0)
-                        <span class="badge bg-danger rounded-pill px-3">Ngừng hoạt động</span>
+                         <span class="badge bg-danger rounded-pill px-3">Ngừng hoạt động</span>
                         @endif
                       </td>
                       <td>

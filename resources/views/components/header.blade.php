@@ -6,6 +6,7 @@
     <title>Danh bạ điện tử - Đại học Thủy Lợi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
     :root {
         --primary-color: #005baa;
@@ -3086,5 +3087,22 @@
     }
 }
 
+/* like */
+/* Add this to your CSS file */
+.like-button {
+    transition: all 0.3s ease;
+}
+
+.like-button.liked {
+    color: #e74c3c !important;
+}
+
+.like-button.liked i {
+    transform: scale(1.1);
+}
+
+.like-button:hover {
+    color: #e74c3c !important;
+}
     </style>
 </head>

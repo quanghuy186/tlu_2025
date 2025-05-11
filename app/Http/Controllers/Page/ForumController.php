@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\DB;
 
 class ForumController extends Controller
 {   
@@ -52,52 +52,15 @@ class ForumController extends Controller
             $postId = request()->get('post');
             $selectedPost = ForumPost::with(['category', 'author', 'comments.user'])
                 ->findOrFail($postId);
-                
-            // Tăng lượt xem nếu người xem không phải tác giả
-            // if (!Auth::check() || (Auth::check() && Auth::id() != $selectedPost->user_id)) {
-            //     $view = new ForumView();
-            //     $view->post_id = $selectedPost->id;
-            //     $view->user_id = Auth::check() ? Auth::id() : null;
-            //     $view->ip_address = request()->ip();
-            //     $view->save();
-            // }
         }
-
-        // if (!Auth::check() || (Auth::id() !== $selectedPost->user_id)) {
-        //     // Kiểm tra xem người dùng đã xem bài viết này chưa (trong vòng 24 giờ)
-        //     $hasViewed = false;
-            
-        //     if (Auth::check()) {
-        //         // Nếu đã đăng nhập, kiểm tra theo user_id
-        //         $hasViewed = ForumView::where('post_id', $selectedPost->id)
-        //             ->where('user_id', Auth::id())
-        //             ->where('created_at', '>', now()->subHours(24))
-        //             ->exists();
-        //     } else {
-        //         // Nếu chưa đăng nhập, kiểm tra theo IP
-        //         $hasViewed = ForumView::where('post_id', $selectedPost->id)
-        //             ->where('ip_address', request()->ip())
-        //             ->where('created_at', '>', now()->subHours(24))
-        //             ->exists();
-        //     }
-            
-        //     // Nếu chưa xem trong 24 giờ qua, tăng lượt xem
-        //     if (!$hasViewed) {
-        //         $view = new ForumView();
-        //         $view->post_id = $selectedPost->id;
-        //         $view->user_id = Auth::check() ? Auth::id() : null;
-        //         $view->ip_address = request()->ip();
-        //         $view->save();
-        //     }
-        // }
         
         $latestPosts = ForumPost::where('status', 'approved')
-            ->with(['category', 'author'])
-            ->withCount('comments')
-            // ->withCount('comments')
-            ->orderBy('created_at', 'desc')
-            ->take(5)
-            ->paginate(5);
+        ->with(['category', 'author'])
+        ->withCount('comments')
+        ->withCount('likes') // Add this line to get like counts
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->paginate(5);
 
         $totalPosts = ForumPost::where('status', 'approved')->count();
         $totalCategories = ForumCategory::where('is_active', 1)->count();
@@ -123,7 +86,6 @@ class ForumController extends Controller
             'category_id' => 'required|exists:forum_categories,id',
             'content' => 'required|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_anonymous' => 'boolean',
         ]);
 
         if ($validator->fails()) {
@@ -140,6 +102,8 @@ class ForumController extends Controller
             }
         }
 
+        $is_anonymous = $request->has('is_anonymous') ? 1 : 0;
+
         $post = ForumPost::create([
             'title' => $request->title,
             'category_id' => $request->category_id,
@@ -147,7 +111,7 @@ class ForumController extends Controller
             'content' => $request->content,
             'images' => !empty($imagesPath) ? json_encode($imagesPath) : null,
             'status' => 'pending',
-            'is_anonymous' => $request->has('is_anonymous') ? true : false,
+            'is_anonymous' => $is_anonymous,
         ]);
 
         return redirect()->route('forum.index')
@@ -234,6 +198,17 @@ class ForumController extends Controller
         // Increment view count
         $post->increment('view_count');
         
+        // Get like count
+        $likeCount = DB::table('forum_likes')
+            ->where('post_id', $post->id)
+            ->count();
+        
+        // Check if current user has liked the post
+        $userLiked = Auth::check() ? DB::table('forum_likes')
+            ->where('post_id', $post->id)
+            ->where('user_id', Auth::id())
+            ->exists() : false;
+        
         // Get related posts from the same category
         $relatedPosts = ForumPost::where('category_id', $post->category_id)
             ->where('id', '!=', $post->id)
@@ -245,8 +220,37 @@ class ForumController extends Controller
         // Get categories for the sidebar
         $categories = ForumCategory::with('children')->whereNull('parent_id')->get();
         
-        return view('pages.forum_post_detail', compact('post', 'relatedPosts', 'categories'));
+        return view('pages.forum_post_detail', compact(
+            'post', 
+            'relatedPosts', 
+            'categories', 
+            'likeCount', 
+            'userLiked'
+        ));
     }
+
+    // public function showPost($id)
+    // {
+    //     // Find the post with its relationships
+    //     $post = ForumPost::with(['author', 'category', 'comments.author'])
+    //         ->findOrFail($id);
+        
+    //     // Increment view count
+    //     $post->increment('view_count');
+        
+    //     // Get related posts from the same category
+    //     $relatedPosts = ForumPost::where('category_id', $post->category_id)
+    //         ->where('id', '!=', $post->id)
+    //         ->where('status', 'approved')
+    //         ->latest()
+    //         ->take(3)
+    //         ->get();
+        
+    //     // Get categories for the sidebar
+    //     $categories = ForumCategory::with('children')->whereNull('parent_id')->get();
+        
+    //     return view('pages.forum_post_detail', compact('post', 'relatedPosts', 'categories'));
+    // }
 
     public function showCategory($slug)
     {
@@ -374,7 +378,7 @@ class ForumController extends Controller
         $reply->user_id = Auth::id();
         $reply->parent_id = $parentComment->id;
         $reply->content = $request->content;
-        $reply->is_anonymous = $request->has('is_anonymous') ? true : false;
+        $reply->is_anonymous = $request->has('is_anonymous') ? 1 : 0;
         $reply->save();
         
         // Gửi thông báo cho người comment gốc
@@ -479,6 +483,81 @@ class ForumController extends Controller
                 'per_page' => $comments->perPage(),
                 'total' => $comments->total()
             ]
+        ]);
+    }
+
+    public function toggleLike(Request $request, $postId)
+    {
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn cần đăng nhập để thích bài viết'
+            ], 401);
+        }
+
+        $userId = Auth::id();
+        $post = ForumPost::findOrFail($postId);
+        
+        // Check if user has already liked the post
+        $existingLike = DB::table('forum_likes')
+            ->where('post_id', $postId)
+            ->where('user_id', $userId)
+            ->first();
+        
+        if ($existingLike) {
+            // If like exists, remove it (unlike)
+            DB::table('forum_likes')
+                ->where('post_id', $postId)
+                ->where('user_id', $userId)
+                ->delete();
+            
+            $action = 'unliked';
+        } else {
+            // Otherwise, add a new like
+            DB::table('forum_likes')->insert([
+                'post_id' => $postId,
+                'user_id' => $userId,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+            
+            $action = 'liked';
+        }
+        
+        // Get the updated like count
+        $likeCount = DB::table('forum_likes')
+            ->where('post_id', $postId)
+            ->count();
+        
+        return response()->json([
+            'success' => true,
+            'action' => $action,
+            'likeCount' => $likeCount
+        ]);
+    }
+
+    // Add a method to get the like count and user's like status
+    public function getLikeInfo(Request $request, $postId)
+    {
+        $post = ForumPost::findOrFail($postId);
+        $likeCount = DB::table('forum_likes')
+            ->where('post_id', $postId)
+            ->count();
+        
+        $userLiked = false;
+        
+        if (Auth::check()) {
+            $userLiked = DB::table('forum_likes')
+                ->where('post_id', $postId)
+                ->where('user_id', Auth::id())
+                ->exists();
+        }
+        
+        return response()->json([
+            'success' => true,
+            'likeCount' => $likeCount,
+            'userLiked' => $userLiked
         ]);
     }
 

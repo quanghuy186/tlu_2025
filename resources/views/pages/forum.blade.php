@@ -13,8 +13,8 @@
     </div>
 </section>
 
+{{-- @include('partials.create_post_modal') --}}
 
-<!-- Modal Tạo Bài Viết -->
 <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -116,6 +116,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Breadcrumb -->
 <div class="breadcrumb-container">
@@ -630,17 +631,37 @@
                             <p class="post-text">{{ $p->content }}</p>
                             <a href="{{ route('forum.post.show', $p->id) }}" class="btn btn-sm btn-outline-primary">Đọc tiếp <i class="fas fa-arrow-right ms-1"></i></a>
                         </div>
+                        {{-- <div class="post-footer">
+                            <div class="post-actions">
+                                <a href="#"><i class="far fa-comment"></i> {{ $p->comments_count }} bình luận</a>
+                                 <a href="#" class="like-button" data-post-id="{{ $p->id }}">
+                                    <i class="far fa-heart"></i> <span class="like-count">0</span> thích
+                                </a>
+                                <a href="#"><i class="far fa-eye ms-2 me-1"></i>{{ $post->view_count }}</a>
+                            </div>
+                            <div class="post-meta">
+                                <span><i class="fas fa-folder me-1"></i>{{ $p->category->name ?? '' }}</span>
+                            </div>
+                        </div> --}}
+
                         <div class="post-footer">
                             <div class="post-actions">
                                 <a href="#"><i class="far fa-comment"></i> {{ $p->comments_count }} bình luận</a>
-                                <a href="#"><i class="far fa-heart"></i> 15 thích</a>
-                                <a href="#"><i class="far fa-eye ms-2 me-1"></i>{{ $post->view_count }}</a>
-                                {{-- <a href="#"><i class="far fa-bookmark"></i> Lưu</a> --}}
+                                
+                                <!-- Updated like button with like count -->
+                                <a href="#" class="like-button {{ Auth::check() && $p->likedByUser(Auth::id()) ? 'liked' : '' }}" data-post-id="{{ $p->id }}">
+                                    <i class="{{ Auth::check() && $p->likedByUser(Auth::id()) ? 'fas' : 'far' }} fa-heart"></i> 
+                                    <span class="like-count">{{ $p->likes_count }}</span> thích
+                                </a>
+                                
+                                <a href="#"><i class="far fa-eye ms-2 me-1"></i> {{ $p->view_count }}</a>
                             </div>
                             <div class="post-meta">
                                 <span><i class="fas fa-folder me-1"></i>{{ $p->category->name ?? '' }}</span>
                             </div>
                         </div>
+
+
                     </div>
                 @endforeach
                 

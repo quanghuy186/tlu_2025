@@ -263,8 +263,6 @@
 </script>
 
 <script>
-    // Thêm đoạn code này vào file JavaScript chính hoặc tạo file mới public/js/forum-comments.js
-
     document.addEventListener('DOMContentLoaded', function() {
         // Xử lý hiển thị form phản hồi
         document.querySelectorAll('.reply-btn').forEach(button => {
@@ -594,6 +592,112 @@
             }
         }
     });
+</script>
+
+{{-- like --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Handle likes for all posts
+    const setupLikeButtons = () => {
+        document.querySelectorAll('.like-button').forEach(button => {
+            // Remove previous event listeners
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            // Get post ID from data attribute
+            const postId = newButton.getAttribute('data-post-id');
+            
+            // Fetch initial like info
+            fetchLikeInfo(postId, newButton);
+            
+            // Add click event listener
+            newButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Toggle like
+                toggleLike(postId, newButton);
+            });
+        });
+    };
+    
+    // Function to fetch like info
+    const fetchLikeInfo = (postId, button) => {
+        fetch(`/forum/post/${postId}/like-info`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update like count
+                    const likeCountElement = button.querySelector('.like-count');
+                    if (likeCountElement) {
+                        likeCountElement.textContent = data.likeCount;
+                    }
+                    
+                    // Update button appearance based on whether user has liked
+                    if (data.userLiked) {
+                        button.classList.add('liked');
+                        button.querySelector('i').classList.remove('far');
+                        button.querySelector('i').classList.add('fas');
+                    } else {
+                        button.classList.remove('liked');
+                        button.querySelector('i').classList.remove('fas');
+                        button.querySelector('i').classList.add('far');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching like info:', error);
+            });
+    };
+    
+    // Function to toggle like
+    const toggleLike = (postId, button) => {
+        // Send AJAX request to toggle like
+        fetch(`/forum/post/${postId}/like`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname);
+                    throw new Error('Unauthorized');
+                }
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Update like count
+                const likeCountElement = button.querySelector('.like-count');
+                if (likeCountElement) {
+                    likeCountElement.textContent = data.likeCount;
+                }
+                
+                // Update button appearance
+                if (data.action === 'liked') {
+                    button.classList.add('liked');
+                    button.querySelector('i').classList.remove('far');
+                    button.querySelector('i').classList.add('fas');
+                } else {
+                    button.classList.remove('liked');
+                    button.querySelector('i').classList.remove('fas');
+                    button.querySelector('i').classList.add('far');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error toggling like:', error);
+        });
+    };
+    setupLikeButtons();
+    
+    window.setupLikeButtons = setupLikeButtons;
+});
 </script>
 
 </body>
