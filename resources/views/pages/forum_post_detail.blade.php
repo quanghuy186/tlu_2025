@@ -60,20 +60,32 @@
                     </div>
                     
                     <!-- Post Images -->
-                    {{-- @if($post->images && count($post->images) > 0)
-                        <div class="post-images my-4">
-                            <h6>Hình ảnh đính kèm:</h6>
-                            <div class="row">
-                                @foreach($post->images as $image)
-                                    <div class="col-md-4 mb-3">
-                                        <a href="{{ asset('storage/'.$image) }}" data-lightbox="post-images" data-title="Ảnh đính kèm">
-                                            <img src="{{ asset('storage/'.$image) }}" alt="Hình ảnh bài viết" class="img-fluid rounded">
-                                        </a>
-                                    </div>
-                                @endforeach
+                    @if($post->images)
+                        @php
+                            // If images is stored as a JSON string, decode it
+                            $imagesArray = is_string($post->images) ? json_decode($post->images, true) : [];
+                            
+                            // If json_decode returned null (invalid JSON) or false, try treating it as a comma-separated string
+                            if (!$imagesArray) {
+                                $imagesArray = is_string($post->images) ? explode(',', $post->images) : [];
+                            }
+                        @endphp
+                        
+                        @if(is_array($imagesArray) && count($imagesArray) > 0)
+                            <div class="post-images my-4">
+                                <h6>Hình ảnh đính kèm:</h6>
+                                <div class="row">
+                                    @foreach($imagesArray as $image)
+                                        <div class="col-md-4 mb-3">
+                                            <a href="{{ asset('storage/'.trim($image)) }}" data-lightbox="post-images" data-title="Ảnh đính kèm">
+                                                <img src="{{ asset('storage/'.trim($image)) }}" alt="Hình ảnh bài viết" class="img-fluid rounded">
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
-                    @endif --}}
+                        @endif
+                    @endif
                     
                     <!-- Post Tags -->
                     {{-- @if($post->tags && count($post->tags) > 0)

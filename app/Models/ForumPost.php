@@ -33,17 +33,12 @@ class ForumPost extends Model
         'is_locked' => 'boolean',
     ];
 
-    /**
-     * Lấy danh mục của bài viết
-     */
+   
     public function category()
     {
         return $this->belongsTo(ForumCategory::class, 'category_id');
     }
 
-    /**
-     * Lấy tác giả của bài viết
-     */
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -57,9 +52,6 @@ class ForumPost extends Model
         return $this->belongsTo(User::class, 'approved_by');
     }
 
-    /**
-     * Lấy bình luận của bài viết
-     */
     public function comments()
     {
         return $this->hasMany(ForumComment::class, 'post_id');

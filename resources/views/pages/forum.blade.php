@@ -202,16 +202,20 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="{{ route('forum.post.show', $post->id) }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
-                                                            <i class="far fa-eye"></i>
-                                                        </a>
+                                                        @if($post->status == 'approved')
+                                                            <a href="{{ route('forum.post.show', $post->id) }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                                <i class="far fa-eye"></i>
+                                                            </a>
+                                                        @endif
+
                                                         @if($post->status != 'approved')
                                                             <button type="button" class="btn btn-sm btn-outline-secondary edit-post-btn" data-post-id="{{ $post->id }}" title="Chỉnh sửa">
                                                                 <i class="far fa-edit"></i>
                                                             </button>
                                                         @endif
+
                                                         @if($post->status == 'rejected')
-                                                            <button type="button" class="btn btn-sm btn-outline-info view-rejection-reason" data-bs-toggle="modal" data-bs-target="#rejectionReasonModal" data-rejection="{{ $post->rejection_reason ?? 'Không có lý do được cung cấp.' }}" data-post-id="{{ $post->id }}" title="Xem lý do từ chối">
+                                                            <button type="button" class="btn btn-sm btn-outline-info view-rejection-reason" data-bs-toggle="modal" data-bs-target="#rejectionReasonModal" data-rejection="{{ $post->reject_reason ?? 'Không có lý do được cung cấp.' }}" data-post-id="{{ $post->id }}" title="Xem lý do từ chối">
                                                                 <i class="fas fa-info-circle"></i>
                                                             </button>
                                                         @endif
@@ -287,7 +291,7 @@
                                                 <th>Ngày đăng</th>
                                                 <th>Ngày duyệt</th>
                                                 <th>Tương tác</th>
-                                                {{-- <th>Thao tác</th> --}}
+                                                <th>Thao tác</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -303,11 +307,15 @@
                                                     <i class="far fa-comment me-1"></i> {{ $post->comments_count ?? 0 }}
                                                     <i class="far fa-eye ms-2 me-1"></i> {{ $post->view_count ?? 0 }}
                                                 </td>
-                                                {{-- <td>
-                                                    <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                <td>
+                                                    {{-- <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
                                                         <i class="far fa-eye"></i>
+                                                    </a> --}}
+
+                                                    <a href="{{ route('forum.post.show', $post->id) }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                                <i class="far fa-eye"></i>
                                                     </a>
-                                                </td> --}}
+                                                </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -345,15 +353,13 @@
                                                 <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
                                                 <td>{{ $post->rejected_at ? $post->rejected_at->format('d/m/Y H:i') : 'N/A' }}</td>
                                                 <td>
-                                                    <button type="button" class="btn btn-sm btn-outline-info view-rejection-reason" data-bs-toggle="modal" data-bs-target="#rejectionReasonModal" data-rejection="{{ $post->rejection_reason ?? 'Không có lý do được cung cấp.' }}" data-post-id="{{ $post->id }}">
+                                                    <button type="button" class="btn btn-sm btn-outline-info view-rejection-reason" data-bs-toggle="modal" data-bs-target="#rejectionReasonModal" data-rejection="{{ $post->reject_reason ?? 'Không có lý do được cung cấp.' }}" data-post-id="{{ $post->id }}">
                                                         Xem lý do
                                                     </button>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
-                                                            <i class="far fa-eye"></i>
-                                                        </a>
+                                                       
                                                         <button type="button" class="btn btn-sm btn-outline-secondary edit-post-btn" data-post-id="{{ $post->id }}" title="Chỉnh sửa">
                                                             <i class="far fa-edit"></i>
                                                         </button>
@@ -465,17 +471,6 @@
                                     <!-- JS sẽ hiển thị hình ảnh hiện tại ở đây -->
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <label for="edit_tags" class="col-sm-2 col-form-label">Thẻ</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control @error('tags') is-invalid @enderror" id="edit_tags" name="tags" placeholder="Thêm thẻ (phân cách bằng dấu phẩy)">
-                            @error('tags')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <small class="text-muted">Ví dụ: toán cao cấp, kinh nghiệm học tập, tài liệu</small>
                         </div>
                     </div>
                     

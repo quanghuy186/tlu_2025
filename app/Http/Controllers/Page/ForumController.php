@@ -28,18 +28,16 @@ class ForumController extends Controller
         if (Auth::check()) {
             $userId = Auth::id();
             
-            // Lấy tất cả bài viết của người dùng đăng nhập
             $userPosts = ForumPost::where('user_id', $userId)
                 ->with('category') // Eager loading relationship
                 ->orderBy('created_at', 'desc')
                 ->get();
             
-            // Lọc các bài viết theo trạng thái
+            //colection
             $pendingPosts = $userPosts->where('status', 'pending');
             $approvedPosts = $userPosts->where('status', 'approved');
             $rejectedPosts = $userPosts->where('status', 'rejected');
         } else {
-            // Nếu chưa đăng nhập, đặt các biến là collections rỗng
             $userPosts = collect();
             $pendingPosts = collect();
             $approvedPosts = collect();
@@ -54,10 +52,11 @@ class ForumController extends Controller
                 ->findOrFail($postId);
         }
         
+        //lấy bài viết mới
         $latestPosts = ForumPost::where('status', 'approved')
         ->with(['category', 'author'])
         ->withCount('comments')
-        ->withCount('likes') // Add this line to get like counts
+        ->withCount('likes') 
         ->orderBy('created_at', 'desc')
         ->take(5)
         ->paginate(5);
@@ -124,7 +123,6 @@ class ForumController extends Controller
             'category_id' => 'required|exists:forum_categories,id',
             'content' => 'required|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_anonymous' => 'boolean',
         ]);
 
         if ($validator->fails()) {
@@ -227,29 +225,6 @@ class ForumController extends Controller
         ));
     }
 
-    // public function showPost($id)
-    // {
-    //     // Find the post with its relationships
-    //     $post = ForumPost::with(['author', 'category', 'comments.author'])
-    //         ->findOrFail($id);
-        
-    //     // Increment view count
-    //     $post->increment('view_count');
-        
-    //     // Get related posts from the same category
-    //     $relatedPosts = ForumPost::where('category_id', $post->category_id)
-    //         ->where('id', '!=', $post->id)
-    //         ->where('status', 'approved')
-    //         ->latest()
-    //         ->take(3)
-    //         ->get();
-        
-    //     // Get categories for the sidebar
-    //     $categories = ForumCategory::with('children')->whereNull('parent_id')->get();
-        
-    //     return view('pages.forum_post_detail', compact('post', 'relatedPosts', 'categories'));
-    // }
-
     public function showCategory($slug)
     {
         $category = ForumCategory::where('slug', $slug)->firstOrFail();
@@ -295,14 +270,6 @@ class ForumController extends Controller
         $categories = ForumCategory::with(['children', 'posts'])
             ->whereNull('parent_id')
             ->get();
-        
-        // Get popular tags used in this category
-        // $popularTags = Tag::withCount(['posts' => function($query) use ($category) {
-        //     $query->where('category_id', $category->id);
-        // }])
-        // ->orderBy('posts_count', 'desc')
-        // ->take(10)
-        // ->get();
         
         return view('pages.forum_category', compact('category', 'posts', 'categories', 'sort'));
     }
