@@ -102,8 +102,6 @@ class ForumController extends Controller
             }
         }
 
-        $is_anonymous = $request->has('is_anonymous') ? 1 : 0;
-
         $post = ForumPost::create([
             'title' => $request->title,
             'category_id' => $request->category_id,
@@ -111,7 +109,7 @@ class ForumController extends Controller
             'content' => $request->content,
             'images' => !empty($imagesPath) ? json_encode($imagesPath) : null,
             'status' => 'pending',
-            'is_anonymous' => $is_anonymous,
+            'is_anonymous' => $request->has('is_anonymous') ? true : false,
         ]);
 
         return redirect()->route('forum.index')
@@ -314,7 +312,6 @@ class ForumController extends Controller
         $validator = Validator::make($request->all(), [
             'post_id' => 'required|exists:forum_posts,id',
             'content' => 'required|string|min:2|max:1000',
-            'is_anonymous' => 'boolean',
         ]);
 
         if ($validator->fails()) {
@@ -355,7 +352,6 @@ class ForumController extends Controller
             'post_id' => 'required|exists:forum_posts,id',
             'parent_id' => 'required|exists:forum_comments,id',
             'content' => 'required|string|min:2|max:1000',
-            'is_anonymous' => 'boolean',
         ]);
 
         if ($validator->fails()) {

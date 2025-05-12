@@ -622,7 +622,7 @@
                                 </span>
                             @endif
                             <div>       
-                                <h6 class="post-author">{{ $p->is_anonymous == 1 ? "Ẩn danh" : $post->author->name }}</h6>
+                                <h6 class="post-author">{{ $p->is_anonymous == 1 ? "Ẩn danh" : $p->author->name }}</h6>
                                 <span class="post-time">Đăng 2 giờ trước</span>
                             </div>
                         </div>
@@ -631,19 +631,7 @@
                             <p class="post-text">{{ $p->content }}</p>
                             <a href="{{ route('forum.post.show', $p->id) }}" class="btn btn-sm btn-outline-primary">Đọc tiếp <i class="fas fa-arrow-right ms-1"></i></a>
                         </div>
-                        {{-- <div class="post-footer">
-                            <div class="post-actions">
-                                <a href="#"><i class="far fa-comment"></i> {{ $p->comments_count }} bình luận</a>
-                                 <a href="#" class="like-button" data-post-id="{{ $p->id }}">
-                                    <i class="far fa-heart"></i> <span class="like-count">0</span> thích
-                                </a>
-                                <a href="#"><i class="far fa-eye ms-2 me-1"></i>{{ $post->view_count }}</a>
-                            </div>
-                            <div class="post-meta">
-                                <span><i class="fas fa-folder me-1"></i>{{ $p->category->name ?? '' }}</span>
-                            </div>
-                        </div> --}}
-
+                        
                         <div class="post-footer">
                             <div class="post-actions">
                                 <a href="#"><i class="far fa-comment"></i> {{ $p->comments_count }} bình luận</a>

@@ -10,7 +10,6 @@
     </div>
     <div class="card-body">
         <!-- Form thêm bình luận -->
-        @auth
             <form action="{{ route('forum.comment.store') }}" method="POST" class="mb-4">
                 @csrf
                 <input type="hidden" name="post_id" value="{{ $post->id }}">
@@ -25,7 +24,9 @@
                 
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="is_anonymous" name="is_anonymous">
+                        {{-- <input class="form-check-input" type="checkbox" id="is_anonymous" name="is_anonymous"> --}}
+                        <input class="form-check-input" type="checkbox" id="is_anonymous" name="is_anonymous" {{ old('is_anonymous') ? 'checked' : '' }}>
+
                         <label class="form-check-label" for="is_anonymous">
                             Bình luận ẩn danh
                         </label>
@@ -35,14 +36,7 @@
                     </button>
                 </div>
             </form>
-        @else
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle me-2"></i> Vui lòng 
-                <a href="{{ route('login') }}" class="alert-link">đăng nhập</a> 
-                để bình luận.
-            </div>
-        @endauth
-
+      
         <!-- Danh sách bình luận -->
         <div class="comments-list">
             @forelse($post->parentComments()->with('replies.author', 'author')->orderBy('created_at', 'desc')->get() as $comment)
@@ -115,7 +109,9 @@
                                         
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="reply_is_anonymous_{{ $comment->id }}" name="is_anonymous" checked>
+                                                <input class="form-check-input" type="checkbox" id="reply_is_anonymous_{{ $comment->id }}" name="is_anonymous" {{ old('is_anonymous') ? 'checked' : '' }}>
+                                                {{-- <input class="form-check-input" type="checkbox" id="is_anonymous" name="is_anonymous" {{ old('is_anonymous') ? 'checked' : '' }}> --}}
+
                                                 <label class="form-check-label" for="reply_is_anonymous_{{ $comment->id }}">
                                                     Phản hồi ẩn danh
                                                 </label>
