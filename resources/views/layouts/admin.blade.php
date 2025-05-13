@@ -321,7 +321,7 @@
             </a>
           </li>
           <li>
-            <a href="charts-echarts.html">
+            <a href="{{ route('admin.forum.comments.index') }}">
               <i class="bi bi-circle"></i><span>Bình luận</span>
             </a>
           </li>

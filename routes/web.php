@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\ForumCategoryController;
+use App\Http\Controllers\Admin\ForumCommentController;
 use App\Http\Controllers\Admin\ForumPostController;
 use App\Http\Controllers\Admin\NotificationCategoryController;
 use App\Http\Controllers\Admin\NotificationController;
@@ -240,7 +241,17 @@ Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
         Route::get('/{id}/toggle-pin', [ForumPostController::class, 'togglePin'])->name('toggle-pin');
         Route::get('/{id}/toggle-lock', [ForumPostController::class, 'toggleLock'])->name('toggle-lock');
     });
+
+    Route::prefix('comments')->name('comments.')->group(function () {
+        // Routes cho comments
+        Route::get('/', [ForumCommentController::class, 'index'])->name('index');
+        Route::get('/{comment}', [ForumCommentController::class, 'show'])->name('show');
+        Route::get('/{comment}/edit', [ForumCommentController::class, 'edit'])->name('edit');
+        Route::put('/{comment}', [ForumCommentController::class, 'update'])->name('update');
+        Route::delete('/{comment}', [ForumCommentController::class, 'destroy'])->name('destroy');
+    });
 });
+
 
 Route::middleware(['auth'])->group(function () {
     // Thêm bình luận mới
