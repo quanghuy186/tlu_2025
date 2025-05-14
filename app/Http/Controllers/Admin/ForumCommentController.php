@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class ForumCommentController extends Controller
 {
-    /**
-     * Display a listing of the comments.
-     */
     public function index(Request $request)
     {
         $query = ForumComment::with(['post', 'user'])
@@ -48,9 +45,6 @@ class ForumCommentController extends Controller
         return view('admin.forum.comments.index', compact('comments', 'posts'));
     }
 
-    /**
-     * Display the specified comment.
-     */
     public function show(ForumComment $comment)
     {
         $comment->load(['post', 'user']);
@@ -64,18 +58,12 @@ class ForumCommentController extends Controller
         return view('admin.forum.comments.detail', compact('comment', 'replies'));
     }
 
-    /**
-     * Show the form for editing the specified comment.
-     */
     public function edit(ForumComment $comment)
     {
         $comment->load(['post', 'user']);
         return view('admin.forum.comments.edit', compact('comment'));
     }
-
-    /**
-     * Update the specified comment in storage.
-     */
+ 
     public function update(Request $request, ForumComment $comment)
     {
         $request->validate([
@@ -86,7 +74,6 @@ class ForumCommentController extends Controller
         ]);
 
         try {
-            // Cập nhật dữ liệu bình luận
             $comment->content = $request->content;
             $comment->is_anonymous = $request->has('is_anonymous') ? 1 : 0;
             $comment->save();
@@ -99,9 +86,6 @@ class ForumCommentController extends Controller
         }
     }
 
-    /**
-     * Remove the specified comment from storage.
-     */
     public function destroy(ForumComment $comment)
     {
         try {
@@ -112,7 +96,6 @@ class ForumCommentController extends Controller
                 $comment->replies()->delete();
             }
             
-            // Xóa bình luận
             $comment->delete();
             
             DB::commit();

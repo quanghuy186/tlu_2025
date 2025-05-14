@@ -37,18 +37,12 @@ class ForumPostController extends Controller
         return view('admin.forum.posts.index', compact('posts', 'categories'));
     }
 
-    /**
-     * Hiển thị form tạo bài viết mới
-     */
     public function create()
     {
         $categories = ForumCategory::all();
         return view('admin.forum.posts.create', compact('categories'));
     }
 
-    /**
-     * Lưu bài viết mới vào database
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -87,9 +81,7 @@ class ForumPostController extends Controller
             ->with('success', 'Bài viết đã được tạo và đang chờ phê duyệt!');
     }
 
-    /**
-     * Hiển thị chi tiết bài viết
-     */
+   
     public function show($id)
     {
         $post = ForumPost::with(['category', 'author', 'approver', 'comments'])->findOrFail($id);
@@ -102,9 +94,6 @@ class ForumPostController extends Controller
         return view('admin.forum.posts.detail', compact('post'));
     }
 
-    /**
-     * Hiển thị form chỉnh sửa bài viết
-     */
     public function edit($id)
     {
         $post = ForumPost::findOrFail($id);
@@ -113,9 +102,7 @@ class ForumPostController extends Controller
         return view('admin.forum.posts.edit', compact('post', 'categories'));
     }
 
-    /**
-     * Cập nhật thông tin bài viết
-     */
+
     public function update(Request $request, $id)
     {
         $post = ForumPost::findOrFail($id);
@@ -171,9 +158,6 @@ class ForumPostController extends Controller
             ->with('success', 'Bài viết đã được cập nhật và đang chờ phê duyệt lại!');
     }
 
-    /**
-     * Xóa bài viết khỏi database
-     */
     public function destroy($id)
     {
         $post = ForumPost::findOrFail($id);

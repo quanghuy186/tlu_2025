@@ -174,11 +174,11 @@
                                                         <td><span class="badge bg-light text-dark">{{ $reply->id }}</span></td>
                                                         <td>{{ Str::limit($reply->content, 50) }}</td>
                                                         <td>
-                                                            @if($reply->is_anonymous)
+                                                            {{-- @if($reply->is_anonymous)
                                                                 <span class="text-muted"><i class="bi bi-incognito"></i> Ẩn danh</span>
-                                                            @else
-                                                                {{ $reply->user->name ?? 'Không xác định' }}
-                                                            @endif
+                                                            @else --}}
+                                                                {{ $reply->user->name ?? 'Không xác định' }} @if($reply->is_anonymous) (Ẩn danh) @endif
+                                                            {{-- @endif --}}
                                                         </td>
                                                         <td>
                                                             @if($reply->is_anonymous)
