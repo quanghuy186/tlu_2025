@@ -22,7 +22,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Page\ContactController;
 use App\Http\Controllers\Home\IndexController;
-use App\Http\Controllers\Message\MessageController;
+use App\Http\Controllers\Page\MessageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -199,7 +199,20 @@ Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(
 
 
 // -------------
-Route::get('/message', [MessageController::class, 'index'])->name('message.index');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/{userId}', [MessageController::class, 'getMessages'])->name('messages.get');
+    Route::post('/messages', [MessageController::class, 'sendMessage'])->name('messages.send');
+    Route::post('/messages/read', [MessageController::class, 'markAsRead'])->name('messages.read');
+    Route::get('/contacts', [MessageController::class, 'getContacts'])->name('contacts.get');
+    Route::get('/users/search', [MessageController::class, 'searchUsers'])->name('users.search');
+});
+
+// routes/web.php
+Route::post('/messages/typing', [MessageController::class, 'sendTypingStatus'])->name('messages.typing');
+
+// routes/channels.php
+
 
 
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');

@@ -49,7 +49,7 @@
                         <a class="nav-link active" href="{{ route('contact.index') }}">Danh bạ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('message.index') }}">Tin nhắn</a>
+                        <a class="nav-link" href="{{ route('messages.index') }}">Tin nhắn</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('forum.index') }}">Diễn đàn</a>

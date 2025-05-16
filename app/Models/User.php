@@ -95,4 +95,33 @@ class User extends Authenticatable
         return $this->hasOne(Department::class,'user_id', 'id');
     }
 
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_user_id');
+    }
+
+    /**
+     * Lấy tin nhắn mà user đã nhận.
+     */
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'recipient_user_id');
+    }
+
+    /**
+     * Lấy tin nhắn chưa đọc mà user nhận được.
+     */
+    public function unreadMessages()
+    {
+        return $this->receivedMessages()->where('is_read', false);
+    }
+
+    /**
+     * Kiểm tra xem user có đang online không.
+     */
+    public function isOnline()
+    {
+        return $this->last_seen_at && $this->last_seen_at->diffInMinutes(now()) < 5;
+    }
+
 }

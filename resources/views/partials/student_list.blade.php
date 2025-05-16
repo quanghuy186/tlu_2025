@@ -24,11 +24,18 @@
                 @endif
             </div>
         </div>
-        <div class="student-actions">
+        <div class="student-actions mx-3">
             <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#studentDetailModal{{ $student->id }}">
                 <i class="fas fa-eye"></i>
             </a>
         </div>
+
+        <div class="student-actions">
+            <a href="{{ route('messages.send') }}" class="action-btn">
+                <i class="fas fa-message"></i>
+            </a>
+        </div>
+
     </div>
 
     <!-- Student Detail Modal -->
