@@ -100,8 +100,14 @@
                     
                     <!-- Post Statistics -->
                     <div class="post-stats mt-4 d-flex justify-content-between">
+                        
+
                         <div>
                             <i class="far fa-eye me-1"></i> {{ number_format($post->view_count) }} lượt xem
+                            <a style="text-decoration: none;" href="#" class="mx-3 like-button {{ Auth::check() && $post->likedByUser(Auth::id()) ? 'liked' : '' }}" data-post-id="{{ $post->id }}">
+                                <i class="{{ Auth::check() && $post->likedByUser(Auth::id()) ? 'fas' : 'far' }} fa-heart"></i> 
+                                    <span  class="like-count">{{ $post->likes_count }}</span> thích
+                            </a>
                             <i class="far fa-comment ms-3 me-1"></i> {{ count($post->comments) }} bình luận
                         </div>
                         {{-- <div>

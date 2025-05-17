@@ -19,6 +19,7 @@ class ContactController extends Controller
 
     public function department(){
         
+        // $departments = Department::with('manager')->paginate(10);
         $departments = Department::with('manager')->paginate(10);
         return view('pages.contact.department')->with('departments', $departments);
     }
@@ -27,23 +28,23 @@ class ContactController extends Controller
     {
         $fullname = $request->input('fullname');
         
-            
         $query = Department::query()
-            ->join('users', 'departments.user_id', '=', 'users.id')
+            ->leftJoin('users', 'departments.user_id', '=', 'users.id')
             ->select('departments.*')
             ->with('manager');
         
-        // Thêm điều kiện tìm kiếm theo tên hoặc mã cán bộ
+        // Add search conditions with null handling
         if (!empty($fullname)) {
             $query->where(function($q) use ($fullname) {
                 $q->where('users.name', 'LIKE', "%{$fullname}%")
-                ->orWhere('departments.code', 'LIKE', "%{$fullname}%");
+                ->orWhere('departments.code', 'LIKE', "%{$fullname}%")
+                ->orWhere('departments.name', 'LIKE', "%{$fullname}%"); // Add department name search
             });
         }
         
         $departments = $query->paginate(10);
         
-        // Kiểm tra nếu là yêu cầu Ajax
+        // Check if it's an Ajax request
         if ($request->ajax()) {
             return view('partials.department_list', compact('departments'));
         }
@@ -59,31 +60,37 @@ class ContactController extends Controller
         $fullname = $request->input('fullname', '');
         
         $query = Department::query()
-            ->join('users', 'departments.user_id', '=', 'users.id')
+            ->leftJoin('users', 'departments.user_id', '=', 'users.id')
             ->select('departments.*')
             ->with('manager');
             
         if (!empty($fullname)) {
             $query->where(function($q) use ($fullname) {
                 $q->where('users.name', 'LIKE', "%{$fullname}%")
-                ->orWhere('departments.code', 'LIKE', "%{$fullname}%");
+                ->orWhere('departments.code', 'LIKE', "%{$fullname}%")
+                ->orWhere('departments.name', 'LIKE', "%{$fullname}%"); // Add department name search
             });
         }
 
+        // Modified sorting to handle null managers
         switch ($sortBy) {
             case 'name':
-                $query->orderBy('users.name', 'asc');
+                // First sort by whether manager exists, then by name
+                $query->orderByRaw('CASE WHEN users.name IS NULL THEN 1 ELSE 0 END')
+                    ->orderBy('users.name', 'asc');
                 break;
             case 'name-desc':
-                $query->orderBy('users.name', 'desc');
+                $query->orderByRaw('CASE WHEN users.name IS NULL THEN 1 ELSE 0 END')
+                    ->orderBy('users.name', 'desc');
                 break;
             default:
-                $query->orderBy('users.name', 'asc');
+                // Default to sorting by department name if no sorting specified
+                $query->orderBy('departments.name', 'asc');
         }
         
         $departments = $query->paginate(10);
         
-        // Trả về partial view khi được gọi bằng Ajax - đảm bảo có render()
+        // Return partial view for Ajax
         return view('partials.department_list', compact('departments'));
     }
 

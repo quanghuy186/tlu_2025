@@ -19,7 +19,7 @@
                         </a>
                     </div> --}}
 
-                    <div class="teacher-actions">
+                    <div class="mx-3 teacher-actions">
                         <a href="{{ route('messages.send') }}" class="action-btn">
                             <i class="fas fa-message"></i>
                         </a>

@@ -21,7 +21,7 @@ class DepartmentController extends Controller
             ->orderBy('level')
             ->orderBy('name')
             ->paginate(10);
-            
+
         return view('admin.contact.department.index', compact('departments'));
     }
 
