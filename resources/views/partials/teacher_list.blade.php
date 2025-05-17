@@ -18,6 +18,14 @@
                             <i class="fas fa-eye"></i>
                         </a>
                     </div> --}}
+
+                    <div class="teacher-actions">
+                        <a href="{{ route('messages.send') }}" class="action-btn">
+                            <i class="fas fa-message"></i>
+                        </a>
+                    </div>
+
+
                     <div class="teacher-actions">
                         <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal{{ $teacher->id }}">
                             <i class="fas fa-eye"></i>
