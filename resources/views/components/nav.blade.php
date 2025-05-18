@@ -42,21 +42,55 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto me-3">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home.index') }}">Trang chủ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('contact.index') }}">Danh bạ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('messages.index') }}">Tin nhắn</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('forum.index') }}">Diễn đàn</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('notification.index') }}">Thông báo</a>
-                    </li>
+                    @if (request()->is('home*'))
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ route('home.index') }}">Trang chủ</a>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('home.index') }}">Trang chủ</a>
+                        </li>
+                    @endif
+                   
+                    @if(request()->is('contact*'))
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ route('contact.index') }}">Danh bạ</a>
+                        </li>
+                    @else
+                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('contact.index') }}">Danh bạ</a>
+                        </li>
+                    @endif
+
+                    @if(request()->is('messages*'))
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ route('messages.index') }}">Tin nhắn</a>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('messages.index') }}">Tin nhắn</a>
+                        </li>
+                    @endif
+                    
+                    @if (request()->is('forum'))
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ route('forum.index') }}">Diễn đàn</a>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('forum.index') }}">Diễn đàn</a>
+                        </li>
+                    @endif
+
+                    @if(request()->is('notification'))
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ route('notification.index') }}">Thông báo</a>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('notification.index') }}">Thông báo</a>
+                        </li>
+                    @endif
                 </ul>
                 <div class="dropdown">
                     <a href="#" class="user-menu dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="modal" data-bs-target="#userInfoModal">
