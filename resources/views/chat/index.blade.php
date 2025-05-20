@@ -353,8 +353,8 @@
                         badge.text(parseInt(badge.text() || 0) + 1);
                         
                         // Thông báo âm thanh
-                        const audio = new Audio('/notification.mp3');
-                        audio.play();
+                        // const audio = new Audio('/notification.mp3');
+                        // audio.play();
                         
                         // Hiển thị notification nếu được cho phép
                         if (Notification.permission === 'granted') {
@@ -406,8 +406,8 @@
                         badge.text(parseInt(badge.text() || 0) + 1);
                         
                         // Thông báo âm thanh
-                        const audio = new Audio('/notification.mp3');
-                        audio.play();
+                        // const audio = new Audio('/notification.mp3');
+                        // audio.play();
                         
                         // Hiển thị notification nếu được cho phép
                         if (Notification.permission === 'granted') {
