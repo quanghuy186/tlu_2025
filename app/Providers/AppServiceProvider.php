@@ -33,16 +33,15 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        Gate::define('view-user', function(User $user) {
-            return tluHasPermission($user,'view-user');
-        });
+        // Gate::define('view-user', function(User $user) {
+        //     return tluHasPermission($user,'view-user');
+        // });
 
-        Gate::define('edit-user', function(User $user) {
-            return tluHasPermission($user,'edit-user');
-        });
+        // Gate::define('edit-user', function(User $user) {
+        //     return tluHasPermission($user,'edit-user');
+        // });
 
-        //dinh nghia với policy
-        Gate::define('update-user', [UserHasRolePolicy::class,'update']);
+        // Gate::define('update-user', [UserHasRolePolicy::class,'update']);
 
         // Gate::define('view-contact-student');
     }

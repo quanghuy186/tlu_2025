@@ -14,16 +14,16 @@ class UserTyping implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $userId;
+    public $senderId;
     public $recipientId;
     public $isTyping;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($userId, $recipientId, $isTyping)
+    public function __construct(int $senderId, int $recipientId, bool $isTyping)
     {
-        $this->userId = $userId;
+        $this->senderId = $senderId;
         $this->recipientId = $recipientId;
         $this->isTyping = $isTyping;
     }
@@ -36,7 +36,7 @@ class UserTyping implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('typing.' . $this->recipientId),
+            new PrivateChannel('messages.'.$this->recipientId),
         ];
     }
 
@@ -46,5 +46,18 @@ class UserTyping implements ShouldBroadcast
     public function broadcastAs(): string
     {
         return 'user.typing';
+    }
+
+    /**
+     * Get the data to broadcast.
+     *
+     * @return array<string, mixed>
+     */
+    public function broadcastWith(): array
+    {
+        return [
+            'sender_id' => $this->senderId,
+            'is_typing' => $this->isTyping
+        ];
     }
 }

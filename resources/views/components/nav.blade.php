@@ -94,8 +94,10 @@
                 </ul>
                 <div class="dropdown">
                     <a href="#" class="user-menu dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="modal" data-bs-target="#userInfoModal">
-                        <img src="{{ asset('storage/avatars/'.Auth::user()->avatar) }}" alt="User Avatar" class="user-avatar">
-                        <span>{{ Auth::user()->name }}</span>
+                        {{-- <img src="{{ asset('storage/avatars/'.Auth::user()->avatar) }}" alt="User Avatar" class="user-avatar"> --}}
+                        <span>
+                            
+                            {{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li class="dropdown-header">Thông tin tài khoản</li>
@@ -162,8 +164,8 @@
                         
                         <div class="text-center mb-4">
                             <div class="position-relative d-inline-block">
-                                <img src="{{ Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar)  : 'https://via.placeholder.com/200x200?text=User' }}" 
-                                     alt="User Profile" class="avatar" id="avatarPreview">
+                                {{-- <img src="{{ Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar)  : 'https://via.placeholder.com/200x200?text=User' }}" 
+                                     alt="User Profile" class="avatar" id="avatarPreview"> --}}
                                 <label for="avatarInput" class="avatar-upload-btn">
                                     <i class="fas fa-camera"></i>
                                 </label>
@@ -174,13 +176,16 @@
                         </div>
                         
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="name"><i class="fas fa-user"></i> Họ và tên</label>
                                     <input type="text" class="form-control" id="name" name="name" value="{{ Auth::user()->name }}">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12 mb-3">
                                 <div class="form-group">
                                     <label for="studentId"><i class="fas fa-id-card"></i> Mã số sinh viên</label>
                                     <input type="text" class="form-control" id="studentId" name="student_id" value="{{ Auth::user()->student_id ?? 'SV12345678' }}">
@@ -189,7 +194,7 @@
                         </div>
                         
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="faculty"><i class="fas fa-building"></i> Khoa</label>
                                     <select class="form-select" id="faculty" name="faculty">
@@ -201,28 +206,31 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                        </div>
+
+                        <div class="col-md-12 mb-3">
                                 <div class="form-group">
                                     <label for="email"><i class="fas fa-envelope"></i> Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->email }}">
+                                    <input readonly type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->email }}">
                                 </div>
-                            </div>
                         </div>
                         
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="phone"><i class="fas fa-phone"></i> Số điện thoại</label>
                                     <input type="tel" class="form-control" id="phone" name="phone" value="{{ Auth::user()->phone ?? '0987654321' }}">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            
+                        </div>
+
+                        <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ</label>
                                     <input type="text" class="form-control" id="address" name="address" value="{{ Auth::user()->address ?? 'Hà Nội, Việt Nam' }}">
                                 </div>
                             </div>
-                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">

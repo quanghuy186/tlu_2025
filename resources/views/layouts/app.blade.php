@@ -12,7 +12,7 @@
 @yield('custom-js')
 
 
-
+{{-- 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -26,26 +26,24 @@
             userModal.show();
         });
     });
-</script>
+</script> --}}
 
 {{-- teacher --}}
-<!-- Bootstrap & JavaScript -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Đây là nơi để thiết lập logic hiển thị quyền truy cập phù hợp
         // Đoạn code bên dưới có thể được sửa đổi dựa trên logic xác thực thực tế
 
         // Ví dụ: Kiểm tra vai trò người dùng
-        const userRole = 'cbgv'; // Giả sử vai trò là 'cbgv' hoặc 'student'
+        // const userRole = 'cbgv'; 
 
-        // Hiển thị nội dung phù hợp dựa trên vai trò
-        if (userRole === 'cbgv') {
-            document.getElementById('cbgv-access').style.display = 'block';
-            document.getElementById('student-access').style.display = 'none';
-        } else if (userRole === 'student') {
-            document.getElementById('cbgv-access').style.display = 'none';
-            document.getElementById('student-access').style.display = 'block';
-        }
+        // if (userRole === 'cbgv') {
+        //     document.getElementById('cbgv-access').style.display = 'block';
+        //     document.getElementById('student-access').style.display = 'none';
+        // } else if (userRole === 'student') {
+        //     document.getElementById('cbgv-access').style.display = 'none';
+        //     document.getElementById('student-access').style.display = 'block';
+        // }
 
         // Khởi tạo tooltips nếu cần
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -116,19 +114,19 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Thiết lập phân quyền truy cập dựa trên vai trò người dùng
-        const userRole = 'cbgv'; // Có thể là 'cbgv' hoặc 'student'
-        const studentClass = '62CNTT1'; // Lớp của sinh viên hiện tại
+        // const userRole = 'cbgv'; // Có thể là 'cbgv' hoặc 'student'
+        // const studentClass = '62CNTT1'; // Lớp của sinh viên hiện tại
 
-        // Hiển thị phù hợp dựa trên vai trò
-        if (userRole === 'cbgv') {
-            // CBGV có thể xem tất cả thông tin
-            document.getElementById('cbgv-access').style.display = 'block';
-            document.getElementById('student-access').style.display = 'none';
-        } else if (userRole === 'student') {
-            // Sinh viên chỉ xem được danh sách sinh viên cùng lớp
-            document.getElementById('cbgv-access').style.display = 'none';
-            document.getElementById('student-access').style.display = 'block';
-        }
+        // // Hiển thị phù hợp dựa trên vai trò
+        // if (userRole === 'cbgv') {
+        //     // CBGV có thể xem tất cả thông tin
+        //     document.getElementById('cbgv-access').style.display = 'block';
+        //     document.getElementById('student-access').style.display = 'none';
+        // } else if (userRole === 'student') {
+        //     // Sinh viên chỉ xem được danh sách sinh viên cùng lớp
+        //     document.getElementById('cbgv-access').style.display = 'none';
+        //     document.getElementById('student-access').style.display = 'block';
+        // }
 
         // Xử lý chuyển đổi kiểu xem
         const viewOptionButtons = document.querySelectorAll('.view-options button');

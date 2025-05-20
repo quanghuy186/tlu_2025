@@ -101,7 +101,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Lấy tin nhắn mà user đã nhận.
+     * Get messages received by this user.
      */
     public function receivedMessages()
     {
@@ -109,7 +109,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Lấy tin nhắn chưa đọc mà user nhận được.
+     * Get unread messages for this user.
      */
     public function unreadMessages()
     {

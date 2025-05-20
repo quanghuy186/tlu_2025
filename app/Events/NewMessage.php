@@ -33,15 +33,26 @@ class NewMessage implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('messages.' . $this->message->recipient_user_id),
+            new PrivateChannel('messages.'.$this->message->recipient_user_id),
         ];
     }
 
-    /**
-     * The event's broadcast name.
-     */
     public function broadcastAs(): string
     {
         return 'new.message';
+    }
+
+    /**
+     * Get the data to broadcast.
+     *
+     * @return array<string, mixed>
+     */
+    public function broadcastWith(): array
+    {
+        $this->message->load('sender');
+        
+        return [
+            'message' => $this->message
+        ];
     }
 }

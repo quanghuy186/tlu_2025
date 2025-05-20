@@ -31,7 +31,7 @@
         </div>
 
         <div class="student-actions">
-            <a href="{{ route('messages.send') }}" class="action-btn">
+            <a href="" class="action-btn">
                 <i class="fas fa-message"></i>
             </a>
         </div>

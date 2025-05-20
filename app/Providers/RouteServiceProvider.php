@@ -2,49 +2,45 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap any application services.
+     * The path to your application's "home" route.
+     */
+    public const HOME = '/home';
+
+    /**
+     * Define your route model bindings, pattern filters, and other route configuration.
      */
     public function boot(): void
     {
+        // Configure rate limiting
+        $this->configureRateLimiting();
+
+        // Register routes
         $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
+            // Route::middleware('api')
+            //     ->prefix('api')
+            //     ->group(base_path('routes/api.php'));
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
-            
-            // Load channels.php nếu tồn tại
-            if (file_exists(base_path('routes/channels.php'))) {
-                require base_path('routes/channels.php');
-            }
         });
-        
-        // Nếu bạn muốn định nghĩa channels trực tiếp thay vì trong file
-        // có thể gọi phương thức này ở đây
-        // $this->registerChannels();
     }
 
     /**
-     * Register the channels (tùy chọn).
-     * Chỉ cần nếu bạn muốn định nghĩa channels trực tiếp trong provider
-     * thay vì file channels.php
+     * Configure the rate limiters for the application.
      */
-    protected function registerChannels(): void
+    protected function configureRateLimiting(): void
     {
-        Broadcast::channel('messages.{id}', function ($user, $id) {
-            return (int) $user->id === (int) $id;
-        });
-        
-        Broadcast::channel('typing.{id}', function ($user, $id) {
-            return (int) $user->id === (int) $id;
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }
 }

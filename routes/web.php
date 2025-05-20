@@ -30,6 +30,8 @@ use App\Models\UserHasPermission;
 use App\Http\Controllers\Notification\NotificationController as UserNotificationController;
 use App\Http\Controllers\Page\ForumController;
 use App\Http\Controllers\Page\IndexController as PageIndexController;
+use Illuminate\Contracts\Broadcasting\Broadcaster;
+use Illuminate\Support\Facades\Broadcast;
 
 // forgot password
 Route::middleware('guest')->group(function () {
@@ -199,21 +201,29 @@ Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(
 
 
 // -------------
-Route::middleware(['auth'])->group(function () {
-    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
-    Route::get('/messages/{userId}', [MessageController::class, 'getMessages'])->name('messages.get');
-    Route::post('/messages', [MessageController::class, 'sendMessage'])->name('messages.send');
-    Route::post('/messages/read', [MessageController::class, 'markAsRead'])->name('messages.read');
-    Route::get('/contacts', [MessageController::class, 'getContacts'])->name('contacts.get');
-    Route::get('/users/search', [MessageController::class, 'searchUsers'])->name('users.search');
-});
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+//     Route::get('/messages/{userId}', [MessageController::class, 'getMessages'])->name('messages.get');
+//     Route::post('/messages', [MessageController::class, 'sendMessage'])->name('messages.send');
+//     Route::post('/messages/read', [MessageController::class, 'markAsRead'])->name('messages.read');
+//     Route::get('/contacts', [MessageController::class, 'getContacts'])->name('contacts.get');
+//     Route::get('/users/search', [MessageController::class, 'searchUsers'])->name('users.search');
+// });
+
+// // routes/web.php
+// Route::post('/messages/typing', [MessageController::class, 'sendTypingStatus'])->name('messages.typing');
+
 
 // routes/web.php
-Route::post('/messages/typing', [MessageController::class, 'sendTypingStatus'])->name('messages.typing');
-
-// routes/channels.php
-
-
+Route::middleware('auth')->group(function () {
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/contacts', [MessageController::class, 'getContacts']);
+    Route::get('/messages/{userId}', [MessageController::class, 'getMessages']);
+    Route::post('/messages', [MessageController::class, 'sendMessage']);
+    Route::post('/messages/read', [MessageController::class, 'markAsRead']);
+    Route::get('/users/search', [MessageController::class, 'searchUsers']);
+    Route::post('/messages/typing', [MessageController::class, 'sendTypingStatus']);
+});
 
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 Route::post('/forum', [ForumController::class, 'post'])->name('forum.post');

@@ -6,6 +6,7 @@
     <title>Danh bạ điện tử - Đại học Thủy Lợi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="user-id" content="{{ Auth::id() }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
     :root {
