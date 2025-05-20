@@ -256,55 +256,51 @@
     });
     
     // Thiết lập Echo để lắng nghe sự kiện
-    window.Echo.private('chat.{{ Auth::id() }}')
-        .listen('MessageSent', (e) => {
-            const message = e.message;
+window.Echo.private('chat.{{ Auth::id() }}')
+    .listen('.message.sent', (e) => {
+        // Chú ý dấu chấm ở đầu tên sự kiện nếu bạn dùng broadcastAs
+        const message = e.message;
+        
+        // Nếu đang trò chuyện với người gửi tin nhắn
+        if (currentRecipientId && currentRecipientId == message.sender_user_id) {
+            // Tải lại tin nhắn
+            loadMessages(currentRecipientId);
             
-            // Nếu đang trò chuyện với người gửi tin nhắn
-            if (currentRecipientId && currentRecipientId == message.sender_user_id) {
-                // Tải lại tin nhắn
-                loadMessages(currentRecipientId);
-                
-                // Đánh dấu đã đọc
-                $.ajax({
-                    url: `/messages/${message.id}/read`,
-                    method: 'PUT',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-            } else {
-                // Hiển thị thông báo có tin nhắn mới
-                const userItem = $(`.user-item[data-id="${message.sender_user_id}"]`);
-                const unreadBadge = userItem.find('.unread-badge');
-                const badge = unreadBadge.find('.badge');
-                
-                unreadBadge.removeClass('d-none');
-                badge.text(parseInt(badge.text() || 0) + 1);
-                
-                // Thông báo âm thanh
-                const audio = new Audio('/notification.mp3');
-                audio.play();
-                
-                // Hiển thị notification nếu được cho phép
-                if (Notification.permission === 'granted') {
-                    const sender = userItem.find('h6').text();
-                    const notification = new Notification('Tin nhắn mới', {
-                        body: `${sender}: ${message.content}`,
-                        icon: '/favicon.ico'
-                    });
-                    
-                    notification.onclick = function() {
-                        window.focus();
-                        userItem.click();
-                    };
+            // Đánh dấu đã đọc
+            $.ajax({
+                url: `/messages/${message.id}/read`,
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
+            });
+        } else {
+            // Hiển thị thông báo có tin nhắn mới
+            const userItem = $(`.user-item[data-id="${message.sender_user_id}"]`);
+            const unreadBadge = userItem.find('.unread-badge');
+            const badge = unreadBadge.find('.badge');
+            
+            unreadBadge.removeClass('d-none');
+            badge.text(parseInt(badge.text() || 0) + 1);
+            
+            // Thông báo âm thanh
+            const audio = new Audio('/notification.mp3');
+            audio.play();
+            
+            // Hiển thị notification nếu được cho phép
+            if (Notification.permission === 'granted') {
+                const sender = userItem.find('h6').text();
+                const notification = new Notification('Tin nhắn mới', {
+                    body: `${sender}: ${message.content}`,
+                    icon: '/favicon.ico'
+                });
+                
+                notification.onclick = function() {
+                    window.focus();
+                    userItem.click();
+                };
             }
-        });
-    
-    // Yêu cầu quyền thông báo
-    if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-        Notification.requestPermission();
-    }
+        }
+    });
 </script>
 @endsection

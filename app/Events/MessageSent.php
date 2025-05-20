@@ -13,6 +13,7 @@ use Illuminate\Queue\SerializesModels;
 
 class MessageSent implements ShouldBroadcast
 {
+
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
@@ -22,8 +23,51 @@ class MessageSent implements ShouldBroadcast
         $this->message = $message;
     }
 
+    // public function broadcastOn()
+    // {
+    //     return new PrivateChannel('chat.' . $this->message->recipient_user_id);
+    // }
+
     public function broadcastOn()
     {
-        return new PrivateChannel('chat.' . $this->message->recipient_user_id);
+        return new Channel('chat.' . $this->message->recipient_user_id);
     }
+     
+    
+    /**
+     * Tên cho sự kiện broadcast
+     */
+    public function broadcastAs()
+    {
+        return 'message.sent';
+    }
+    
+    /**
+     * Dữ liệu để broadcast
+     */
+    public function broadcastWith()
+    {
+        // Đảm bảo message có thông tin người gửi
+        $this->message->load('sender');
+        
+        return [
+            'message' => $this->message
+        ];
+    }
+
+    
+
+    // use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    // public $message;
+
+    // public function __construct(Message $message)
+    // {
+    //     $this->message = $message;
+    // }
+
+    // public function broadcastOn()
+    // {
+    //     return new PrivateChannel('chat.' . $this->message->recipient_user_id);
+    // }
 }

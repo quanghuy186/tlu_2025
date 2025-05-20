@@ -231,6 +231,33 @@ Route::get('/chat', [MessageController::class, 'index'])->name('chat.index');
     Route::put('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('chat.read');
     Route::delete('/messages/{message}', [MessageController::class, 'deleteMessage'])->name('chat.delete');
 
+Broadcast::routes(['middleware' => ['auth:web']]);
+
+// Thêm route này vào routes/web.php
+// routes/web.php
+// Route::get('/direct-pusher', function () {
+//     $options = [
+//         'cluster' => env('PUSHER_APP_CLUSTER'),
+//         'useTLS' => true
+//     ];
+//     $pusher = new \Pusher\Pusher(
+//         env('PUSHER_APP_KEY'),
+//         env('PUSHER_APP_SECRET'),
+//         env('PUSHER_APP_ID'),
+//         $options
+//     );
+
+//     $data['message'] = 'Thử nghiệm trực tiếp từ Pusher API';
+//     $pusher->trigger('test-channel', 'test-event', $data);
+
+//     return "Đã gửi sự kiện trực tiếp qua Pusher API. Kiểm tra Debug Console.";
+// });
+
+// Route::post('/test-event', function () {
+//     event(new \App\Events\TestEvent('Đây là tin nhắn thử nghiệm'));
+//     return response()->json(['success' => true]);
+// });
+
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 Route::post('/forum', [ForumController::class, 'post'])->name('forum.post');
 Route::get('/forum/post/{id}', [ForumController::class, 'showPost'])->name('forum.post.show');
