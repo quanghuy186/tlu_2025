@@ -64,11 +64,11 @@
 
                     @if(request()->is('messages*'))
                         <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('messages.index') }}">Tin nhắn</a>
+                            <a class="nav-link active" href="{{ route('chat.index') }}">Tin nhắn</a>
                         </li>
                     @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('messages.index') }}">Tin nhắn</a>
+                            <a class="nav-link" href="{{ route('chat.index') }}">Tin nhắn</a>
                         </li>
                     @endif
                     

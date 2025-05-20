@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'sender_user_id',
         'recipient_user_id',
@@ -14,7 +17,7 @@ class Message extends Model
         'file_url',
         'is_read',
         'is_deleted',
-        'sent_at'
+        'sent_at',
     ];
 
     protected $casts = [

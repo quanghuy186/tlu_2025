@@ -22,7 +22,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Page\ContactController;
 use App\Http\Controllers\Home\IndexController;
-use App\Http\Controllers\Page\MessageController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -215,15 +215,21 @@ Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(
 
 
 // routes/web.php
-Route::middleware('auth')->group(function () {
-    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
-    Route::get('/contacts', [MessageController::class, 'getContacts']);
-    Route::get('/messages/{userId}', [MessageController::class, 'getMessages']);
-    Route::post('/messages', [MessageController::class, 'sendMessage']);
-    Route::post('/messages/read', [MessageController::class, 'markAsRead']);
-    Route::get('/users/search', [MessageController::class, 'searchUsers']);
-    Route::post('/messages/typing', [MessageController::class, 'sendTypingStatus']);
-});
+// Route::middleware('auth')->group(function () {
+//     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+//     Route::get('/contacts', [MessageController::class, 'getContacts']);
+//     Route::get('/messages/{userId}', [MessageController::class, 'getMessages']);
+//     Route::post('/messages', [MessageController::class, 'sendMessage']);
+//     Route::post('/messages/read', [MessageController::class, 'markAsRead']);
+//     Route::get('/users/search', [MessageController::class, 'searchUsers']);
+//     Route::post('/messages/typing', [MessageController::class, 'sendTypingStatus']);
+// });
+
+Route::get('/chat', [MessageController::class, 'index'])->name('chat.index');
+    Route::get('/messages/{user}', [MessageController::class, 'getMessages'])->name('chat.messages');
+    Route::post('/messages', [MessageController::class, 'sendMessage'])->name('chat.send');
+    Route::put('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('chat.read');
+    Route::delete('/messages/{message}', [MessageController::class, 'deleteMessage'])->name('chat.delete');
 
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 Route::post('/forum', [ForumController::class, 'post'])->name('forum.post');

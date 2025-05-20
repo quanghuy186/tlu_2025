@@ -49,7 +49,7 @@
                             <p>Nhắn tin trực tiếp với các người dùng khác để có thể trao đổi thông tin</p>
                         </div>
                         <div class="card-footer">
-                            <a href="{{route('messages.index')}}" class="btn btn-outline-primary w-100">
+                            <a href="{{route('chat.index')}}" class="btn btn-outline-primary w-100">
                                 <i class="fas fa-arrow-right me-2"></i> Xem tin nhắn
                             </a>
                         </div>

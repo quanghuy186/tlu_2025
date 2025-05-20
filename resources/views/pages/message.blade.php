@@ -96,7 +96,7 @@
 {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> --}}
 
 <!-- Load một file JS nhỏ để khởi tạo Echo trước -->
-<script src="{{ asset('js/app.js') }}"></script>
-<!-- Load file message.js mới của chúng ta -->
-<script src="{{ asset('js/message.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <!-- Load file message.js mới của chúng ta -->
+    <script src="{{ asset('js/message.js') }}"></script>
 @endpush
