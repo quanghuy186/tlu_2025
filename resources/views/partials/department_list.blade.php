@@ -40,13 +40,13 @@
             </div>
         </div>
         <div class="unit-actions">
-            <a href="{{ route('messages.send') }}" class="action-btn">
+            <a href="{{ route('chat.start', $department->manager->id) }}" class="action-btn">
                 <i class="fas fa-message"></i>
             </a>
         </div>
 
         <div class="unit-actions mx-3">
-            <a href="{{ route('chat.start', $department->manager->id) }}" class="action-btn" data-bs-toggle="modal" data-bs-target="#unitDetailModal{{ $department->id }}">
+            <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#unitDetailModal{{ $department->id }}">
                 <i class="fas fa-eye"></i>
             </a>
         </div>
