@@ -46,7 +46,7 @@
         </div>
 
         <div class="unit-actions mx-3">
-            <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#unitDetailModal{{ $department->id }}">
+            <a href="{{ route('chat.start', $department->manager->id) }}" class="action-btn" data-bs-toggle="modal" data-bs-target="#unitDetailModal{{ $department->id }}">
                 <i class="fas fa-eye"></i>
             </a>
         </div>

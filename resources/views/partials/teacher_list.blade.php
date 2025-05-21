@@ -27,7 +27,7 @@
 
 
                     <div class="teacher-actions">
-                        <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal{{ $teacher->id }}">
+                        <a href="{{ route('chat.start', $teacher->user->id) }}" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal{{ $teacher->id }}">
                             <i class="fas fa-eye"></i>
                         </a>
                     </div>

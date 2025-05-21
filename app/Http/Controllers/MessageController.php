@@ -10,22 +10,86 @@ use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
-    public function index()
+    /**
+     * Hiển thị trang chat
+     */
+    public function index(Request $request)
     {
-        // Lấy danh sách người dùng để chat
-        $users = User::where('id', '!=', Auth::id())->get();
+        // Lấy danh sách người dùng đã có lịch sử trò chuyện với người dùng hiện tại
+        $users = $this->getUsersWithChatHistory();
+        
+        // Kiểm tra xem có người dùng mới được chọn từ danh bạ không
+        if ($request->has('new_user_id')) {
+            $newUser = User::find($request->new_user_id);
+            if ($newUser && !$users->contains('id', $newUser->id)) {
+                // Thêm người dùng mới vào đầu danh sách
+                $users->prepend($newUser);
+            }
+        }
+        
         return view('chat.index', compact('users'));
     }
+    
+    /**
+     * Lấy danh sách người dùng đã có lịch sử trò chuyện
+     */
+    private function getUsersWithChatHistory()
+    {
+        $currentUserId = Auth::id();
+        
+        // Lấy ID của những người dùng đã từng nhắn tin với người dùng hiện tại
+        $userIds = Message::where(function($query) use ($currentUserId) {
+                $query->where('sender_user_id', $currentUserId)
+                      ->orWhere('recipient_user_id', $currentUserId);
+            })
+            ->where('is_deleted', false)
+            ->select('sender_user_id', 'recipient_user_id')
+            ->get()
+            ->flatMap(function($message) use ($currentUserId) {
+                // Chỉ lấy ID của người còn lại trong cuộc trò chuyện
+                return [$message->sender_user_id, $message->recipient_user_id];
+            })
+            ->unique()
+            ->reject(function($userId) use ($currentUserId) {
+                // Loại bỏ ID của người dùng hiện tại
+                return $userId == $currentUserId;
+            });
+        
+        // Lấy thông tin người dùng
+        return User::whereIn('id', $userIds)->get();
+    }
+    
+    /**
+     * Hiển thị danh bạ tất cả người dùng để bắt đầu cuộc trò chuyện mới
+     */
+    public function contacts()
+    {
+        // Lấy tất cả người dùng trừ người dùng hiện tại
+        $users = User::where('id', '!=', Auth::id())->get();
+        return view('chat.contacts', compact('users'));
+    }
+    
+    /**
+     * Bắt đầu cuộc trò chuyện với người dùng từ danh bạ
+     */
+    public function startChat($userId)
+    {
+        // Kiểm tra người dùng có tồn tại không
+        $user = User::findOrFail($userId);
+        
+        // Chuyển hướng đến trang chat với tham số user_id
+        return redirect()->route('chat.index', ['new_user_id' => $userId]);
+    }
 
-    public function getMessages($userId)
+    public function getMessages(User $user)
     {
         // Lấy tin nhắn giữa người dùng hiện tại và người dùng đã chọn
-        $messages = Message::where(function($query) use ($userId) {
+        $messages = Message::where(function($query) use ($user) {
                 $query->where('sender_user_id', Auth::id())
-                      ->where('recipient_user_id', $userId);
+                      ->where('recipient_user_id', $user->id);
             })
-            ->orWhere(function($query) use ($userId) {
-                $query->where('sender_user_id', $userId)
+            ->orWhere(function($query) use ($user) {
+                $query->where('sender_user_id', $user->id)
                       ->where('recipient_user_id', Auth::id());
             })
             ->where('is_deleted', false)
@@ -66,10 +130,8 @@ class MessageController extends Controller
         return response()->json(['message' => $message]);
     }
 
-    public function markAsRead($messageId)
+    public function markAsRead(Message $message)
     {
-        $message = Message::findOrFail($messageId);
-        
         // Chỉ người nhận mới có thể đánh dấu đã đọc
         if ($message->recipient_user_id == Auth::id()) {
             $message->is_read = true;
@@ -79,10 +141,8 @@ class MessageController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function deleteMessage($messageId)
+    public function deleteMessage(Message $message)
     {
-        $message = Message::findOrFail($messageId);
-        
         // Chỉ người gửi hoặc người nhận mới có thể xóa
         if ($message->sender_user_id == Auth::id() || $message->recipient_user_id == Auth::id()) {
             $message->is_deleted = true;

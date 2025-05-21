@@ -31,6 +31,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header d-flex align-items-center">
@@ -71,6 +72,22 @@
 
 @section('scripts')
 <script>
+    $(document).ready(function() {
+        // Kiểm tra xem có tham số new_user_id trên URL không
+        const urlParams = new URLSearchParams(window.location.search);
+        const newUserId = urlParams.get('new_user_id');
+        
+        if (newUserId) {
+            // Tự động chọn người dùng mới
+            $(`.user-item[data-id="${newUserId}"]`).click();
+            
+            // Xóa tham số khỏi URL để tránh chọn lại khi tải lại trang
+            const url = new URL(window.location);
+            url.searchParams.delete('new_user_id');
+            window.history.replaceState({}, '', url);
+        }
+    });
+
     let currentRecipientId = null;
     
     // Xử lý khi chọn người dùng

@@ -31,7 +31,7 @@
         </div>
 
         <div class="student-actions">
-            <a href="" class="action-btn">
+            <a href="{{ route('chat.start', $student->user->id) }}" class="action-btn">
                 <i class="fas fa-message"></i>
             </a>
         </div>

@@ -199,41 +199,17 @@ Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(
     Route::get('/department/sort', [ContactController::class, 'sort_department'])->name('department.sort');
 });
 
-
-// -------------
-// Route::middleware(['auth'])->group(function () {
-//     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
-//     Route::get('/messages/{userId}', [MessageController::class, 'getMessages'])->name('messages.get');
-//     Route::post('/messages', [MessageController::class, 'sendMessage'])->name('messages.send');
-//     Route::post('/messages/read', [MessageController::class, 'markAsRead'])->name('messages.read');
-//     Route::get('/contacts', [MessageController::class, 'getContacts'])->name('contacts.get');
-//     Route::get('/users/search', [MessageController::class, 'searchUsers'])->name('users.search');
-// });
-
-// // routes/web.php
-// Route::post('/messages/typing', [MessageController::class, 'sendTypingStatus'])->name('messages.typing');
-
-
-// routes/web.php
-// Route::middleware('auth')->group(function () {
-//     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
-//     Route::get('/contacts', [MessageController::class, 'getContacts']);
-//     Route::get('/messages/{userId}', [MessageController::class, 'getMessages']);
-//     Route::post('/messages', [MessageController::class, 'sendMessage']);
-//     Route::post('/messages/read', [MessageController::class, 'markAsRead']);
-//     Route::get('/users/search', [MessageController::class, 'searchUsers']);
-//     Route::post('/messages/typing', [MessageController::class, 'sendTypingStatus']);
-// });
-
 Route::get('/chat', [MessageController::class, 'index'])->name('chat.index');
-    Route::get('/messages/{user}', [MessageController::class, 'getMessages'])->name('chat.messages');
-    Route::post('/messages', [MessageController::class, 'sendMessage'])->name('chat.send');
-    Route::put('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('chat.read');
-    Route::delete('/messages/{message}', [MessageController::class, 'deleteMessage'])->name('chat.delete');
+Route::get('/messages/{user}', [MessageController::class, 'getMessages'])->name('chat.messages');
+Route::post('/messages', [MessageController::class, 'sendMessage'])->name('chat.send');
+Route::put('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('chat.read');
+Route::delete('/messages/{message}', [MessageController::class, 'deleteMessage'])->name('chat.delete');
+
+Route::get('/contacts', [MessageController::class, 'contacts'])->name('chat.contacts');
+Route::get('/chat/start/{userId}', [MessageController::class, 'startChat'])->name('chat.start');
 
 Broadcast::routes(['middleware' => ['auth:web']]);
 
-// Thêm route này vào routes/web.php
 // routes/web.php
 // Route::get('/direct-pusher', function () {
 //     $options = [
