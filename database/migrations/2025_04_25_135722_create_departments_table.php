@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->text('description')->nullable();
             $table->string('phone', 20)->nullable();
-            $table->string('email', 20)->nullable();
+            $table->string('email', 200)->nullable();
             $table->text('address')->nullable();
             $table->integer('level');
             $table->foreign('parent_id')->references('id')->on('departments');

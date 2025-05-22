@@ -1,7 +1,7 @@
 {{-- resources/views/partials/student_list.blade.php --}}
 @foreach ($students as $student)
     <div class="student-item">
-        <img src="{{ $student->user && $student->user->avatar ? asset('storage/avatars/'.$student->user->avatar) : 'https://via.placeholder.com/150x150?text=SV' }}" 
+        <img src="{{ $student->user && $student->user->avatar ? asset('storage/avatars/'.$student->user->avatar) :  asset('user_default.jpg') }}" 
             alt="Sinh viên" class="student-avatar">
         <div class="student-info">
             <div class="student-name">{{ $student->user->name ?? 'Chưa cập nhật' }}</div>
@@ -48,7 +48,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="student-detail">
-                        <img src="{{ $student->user && $student->user->avatar ? asset('storage/avatars/'.$student->user->avatar) : 'https://via.placeholder.com/150x150?text=SV' }}" 
+                        <img src="{{ $student->user && $student->user->avatar ? asset('storage/avatars/'.$student->user->avatar) : asset('user_default.jpg') }}" 
                             alt="Sinh viên" class="student-detail-avatar">
                         <div class="student-detail-name">{{ $student->user->name ?? 'Chưa cập nhật' }}</div>
                         <div class="student-detail-id">{{ $student->student_code ?? 'Chưa cập nhật' }}</div>

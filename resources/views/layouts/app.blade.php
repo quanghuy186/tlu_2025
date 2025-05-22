@@ -14,17 +14,21 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        });
-
-        document.getElementById('openProfileModal').addEventListener('click', function(e) {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+    
+    // Kiểm tra phần tử tồn tại trước khi thêm event listener
+    const openProfileButton = document.getElementById('openProfileModal');
+    if (openProfileButton) {
+        openProfileButton.addEventListener('click', function(e) {
             e.preventDefault();
             var userModal = new bootstrap.Modal(document.getElementById('userInfoModal'));
             userModal.show();
         });
-    });
+    }
+});
 </script>
 
 {{-- teacher --}}

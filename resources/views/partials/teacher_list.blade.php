@@ -1,6 +1,6 @@
 @foreach($teachers as $teacher)
                 <div class="teacher-item">
-                    <img src="{{ asset('storage/avatars/'.($teacher->user->avatar ?? 'default.png')) }}" alt="Giảng viên" class="teacher-avatar">
+                    <img src="{{ $teacher->user && $teacher->user->avatar ? asset('storage/avatars/'.$teacher->user->avatar) : asset('user_default.jpg') }}" alt="Giảng viên" class="teacher-avatar">
                     <div class="teacher-info">
                         <div class="teacher-name">{{ $teacher->user->name ?? 'Chưa cập nhật' }}</div>
                         <div class="teacher-position">{{ $teacher->position ?? 'Chưa cập nhật' }}</div>
@@ -42,7 +42,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="teacher-detail">
-                                    <img src="{{ asset('storage/avatars/'.($teacher->user->avatar ?? 'default.png')) }}" alt="Giảng viên" class="teacher-detail-avatar">
+                                    <img src="{{ $teacher->user && $teacher->user->avatar ? asset('storage/avatars/'.$teacher->user->avatar) : asset('user_default.jpg') }}" alt="Giảng viên" class="teacher-detail-avatar">
                                     <div class="teacher-detail-name">{{ $teacher->user->name ?? 'Chưa cập nhật' }}</div>
                                     <div class="teacher-detail-position">{{ $teacher->position ?? 'Chưa cập nhật' }}</div>
             

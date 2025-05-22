@@ -39,10 +39,23 @@
                 </div>
             </div>
         </div>
-        <div class="unit-actions">
+        {{-- <div class="unit-actions">
             <a href="{{ route('chat.start', $department->manager->id) }}" class="action-btn">
                 <i class="fas fa-message"></i>
             </a>
+        </div> --}}
+
+        <div class="unit-actions">
+            @if($department->manager)
+                <a href="{{ route('chat.start', $department->manager->id) }}" class="action-btn">
+                    <i class="fas fa-message"></i>
+                </a>
+            @else
+                <!-- Handle case when no manager exists -->
+                <span class="action-btn disabled" title="No manager assigned">
+                    <i class="fas fa-message"></i>
+                </span>
+            @endif
         </div>
 
         <div class="unit-actions mx-3">
@@ -93,7 +106,7 @@
                         </div>
 
                         <!-- Leadership -->
-                        <div class="unit-detail-section">
+                        {{-- <div class="unit-detail-section">
                             <div class="unit-detail-section-title">Ban lãnh đạo</div>
                             <div class="leader-list">
                                 <div class="leader-item">
@@ -103,44 +116,54 @@
                                         <div class="leader-position">Trưởng khoa</div>
                                     </div>
                                 </div>
-                                <div class="leader-item">
-                                    <img src="https://via.placeholder.com/150x150?text=Leader2" alt="Phó trưởng khoa" class="leader-avatar">
-                                    <div class="leader-info">
-                                        <div class="leader-name">TS. Phạm Tuấn Minh</div>
-                                        <div class="leader-position">Phó Trưởng khoa</div>
-                                    </div>
-                                </div>
-                                <div class="leader-item">
-                                    <img src="https://via.placeholder.com/150x150?text=Leader3" alt="Phó trưởng khoa" class="leader-avatar">
-                                    <div class="leader-info">
-                                        <div class="leader-name">PGS.TS. Hoàng Xuân Dậu</div>
-                                        <div class="leader-position">Phó Trưởng khoa</div>
-                                    </div>
-                                </div>
-                                <div class="leader-item">
-                                    <img src="https://via.placeholder.com/150x150?text=Leader4" alt="Trợ lý khoa" class="leader-avatar">
-                                    <div class="leader-info">
-                                        <div class="leader-name">ThS. Lê Thị Hương</div>
-                                        <div class="leader-position">Trợ lý Khoa</div>
-                                    </div>
-                                </div>
+
+
                             </div>
-                        </div>
+                        </div> --}}
 
                        
                         <div class="unit-detail-section">
-                            <div class="unit-detail-section-title">Bộ môn trực thuộc</div>
-                            <div class="staff-list">
-                                @foreach ($department->children as $child)
-                                    <div class="staff-item">
-                                        <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
-                                        <div class="staff-info">
-                                            <div class="staff-name">{{ $child->name }}</div>
-                                            <div class="staff-position">Trưởng BM: TS. Lê Văn Thịnh</div>
+                            @if($department->level == 1)
+                                <div class="unit-detail-section-title">Bộ môn trực thuộc</div>
+                                <div class="staff-list">
+                                    @foreach ($department->children as $child)
+                                        <div class="staff-item">
+                                            <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
+                                            <div class="staff-info">
+                                                <div class="staff-name">{{ $child->name }}</div>
+                                                <div class="staff-position">Trưởng BM: {{ $child->manager->name }}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                @endforeach
-                            </div>
+                                    @endforeach
+                                </div>
+                            @elseif($department->level == 2)
+                                <div class="unit-detail-section-title">Ngành trực thuộc</div>
+                                <div class="staff-list">
+                                    @foreach ($department->children as $child)
+                                        <div class="staff-item">
+                                            <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
+                                            <div class="staff-info">
+                                                <div class="staff-name">{{ $child->name }}</div>
+                                                <div class="staff-position">Trưởng ngành: {{ $child->manager->name }}</div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @elseif($department->level == null)
+                                <div class="unit-detail-section-title">Đơn vị trực thuộc</div>
+                                <div class="staff-list">
+                                    @foreach ($department->children as $child)
+                                        <div class="staff-item">
+                                            <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
+                                            <div class="staff-info">
+                                                <div class="staff-name">{{ $child->name }}</div>
+                                                <div class="staff-position">Trưởng đơn vị: {{ $child->manager->name }}</div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                            
                         </div>
 
                         <!-- Contact Information -->

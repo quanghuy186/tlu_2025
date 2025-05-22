@@ -62,7 +62,7 @@
                         </li>
                     @endif
 
-                    @if(request()->is('messages*'))
+                    @if(request()->is('chat*'))
                         <li class="nav-item">
                             <a class="nav-link active" href="{{ route('chat.index') }}">Tin nhắn</a>
                         </li>
@@ -94,7 +94,7 @@
                 </ul>
                 <div class="dropdown">
                     <a href="#" class="user-menu dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="modal" data-bs-target="#userInfoModal">
-                        {{-- <img src="{{ asset('storage/avatars/'.Auth::user()->avatar) }}" alt="User Avatar" class="user-avatar"> --}}
+                        <img src="{{ Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar) : asset('user_default.jpg') }}" alt="User Avatar" class="user-avatar">
                         <span>
                             
                             {{ Auth::user()->name }}</span>
@@ -164,8 +164,8 @@
                         
                         <div class="text-center mb-4">
                             <div class="position-relative d-inline-block">
-                                {{-- <img src="{{ Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar)  : 'https://via.placeholder.com/200x200?text=User' }}" 
-                                     alt="User Profile" class="avatar" id="avatarPreview"> --}}
+                                <img src="{{ Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar)  : asset('user_default.jpg') }}" 
+                                     alt="User Profile" class="avatar" id="avatarPreview">
                                 <label for="avatarInput" class="avatar-upload-btn">
                                     <i class="fas fa-camera"></i>
                                 </label>
