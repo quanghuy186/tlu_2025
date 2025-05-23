@@ -9,222 +9,116 @@ use Faker\Factory as Faker;
 
 class ClassSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+     public function run()
     {
-        $faker = Faker::create('vi_VN');
-        
-        // Lấy danh sách giáo viên (teachers) để làm chủ nhiệm
-        $teachers = DB::table('teachers')->pluck('id')->toArray();
-        $usedTeachers = []; // Đảm bảo mỗi giáo viên chỉ chủ nhiệm 1 lớp
-        
-        // Lấy danh sách departments (bộ môn) - level 3 từ DepartmentSeeder
-        $departments = DB::table('departments')
-            ->where('level', 3)
-            ->get()
-            ->keyBy('code');
-        
-        // Mapping chính xác với DepartmentSeeder - các bộ môn
-        $departmentMapping = [
-            // Bộ môn thuộc Khoa CNTT
-            'CNPM' => 'CNPM',  // Bộ môn Công nghệ phần mềm
-            'HTTT' => 'HTTT',  // Bộ môn Hệ thống thông tin
-            'TTNT' => 'TTNT',  // Bộ môn Trí tuệ nhân tạo
+        // Danh sách các ngành từ department data với mã viết tắt tiếng Anh
+        $majors = [
+            // Khoa Công trình
+            ['name' => 'Kỹ thuật xây dựng công trình thủy', 'code' => 'HYDROENG', 'department_id' => 2],
+            ['name' => 'Kỹ thuật xây dựng', 'code' => 'CIVENG', 'department_id' => 2],
+            ['name' => 'Công nghệ kỹ thuật xây dựng', 'code' => 'CONTECH', 'department_id' => 2],
+            ['name' => 'Kỹ thuật xây dựng công trình giao thông', 'code' => 'TRAENG', 'department_id' => 2],
+            ['name' => 'Quản lí xây dựng', 'code' => 'CONMGT', 'department_id' => 2],
             
-            // Bộ môn thuộc Khoa Điện - Điện tử
-            'KTD' => 'KTD',    // Bộ môn Kỹ thuật điện
-            'TDH' => 'TDH',    // Bộ môn Tự động hóa
-            'DTVT' => 'DTVT',  // Bộ môn Điện tử viễn thông
+            // Khoa Kỹ thuật tài nguyên nước
+            ['name' => 'Kỹ thuật tài nguyên nước', 'code' => 'WATRENG', 'department_id' => 3],
+            ['name' => 'Kỹ thuật cấp thoát nước', 'code' => 'WASUENG', 'department_id' => 3],
+            ['name' => 'Kỹ thuật cơ sở hạ tầng', 'code' => 'INFENG', 'department_id' => 3],
+            ['name' => 'Thủy văn học', 'code' => 'HYDRO', 'department_id' => 3],
             
-            // Bộ môn thuộc Khoa Kinh tế và Quản lý
-            'QTKD' => 'QTKD',  // Bộ môn Quản trị kinh doanh
-            'TCNH' => 'TCNH',  // Bộ môn Tài chính ngân hàng
+            // Khoa Cơ khí
+            ['name' => 'Kỹ thuật cơ khí', 'code' => 'MECHENG', 'department_id' => 4],
+            ['name' => 'Công nghệ chế tạo máy', 'code' => 'MANTECH', 'department_id' => 4],
+            ['name' => 'Kỹ thuật ô tô', 'code' => 'AUTOENG', 'department_id' => 4],
+            ['name' => 'Kỹ thuật cơ điện tử', 'code' => 'MECHAENG', 'department_id' => 4],
             
-            // Bộ môn thuộc Khoa Kỹ thuật Xây dựng
-            'KCCT' => 'KCCT',  // Bộ môn Kết cấu công trình
-            'DKT' => 'DKT',    // Bộ môn Địa kỹ thuật
+            // Khoa Điện - Điện tử
+            ['name' => 'Kỹ thuật điện', 'code' => 'ELECENG', 'department_id' => 5],
+            ['name' => 'Kỹ thuật điều khiển và tự động hóa', 'code' => 'AUTENG', 'department_id' => 5],
+            ['name' => 'Kỹ thuật điện tử - viễn thông', 'code' => 'TELEENG', 'department_id' => 5],
+            ['name' => 'Kỹ thuật Robot và Điều khiển thông minh', 'code' => 'ROBENG', 'department_id' => 5],
             
-            // Bộ môn thuộc Khoa Thủy lợi
-            'THLC' => 'THLC',  // Bộ môn Thủy lực
-            'CTT' => 'CTT'     // Bộ môn Công trình thủy
+            // Khoa Công nghệ thông tin
+            ['name' => 'Công nghệ thông tin', 'code' => 'IT', 'department_id' => 7],
+            ['name' => 'Hệ thống thông tin', 'code' => 'IS', 'department_id' => 7],
+            ['name' => 'Kỹ thuật phần mềm', 'code' => 'SE', 'department_id' => 7],
+            ['name' => 'Trí tuệ nhân tạo và khoa học dữ liệu', 'code' => 'AIDT', 'department_id' => 7],
+            ['name' => 'An toàn thông tin', 'code' => 'ISEC', 'department_id' => 7],
+            
+            // Khoa Kinh tế và quản lý
+            ['name' => 'Kinh tế', 'code' => 'ECON', 'department_id' => 6],
+            ['name' => 'Kinh tế xây dựng', 'code' => 'CONECON', 'department_id' => 6],
+            ['name' => 'Logistics và quản lí chuỗi cung ứng', 'code' => 'LSCM', 'department_id' => 6],
+            ['name' => 'Thương mại điện tử', 'code' => 'ECOM', 'department_id' => 6],
+            ['name' => 'Kinh tế số', 'code' => 'DIECON', 'department_id' => 6],
+            ['name' => 'Quản trị dịch vụ du lịch và lữ hành', 'code' => 'TOURM', 'department_id' => 6],
+            
+            // Khoa Kế toán và Kinh doanh
+            ['name' => 'Tài chính - Ngân hàng', 'code' => 'FINBAN', 'department_id' => 11],
+            ['name' => 'Công nghệ tài chính', 'code' => 'FINTECH', 'department_id' => 11],
+            ['name' => 'Kiểm toán', 'code' => 'AUDIT', 'department_id' => 11],
+            ['name' => 'Quản trị kinh doanh', 'code' => 'BA', 'department_id' => 11],
+            ['name' => 'Kế toán', 'code' => 'ACC', 'department_id' => 11],
+            
+            // Khoa Hóa và Môi trường
+            ['name' => 'Kỹ thuật môi trường', 'code' => 'ENVENG', 'department_id' => 8],
+            ['name' => 'Công nghệ sinh học', 'code' => 'BIOTECH', 'department_id' => 8],
+            ['name' => 'Kỹ thuật hóa học', 'code' => 'CHEMENG', 'department_id' => 8],
+            
+            // Khoa Luật và Lý luận chính trị
+            ['name' => 'Luật', 'code' => 'LAW', 'department_id' => 9],
+            ['name' => 'Luật kinh tế', 'code' => 'ECONLAW', 'department_id' => 9],
+            
+            // Trung tâm Đào tạo quốc tế
+            ['name' => 'Ngôn ngữ Trung Quốc', 'code' => 'CHINESE', 'department_id' => 10],
+            ['name' => 'Ngôn ngữ Anh', 'code' => 'ENGLISH', 'department_id' => 10],
         ];
-        
-        // Năm học từ 2021-2025 (63-67)
-        $academicYears = [
-            2021 => '63', // Sinh viên nhập học 2021, mã lớp 63
-            2022 => '64', // Sinh viên nhập học 2022, mã lớp 64  
-            2023 => '65', // Sinh viên nhập học 2023, mã lớp 65
-            2024 => '66', // Sinh viên nhập học 2024, mã lớp 66
-            2025 => '67'  // Sinh viên nhập học 2025, mã lớp 67
-        ];
-        
-        // Tạo lớp cho từng năm học
-        foreach ($academicYears as $academicYear => $yearCode) {
-            // Tạo lớp cho từng department (bộ môn)
-            foreach ($departmentMapping as $deptCode => $classPrefix) {
-                // Kiểm tra department có tồn tại không
-                if (!isset($departments[$deptCode])) {
-                    continue;
-                }
+
+        $classes = [];
+        $classId = 1;
+        $teacher_id = 41;
+
+        // Tạo các lớp từ năm 2021 đến 2024 (khóa 63 đến 66)
+        for ($year = 2021; $year <= 2024; $year++) {
+            $grade = 60 + ($year - 2018); // 2021 -> 63, 2022 -> 64, 2023 -> 65, 2024 -> 66
+            $academicYear = $year . '-' . ($year + 4);
+
+            foreach ($majors as $major) {
+                // Mỗi ngành có từ 1-4 lớp
+                $numberOfClasses = rand(1, 3);
                 
-                $departmentId = $departments[$deptCode]->id;
-                $departmentName = $departments[$deptCode]->name;
-                
-                // Mỗi bộ môn có 2-3 lớp
-                $classCount = in_array($deptCode, ['CNPM', 'HTTT', 'KTD', 'QTKD']) ? 3 : 2;
-                
-                for ($classNumber = 1; $classNumber <= $classCount; $classNumber++) {
-                    // Kiểm tra còn giáo viên để làm chủ nhiệm không
-                    if (empty($teachers) || count($usedTeachers) >= count($teachers)) {
-                        break 3; // Thoát khỏi tất cả vòng lặp nếu hết giáo viên
+                for ($classNumber = 1; $classNumber <= $numberOfClasses; $classNumber++) {
+                    $className = $grade . ' ' . $major['name'] . ' ' . $classNumber;
+                    $classCode = $grade . $major['code'] . sprintf('%02d', $classNumber);
+                    
+                    // Truncate class_code if it's too long (ensure it's ASCII only)
+                    if (strlen($classCode) > 20) {
+                        $classCode = $grade . substr($major['code'], 0, 15 - strlen($grade)) . sprintf('%02d', $classNumber);
                     }
                     
-                    // Chọn giáo viên chủ nhiệm ngẫu nhiên (chưa được sử dụng)
-                    $availableTeachers = array_diff($teachers, $usedTeachers);
-                    if (empty($availableTeachers)) {
-                        break 3; // Thoát nếu hết giáo viên available
+                    // Truncate class_name if it's too long
+                    if (strlen($className) > 100) {
+                        $className = substr($className, 0, 100);
                     }
-                    
-                    $teacherId = $faker->randomElement($availableTeachers);
-                    $usedTeachers[] = $teacherId;
-                    
-                    // Tạo mã lớp: VD 63CNPM1, 64HTTT2, 65KTD3
-                    $classCode = $yearCode . $classPrefix . $classNumber;
-                    
-                    // Tạo tên lớp đầy đủ
-                    $className = "Lớp {$classCode} - {$departmentName}";
-                    
-                    // Insert vào bảng classes - khớp với cấu trúc database
-                    DB::table('classes')->insert([
-                        'class_code' => $classCode,                    // string(20)
-                        'class_name' => $className,                    // string(100)
-                        'department_id' => $departmentId,              // unsignedBigInteger, nullable
-                        'academic_year' => (string)$academicYear,      // string(20) - convert to string
-                        'teacher_id' => $teacherId,                    // unsignedBigInteger, nullable
+
+                    $classes[] = [
+                        'id' => $classId++,
+                        'class_code' => $classCode,
+                        'class_name' => $className,
+                        'department_id' => $major['department_id'],
+                        'academic_year' => $academicYear,
+                        'teacher_id' => $teacher_id++,
                         'created_at' => now(),
                         'updated_at' => now(),
-                    ]);
+                    ];
                 }
             }
         }
-        
-        // Tạo thêm một số lớp chuyên biệt cho các department khác (nếu có)
-        $this->createAdditionalClasses($faker, $teachers, $usedTeachers, $academicYears, $departments);
-    }
-    
-    /**
-     * Tạo thêm các lớp cho department khác hoặc lớp đặc biệt
-     */
-    private function createAdditionalClasses($faker, $teachers, &$usedTeachers, $academicYears, $departments)
-    {
-        // Lấy các department khác ngoài bộ môn chính (có thể là khoa level 2 hoặc phòng ban)
-        $otherDepartments = DB::table('departments')
-            ->where('level', 2)
-            ->get();
-        
-        // Nếu có department khác, tạo ít lớp hơn (1 lớp mỗi department)
-        foreach ($otherDepartments as $dept) {
-            foreach ($academicYears as $academicYear => $yearCode) {
-                // Chỉ tạo 1 lớp cho mỗi department cấp 2
-                
-                // Kiểm tra còn giáo viên
-                $availableTeachers = array_diff($teachers, $usedTeachers);
-                if (empty($availableTeachers)) {
-                    return; // Thoát nếu hết giáo viên
-                }
-                
-                $teacherId = $faker->randomElement($availableTeachers);
-                $usedTeachers[] = $teacherId;
-                
-                // Tạo mã lớp với tên viết tắt của department
-                $deptPrefix = $this->createDeptPrefix($dept->code);
-                $classCode = $yearCode . $deptPrefix . '1';
-                $className = "Lớp {$classCode} - {$dept->name}";
-                
-                DB::table('classes')->insert([
-                    'class_code' => $classCode,
-                    'class_name' => $className,
-                    'department_id' => $dept->id,
-                    'academic_year' => (string)$academicYear,      // Convert to string
-                    'teacher_id' => $teacherId,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-        }
-        
-        // Tạo một số lớp cao học (Graduate) cho các bộ môn chính
-        $this->createGraduateClasses($faker, $teachers, $usedTeachers, $academicYears, $departments);
-    }
-    
-    /**
-     * Tạo prefix cho department từ code hoặc name
-     */
-    private function createDeptPrefix($deptCode)
-    {
-        // Các mapping đặc biệt
-        $specialMapping = [
-            'PDT' => 'PDT',
-            'TCKT' => 'TCK',
-            'CTSV' => 'CTS',
-            'KHCN' => 'KHC',
-            'HCTH' => 'HCT'
-        ];
-        
-        if (isset($specialMapping[$deptCode])) {
-            return $specialMapping[$deptCode];
-        }
-        
-        // Nếu không có mapping đặc biệt, lấy 3 ký tự đầu
-        return substr($deptCode, 0, 3);
-    }
-    
-    /**
-     * Tạo lớp cao học
-     */
-    private function createGraduateClasses($faker, $teachers, &$usedTeachers, $academicYears, $departments)
-    {
-        // Chỉ tạo lớp cao học cho một số bộ môn chính và từ năm 2023 trở lên
-        $graduateDepts = ['CNPM', 'HTTT', 'KTD', 'KCCT', 'THLC'];
-        
-        foreach ($graduateDepts as $deptCode) {
-            if (!isset($departments[$deptCode])) continue;
-            
-            $dept = $departments[$deptCode];
-            
-            // Chỉ tạo cho năm 2023-2025
-            $graduateYears = [
-                2023 => '65',
-                2024 => '66', 
-                2025 => '67'
-            ];
-            
-            foreach ($graduateYears as $academicYear => $yearCode) {
-                // Kiểm tra còn giáo viên
-                $availableTeachers = array_diff($teachers, $usedTeachers);
-                if (empty($availableTeachers)) {
-                    return;
-                }
-                
-                $teacherId = $faker->randomElement($availableTeachers);
-                $usedTeachers[] = $teacherId;
-                
-                // Tạo mã lớp cao học: VD 65CNPMCH, 66HTTCH, 67KTDCH
-                $classCode = $yearCode . $deptCode . 'CH'; // CH = Cao học
-                $className = "Lớp Cao học {$classCode} - {$dept->name}";
-                
-                DB::table('classes')->insert([
-                    'class_code' => $classCode,
-                    'class_name' => $className,
-                    'department_id' => $dept->id,
-                    'academic_year' => (string)$academicYear,      // Convert to string
-                    'teacher_id' => $teacherId,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
+
+        // Insert all classes in batches to avoid memory issues
+        $chunks = array_chunk($classes, 300);
+        foreach ($chunks as $chunk) {
+            DB::table('classes')->insert($chunk);
         }
     }
 }

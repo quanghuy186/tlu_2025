@@ -3117,5 +3117,174 @@
 .like-button:hover {
     color: #e74c3c !important;
 }
+
+
+    /* Pagination Container */
+.pagination-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    padding: 20px 0;
+}
+
+/* Pagination List */
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Pagination Items */
+.pagination li {
+    display: inline-block;
+}
+
+.pagination li a,
+.pagination li span {
+    display: block;
+    padding: 8px 12px;
+    text-decoration: none;
+    border: 1px solid #dee2e6;
+    color: #6c757d;
+    background-color: #fff;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+    min-width: 40px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Hover Effect */
+.pagination li a:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+    color: #495057;
+    transform: translateY(-1px);
+}
+
+/* Active Page */
+.pagination li a.active {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+}
+
+.pagination li a.active:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+    transform: none;
+}
+
+/* Disabled Items */
+.pagination li.disabled a,
+.pagination li.disabled span {
+    color: #6c757d;
+    background-color: #fff;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.pagination li.disabled a:hover,
+.pagination li.disabled span:hover {
+    background-color: #fff;
+    border-color: #dee2e6;
+    transform: none;
+}
+
+/* First/Last buttons */
+.pagination li a[data-page="1"]:first-child,
+.pagination li a:last-child {
+    font-weight: 500;
+    background-color: #f8f9fa;
+}
+
+/* Ellipsis */
+.pagination li.disabled span {
+    border: none;
+    background: transparent;
+    color: #6c757d;
+    cursor: default;
+}
+
+/* Pagination Info */
+.pagination-info {
+    color: #6c757d;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #f8f9fa;
+    border-radius: 20px;
+    border: 1px solid #e9ecef;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .pagination {
+        gap: 3px;
+        margin: 0 0 10px 0;
+    }
+    
+    .pagination li a,
+    .pagination li span {
+        padding: 6px 8px;
+        font-size: 12px;
+        min-width: 32px;
+    }
+    
+    /* Ẩn First/Last text trên mobile */
+    .pagination li a[data-page="1"]:first-child::after,
+    .pagination li a:last-child::after {
+        content: "";
+    }
+    
+    .pagination li a[data-page="1"]:first-child,
+    .pagination li a:last-child {
+        font-size: 16px;
+        padding: 6px;
+    }
+    
+    .pagination-info {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pagination-container {
+        margin-top: 20px;
+        padding: 15px 0;
+    }
+    
+    /* Trên mobile nhỏ, ẩn một số trang để giao diện gọn hơn */
+    .pagination {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 5px;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .pagination li {
+        flex-shrink: 0;
+    }
+}
+
+/* Loading Animation */
+.loading-overlay .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Smooth scroll effect */
+html {
+    scroll-behavior: smooth;
+}
     </style>
 </head>

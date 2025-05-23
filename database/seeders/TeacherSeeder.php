@@ -1,8 +1,5 @@
 <?php
-
 namespace Database\Seeders;
-
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -10,247 +7,86 @@ use Faker\Factory as Faker;
 
 class TeacherSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
         $faker = Faker::create('vi_VN');
         
-        // Lấy danh sách các department_id từ database
-        $departments = DB::table('departments')->where('level', '>=', 2)->pluck('id')->toArray();
+        $departments = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28];
         
-        // Định nghĩa các học hàm học vị
-        $academicRanks = [
-            'Giáo sư',
-            'Phó Giáo sư', 
-            'Tiến sĩ',
-            'Thạc sĩ',
-            'Kỹ sư',
-            'Cử nhân'
+        $departmentSpecializations = [
+            2 => ['Kỹ thuật xây dựng dân dụng', 'Kỹ thuật cầu đường', 'Kỹ thuật thủy lợi'],
+            3 => ['Kỹ thuật tài nguyên nước', 'Thủy văn học', 'Cấp thoát nước'],
+            4 => ['Kỹ thuật cơ khí', 'Chế tạo máy', 'Kỹ thuật ô tô'],
+            5 => ['Kỹ thuật điện', 'Điện tử viễn thông', 'Tự động hóa'],
+            6 => ['Kinh tế học', 'Quản trị kinh doanh', 'Kinh tế đầu tư'],
+            7 => ['Công nghệ thông tin', 'An ninh mạng', 'Trí tuệ nhân tạo'],
+            8 => ['Kỹ thuật môi trường', 'Hóa học', 'Công nghệ sinh học'],
+            9 => ['Luật kinh tế', 'Luật dân sự', 'Lý luận chính trị'],
+            10 => ['Quan hệ quốc tế', 'Ngôn ngữ học', 'Văn hóa học'],
+            11 => ['Kế toán', 'Kiểm toán', 'Tài chính ngân hàng'],
+            12 => ['Thương mại điện tử', 'Marketing số'],
+            13 => ['Quản trị du lịch', 'Dịch vụ lữ hành'],
+            14 => ['Kinh tế học', 'Kinh tế vĩ mô'],
+            15 => ['Kinh tế xây dựng', 'Quản lý dự án xây dựng'],
+            16 => ['Phát triển kỹ năng mềm', 'Tâm lý học'],
+            17 => ['Kinh tế số', 'Kinh doanh số'],
+            18 => ['Logistics', 'Quản lý chuỗi cung ứng'],
+            19 => ['Nghiên cứu kinh tế', 'Ứng dụng quản lý'],
+            20 => ['Kỹ thuật môi trường', 'Quản lý môi trường'],
+            21 => ['Kỹ thuật hóa học', 'Công nghệ hóa học'],
+            22 => ['Công nghệ sinh học', 'Sinh học phân tử'],
+            23 => ['Ngôn ngữ Anh', 'Văn học Anh'],
+            24 => ['Ngôn ngữ Trung Quốc', 'Văn hóa Trung Quốc'],
+            25 => ['Kế toán', 'Kế toán quản trị'],
+            26 => ['Kiểm toán', 'Kiểm toán nội bộ'],
+            27 => ['Tài chính ngân hàng', 'Đầu tư tài chính'],
+            28 => ['Quản trị kinh doanh', 'Chiến lược kinh doanh']
         ];
         
-        // Định nghĩa các chuyên ngành theo khoa
-        $specializations = [
-            // CNTT
-            'Công nghệ phần mềm',
-            'Hệ thống thông tin',
-            'Khoa học máy tính',
-            'An toàn thông tin',
-            'Trí tuệ nhân tạo',
-            'Khoa học dữ liệu',
-            'Công nghệ web',
-            'Phát triển ứng dụng di động',
-            'Điện toán đám mây',
-            'IoT và Embedded Systems',
+        $roleId = 2;
+        $academicRanks = ['TS', 'ThS', 'PGS', 'GS'];
+        $positions = ['Giảng viên', 'Giảng viên chính'];
+        
+        for ($i = 1; $i <= 400; $i++) {
+            $departmentId = $faker->randomElement($departments);
+            $specializations = $departmentSpecializations[$departmentId] ?? ['Chuyên ngành khác'];
+            $specialization = $faker->randomElement($specializations);
             
-            // Điện - Điện tử
-            'Kỹ thuật điện',
-            'Tự động hóa',
-            'Điện tử viễn thông',
-            'Kỹ thuật điều khiển',
-            'Năng lượng tái tạo',
-            'Điện tử công suất',
-            'Xử lý tín hiệu số',
-            'Mạng thông minh',
-            'Robotics',
-            'Hệ thống nhúng',
-            
-            // Kinh tế & Quản lý
-            'Quản trị kinh doanh',
-            'Tài chính ngân hàng',
-            'Marketing',
-            'Kinh tế phát triển',
-            'Quản lý dự án',
-            'Logistics',
-            'E-commerce',
-            'Quản trị nhân lực',
-            'Kế toán',
-            'Kiểm toán',
-            
-            // Xây dựng
-            'Kết cấu công trình',
-            'Địa kỹ thuật',
-            'Vật liệu xây dựng',
-            'Quản lý xây dựng',
-            'Kiến trúc',
-            'Quy hoạch đô thị',
-            'Kỹ thuật giao thông',
-            'Cầu đường',
-            'Công trình ngầm',
-            'BIM và CAD',
-            
-            // Thủy lợi
-            'Thủy lực',
-            'Công trình thủy',
-            'Thủy văn',
-            'Môi trường nước',
-            'Quản lý tài nguyên nước',
-            'Thủy điện',
-            'Tưới tiêu',
-            'Phòng chống thiên tai',
-            'Hải dương học',
-            'Khí tượng thủy văn'
-        ];
-        
-        // Định nghĩa các chức vụ
-        $positions = [
-            'Giảng viên',
-            'Giảng viên chính',
-            'Phó trưởng bộ môn',
-            'Thư ký khoa',
-            'Chuyên viên',
-            'Trợ lý giảng dạy',
-            'Nghiên cứu viên',
-            'Giảng viên kiêm nhiệm'
-        ];
-        
-        // Tên họ Việt Nam phổ biến
-        $firstNames = [
-            'Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Huỳnh', 'Phan', 'Vũ', 'Võ', 'Đặng',
-            'Bùi', 'Đỗ', 'Hồ', 'Ngô', 'Dương', 'Lý', 'Đinh', 'Lương', 'Tạ', 'Mai'
-        ];
-        
-        $middleNames = [
-            'Văn', 'Thị', 'Đức', 'Minh', 'Anh', 'Thu', 'Hồng', 'Quang', 'Hải', 'Tuấn',
-            'Hoài', 'Thanh', 'Bảo', 'Kim', 'Xuân', 'An', 'Phương', 'Lan', 'Mai', 'Hương'
-        ];
-        
-        $lastNames = [
-            'Anh', 'Bình', 'Cường', 'Dũng', 'Đạt', 'Giang', 'Hùng', 'Khoa', 'Long', 'Minh',
-            'Nam', 'Phúc', 'Quân', 'Sơn', 'Tâm', 'Vũ', 'Yến', 'Linh', 'Nga', 'Thảo',
-            'Trang', 'Hà', 'Hương', 'Lan', 'Mai', 'Nhung', 'Oanh', 'Phương', 'Thu', 'Trang'
-        ];
-        
-        // Địa điểm văn phòng
-        $officeLocations = [
-            'Tòa A, phòng A101', 'Tòa A, phòng A102', 'Tòa A, phòng A103', 'Tòa A, phòng A201', 'Tòa A, phòng A202',
-            'Tòa B, phòng B101', 'Tòa B, phòng B102', 'Tòa B, phòng B201', 'Tòa B, phòng B202', 'Tòa B, phòng B301',
-            'Tòa C, phòng C101', 'Tòa C, phòng C102', 'Tòa C, phòng C201', 'Tòa C, phòng C202', 'Tòa C, phòng C301',
-            'Tòa D, phòng D101', 'Tòa D, phòng D102', 'Tòa D, phòng D201', 'Tòa D, phòng D301', 'Tòa D, phòng D401',
-            'Tòa E, phòng E101', 'Tòa E, phòng E201', 'Tòa E, phòng E301', 'Tòa F, phòng F101', 'Tòa F, phòng F201'
-        ];
-        
-        // Mảng lưu user_id của các giảng viên để gán role
-        $teacherUserIds = [];
-        
-        // Tạo 300 giảng viên
-        for ($i = 1; $i <= 300; $i++) {
-            // Tạo tên ngẫu nhiên
-            $firstName = $faker->randomElement($firstNames);
-            $middleName = $faker->randomElement($middleNames);
-            $lastName = $faker->randomElement($lastNames);
-            $fullName = $firstName . ' ' . $middleName . ' ' . $lastName;
-            
-            // Tạo email từ tên
-            $emailName = $this->removeVietnameseAccents(strtolower($firstName . $middleName . $lastName));
-            $email = $emailName . $i . '@tlu.edu.vn';
-            
-            // Tạo user trước
+            // Tạo user (bỏ created_at, updated_at để Laravel tự động xử lý)
             $userId = DB::table('users')->insertGetId([
-                'name' => $fullName,
-                'email' => $email,
-                'email_verified_at' => now(),
+                'name' => $faker->name,
+                'email' => $faker->unique()->safeEmail,
+                'phone' => $faker->phoneNumber(),
                 'password' => Hash::make('password123'),
-                'phone' => $faker->numerify('0##########'),
                 'is_active' => true,
                 'email_verified' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
             
-            // Lưu user_id để gán role sau
-            $teacherUserIds[] = $userId;
-            
-            // Tạo mã giảng viên
-            $teacherCode = 'GV' . str_pad($i, 4, '0', STR_PAD_LEFT);
-            
-            // Tạo giờ làm việc ngẫu nhiên
-            $officeHours = $this->generateOfficeHours($faker);
+            // Gán role
+            DB::table('user_has_roles')->insert([
+                'user_id' => $userId,
+                'role_id' => $roleId,
+            ]);
             
             // Tạo teacher
             DB::table('teachers')->insert([
-                'department_id' => $faker->randomElement($departments),
                 'user_id' => $userId,
-                'teacher_code' => $teacherCode,
+                'department_id' => $departmentId,
+                'teacher_code' => 'GV' . str_pad($i, 4, '0', STR_PAD_LEFT),
                 'academic_rank' => $faker->randomElement($academicRanks),
-                'specialization' => $faker->randomElement($specializations),
+                'specialization' => $specialization,
                 'position' => $faker->randomElement($positions),
-                'office_location' => $faker->randomElement($officeLocations),
-                'office_hours' => $officeHours,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'office_location' => 'Phòng ' . $faker->numberBetween(101, 509) . ' - Tòa ' . $faker->randomElement(['A1', 'A2', 'A3', 'B1', 'B2', 'C1', 'C2']),
+                'office_hours' => $faker->randomElement(['Thứ 2-4', 'Thứ 3-5', 'Thứ 4-6']) . ' (' . $faker->randomElement(['8h-10h', '9h-11h', '14h-16h']) . ')'
             ]);
+            
+            if ($i % 50 == 0) {
+                echo "Đã tạo $i/400 giảng viên...\n";
+            }
         }
         
-        // Gán role_id = 2 cho tất cả giảng viên
-        foreach ($teacherUserIds as $userId) {
-            DB::table('user_has_roles')->insert([
-                'user_id' => $userId,
-                'role_id' => 2,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-    }
-    
-    /**
-     * Loại bỏ dấu tiếng Việt
-     */
-    private function removeVietnameseAccents($str)
-    {
-        $accents = [
-            'à', 'á', 'ạ', 'ả', 'ã', 'â', 'ầ', 'ấ', 'ậ', 'ẩ', 'ẫ', 'ă', 'ằ', 'ắ', 'ặ', 'ẳ', 'ẵ',
-            'è', 'é', 'ẹ', 'ẻ', 'ẽ', 'ê', 'ề', 'ế', 'ệ', 'ể', 'ễ',
-            'ì', 'í', 'ị', 'ỉ', 'ĩ',
-            'ò', 'ó', 'ọ', 'ỏ', 'õ', 'ô', 'ồ', 'ố', 'ộ', 'ổ', 'ỗ', 'ơ', 'ờ', 'ớ', 'ợ', 'ở', 'ỡ',
-            'ù', 'ú', 'ụ', 'ủ', 'ũ', 'ư', 'ừ', 'ứ', 'ự', 'ử', 'ữ',
-            'ỳ', 'ý', 'ỵ', 'ỷ', 'ỹ',
-            'đ',
-            'À', 'Á', 'Ạ', 'Ả', 'Ã', 'Â', 'Ầ', 'Ấ', 'Ậ', 'Ẩ', 'Ẫ', 'Ă', 'Ằ', 'Ắ', 'Ặ', 'Ẳ', 'Ẵ',
-            'È', 'É', 'Ẹ', 'Ẻ', 'Ẽ', 'Ê', 'Ề', 'Ế', 'Ệ', 'Ể', 'Ễ',
-            'Ì', 'Í', 'Ị', 'Ỉ', 'Ĩ',
-            'Ò', 'Ó', 'Ọ', 'Ỏ', 'Õ', 'Ô', 'Ồ', 'Ố', 'Ộ', 'Ổ', 'Ỗ', 'Ơ', 'Ờ', 'Ớ', 'Ợ', 'Ở', 'Ỡ',
-            'Ù', 'Ú', 'Ụ', 'Ủ', 'Ũ', 'Ư', 'Ừ', 'Ứ', 'Ự', 'Ử', 'Ữ',
-            'Ỳ', 'Ý', 'Ỵ', 'Ỷ', 'Ỹ',
-            'Đ'
-        ];
-        
-        $noAccents = [
-            'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a',
-            'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e',
-            'i', 'i', 'i', 'i', 'i',
-            'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o',
-            'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u',
-            'y', 'y', 'y', 'y', 'y',
-            'd',
-            'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A',
-            'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E',
-            'I', 'I', 'I', 'I', 'I',
-            'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O',
-            'U', 'U', 'U', 'U', 'U', 'U', 'U', 'U', 'U', 'U', 'U',
-            'Y', 'Y', 'Y', 'Y', 'Y',
-            'D'
-        ];
-        
-        return str_replace($accents, $noAccents, $str);
-    }
-    
-    /**
-     * Tạo giờ làm việc ngẫu nhiên
-     */
-    private function generateOfficeHours($faker)
-    {
-        $days = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6'];
-        $selectedDays = $faker->randomElements($days, $faker->numberBetween(2, 5));
-        
-        $hours = [];
-        foreach ($selectedDays as $day) {
-            $startHour = $faker->numberBetween(7, 14);
-            $endHour = $startHour + $faker->numberBetween(2, 4);
-            $hours[] = $day . ': ' . sprintf('%02d:00 - %02d:00', $startHour, $endHour);
-        }
-        
-        return implode(', ', $hours);
+        echo "Hoàn thành! Đã tạo 400 giảng viên.\n";
     }
 }

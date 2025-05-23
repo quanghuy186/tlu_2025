@@ -17,8 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('class_id')->nullable();
             $table->string('student_code', 20)->nullable();
             $table->integer('enrollment_year')->nullable();
-            $table->string('program', 50)->nullable();
-            $table->string('graduation_status', 20)->nullable();
             $table->foreign('class_id')->references('id')->on('classes');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

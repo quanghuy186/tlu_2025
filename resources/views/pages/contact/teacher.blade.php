@@ -22,12 +22,14 @@
     <!-- Search and Filter Section -->
     <div class="search-filter-container">
         
-        <div class="filter-options" >
+        <div class="filter-options">
             <div class="filter-group">
                 <span class="filter-label">Sắp xếp theo:</span>
-                <select class="filter-select" id="sortSelect">
-                    <option value="name">Tên (A-Z)</option>
-                    <option value="name-desc">Tên (Z-A)</option>
+                <select class="filter-select" id="sortSelect" name="sort">
+                    <option value="name" {{ ($sort ?? 'name') == 'name' ? 'selected' : '' }}>Tên (A-Z)</option>
+                    <option value="name-desc" {{ ($sort ?? '') == 'name-desc' ? 'selected' : '' }}>Tên (Z-A)</option>
+                    <option value="department" {{ ($sort ?? '') == 'department' ? 'selected' : '' }}>Đơn vị</option>
+                    <option value="position" {{ ($sort ?? '') == 'position' ? 'selected' : '' }}>Chức vụ</option>
                 </select>
             </div> 
 
@@ -56,7 +58,7 @@
             </div>
         </div>
 
-        <form action="{{ route('contact.teacher.search') }}" method="GET">
+        <form action="{{ route('contact.teacher.search') }}" method="GET" id="search-form">
             <div class="search-box mt-5">
                 <i class="fas fa-search me-2"></i>
                 <input name="fullname" value="{{ $fullname ?? '' }}" type="text" placeholder="Tìm kiếm theo tên hoặc mã cán bộ...">
@@ -67,10 +69,11 @@
     </div>
 
     <!-- Teacher List -->
-    <div class="teacher-list-container">
+    <div class="teacher-list-container" id="teacher-list-container">
         <div class="teacher-list-header">
             <div class="teacher-count">
-                Hiển thị <span class="text-primary">1-10</span> trong tổng số <span class="text-primary">153</span> Cán bộ Giảng viên
+                Hiển thị <span class="text-primary">{{ $teachers->firstItem() ?? 0 }}-{{ $teachers->lastItem() ?? 0 }}</span> 
+                trong tổng số <span class="text-primary">{{ $teachers->total() ?? 0 }}</span> Cán bộ Giảng viên
             </div>
             <div class="view-options">
                 <button type="button" class="active"><i class="fas fa-list"></i></button>
@@ -81,97 +84,7 @@
         <!-- Teacher List Items -->
         <div class="teacher-list">
             @include('partials.teacher_list', ['teachers' => $teachers])
-            {{-- @foreach($teachers as $teacher)
-                <div class="teacher-item">
-                    <img src="{{ asset('storage/avatars/'.($teacher->user->avatar ?? 'default.png')) }}" alt="Giảng viên" class="teacher-avatar">
-                    <div class="teacher-info">
-                        <div class="teacher-name">{{ $teacher->user->name ?? 'Chưa cập nhật' }}</div>
-                        <div class="teacher-position">{{ $teacher->position ?? 'Chưa cập nhật' }}</div>
-                        <div class="teacher-department">
-                            Đơn vị: 
-                            @if($teacher->department)
-                                <a href="#">{{ $teacher->department->name }}</a>
-                            @else
-                                <span>Chưa cập nhật</span>
-                            @endif
-                        </div>
-                    </div>
-                   
-                    <div class="teacher-actions">
-                        <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal{{ $teacher->id }}">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="modal fade" id="teacherDetailModal{{ $teacher->id }}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Thông tin Cán bộ Giảng viên</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="teacher-detail">
-                                    <img src="{{ asset('storage/avatars/'.($teacher->user->avatar ?? 'default.png')) }}" alt="Giảng viên" class="teacher-detail-avatar">
-                                    <div class="teacher-detail-name">{{ $teacher->user->name ?? 'Chưa cập nhật' }}</div>
-                                    <div class="teacher-detail-position">{{ $teacher->position ?? 'Chưa cập nhật' }}</div>
-            
-                                    <ul class="teacher-detail-info">
-                                        <li>
-                                            <i class="fas fa-id-card"></i>
-                                            <span class="detail-label">Mã cán bộ:</span>
-                                            <span class="detail-value">{{ $teacher->code ?? 'Chưa cập nhật' }}</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-envelope"></i>
-                                            <span class="detail-label">Email:</span>
-                                            <span class="detail-value">{{ $teacher->user->email ?? 'Chưa cập nhật' }}</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-phone"></i>
-                                            <span class="detail-label">Điện thoại:</span>
-                                            <span class="detail-value">{{ $teacher->phone ?? 'Chưa cập nhật' }}</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-building"></i>
-                                            <span class="detail-label">Đơn vị:</span>
-                                            <span class="detail-value">
-                                                @if($teacher->department)
-                                                    <a href="#">{{ $teacher->department->name }}</a>
-                                                @else
-                                                    Chưa cập nhật
-                                                @endif
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-map-marker-alt"></i>
-                                            <span class="detail-label">Địa chỉ:</span>
-                                            <span class="detail-value">{{ $teacher->address ?? 'Chưa cập nhật' }}</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-briefcase"></i>
-                                            <span class="detail-label">Chuyên môn:</span>
-                                            <span class="detail-value">{{ $teacher->specialization ?? 'Chưa cập nhật' }}</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach --}}
-            
         </div>
-
-
-        <!-- Pagination -->
-        
-            {{-- </div>
-        </div> --}}
     </div>
 </div>
 
@@ -189,124 +102,193 @@
 
 @section('custom-js')
 <script>
-$(document).ready(function(){
-    // Biến để lưu trữ các tham số tìm kiếm hiện tại
-    var currentSearch = "{{ $fullname ?? '' }}";
-    var currentDepartment = "{{ $department_id ?? 'all' }}";
-    var currentRank = "{{ $selected_rank ?? 'all' }}";
+$(document).ready(function() {
+    // Biến để lưu trữ các tham số hiện tại
+    let currentFilters = {
+        fullname: '{{ $fullname ?? '' }}',
+        department_id: '{{ $department_id ?? 'all' }}',
+        academic_rank: '{{ $selected_rank ?? 'all' }}',
+        sort: '{{ $sort ?? 'name' }}'
+    };
     
-    // Hàm chung để tải dữ liệu khi có thay đổi bất kỳ
-    function loadData(options) {
-        // Cập nhật các biến nếu có tham số tương ứng
-        if (options.sort) {
-            // Chỉ cập nhật sortBy, không cần lưu vào biến toàn cục
-        }
-        if (options.search !== undefined) {
-            currentSearch = options.search;
-        }
-        if (options.department_id !== undefined) {
-            currentDepartment = options.department_id;
-        }
-        if (options.academic_rank !== undefined) {
-            currentRank = options.academic_rank;
-        }
+    // Hàm gửi Ajax request chung
+    function sendAjaxRequest(url, data, successCallback) {
+        showLoading();
         
-        // Xác định URL dựa trên loại hành động
-        var url = options.sort 
-            ? "{{ route('contact.teacher.sort') }}" 
-            : "{{ route('contact.teacher.search') }}";
-        
-        // Chuẩn bị dữ liệu gửi đi
-        var data = {
-            fullname: currentSearch,
-            department_id: currentDepartment,
-            academic_rank: currentRank
-        };
-        
-        // Thêm tham số sort nếu có
-        if (options.sort) {
-            data.sort = options.sort;
-        }
-        
-        // Gửi yêu cầu Ajax
         $.ajax({
             url: url,
-            type: "GET",
+            type: 'GET',
             data: data,
-            success: function(response) {
-                $(".teacher-list").html(response);
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
             },
-            error: function(xhr) {
-                console.error("Lỗi khi tải dữ liệu:", xhr.responseText);
+            success: function(response) {
+                if (successCallback) {
+                    successCallback(response);
+                }
+                hideLoading();
+            },
+            error: function(xhr, status, error) {
+                console.error('Ajax Error:', error);
+                console.error('Response:', xhr.responseText);
+                hideLoading();
+                
+                let errorMsg = 'Có lỗi xảy ra khi tải dữ liệu.';
+                if (xhr.status === 404) {
+                    errorMsg = 'Không tìm thấy trang yêu cầu.';
+                } else if (xhr.status === 500) {
+                    errorMsg = 'Lỗi server. Vui lòng thử lại sau.';
+                }
+                alert(errorMsg);
             }
         });
     }
     
-    // Xử lý sự kiện khi select sắp xếp thay đổi
-    $("#sortSelect").change(function() {
-        loadData({
-            sort: $(this).val()
-        });
-    });
-    
-    // Xử lý sự kiện khi select department thay đổi
-    $("#departmentSelect").change(function() {
-        loadData({
-            department_id: $(this).val()
-        });
-    });
-    
-    // Xử lý sự kiện khi select chức vụ thay đổi
-    $("#rankSelect").change(function() {
-        loadData({
-            academic_rank: $(this).val()
-        });
-    });
-    
-    // Xử lý form tìm kiếm bằng Ajax
-    $(".search-box form").submit(function(e) {
-        e.preventDefault(); // Ngăn chặn hành vi mặc định của form
-        
-        loadData({
-            search: $("input[name='fullname']").val()
-        });
-    });
-    
-    // Xử lý các link phân trang để duy trì tham số tìm kiếm
-
+    // Xử lý sự kiện click pagination
     $(document).on('click', '.page-link', function(e) {
-            e.preventDefault();
+        e.preventDefault();
+        
+        var page = $(this).data('page');
+        if (!page || $(this).parent().hasClass('disabled')) {
+            return;
+        }
+        
+        var requestData = {
+            page: page,
+            fullname: currentFilters.fullname,
+            department_id: currentFilters.department_id,
+            academic_rank: currentFilters.academic_rank,
+            sort: currentFilters.sort
+        };
+        
+        var searchUrl = '{{ route("contact.teacher.search") }}';
+        
+        sendAjaxRequest(searchUrl, requestData, function(response) {
+            $('.teacher-list').html(response);
             
-            var page = $(this).data('page');
-            
-            loadData({
-                page: page
-            });
-            
-            // Scroll to top of list (optional)
+            // Cuộn lên đầu danh sách
             $('html, body').animate({
-                scrollTop: $(".teacher-list-container").offset().top - 100
-            }, 200);
+                scrollTop: $('#teacher-list-container').offset().top - 100
+            }, 300);
+        });
     });
-
-    $("<style>")
-            .prop("type", "text/css")
-            .html(`
-                .student-list.loading {
-                    position: relative;
-                    min-height: 200px;
-                }
-                .student-list.loading:after {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(255, 255, 255, 0.7) url('/images/spinner.gif') no-repeat center center;
-                    z-index: 5;
-                }
-            `).appendTo("head");
+    
+    // Xử lý sự kiện tìm kiếm
+    $('#search-form').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Cập nhật filters
+        currentFilters.fullname = $('input[name="fullname"]').val() || '';
+        
+        var requestData = {
+            page: 1, // Reset về trang 1
+            fullname: currentFilters.fullname,
+            department_id: currentFilters.department_id,
+            academic_rank: currentFilters.academic_rank,
+            sort: currentFilters.sort
+        };
+        
+        var searchUrl = $(this).attr('action');
+        
+        sendAjaxRequest(searchUrl, requestData, function(response) {
+            $('.teacher-list').html(response);
+            updateTeacherCount();
+        });
+    });
+    
+    // Xử lý sự kiện lọc theo department
+    $('#departmentSelect').on('change', function() {
+        currentFilters.department_id = $(this).val();
+        triggerFilter();
+    });
+    
+    // Xử lý sự kiện lọc theo academic_rank
+    $('#rankSelect').on('change', function() {
+        currentFilters.academic_rank = $(this).val();
+        triggerFilter();
+    });
+    
+    // Xử lý sự kiện sắp xếp
+    $('#sortSelect').on('change', function() {
+        currentFilters.sort = $(this).val();
+        
+        var requestData = {
+            page: 1, // Reset về trang 1
+            fullname: currentFilters.fullname,
+            department_id: currentFilters.department_id,
+            academic_rank: currentFilters.academic_rank,
+            sort: currentFilters.sort
+        };
+        
+        var sortUrl = '{{ route("contact.teacher.sort") }}';
+        
+        sendAjaxRequest(sortUrl, requestData, function(response) {
+            $('.teacher-list').html(response);
+            updateTeacherCount();
+        });
+    });
+    
+    // Hàm trigger filter chung
+    function triggerFilter() {
+        var requestData = {
+            page: 1, // Reset về trang 1
+            fullname: currentFilters.fullname,
+            department_id: currentFilters.department_id,
+            academic_rank: currentFilters.academic_rank,
+            sort: currentFilters.sort
+        };
+        
+        var searchUrl = '{{ route("contact.teacher.search") }}';
+        
+        sendAjaxRequest(searchUrl, requestData, function(response) {
+            $('.teacher-list').html(response);
+            updateTeacherCount();
+        });
+    }
+    
+    // Cập nhật số lượng giáo viên hiển thị
+    function updateTeacherCount() {
+        // Lấy thông tin từ phần pagination-info trong response
+        var paginationInfo = $('.pagination-info').text();
+        if (paginationInfo) {
+            var matches = paginationInfo.match(/Hiển thị (\d+) - (\d+) của (\d+)/);
+            if (matches) {
+                $('.teacher-count').html(
+                    'Hiển thị <span class="text-primary">' + matches[1] + '-' + matches[2] + '</span> ' +
+                    'trong tổng số <span class="text-primary">' + matches[3] + '</span> Cán bộ Giảng viên'
+                );
+            }
+        }
+    }
+    
+    // Hàm hiển thị loading
+    function showLoading() {
+        $('.loading-overlay').remove();
+        
+        $('body').append(`
+            <div class="loading-overlay" style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+            ">
+                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        `);
+    }
+    
+    // Hàm ẩn loading
+    function hideLoading() {
+        $('.loading-overlay').remove();
+    }
 });
 </script>
 @endsection

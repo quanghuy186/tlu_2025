@@ -26,6 +26,11 @@ class ClassRoom extends Model
         'teacher_id',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     /**
      * Lấy thông tin khoa/bộ môn của lớp
      */
