@@ -7,18 +7,18 @@
             <h1>Danh bạ điện tử Trường Đại học Thủy Lợi</h1>
             <p>Kết nối thông tin - Chia sẻ tri thức - Xây dựng cộng đồng</p>
 
-            <div class="search-box">
-                <select class="form-select">
-                    <option selected>Tất cả</option>
-                    <option>Đơn vị</option>
-                    <option>Giảng viên</option>
-                    <option>Sinh viên</option>
-                </select>
-                <input type="text" class="form-control" placeholder="Nhập tên, mã, chức vụ cần tìm...">
-                <button type="button">
-                    <i class="fas fa-search"></i> Tìm kiếm
-                </button>
-            </div>
+                {{-- <div class="search-box">
+                    <select class="form-select">
+                        <option selected>Tất cả</option>
+                        <option>Đơn vị</option>
+                        <option>Giảng viên</option>
+                        <option>Sinh viên</option>
+                    </select>
+                    <input type="text" class="form-control" placeholder="Nhập tên, mã, chức vụ cần tìm...">
+                    <button type="button">
+                        <i class="fas fa-search"></i> Tìm kiếm
+                    </button>
+                </div> --}}
         </div>
     </section>
 

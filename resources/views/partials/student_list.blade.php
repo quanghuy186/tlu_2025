@@ -12,13 +12,13 @@
             <div class="student-class">
                 Lớp: 
                 @if($student->class)
-                    <a href="#">{{ $student->class->name ?? 'Chưa cập nhật' }}</a>
+                    <a href="#">{{ $student->class->class_name ?? 'Chưa cập nhật' }}</a>
                 @else
                     <span>Chưa cập nhật</span>
                 @endif
                 - 
-                @if($student->department)
-                    {{ $student->department->name }}
+                @if($student->class->department)
+                    {{ $student->class->department->name }}
                 @else
                     Chưa cập nhật
                 @endif

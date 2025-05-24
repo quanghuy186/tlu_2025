@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('email', 200)->nullable();
             $table->text('address')->nullable();
             $table->integer('level');
+            $table->string('department_type', 200)->nullable();
             $table->foreign('parent_id')->references('id')->on('departments');
             $table->foreign('user_id')->references('id')->on('users');
 

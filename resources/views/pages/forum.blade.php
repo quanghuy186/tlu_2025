@@ -6,10 +6,10 @@
     <div class="container text-center">
         <h1>Diễn đàn trao đổi TLU</h1>
         <p>Nơi trao đổi, chia sẻ kiến thức, thông tin và giải đáp thắc mắc trong cộng đồng Đại học Thủy Lợi</p>
-        <div class="search-box bg-white p-2 rounded-pill d-flex align-items-center justify-content-between mt-4 mx-auto" style="max-width: 600px;">
+        {{-- <div class="search-box bg-white p-2 rounded-pill d-flex align-items-center justify-content-between mt-4 mx-auto" style="max-width: 600px;">
             <input type="text" class="border-0 flex-grow-1 p-2 ms-3" placeholder="Tìm kiếm chủ đề, bài viết...">
             <button class="btn btn-primary rounded-pill px-4 py-2 fw-semibold"><i class="fas fa-search me-2"></i> Tìm kiếm</button>
-        </div>
+        </div> --}}
     </div>
 </section>
 

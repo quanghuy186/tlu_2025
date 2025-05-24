@@ -2,6 +2,24 @@
 
 @section('content')
 <div class="container">
+
+<section class="page-title">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Danh bạ đơn vị</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('home.index') }}">Trang chủ</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('contact.index') }}">Danh bạ</a></li>
+                        <li class="breadcrumb-item active"><a href="#">Danh bạ đơn vị</a></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
     <!-- Search and Filter Section -->
     <div class="search-filter-container">
         

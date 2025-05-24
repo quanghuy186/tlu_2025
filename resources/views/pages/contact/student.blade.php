@@ -5,11 +5,12 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1>Danh bạ Sinh viên</h1>
+                <h1>Danh bạ sinh viên</h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Danh bạ Sinh viên</li>
+                        <li class="breadcrumb-item"><a href="{{ route('home.index') }}">Trang chủ</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('contact.index') }}">Danh bạ</a></li>
+                        <li class="breadcrumb-item active"><a href="#">Danh bạ sinh viên</a></li>
                     </ol>
                 </nav>
             </div>

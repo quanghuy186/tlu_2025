@@ -22,10 +22,11 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522201',
                 'email' => 'tlu@tlu.edu.vn',
                 'address' => '175 Tây Sơn, Đống Đa, Hà Nội',
-                'level' => 0
+                'level' => 0,
+                'department_type' => 'administrative' // Đơn vị hành chính
             ],
 
-            // Level 1 - Các Khoa
+            // Level 1 - Các Khoa (Đơn vị đào tạo)
             [
                 'id' => 2,
                 'name' => 'Khoa Công trình',
@@ -36,7 +37,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522210',
                 'email' => 'congtrinh@tlu.edu.vn',
                 'address' => 'Tòa nhà A2, Trường Đại học Thủy lợi',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'academic' // Đơn vị đào tạo
             ],
             [
                 'id' => 3,
@@ -48,7 +50,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522215',
                 'email' => 'tainguyennuoc@tlu.edu.vn',
                 'address' => 'Tòa nhà A3, Trường Đại học Thủy lợi',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 4,
@@ -60,7 +63,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522220',
                 'email' => 'cokhi@tlu.edu.vn',
                 'address' => 'Tòa nhà B1, Trường Đại học Thủy lợi',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 5,
@@ -72,7 +76,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522225',
                 'email' => 'diendt@tlu.edu.vn',
                 'address' => 'Tòa nhà B2, Trường Đại học Thủy lợi',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 6,
@@ -84,7 +89,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522230',
                 'email' => 'ktql@tlu.edu.vn',
                 'address' => 'Tòa nhà A5, Trường Đại học Thủy lợi',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 7,
@@ -96,7 +102,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522235',
                 'email' => 'cntt@tlu.edu.vn',
                 'address' => 'Tòa nhà C5, Trường Đại học Thủy lợi',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 8,
@@ -108,7 +115,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522240',
                 'email' => 'hoamt@tlu.edu.vn',
                 'address' => 'Tòa nhà D1, Trường Đại học Thủy lợi',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 9,
@@ -120,7 +128,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522245',
                 'email' => 'luat@tlu.edu.vn',
                 'address' => 'Tòa nhà A1, Trường Đại học Thủy lợi',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 10,
@@ -132,7 +141,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522250',
                 'email' => 'international@tlu.edu.vn',
                 'address' => 'Tòa nhà A6, Trường Đại học Thủy lợi',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 11,
@@ -144,10 +154,309 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522255',
                 'email' => 'ketoan@tlu.edu.vn',
                 'address' => 'Tòa nhà A7, Trường Đại học Thủy lợi',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'academic'
             ],
 
-            // Level 2 - Bộ môn thuộc Khoa Kinh tế và quản lý
+            // Level 2 - Bộ môn thuộc Khoa Công trình
+            [
+                'id' => 41,
+                'name' => 'Bộ môn Kỹ thuật xây dựng công trình thủy',
+                'code' => 'KTXDCTT',
+                'parent_id' => 2,
+                'user_id' => 41,
+                'description' => 'Bộ môn chuyên đào tạo ngành Kỹ thuật xây dựng công trình thủy.',
+                'phone' => '024.38522211',
+                'email' => 'ktxdctt@tlu.edu.vn',
+                'address' => 'Tòa nhà A2, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 42,
+                'name' => 'Bộ môn Xây dựng dân dụng và công nghiệp',
+                'code' => 'XDDVCN',
+                'parent_id' => 2,
+                'user_id' => 42,
+                'description' => 'Bộ môn chuyên đào tạo ngành Xây dựng dân dụng và công nghiệp.',
+                'phone' => '024.38522212',
+                'email' => 'xddvcn@tlu.edu.vn',
+                'address' => 'Tòa nhà A2, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 43,
+                'name' => 'Bộ môn Xây dựng cầu đường',
+                'code' => 'XDCD',
+                'parent_id' => 2,
+                'user_id' => 43,
+                'description' => 'Bộ môn chuyên đào tạo ngành Xây dựng cầu đường.',
+                'phone' => '024.38522213',
+                'email' => 'xdcd@tlu.edu.vn',
+                'address' => 'Tòa nhà A2, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 44,
+                'name' => 'Bộ môn Vật liệu xây dựng',
+                'code' => 'VLXD',
+                'parent_id' => 2,
+                'user_id' => 44,
+                'description' => 'Bộ môn chuyên về vật liệu xây dựng và công nghệ mới.',
+                'phone' => '024.38522214',
+                'email' => 'vlxd@tlu.edu.vn',
+                'address' => 'Tòa nhà A2, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+
+            // Level 2 - Bộ môn thuộc Khoa Kỹ thuật tài nguyên nước
+            [
+                'id' => 45,
+                'name' => 'Bộ môn Thủy văn',
+                'code' => 'TV',
+                'parent_id' => 3,
+                'user_id' => 45,
+                'description' => 'Bộ môn chuyên đào tạo ngành Thủy văn học.',
+                'phone' => '024.38522216',
+                'email' => 'thuyvan@tlu.edu.vn',
+                'address' => 'Tòa nhà A3, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 46,
+                'name' => 'Bộ môn Cấp thoát nước',
+                'code' => 'CTN',
+                'parent_id' => 3,
+                'user_id' => 46,
+                'description' => 'Bộ môn chuyên đào tạo ngành Kỹ thuật cấp thoát nước.',
+                'phone' => '024.38522217',
+                'email' => 'capthoatnuoc@tlu.edu.vn',
+                'address' => 'Tòa nhà A3, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 47,
+                'name' => 'Bộ môn Kỹ thuật tài nguyên nước',
+                'code' => 'KTTN',
+                'parent_id' => 3,
+                'user_id' => 47,
+                'description' => 'Bộ môn chuyên về quản lý và khai thác tài nguyên nước.',
+                'phone' => '024.38522218',
+                'email' => 'kttn@tlu.edu.vn',
+                'address' => 'Tòa nhà A3, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+
+            // Level 2 - Bộ môn thuộc Khoa Cơ khí
+            [
+                'id' => 48,
+                'name' => 'Bộ môn Kỹ thuật cơ khí',
+                'code' => 'KTCK',
+                'parent_id' => 4,
+                'user_id' => 48,
+                'description' => 'Bộ môn chuyên đào tạo ngành Kỹ thuật cơ khí.',
+                'phone' => '024.38522221',
+                'email' => 'ktck@tlu.edu.vn',
+                'address' => 'Tòa nhà B1, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 49,
+                'name' => 'Bộ môn Công nghệ chế tạo máy',
+                'code' => 'CNCTM',
+                'parent_id' => 4,
+                'user_id' => 49,
+                'description' => 'Bộ môn chuyên đào tạo ngành Công nghệ chế tạo máy.',
+                'phone' => '024.38522222',
+                'email' => 'cnctm@tlu.edu.vn',
+                'address' => 'Tòa nhà B1, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 50,
+                'name' => 'Bộ môn Kỹ thuật ô tô',
+                'code' => 'KTOT',
+                'parent_id' => 4,
+                'user_id' => 50,
+                'description' => 'Bộ môn chuyên đào tạo ngành Kỹ thuật ô tô.',
+                'phone' => '024.38522223',
+                'email' => 'ktot@tlu.edu.vn',
+                'address' => 'Tòa nhà B1, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 51,
+                'name' => 'Bộ môn Cơ điện tử',
+                'code' => 'CDT',
+                'parent_id' => 4,
+                'user_id' => 51,
+                'description' => 'Bộ môn chuyên đào tạo ngành Cơ điện tử.',
+                'phone' => '024.38522224',
+                'email' => 'codientu@tlu.edu.vn',
+                'address' => 'Tòa nhà B1, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+
+            // Level 2 - Bộ môn thuộc Khoa Điện - Điện tử
+            [
+                'id' => 52,
+                'name' => 'Bộ môn Kỹ thuật điện',
+                'code' => 'KTD',
+                'parent_id' => 5,
+                'user_id' => 52,
+                'description' => 'Bộ môn chuyên đào tạo ngành Kỹ thuật điện.',
+                'phone' => '024.38522226',
+                'email' => 'ktdien@tlu.edu.vn',
+                'address' => 'Tòa nhà B2, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 53,
+                'name' => 'Bộ môn Điện tử viễn thông',
+                'code' => 'DTVT',
+                'parent_id' => 5,
+                'user_id' => 53,
+                'description' => 'Bộ môn chuyên đào tạo ngành Điện tử viễn thông.',
+                'phone' => '024.38522227',
+                'email' => 'dtvt@tlu.edu.vn',
+                'address' => 'Tòa nhà B2, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 54,
+                'name' => 'Bộ môn Kỹ thuật điều khiển và Tự động hóa',
+                'code' => 'KTDKTDH',
+                'parent_id' => 5,
+                'user_id' => 54,
+                'description' => 'Bộ môn chuyên đào tạo ngành Kỹ thuật điều khiển và tự động hóa.',
+                'phone' => '024.38522228',
+                'email' => 'tudonghua@tlu.edu.vn',
+                'address' => 'Tòa nhà B2, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 55,
+                'name' => 'Bộ môn Robot và Trí tuệ nhân tạo',
+                'code' => 'RTTNT',
+                'parent_id' => 5,
+                'user_id' => 55,
+                'description' => 'Bộ môn chuyên đào tạo ngành Robot và trí tuệ nhân tạo.',
+                'phone' => '024.38522229',
+                'email' => 'robotai@tlu.edu.vn',
+                'address' => 'Tòa nhà B2, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+
+            // Level 2 - Bộ môn thuộc Khoa Công nghệ thông tin
+            [
+                'id' => 56,
+                'name' => 'Bộ môn Công nghệ phần mềm',
+                'code' => 'CNPM',
+                'parent_id' => 7,
+                'user_id' => 56,
+                'description' => 'Bộ môn chuyên đào tạo ngành Công nghệ phần mềm.',
+                'phone' => '024.38522236',
+                'email' => 'cnpm@tlu.edu.vn',
+                'address' => 'Tòa nhà C5, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 57,
+                'name' => 'Bộ môn Hệ thống thông tin',
+                'code' => 'HTTT',
+                'parent_id' => 7,
+                'user_id' => 57,
+                'description' => 'Bộ môn chuyên đào tạo ngành Hệ thống thông tin.',
+                'phone' => '024.38522237',
+                'email' => 'httt@tlu.edu.vn',
+                'address' => 'Tòa nhà C5, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 58,
+                'name' => 'Bộ môn An toàn thông tin',
+                'code' => 'ATTT',
+                'parent_id' => 7,
+                'user_id' => 58,
+                'description' => 'Bộ môn chuyên đào tạo ngành An toàn thông tin.',
+                'phone' => '024.38522238',
+                'email' => 'attt@tlu.edu.vn',
+                'address' => 'Tòa nhà C5, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 59,
+                'name' => 'Bộ môn Khoa học máy tính',
+                'code' => 'KHMT',
+                'parent_id' => 7,
+                'user_id' => 59,
+                'description' => 'Bộ môn chuyên đào tạo ngành Khoa học máy tính.',
+                'phone' => '024.38522239',
+                'email' => 'khmt@tlu.edu.vn',
+                'address' => 'Tòa nhà C5, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+
+            // Level 2 - Bộ môn thuộc Khoa Luật và Lý luận chính trị
+            [
+                'id' => 60,
+                'name' => 'Bộ môn Luật',
+                'code' => 'L',
+                'parent_id' => 9,
+                'user_id' => 60,
+                'description' => 'Bộ môn chuyên đào tạo ngành Luật.',
+                'phone' => '024.38522246',
+                'email' => 'luat_bm@tlu.edu.vn',
+                'address' => 'Tòa nhà A1, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 61,
+                'name' => 'Bộ môn Luật kinh tế',
+                'code' => 'LKT',
+                'parent_id' => 9,
+                'user_id' => 61,
+                'description' => 'Bộ môn chuyên đào tạo ngành Luật kinh tế.',
+                'phone' => '024.38522247',
+                'email' => 'luatkinhte@tlu.edu.vn',
+                'address' => 'Tòa nhà A1, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+            [
+                'id' => 62,
+                'name' => 'Bộ môn Lý luận chính trị',
+                'code' => 'LLCT',
+                'parent_id' => 9,
+                'user_id' => 62,
+                'description' => 'Bộ môn giảng dạy các môn lý luận chính trị.',
+                'phone' => '024.38522248',
+                'email' => 'llct@tlu.edu.vn',
+                'address' => 'Tòa nhà A1, Trường Đại học Thủy lợi',
+                'level' => 2,
+                'department_type' => 'academic'
+            ],
+
+            // Level 2 - Bộ môn thuộc Khoa Kinh tế và quản lý (đã có từ trước)
             [
                 'id' => 12,
                 'name' => 'Bộ môn Thương mại điện tử',
@@ -158,7 +467,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522231',
                 'email' => 'tmdt@tlu.edu.vn',
                 'address' => 'P208 nhà A5',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 13,
@@ -170,7 +480,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522232',
                 'email' => 'dulich@tlu.edu.vn',
                 'address' => 'P209 nhà A5',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 14,
@@ -182,7 +493,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522233',
                 'email' => 'kinhte@tlu.edu.vn',
                 'address' => 'P210 nhà A5',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 15,
@@ -194,7 +506,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522234',
                 'email' => 'ktxd@tlu.edu.vn',
                 'address' => 'P211 nhà A5',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 16,
@@ -206,7 +519,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522235',
                 'email' => 'ptkn@tlu.edu.vn',
                 'address' => 'P214 nhà A5',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 17,
@@ -218,7 +532,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522236',
                 'email' => 'kinhteaso@tlu.edu.vn',
                 'address' => 'P202 nhà A5',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 18,
@@ -230,7 +545,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522237',
                 'email' => 'logistics@tlu.edu.vn',
                 'address' => 'P203-204-205 nhà A5',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 19,
@@ -242,7 +558,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522238',
                 'email' => 'ttktql@tlu.edu.vn',
                 'address' => 'P212-213 nhà A5',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
 
             // Level 2 - Bộ môn thuộc Khoa Hóa và Môi trường
@@ -256,7 +573,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522241',
                 'email' => 'moitruong@tlu.edu.vn',
                 'address' => 'Tòa nhà D1, Trường Đại học Thủy lợi',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 21,
@@ -268,7 +586,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522242',
                 'email' => 'hoahoc@tlu.edu.vn',
                 'address' => 'Tòa nhà D1, Trường Đại học Thủy lợi',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 22,
@@ -280,7 +599,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522243',
                 'email' => 'sinhhoc@tlu.edu.vn',
                 'address' => 'Tòa nhà D1, Trường Đại học Thủy lợi',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
 
             // Level 2 - Bộ môn thuộc Trung tâm Đào tạo quốc tế
@@ -294,7 +614,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522251',
                 'email' => 'english@tlu.edu.vn',
                 'address' => 'Tòa nhà A6, Trường Đại học Thủy lợi',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 24,
@@ -306,7 +627,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522252',
                 'email' => 'chinese@tlu.edu.vn',
                 'address' => 'Tòa nhà A6, Trường Đại học Thủy lợi',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
 
             // Level 2 - Bộ môn thuộc Khoa Kế toán và Kinh doanh
@@ -320,7 +642,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522256',
                 'email' => 'ketoan_bm@tlu.edu.vn',
                 'address' => 'Tòa nhà A7, Trường Đại học Thủy lợi',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 26,
@@ -332,7 +655,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522257',
                 'email' => 'kiemtoan@tlu.edu.vn',
                 'address' => 'Tòa nhà A7, Trường Đại học Thủy lợi',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 27,
@@ -344,7 +668,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522258',
                 'email' => 'taichinh@tlu.edu.vn',
                 'address' => 'Tòa nhà A7, Trường Đại học Thủy lợi',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
             [
                 'id' => 28,
@@ -356,10 +681,11 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522259',
                 'email' => 'qtkd@tlu.edu.vn',
                 'address' => 'Tòa nhà A7, Trường Đại học Thủy lợi',
-                'level' => 2
+                'level' => 2,
+                'department_type' => 'academic'
             ],
 
-            // Level 1 - Các Phòng ban hành chính
+            // Level 1 - Các Phòng ban hành chính (Đơn vị hành chính)
             [
                 'id' => 29,
                 'name' => 'Phòng Hành chính - Tổng hợp',
@@ -370,7 +696,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38522201',
                 'email' => 'phonghcth@tlu.edu.vn',
                 'address' => 'P.200, P.203, P.204, P.111, P.113 nhà A1',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'administrative'
             ],
             [
                 'id' => 30,
@@ -382,7 +709,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.35633086',
                 'email' => 'p2@tlu.edu.vn',
                 'address' => 'P.209, P.211, P.213 nhà A1',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'administrative'
             ],
             [
                 'id' => 31,
@@ -394,7 +722,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38521441',
                 'email' => 'daotao@tlu.edu.vn',
                 'address' => 'P.130, P.132, P.134 nhà A4',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'administrative'
             ],
             [
                 'id' => 32,
@@ -406,7 +735,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.35643417',
                 'email' => 'phongktkdcl@tlu.edu.vn',
                 'address' => 'P.115, P.104 nhà A1',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'administrative'
             ],
             [
                 'id' => 33,
@@ -418,7 +748,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.35639577',
                 'email' => 'p7@tlu.edu.vn',
                 'address' => 'P.110, P.112, P.116, P.118 nhà A1',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'administrative'
             ],
             [
                 'id' => 34,
@@ -430,7 +761,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.38533083',
                 'email' => 'kncn@tlu.edu.vn',
                 'address' => 'P.103, P.105, P.508, P.510 nhà A1',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'administrative'
             ],
             [
                 'id' => 35,
@@ -442,7 +774,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.35634602',
                 'email' => 'phongtaivu@tlu.edu.vn',
                 'address' => 'P.215, P.217, P.219, P.221 nhà A1',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'administrative'
             ],
             [
                 'id' => 36,
@@ -454,7 +787,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.35635671',
                 'email' => 'quantri@tlu.edu.vn',
                 'address' => 'P.101, P.102, P.103, P.104 nhà A5; P.109 nhà A1',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'administrative'
             ],
             [
                 'id' => 37,
@@ -466,7 +800,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.35643058',
                 'email' => 'banquanly_ktx@tlu.edu.vn',
                 'address' => 'P.303, P.305 KTX K1; Nhà 2, Nhà 3, Nhà 4',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'administrative'
             ],
             [
                 'id' => 38,
@@ -478,7 +813,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.35635915',
                 'email' => 'ttth@tlu.edu.vn',
                 'address' => 'Phòng trực nhà C5; P.204 nhà C5; P.104 Tòa nhà A45',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'administrative'
             ],
             [
                 'id' => 39,
@@ -490,7 +826,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.35640068',
                 'email' => 'thuvien@tlu.edu.vn',
                 'address' => 'P.207, P.205, P.305 Tòa nhà A45',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'administrative'
             ],
             [
                 'id' => 40,
@@ -502,7 +839,8 @@ class DepartmentSeeder extends Seeder
                 'phone' => '024.35632839',
                 'email' => 'tramyte@tlu.edu.vn',
                 'address' => 'KTX Nhà 4',
-                'level' => 1
+                'level' => 1,
+                'department_type' => 'administrative'
             ],
         ];
 
@@ -518,6 +856,7 @@ class DepartmentSeeder extends Seeder
                 'email' => $department['email'],
                 'address' => $department['address'],
                 'level' => $department['level'],
+                'department_type' => $department['department_type'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

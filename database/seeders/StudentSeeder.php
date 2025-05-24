@@ -21,46 +21,69 @@ class StudentSeeder extends Seeder
         $students = [];
         $userHasRoles = [];
         
-        $userId = DB::table('users')->max('id') + 1; // Bắt đầu từ ID tiếp theo
+        // Bắt đầu từ user_id = 1500 (sau teachers)
+        $userId = 1500;
         $studentId = 1;
         
-        // Tạo danh sách mã sinh viên duy nhất (10 chữ số)
+        // Tạo danh sách mã sinh viên duy nhất
         $usedStudentCodes = [];
         
+        // Danh sách họ và tên phổ biến Việt Nam
+        $lastNames = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Vũ', 'Võ', 'Đặng', 'Bùi', 'Đỗ', 'Hồ', 'Ngô', 'Dương', 'Lý'];
+        $maleFirstNames = ['Anh', 'Bảo', 'Cường', 'Dũng', 'Đức', 'Hải', 'Hoàng', 'Hùng', 'Khang', 'Long', 'Minh', 'Nam', 'Phúc', 'Quang', 'Sơn', 'Thành', 'Tuấn', 'Việt'];
+        $femaleFirstNames = ['An', 'Anh', 'Chi', 'Dung', 'Giang', 'Hà', 'Hạnh', 'Hương', 'Lan', 'Linh', 'Mai', 'My', 'Nga', 'Phương', 'Thảo', 'Thu', 'Trang', 'Vy'];
+        $middleNames = ['Văn', 'Thị', 'Đức', 'Minh', 'Hoàng', 'Thanh', 'Thành', 'Quốc', 'Xuân', 'Thu', 'Hữu', 'Công', 'Bảo', 'Ngọc'];
+        
+        $totalStudents = 0;
+        
         foreach ($classes as $class) {
-            // Mỗi lớp có từ 20-30 sinh viên (trung bình 25)
-            $numberOfStudents = rand(1, 2);
+            // Số lượng sinh viên theo loại lớp và năm học
+            $numberOfStudents = $this->getStudentCountByClass($class);
             
             // Lấy năm nhập học từ academic_year (ví dụ: "2021-2025" -> 2021)
             $enrollmentYear = (int) substr($class->academic_year, 0, 4);
             
+            // Lấy mã khóa từ class_code (ví dụ: "63IT01" -> 63)
+            $courseCode = substr($class->class_code, 0, 2);
+            
             for ($i = 1; $i <= $numberOfStudents; $i++) {
-                $firstName = $faker->firstName;
-                $lastName = $faker->lastName;
-                $fullName = $lastName . ' ' . $firstName;
+                // Random giới tính
+                $isMale = $faker->boolean(55); // 55% nam
                 
-                // Tạo mã sinh viên 10 chữ số duy nhất
+                // Tạo tên Việt Nam
+                $lastName = $faker->randomElement($lastNames);
+                $middleName = $isMale ? $faker->randomElement(['Văn', 'Đức', 'Minh', 'Quốc', 'Hoàng', 'Thanh', 'Hữu', 'Công']) 
+                                      : $faker->randomElement(['Thị', 'Thu', 'Ngọc', 'Minh', 'Hoàng', 'Thanh', 'Bảo']);
+                $firstName = $isMale ? $faker->randomElement($maleFirstNames) : $faker->randomElement($femaleFirstNames);
+                
+                $fullName = $lastName . ' ' . $middleName . ' ' . $firstName;
+                
+                // Tạo mã sinh viên duy nhất theo khóa và ngành
                 do {
-                    $studentCode = $this->generateUniqueStudentCode($enrollmentYear);
+                    $studentCode = $this->generateStudentCode($courseCode, $class->department_id, count($usedStudentCodes) + 1);
                 } while (in_array($studentCode, $usedStudentCodes));
                 
                 $usedStudentCodes[] = $studentCode;
-                $email = $studentCode . '@e.tlu.edu.vn';
+                $email = strtolower($studentCode) . '@e.tlu.edu.vn';
+                
+                // Tạo số điện thoại Việt Nam hợp lệ
+                $phonePrefix = $faker->randomElement(['03', '05', '07', '08', '09']);
+                $phone = $phonePrefix . $faker->numerify('#######');
                 
                 // Tạo user
                 $users[] = [
                     'id' => $userId,
                     'name' => $fullName,
                     'email' => $email,
-                    'email_verified_at' => $faker->boolean(80) ? now() : null,
-                    'password' => Hash::make('password123'), // Mật khẩu mặc định
-                    'phone' => $faker->phoneNumber,
+                    'email_verified_at' => $faker->boolean(85) ? now() : null,
+                    'password' => Hash::make('password123'),
+                    'phone' => $phone,
                     'avatar' => null,
-                    'last_login' => $faker->boolean(60) ? $faker->dateTimeBetween('-30 days', 'now') : null,
-                    'is_active' => $faker->boolean(90), // 90% sinh viên active
+                    'last_login' => $faker->boolean(70) ? $faker->dateTimeBetween('-7 days', 'now') : null,
+                    'is_active' => $this->getActiveStatus($enrollmentYear),
                     'password_reset_token' => null,
                     'password_reset_expiry' => null,
-                    'email_verified' => $faker->boolean(80), // 80% đã verify email
+                    'email_verified' => $faker->boolean(85),
                     'verification_token' => null,
                     'verification_token_expiry' => null,
                     'verification_resent_count' => 0,
@@ -88,40 +111,108 @@ class StudentSeeder extends Seeder
                 ];
                 
                 $userId++;
+                $totalStudents++;
+            }
+            
+            if ($totalStudents % 100 == 0) {
+                echo "Đã tạo $totalStudents sinh viên...\n";
             }
         }
         
-        // Insert dữ liệu theo batch để tránh vấn đề memory
+        // Insert dữ liệu theo batch
+        echo "\nBắt đầu insert dữ liệu...\n";
+        
         echo "Inserting " . count($users) . " users...\n";
         $userChunks = array_chunk($users, 500);
-        foreach ($userChunks as $chunk) {
+        foreach ($userChunks as $index => $chunk) {
             DB::table('users')->insert($chunk);
+            echo "  Batch " . ($index + 1) . "/" . count($userChunks) . " completed\n";
         }
         
         echo "Inserting " . count($students) . " students...\n";
         $studentChunks = array_chunk($students, 500);
-        foreach ($studentChunks as $chunk) {
+        foreach ($studentChunks as $index => $chunk) {
             DB::table('students')->insert($chunk);
+            echo "  Batch " . ($index + 1) . "/" . count($studentChunks) . " completed\n";
         }
         
         echo "Inserting " . count($userHasRoles) . " user roles...\n";
         $roleChunks = array_chunk($userHasRoles, 500);
-        foreach ($roleChunks as $chunk) {
+        foreach ($roleChunks as $index => $chunk) {
             DB::table('user_has_roles')->insert($chunk);
+            echo "  Batch " . ($index + 1) . "/" . count($roleChunks) . " completed\n";
         }
         
-        echo "Successfully created " . count($students) . " students for " . count($classes) . " classes\n";
+        echo "\n✅ Successfully created " . count($students) . " students for " . count($classes) . " classes\n";
+        echo "📊 Trung bình: " . round(count($students) / count($classes), 1) . " sinh viên/lớp\n";
     }
     
     /**
-     * Tạo mã sinh viên 10 chữ số duy nhất
+     * Xác định số lượng sinh viên theo lớp
      */
-    private function generateUniqueStudentCode($enrollmentYear)
+    private function getStudentCountByClass($class)
     {
-        // 2 chữ số cuối của năm + 8 chữ số ngẫu nhiên
-        $yearSuffix = substr($enrollmentYear, -2);
-        $randomNumber = str_pad(rand(10000000, 99999999), 8, '0', STR_PAD_LEFT);
+        $classCode = $class->class_code;
         
-        return $yearSuffix . $randomNumber;
+        // Các ngành hot có nhiều sinh viên hơn
+        $popularMajors = ['IT', 'BA', 'CIVENG', 'ELECENG', 'ACC', 'FINBAN', 'SE', 'ECOM'];
+        $mediumMajors = ['MECHENG', 'ENVENG', 'LAW', 'HYDROENG', 'WATRENG', 'AUTOENG'];
+        
+        foreach ($popularMajors as $major) {
+            if (strpos($classCode, $major) !== false) {
+                return rand(35, 45); // 35-45 sinh viên
+            }
+        }
+        
+        foreach ($mediumMajors as $major) {
+            if (strpos($classCode, $major) !== false) {
+                return rand(25, 35); // 25-35 sinh viên
+            }
+        }
+        
+        // Các ngành khác
+        return rand(20, 30); // 20-30 sinh viên
+    }
+    
+    /**
+     * Tạo mã sinh viên theo format chuẩn
+     */
+    private function generateStudentCode($courseCode, $departmentId, $sequence)
+    {
+        // Format: [Khóa][Mã ngành][Số thứ tự]
+        // Ví dụ: 63IT0001, 64BA0123
+        
+        $majorCodes = [
+            // Mapping department_id to major code
+            41 => 'HY', 42 => 'CE', 43 => 'TE', 44 => 'CM',
+            45 => 'HY', 46 => 'WS', 47 => 'WR',
+            48 => 'ME', 49 => 'MT', 50 => 'AU', 51 => 'MC',
+            52 => 'EE', 53 => 'ET', 54 => 'AT', 55 => 'RB',
+            56 => 'SE', 57 => 'IS', 58 => 'IS', 59 => 'IT',
+            12 => 'EC', 13 => 'TM', 14 => 'EN', 15 => 'CE',
+            17 => 'DE', 18 => 'LG', 20 => 'EV', 21 => 'CH',
+            22 => 'BT', 23 => 'EL', 24 => 'CN', 25 => 'AC',
+            26 => 'AU', 27 => 'FN', 28 => 'BA', 60 => 'LW', 61 => 'EL'
+        ];
+        
+        $majorCode = $majorCodes[$departmentId] ?? 'GE';
+        $sequenceNumber = str_pad($sequence, 4, '0', STR_PAD_LEFT);
+        
+        return $courseCode . $majorCode . $sequenceNumber;
+    }
+    
+    /**
+     * Xác định trạng thái active dựa trên năm nhập học
+     */
+    private function getActiveStatus($enrollmentYear)
+    {
+        $currentYear = 2024;
+        $yearsStudied = $currentYear - $enrollmentYear;
+        
+        // Sinh viên năm 4 có 95% active (một số đã tốt nghiệp sớm)
+        if ($yearsStudied >= 4) return rand(1, 100) <= 95;
+        
+        // Sinh viên các năm khác 98% active
+        return rand(1, 100) <= 98;
     }
 }
