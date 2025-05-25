@@ -211,34 +211,34 @@
             
 {{-- Phân trang --}}
 @if ($departments->hasPages())
-<div class="pagination-container">
-    <ul class="pagination">
-        {{-- Liên kết trang trước --}}
-        @if ($departments->onFirstPage())
-            <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
-        @else
-            <li><a href="#" class="page-link" data-page="{{ $departments->currentPage() - 1 }}">
-                <i class="fas fa-angle-double-left"></i>
-            </a></li>
-        @endif
-
-        {{-- Các phần tử phân trang --}}
-        @foreach ($departments->getUrlRange(1, $departments->lastPage()) as $page => $url)
-            @if ($page == $departments->currentPage())
-                <li><a href="#" class="active">{{ $page }}</a></li>
+    <div class="pagination-container">
+        <ul class="pagination">
+            {{-- Liên kết trang trước --}}
+            @if ($departments->onFirstPage())
+                <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
             @else
-                <li><a href="#" class="page-link" data-page="{{ $page }}">{{ $page }}</a></li>
+                <li><a href="#" class="page-link" data-page="{{ $departments->currentPage() - 1 }}">
+                    <i class="fas fa-angle-double-left"></i>
+                </a></li>
             @endif
-        @endforeach
 
-        {{-- Liên kết trang tiếp theo --}}
-        @if ($departments->hasMorePages())
-            <li><a href="#" class="page-link" data-page="{{ $departments->currentPage() + 1 }}">
-                <i class="fas fa-angle-double-right"></i>
-            </a></li>
-        @else
-            <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
-        @endif
-    </ul>
-</div>
+            {{-- Các phần tử phân trang --}}
+            @foreach ($departments->getUrlRange(1, $departments->lastPage()) as $page => $url)
+                @if ($page == $departments->currentPage())
+                    <li><a href="#" class="active">{{ $page }}</a></li>
+                @else
+                    <li><a href="#" class="page-link" data-page="{{ $page }}">{{ $page }}</a></li>
+                @endif
+            @endforeach
+
+            {{-- Liên kết trang tiếp theo --}}
+            @if ($departments->hasMorePages())
+                <li><a href="#" class="page-link" data-page="{{ $departments->currentPage() + 1 }}">
+                    <i class="fas fa-angle-double-right"></i>
+                </a></li>
+            @else
+                <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
+            @endif
+        </ul>
+    </div>
 @endif

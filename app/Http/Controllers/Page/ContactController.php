@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Page;
 use App\Http\Controllers\Controller;
 use App\Models\ClassRoom;
 use App\Models\Department;
+use App\Models\Notification;
 use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -13,8 +14,10 @@ use Illuminate\Support\Facades\DB;
 class ContactController extends Controller
 {
     public function index(){
-
-        return view('pages.contact');
+        $notification_latests = Notification::with(['user', 'category'])
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(4);
+        return view('pages.contact')->with('notification_latests', $notification_latests);
     }
 
     public function department(){

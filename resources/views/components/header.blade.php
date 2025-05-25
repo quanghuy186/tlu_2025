@@ -31,6 +31,10 @@
         --bg-color: #f5f7fa;
         --border-color: #e9ecef;
     }
+    .btn-facebook { background: #3b5998; }
+    .btn-twitter { background: #1da1f2; }
+    .btn-email { background: #ea4335; }
+    .btn-copy { background: #6c757d; }
 
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

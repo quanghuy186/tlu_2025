@@ -228,7 +228,6 @@ class ForumController extends Controller
     public function showCategory($slug)
     {
         $category = ForumCategory::where('slug', $slug)->firstOrFail();
-        
         // Get posts for this category and its children (if any)
         $postsQuery = ForumPost::with(['author', 'category', 'comments'])
             ->where('status', 'approved');

@@ -86,7 +86,7 @@
             <div class="row">
                 @if(count($notification_latests) > 0)
                     @foreach ($notification_latests as $item)
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 my-1">
                             <div class="announcement-card">
                                 <div class="card-body">
                                     <div class="date">

@@ -88,83 +88,46 @@
                         <div class="section-title text-center">
                             <h2>Thông báo mới nhất</h2>
                             <p>Cập nhật những thông tin mới nhất từ hệ thống danh bạ điện tử Đại học Thủy Lợi</p>
-
                         </div>
-
-
 
                         <div class="row">
-                            <div class="col-lg-6">
-                                <div class="announcement-card">
-                                    <div class="card-body">
-                                        <div class="date">
-                                            <div class="day">05</div>
-                                            <div class="month">MAR</div>
+                            @if(count($notification_latests) > 0)
+                                @foreach ($notification_latests as $item)
+                                    <div class="col-lg-6 my-1">
+                                        <div class="announcement-card">
+                                            <div class="card-body">
+                                                <div class="date">
+                                                    <div class="day">{{ date('d', strtotime($item->created_at ?? now())) }}</div>
+                                                    <div class="month">{{ strtoupper(date('M', strtotime($item->created_at ?? now()))) }}</div>
+                                                </div>
+                                                <h5>{{ $item->title ?? 'Thông báo cập nhật hệ thống danh bạ điện tử' }}</h5>
+                                                <p>{{ $item->content ?? 'Hệ thống danh bạ điện tử Trường Đại học Thủy Lợi sẽ được nâng cấp vào ngày 10/03/2025. Trong thời gian cập nhật, hệ thống sẽ tạm ngưng hoạt động từ 22:00 đến 23:59.' }}</p>
+                                                <div class="meta">
+                                                    <i class="fas fa-user me-1"></i> {{ $item->author ?? 'Ban Quản trị' }}
+                                                </div>
+                                            </div>
                                         </div>
-                                        <h5>Thông báo cập nhật hệ thống danh bạ điện tử</h5>
-                                        <p>Hệ thống danh bạ điện tử Trường Đại học Thủy Lợi sẽ được nâng cấp vào ngày 10/03/2025. Trong thời gian cập nhật, hệ thống sẽ tạm ngưng hoạt động từ 22:00 đến 23:59.</p>
-                                        <div class="meta">
-                                            <i class="fas fa-user me-1"></i> Ban Quản trị
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="col-12">
+                                    <div class="empty-state-card">
+                                        <div class="card-body text-center py-5">
+                                            <div class="empty-icon mb-3">
+                                                <i class="bi bi-bell-slash" style="font-size: 3rem; color: #6c757d;"></i>
+                                            </div>
+                                            <h5 class="text-muted">Chưa có thông báo nào</h5>
+                                            <p class="text-muted mb-0">Hiện tại chưa có thông báo mới nào được đăng tải.</p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="announcement-card">
-                                    <div class="card-body">
-                                        <div class="date">
-                                            <div class="day">25</div>
-                                            <div class="month">FEB</div>
-                                        </div>
-                                        <h5>Cảnh báo bảo mật thông tin cá nhân</h5>
-                                        <p>Gần đây xuất hiện một số trường hợp lừa đảo qua điện thoại. Nhà trường khuyến cáo cán bộ, giảng viên và sinh viên cẩn trọng khi chia sẻ thông tin cá nhân.</p>
-                                        <div class="meta">
-                                            <i class="fas fa-user me-1"></i> Ban Giám hiệu
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="col-lg-6">
-                                <div class="announcement-card">
-                                    <div class="card-body">
-                                        <div class="date">
-                                            <div class="day">28</div>
-                                            <div class="month">FEB</div>
-                                        </div>
-                                        <h5>Hướng dẫn sử dụng danh bạ điện tử</h5>
-                                        <p>Phòng Công nghệ thông tin đã cập nhật tài liệu hướng dẫn sử dụng hệ thống danh bạ điện tử mới. Mời các bạn sinh viên và cán bộ giảng viên tham khảo.</p>
-                                        <div class="meta">
-                                            <i class="fas fa-user me-1"></i> Phòng CNTT
-                                        </div>
-                                    </div>
-                            </div>
+                            @endif
                         </div>
-
-                        <div class="col-lg-6">
-                            <div class="announcement-card">
-                                <div class="card-body">
-                                    <div class="date">
-                                        <div class="day">05</div>
-                                        <div class="month">MAR</div>
-                                    </div>
-                                    <h5>Thông báo cập nhật hệ thống danh bạ điện tử</h5>
-                                    <p>Hệ thống danh bạ điện tử Trường Đại học Thủy Lợi sẽ được nâng cấp vào ngày 10/03/2025. Trong thời gian cập nhật, hệ thống sẽ tạm ngưng hoạt động từ 22:00 đến 23:59.</p>
-                                    <div class="meta">
-                                        <i class="fas fa-user me-1"></i> Ban Quản trị
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-            </div>
-        </div>
+                    </div>
+                </div>
 
             <div class="text-center mt-4">
-                <a href="#" class="btn btn-outline-primary">
+                <a href="{{ route('notification.index') }}" class="btn btn-outline-primary">
                     <i class="fas fa-bell me-2"></i> Xem tất cả thông báo
                 </a>
             </div>

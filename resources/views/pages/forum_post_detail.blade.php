@@ -118,165 +118,36 @@
                                 <i class="fas fa-flag me-1"></i> Báo cáo
                             </button>
                         </div> --}}
+
+                        
                     </div>
+
+                    <div class="share-section">
+                            <h5>Chia sẻ bài viết:</h5>
+                            <div class="share-buttons">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}" 
+                                target="_blank" class="btn btn-facebook">
+                                    <i class="fab fa-facebook-f text-white"></i> Facebook
+                                </a>
+                                <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}&text={{ urlencode($post->title) }}" 
+                                target="_blank" class="btn btn-twitter">
+                                    <i class="fab fa-twitter"></i> Twitter
+                                </a>
+                                <a href="mailto:?subject={{ urlencode($post->title) }}&body={{ urlencode(request()->url()) }}" 
+                                class="btn btn-email">
+                                    <i class="far fa-envelope"></i> Email
+                                </a>
+                                <button onclick="copyToClipboard('{{ request()->url() }}')" class="btn btn-copy">
+                                    <i class="far fa-copy"></i> Copy Link
+                                </button>
+                            </div>
+                    </div>
+
                 </div>
             </div>
             
             @include('partials.forum_comments')
-            <!-- Comments Section -->
-            {{-- <div class="card mb-4">
-                <div class="card-header">
-                    <i class="far fa-comments me-2"></i> Bình luận ({{ count($post->comments) }})
-                </div>
-                <div class="card-body">
-                    @auth
-                        <form action="{{ route('forum.comment.store') }}" method="POST" class="mb-4">
-
-                            @csrf
-                            <input type="hidden" name="post_id" value="{{ $post->id }}">
-                            <div class="mb-3">
-                                <textarea class="form-control" name="content" rows="3" placeholder="Viết bình luận của bạn..." required></textarea>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="comment_is_anonymous" name="is_anonymous">
-                                    <label class="form-check-label" for="comment_is_anonymous">
-                                        Bình luận ẩn danh
-                                    </label>
-                                </div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="far fa-paper-plane me-1"></i> Gửi bình luận
-                                </button>
-                            </div>
-                        </form>
-                    @else
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i> Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để bình luận.
-                        </div>
-                    @endauth
-                    
-                    <!-- Comments List -->
-                    <div class="comments-list">
-                        @forelse($post->comments as $comment)
-                            <div class="comment-item p-3 border-bottom">
-                                <div class="d-flex">
-                                    @if($comment->is_anonymous)
-                                        <span class="avatar bg-secondary text-white rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                            <i class="fas fa-user"></i>
-                                        </span>
-                                        <div class="flex-grow-1">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="fw-bold">Ẩn danh</div>
-                                                <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
-                                            </div>
-                                    @else
-                                        @if($comment->author->avatar)
-                                            <img src="{{ asset('storage/avatars/'.$comment->author->avatar) }}" 
-                                                alt="{{ $comment->author->name }}" class="rounded-circle me-2" 
-                                                style="width: 32px; height: 32px; object-fit: cover;">
-                                        @else
-                                            <span class="avatar bg-primary text-white rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                                {{ strtoupper(substr($comment->author->name, 0, 1)) }}
-                                            </span>
-                                        @endif
-                                        <div class="flex-grow-1">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="fw-bold">{{ $comment->author->name }}</div>
-                                                <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
-                                            </div>
-                                    @endif
-                                    <p class="mb-1 mt-2">{{ $comment->content }}</p>
-                                    
-                                    <!-- Comment Actions -->
-                                    <div class="comment-actions mt-2">
-                                        <button class="btn btn-sm btn-link text-decoration-none p-0 reply-btn" data-comment-id="{{ $comment->id }}">
-                                            <i class="far fa-comment-dots"></i> Trả lời
-                                        </button>
-                                        
-                                        @if(auth()->check() && (auth()->id() == $comment->user_id || auth()->user()->isAdmin()))
-                                            <button class="btn btn-sm btn-link text-decoration-none text-danger p-0 ms-3 delete-comment-btn" data-comment-id="{{ $comment->id }}">
-                                                <i class="far fa-trash-alt"></i> Xóa
-                                            </button>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Reply Form (hidden by default) -->
-                            <div class="reply-form ps-5 mt-2 mb-3 d-none" id="replyForm{{ $comment->id }}">
-                                @auth
-                                    <form action="{{ route('forum.comment.reply') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="post_id" value="{{ $post->id }}">
-                                        <input type="hidden" name="parent_id" value="{{ $comment->id }}">
-                                        <div class="mb-2">
-                                            <textarea class="form-control form-control-sm" name="content" rows="2" placeholder="Viết phản hồi của bạn..." required></textarea>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="reply_is_anonymous_{{ $comment->id }}" name="is_anonymous">
-                                                <label class="form-check-label" for="reply_is_anonymous_{{ $comment->id }}">
-                                                    Phản hồi ẩn danh
-                                                </label>
-                                            </div>
-                                            <button type="submit" class="btn btn-sm btn-primary">
-                                                <i class="far fa-paper-plane me-1"></i> Gửi
-                                            </button>
-                                        </div>
-                                    </form>
-                                @else
-                                    <div class="alert alert-info py-2">
-                                        <i class="fas fa-info-circle me-2"></i> Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để phản hồi.
-                                    </div>
-                                @endauth
-                            </div>
-                            
-                            <!-- Nested Replies -->
-                            @if($comment->replies && count($comment->replies) > 0)
-                                <div class="replies-list ps-4 ms-4 border-start">
-                                    @foreach($comment->replies as $reply)
-                                        <div class="reply-item p-2">
-                                            <div class="d-flex">
-                                                @if($reply->is_anonymous)
-                                                    <span class="avatar bg-secondary text-white rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
-                                                        <i class="fas fa-user"></i>
-                                                    </span>
-                                                    <div class="flex-grow-1">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div class="fw-bold">Ẩn danh</div>
-                                                            <small class="text-muted">{{ $reply->created_at->diffForHumans() }}</small>
-                                                        </div>
-                                                @else
-                                                    @if($reply->author->avatar)
-                                                        <img src="{{ asset('storage/avatars/'.$reply->author->avatar) }}" 
-                                                            alt="{{ $reply->author->name }}" class="rounded-circle me-2" 
-                                                            style="width: 24px; height: 24px; object-fit: cover;">
-                                                    @else
-                                                        <span class="avatar bg-primary text-white rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
-                                                            {{ strtoupper(substr($reply->author->name, 0, 1)) }}
-                                                        </span>
-                                                    @endif
-                                                    <div class="flex-grow-1">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div class="fw-bold">{{ $reply->author->name }}</div>
-                                                            <small class="text-muted">{{ $reply->created_at->diffForHumans() }}</small>
-                                                        </div>
-                                                @endif
-                                                <p class="mb-1 mt-1 small">{{ $reply->content }}</p>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
-                        @empty
-                            <div class="text-center py-4">
-                                <i class="far fa-comment-dots fs-4 mb-3 text-muted"></i>
-                                <p class="text-muted">Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</p>
-                            </div>
-                        @endforelse
-                    </div>
-                </div>
-            </div> --}}
+           
         </div>
         
         <!-- Sidebar -->
@@ -442,37 +313,30 @@
 </script>
 @endsection
 
-<!-- Now, update the existing index page to link to post details -->
-<!-- Add this to the topic-item in index.blade.php -->
-{{-- 
-<div class="topic-item">
-    <div class="topic-icon">
-        <i class="fas fa-file-alt"></i>
-    </div>
-    <div class="topic-content">
-        <a href="{{ route('forum.post.show', $post->id) }}" class="topic-title">{{ $post->title }}</a>
-        <div class="topic-info">
-            <span><i class="fas fa-user me-1"></i> {{ $post->is_anonymous == 1 ? "Ẩn danh" : $post->author->name}}</span>
-            <span class="ms-3"><i class="far fa-clock me-1"></i> {{ $post->created_at->diffForHumans() }}</span>
-        </div>
-    </div>
-    <div class="topic-stats">
-        <div class="stat-item">
-            <div class="stat-count">{{ $post->comments_count ?? $post->comments->count() }}</div>
-            <div class="stat-label">Trả lời</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-count">{{ $post->views_count ?? 0 }}</div>
-            <div class="stat-label">Lượt xem</div>
-        </div>
-    </div>
-</div> --}}
+<style>
+.share-section {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 30px;
+}
 
-<!-- Update the "Read More" button in your latest posts section -->
-<!-- Replace this in your index.blade.php -->
+.share-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
 
-{{-- <div class="post-body">
-    <h5 class="post-title">{{ $p->title }}</h5>
-    <p class="post-text">{{ Str::limit($p->content, 150) }}</p>
-    <a href="{{ route('forum.post.show', $p->id) }}" class="btn btn-sm btn-outline-primary">Đọc tiếp <i class="fas fa-arrow-right ms-1"></i></a>
-</div> --}}
+.share-buttons .btn {
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+</style>

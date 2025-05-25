@@ -23,6 +23,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Page\ContactController;
 use App\Http\Controllers\Home\IndexController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Page\NotifycationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -210,30 +211,6 @@ Route::get('/chat/start/{userId}', [MessageController::class, 'startChat'])->nam
 
 Broadcast::routes(['middleware' => ['auth:web']]);
 
-// routes/web.php
-// Route::get('/direct-pusher', function () {
-//     $options = [
-//         'cluster' => env('PUSHER_APP_CLUSTER'),
-//         'useTLS' => true
-//     ];
-//     $pusher = new \Pusher\Pusher(
-//         env('PUSHER_APP_KEY'),
-//         env('PUSHER_APP_SECRET'),
-//         env('PUSHER_APP_ID'),
-//         $options
-//     );
-
-//     $data['message'] = 'Thử nghiệm trực tiếp từ Pusher API';
-//     $pusher->trigger('test-channel', 'test-event', $data);
-
-//     return "Đã gửi sự kiện trực tiếp qua Pusher API. Kiểm tra Debug Console.";
-// });
-
-// Route::post('/test-event', function () {
-//     event(new \App\Events\TestEvent('Đây là tin nhắn thử nghiệm'));
-//     return response()->json(['success' => true]);
-// });
-
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 Route::post('/forum', [ForumController::class, 'post'])->name('forum.post');
 Route::get('/forum/post/{id}', [ForumController::class, 'showPost'])->name('forum.post.show');
@@ -243,8 +220,6 @@ Route::put('/forum/update', [ForumController::class, 'update'])->name('forum.pos
 Route::get('/api/forum/posts/{id}', [ForumController::class, 'getPostData']);
 // Route cho trang danh mục theo slug
 Route::get('/forum/category/{slug}', [ForumController::class, 'showCategory'])->name('forum.category');
-
-
 
 Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
     // Routes cho danh mục diễn đàn
@@ -303,6 +278,22 @@ Route::post('/forum/post/{id}/like', [App\Http\Controllers\Page\ForumController:
 Route::get('/forum/post/{id}/like-info', [App\Http\Controllers\Page\ForumController::class, 'getLikeInfo'])->name('forum.post.like.info');
 
 // Route::get('/notification', [UserNotificationController::class, 'index'])->name('notification.index');
-Route::get('/notification', [PageIndexController::class, 'notification'])->name('notification.index');
+// Route::get('/notification', [NotifycationController::class, 'notification'])->name('notification.index');
 
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('notification')->name('notification.')->group(function () {
+        Route::get('/', action: [NotifycationController::class, 'notification'])->name('index');
+        Route::get('/create', [NotifycationController::class, 'create'])->name('create');
+        Route::post('/', [NotifycationController::class, 'store'])->name('store');
+        Route::get('/{id}', [NotifycationController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [NotifycationController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [NotifycationController::class, 'update'])->name('update');
+        Route::delete('/{id}', [NotifycationController::class, 'destroy'])->name('destroy');
+
+         Route::get('/category/{category_id}', [NotifycationController::class, 'notificationByCategory'])->name('category');
+    });
+});
+
+
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');

@@ -11,8 +11,8 @@
                 <li class="breadcrumb-item"><a href="{{ route('forum.index') }}" class="text-decoration-none">Diễn đàn</a></li>
                 @if($category->parent_id)
                     <li class="breadcrumb-item">
-                        <a href="{{ route('forum.category', $category->parentCategory->slug) }}" class="text-decoration-none">
-                            {{ $category->parentCategory->name }}
+                        <a href="{{ route('forum.category', $category->parent->slug) }}" class="text-decoration-none">
+                            {{ $category->parent->name }}
                         </a>
                     </li>
                 @endif

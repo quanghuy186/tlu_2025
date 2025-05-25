@@ -115,4 +115,15 @@ class Notification extends Model
     {
         return $this->category ? $this->category->name : 'Chưa phân loại';
     }
+
+     public function getFormattedDateAttribute()
+    {
+        return $this->created_at->format('d/m/Y H:i');
+    }
+
+    // Scope để lọc theo danh mục
+    public function scopeByCategory($query, $categoryId)
+    {
+        return $query->where('category_id', $categoryId);
+    }
 }

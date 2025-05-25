@@ -72,7 +72,7 @@
                         </li>
                     @endif
                     
-                    @if (request()->is('forum'))
+                    @if (request()->is('forum*'))
                         <li class="nav-item">
                             <a class="nav-link active" href="{{ route('forum.index') }}">Diễn đàn</a>
                         </li>
@@ -82,7 +82,7 @@
                         </li>
                     @endif
 
-                    @if(request()->is('notification'))
+                    @if(request()->is('notification*'))
                         <li class="nav-item">
                             <a class="nav-link active" href="{{ route('notification.index') }}">Thông báo</a>
                         </li>
