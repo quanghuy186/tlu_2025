@@ -193,6 +193,7 @@ class NotifycationController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
+            'category_id' => 'nullable',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ], [
             'title.required' => 'Vui lòng nhập tiêu đề thông báo',

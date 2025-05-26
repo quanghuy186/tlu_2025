@@ -14,13 +14,35 @@
                                         <div class="avatar me-3">
                                             <!-- Avatar hoặc icon người dùng -->
                                             <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                {{ substr($user->name, 0, 1) }}
+                                                <img src="{{ $user->avatar ? asset('storage/avatars/'.$user->avatar) : asset('user_default.jpg') }}" >
+                                                {{-- {{ $user->avatar ? $user->avatar : asset('user_default.jpg') }} --}}
                                             </div>
                                         </div>
-                                        <div>
+                                        {{-- <div>
                                             <h6 class="mb-0">{{ $user->name }}</h6>
-                                            <small class="text-muted last-seen">Trực tuyến</small>
-                                        </div>
+                                            <small class="text-muted last-seen"> {{ $user->isOnline ? 'Trực tuyến' : 'Hoạt động x phút trước'}}</small>
+                                        </div> --}}
+
+                                        <small class="text-muted last-seen">
+                                            @foreach ($user->roles as $role)
+                                                @if($role->role_id == 3)
+                                                    <h6 class="mb-0">{{ $user->managedDepartment->name }}</h6>
+                                                @else
+                                                    <h6 class="mb-0">{{ $user->name }}</h6>
+                                                @endif
+                                            @endforeach
+
+
+                                            @if($user->isOnline())
+                                                Trực tuyến
+                                            @elseif($user->last_seen_at)
+                                                Hoạt động {{ $user->last_seen_at->diffInMinutes(now()) }} phút trước
+                                            @else
+                                                Không hoạt động
+                                            @endif
+                                        </small>
+
+
                                         <div class="ms-auto unread-badge d-none">
                                             <span class="badge bg-danger rounded-pill">0</span>
                                         </div>

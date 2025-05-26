@@ -4,7 +4,7 @@
             <div class="col-lg-4">
                 <div class="footer-about">
                     <img src="https://cdn.haitrieu.com/wp-content/uploads/2021/10/Logo-DH-Thuy-Loi.png" alt="Logo TLU" class="img-fluid">
-                    <p>Danh bạ điện tử Trường Đại học Thủy Lợi cung cấp thông tin liên lạc chính thức của các đơn vị, cán bộ, giảng viên và sinh viên trong trường, đảm bảo tính bảo mật và chính xác.</p>
+                    <p>Hệ thống tra cứu và trao đổi thông tin nội bộ Trường Đại học Thủy Lợi cung cấp thông tin liên lạc của các đơn vị, cán bộ, giảng viên, sinh viên trong trường và là nơi để mọi người trao đổi thông tin với nhau.</p>
                     <div class="social-links">
                         <a href="#" class="me-2"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="me-2"><i class="fab fa-twitter"></i></a>

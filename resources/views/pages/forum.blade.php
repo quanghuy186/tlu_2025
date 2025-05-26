@@ -185,7 +185,7 @@
                                                 <td>
                                                     <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="fw-semibold text-decoration-none">{{ $post->title }}</a>
                                                 </td>
-                                                <td>{{ $post->category->name ?? 'N/A' }}</td>
+                                                <td>{{ $post->category->name ?? 'Chưa phân loại' }}</td>
                                                 <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
                                                 <td>
                                                     @if($post->status == 'pending')
@@ -255,7 +255,7 @@
                                                 <td>
                                                     <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="fw-semibold text-decoration-none">{{ $post->title }}</a>
                                                 </td>
-                                                <td>{{ $post->category->name ?? 'N/A' }}</td>
+                                                <td>{{ $post->category->name ?? 'Chưa phân loại' }}</td>
                                                 <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
                                                 <td>
                                                     <div class="btn-group">
@@ -300,9 +300,9 @@
                                                 <td>
                                                     <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="fw-semibold text-decoration-none">{{ $post->title }}</a>
                                                 </td>
-                                                <td>{{ $post->category->name ?? 'N/A' }}</td>
+                                                <td>{{ $post->category->name ?? 'Chưa phân loại' }}</td>
                                                 <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
-                                                <td>{{ $post->approved_at ? $post->approved_at->format('d/m/Y H:i') : 'N/A' }}</td>
+                                                <td>{{ $post->approved_at ? $post->approved_at->format('d/m/Y H:i') : 'Chưa phân loại' }}</td>
                                                 <td>
                                                     <i class="far fa-comment me-1"></i> {{ $post->comments_count ?? 0 }}
                                                     <i class="far fa-eye ms-2 me-1"></i> {{ $post->view_count ?? 0 }}
@@ -349,9 +349,9 @@
                                                 <td>
                                                     <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="fw-semibold text-decoration-none">{{ $post->title }}</a>
                                                 </td>
-                                                <td>{{ $post->category->name ?? 'N/A' }}</td>
+                                                <td>{{ $post->category->name ?? 'Chưa phân loại' }}</td>
                                                 <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
-                                                <td>{{ $post->rejected_at ? $post->rejected_at->format('d/m/Y H:i') : 'N/A' }}</td>
+                                                <td>{{ $post->rejected_at ? $post->rejected_at->format('d/m/Y H:i') : 'Chưa phân loại' }}</td>
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-outline-info view-rejection-reason" data-bs-toggle="modal" data-bs-target="#rejectionReasonModal" data-rejection="{{ $post->reject_reason ?? 'Không có lý do được cung cấp.' }}" data-post-id="{{ $post->id }}">
                                                         Xem lý do
