@@ -82,7 +82,6 @@ class ForumController extends Controller
     public function post(Request $request){
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'category_id' => 'required|exists:forum_categories,id',
             'content' => 'required|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);

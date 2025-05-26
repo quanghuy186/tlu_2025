@@ -89,7 +89,7 @@
                         </div>
                     </div>
                     
-                    <div class="row mb-3">
+                    {{-- <div class="row mb-3">
                         <div class="col-sm-10 offset-sm-2">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="notify_replies" name="notify_replies" {{ old('notify_replies') ? 'checked' : '' }} checked>
@@ -98,7 +98,7 @@
                                 </label>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </form>
             </div>
             <div class="modal-footer">

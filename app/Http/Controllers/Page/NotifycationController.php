@@ -146,7 +146,7 @@ class NotifycationController extends Controller
                 break;
         }
         
-        $notifications = $query->paginate(6)->withQueryString();
+        $notifications = $query->paginate(8)->withQueryString();
             
         $notification_latests = Notification::with(['user', 'category'])
             ->orderBy('created_at', 'desc')
@@ -193,12 +193,10 @@ class NotifycationController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'category_id' => 'nullable|exists:notification_categories,id',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ], [
             'title.required' => 'Vui lòng nhập tiêu đề thông báo',
             'content.required' => 'Vui lòng nhập nội dung thông báo',
-            'category_id.exists' => 'Danh mục không hợp lệ',
             'images.*.image' => 'File phải là hình ảnh',
             'images.*.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif',
             'images.*.max' => 'Kích thước hình ảnh không được vượt quá 2MB'

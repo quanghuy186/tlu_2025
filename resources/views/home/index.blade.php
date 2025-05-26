@@ -96,7 +96,7 @@
                                     <h5>{{ $item->title ?? 'Thông báo cập nhật hệ thống danh bạ điện tử' }}</h5>
                                     <p>{{ $item->content ?? 'Hệ thống danh bạ điện tử Trường Đại học Thủy Lợi sẽ được nâng cấp vào ngày 10/03/2025. Trong thời gian cập nhật, hệ thống sẽ tạm ngưng hoạt động từ 22:00 đến 23:59.' }}</p>
                                     <div class="meta">
-                                        <i class="fas fa-user me-1"></i> {{ $item->author ?? 'Ban Quản trị' }}
+                                        <i class="fas fa-user me-1"></i> item->user->managedDepartment->name
                                     </div>
                                 </div>
                             </div>

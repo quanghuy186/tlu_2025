@@ -37,7 +37,7 @@
                     </div>
                     
                     <div class="row mb-3">
-                        <label for="category_id" class="col-sm-2 col-form-label">Chuyên mục <span class="text-danger">*</span></label>
+                        <label for="category_id" class="col-sm-2 col-form-label">Chuyên mục <span class="text-danger"></span></label>
                         <div class="col-sm-10">
                             <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id">
                                 <option value="">-- Chọn chuyên mục --</option>
@@ -75,7 +75,7 @@
                         </div>
                     </div>
                     
-                    <div class="row mb-3">
+                    {{-- <div class="row mb-3">
                         <label for="tags" class="col-sm-2 col-form-label">Thẻ</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control @error('tags') is-invalid @enderror" id="tags" name="tags" value="{{ old('tags') }}" placeholder="Thêm thẻ (phân cách bằng dấu phẩy)">
@@ -84,7 +84,7 @@
                             @enderror
                             <small class="text-muted">Ví dụ: toán cao cấp, kinh nghiệm học tập, tài liệu</small>
                         </div>
-                    </div>
+                    </div> --}}
                     
                     <div class="row mb-3">
                         <div class="col-sm-10 offset-sm-2">
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                     
-                    <div class="row mb-3">
+                    {{-- <div class="row mb-3">
                         <div class="col-sm-10 offset-sm-2">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="notify_replies" name="notify_replies" {{ old('notify_replies') ? 'checked' : '' }} checked>
@@ -106,7 +106,7 @@
                                 </label>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </form>
             </div>
             <div class="modal-footer">
