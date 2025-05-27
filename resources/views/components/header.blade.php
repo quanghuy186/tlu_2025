@@ -379,27 +379,6 @@
         font-weight: 700;
     }
 
-    /* .section-title::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 50px;
-        height: 3px;
-        background-color: var(--accent-color);
-    } */
-
-    .section-title::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%; /* Position at the middle */
-        transform: translateX(-50%); /* Shift back by half of its width */
-        width: 50px;
-        height: 3px;
-        background-color: var(--accent-color);
-    }
-
     /* Centered section title variant */
     .section-title.text-center {
         text-align: center;

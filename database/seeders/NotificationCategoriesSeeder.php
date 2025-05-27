@@ -52,6 +52,7 @@ class NotificationCategoriesSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'id' => 0,
                 'name' => 'Khác',
                 'slug' => 'khac',
                 'description' => 'Các thông báo khác không thuộc nhóm trên.',

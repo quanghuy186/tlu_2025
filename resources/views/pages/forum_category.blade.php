@@ -99,7 +99,7 @@
                     @if(count($posts) > 0)
                         <div class="posts-container">
                             @foreach($posts as $post)
-                                <div class="post-preview">
+                                <div class="post-preview mt-5">
                                     <div class="d-flex">
                                         <!-- Author Avatar -->
                                         <div class="me-3">
@@ -114,7 +114,10 @@
                                                         style="width: 40px; height: 40px; object-fit: cover;">
                                                 @else
                                                     <span class="avatar avatar-sm bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center">
-                                                        {{ strtoupper(substr($post->author->name, 0, 1)) }}
+                                                        <img src="{{ asset('user_default.jpg') }}" 
+                                                        alt="" class="rounded-circle" 
+                                                        style="width: 40px; height: 40px; object-fit: cover;">
+                                                        {{-- {{ strtoupper(substr($post->author->name, 0, 1)) }} --}}
                                                     </span>
                                                 @endif
                                             @endif
@@ -227,7 +230,7 @@
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span><i class="far fa-clock me-1"></i> Bài viết mới nhất</span>
                             <span class="text-muted small">
-                                {{ $posts->count() > 0 ? $posts->first()->created_at->diffForHumans() : 'N/A' }}
+                                {{ $posts->count() > 0 ? $posts->first()->created_at->diffForHumans() : 'Chưa có bài viết nào' }}
                             </span>
                         </li>
                     </ul>

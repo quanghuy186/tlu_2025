@@ -7,7 +7,21 @@
             <ol class="breadcrumb">
                 {{-- <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Trang chủ</a></li> --}}
                 <li class="breadcrumb-item"><a href="{{ route('forum.index') }}" class="text-decoration-none">Diễn đàn</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('forum.category', $post->category->slug) }}" class="text-decoration-none">{{ $post->category->name }}</a></li>
+
+                @if($post->category)
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('forum.category', $post->category->slug) }}" class="text-decoration-none">
+                            {{ $post->category->name }}
+                        </a>
+                    </li>
+                @else
+                    <li class="breadcrumb-item">
+                        <span class="text-muted">Chưa phân loại</span>
+                    </li>
+                @endif
+
+
+                {{-- <li class="breadcrumb-item"><a href="{{ route('forum.category', $post->category->slug) }}" class="text-decoration-none">{{ $post->category->name }}</a></li> --}}
                 <li class="breadcrumb-item active" aria-current="page">{{ Str::limit($post->title, 30) }}</li>
             </ol>
         </nav>
@@ -24,7 +38,10 @@
                     <div>
                         <h4 class="mb-0">{{ $post->title }}</h4>
                     </div>
-                    <span class="badge bg-secondary">{{ $post->category->name }}</span>
+                    @if($post->category)
+                        <span class="badge bg-secondary">{{ $post->category->name }}</span>
+
+                    @endif
                 </div>
                 <div class="card-body">
                     <!-- Author Info -->
@@ -35,7 +52,7 @@
                             </span>
                             <div>
                                 <div class="fw-bold">Ẩn danh</div>
-                                <small class="text-muted">Đăng {{ $post->created_at->diffForHumans() }}</small>
+                                <small class="text-muted">Đăng {{ timeAgo($post->created_at) }}</small>
                             </div>
                         @else
                             @if($post->author->avatar)
@@ -162,7 +179,8 @@
                         <a href="{{ route('forum.post.show', $relatedPost->id) }}" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
                                 <h6 class="mb-1">{{ Str::limit($relatedPost->title, 50) }}</h6>
-                                <small>{{ $relatedPost->created_at->diffForHumans() }}</small>
+                                {{-- <small>{{ $relatedPost->created_at->diffForHumans() }}</small> --}}
+                                <small>{{ timeAgo($relatedPost->created_at) }}</small>
                             </div>
                             <small class="text-muted">
                                 <i class="far fa-comment me-1"></i> {{ count($relatedPost->comments) }}

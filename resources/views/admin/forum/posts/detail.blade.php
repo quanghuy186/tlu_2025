@@ -100,7 +100,8 @@
                                     
                                     {{-- @if($post->is_anonymous && !auth()->user()->hasRole('admin')) --}}
                                         <span class="badge bg-dark me-2" title="Ẩn danh">
-                                            <i class="bi bi-incognito"></i> Ẩn danh
+
+                                            <i class="bi bi-incognito"></i>{{ $post->is_anonymous ? ' Đăng ẩn danh bởi : ' . $post->author->name : $post->author->name}}
                                         </span>
                                     {{-- @endif --}}
                                 </div>
@@ -167,7 +168,7 @@
                                                 <th>Tác giả:</th>
                                                 <td>
                                                     {{-- @if($post->is_anonymous && !auth()->user()->hasRole('admin')) --}}
-                                                        <span class="text-muted">Ẩn danh</span>
+                                                        <span class="text-muted">{{ $post->author->name }}</span>
                                                     {{-- @else
                                                         {{ $post->author->name ?? 'Không xác định' }}
                                                     @endif --}}

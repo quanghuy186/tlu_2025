@@ -58,7 +58,7 @@
                                     @if($notification->images)
                                         <img src="{{ asset('storage/' . $notification->images_array[0]) }}" alt="Announcement Image">
                                     @else
-                                        <img src="https://via.placeholder.com/400x200?text=No+Image" alt="No Image">
+                                        {{-- <img src="https://via.placeholder.com/400x200?text=No+Image" alt="No Image"> --}}
                                     @endif
                                     <span class="announcement-category">
                                         {{ $current_category->name }}
@@ -78,7 +78,7 @@
                                     <div class="announcement-footer">
                                         <div class="announcement-author">
                                             @if($notification->user)
-                                                <img src="https://via.placeholder.com/40x40?text={{ substr($notification->user->name, 0, 1) }}" alt="Author">
+                                                <img src="{{ $notification->user->avatar ?? asset('user_default.jpg') }}" alt="Author">
                                                 <span>{{ $notification->user->name }}</span>
                                             @endif
                                         </div>
@@ -136,8 +136,8 @@
                                     @if($latest->images)
                                         <img src="{{ asset('storage/' . $latest->images_array[0]) }}" alt="Recent">
                                     @else
-                                        <img src="https://via.placeholder.com/80x80?text=No+Image" alt="No Image">
-                                    @endif
+                                        {{-- <img src="https://via.placeholder.com/80x80?text=No+Image" alt="No Image"> --}}
+                                    @endif  
                                 </div>
                                 <div class="recent-post-content">
                                     <h5><a href="{{ route('notification.show', $latest->id) }}">{{ Str::limit($latest->title, 50) }}</a></h5>

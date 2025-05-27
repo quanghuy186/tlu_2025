@@ -59,7 +59,7 @@ class ForumController extends Controller
         ->withCount('likes') 
         ->orderBy('created_at', 'desc')
         ->take(5)
-        ->paginate(5);
+        ->paginate(3);
 
         $totalPosts = ForumPost::where('status', 'approved')->count();
         $totalCategories = ForumCategory::where('is_active', 1)->count();

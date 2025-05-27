@@ -66,7 +66,7 @@
                                 <h6 class="mb-0">
                                     {{ $comment->is_anonymous ? 'Ẩn danh' : ($comment->author ? $comment->author->name : 'Người dùng') }}
                                 </h6>
-                                <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                <small class="text-muted">  {{ timeAgo($comment->created_at) }}</small>
                             </div>
                             
                             <div class="comment-content my-2">
@@ -153,7 +153,7 @@
                                                         <h6 class="mb-0 small fw-bold">
                                                             {{ $reply->is_anonymous ? 'Ẩn danh' : ($reply->author ? $reply->author->name : 'Người dùng') }}
                                                         </h6>
-                                                        <small class="text-muted">{{ $reply->created_at->diffForHumans() }}</small>
+                                                        <small class="text-muted">{{ timeAgo($reply->created_at) }}</small>
                                                     </div>
                                                     
                                                     <div class="reply-content my-1 small">

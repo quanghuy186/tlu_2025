@@ -29,3 +29,9 @@ function tluHasPermission($user, $permission){
         $hasPermission = $result > 0;
         return $hasPermission;
 }
+
+if (!function_exists('timeAgo')) {
+    function timeAgo($datetime) {
+        return \Carbon\Carbon::parse($datetime)->locale('vi')->diffForHumans();
+    }
+}

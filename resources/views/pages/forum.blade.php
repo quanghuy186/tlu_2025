@@ -40,7 +40,7 @@
                         <label for="category_id" class="col-sm-2 col-form-label">Chuyên mục <span class="text-danger"></span></label>
                         <div class="col-sm-10">
                             <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id">
-                                <option value="">-- Chọn chuyên mục --</option>
+                                <option value="0">-- Chọn chuyên mục --</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                         {{ $category->name }}
@@ -138,6 +138,11 @@
             <div class="card">
                 <div class="card-header">
                     <i class="fas fa-clipboard-list me-2"></i> Bài viết của tôi
+
+                    <button type="button" class="btn btn-sm btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                         <i class="fas fa-plus-circle me-1"></i> Tạo bài viết mới
+                    </button>
+
                 </div>
                 <div class="card-body">
                     <ul class="nav nav-pills mb-3" id="myPostsTabs" role="tablist">
@@ -535,7 +540,14 @@
                                         <a href="{{ route('forum.post.show', $post->id) }}" class="topic-title">{{ $post->title }}</a>
                                         <div class="topic-info">
                                             <span><i class="fas fa-user me-1"></i> {{ $post->is_anonymous == 1 ? "Ẩn danh" : $post->author->name }} </span>
-                                            <span class="ms-3"><i class="far fa-clock me-1"></i> {{ $post->created_at->diffForHumans() }}</span>
+
+                                            {{-- <span class="ms-3"><i class="far fa-clock me-1"></i> {{ $post->created_at->diffForHumans() }}</span> --}}
+
+                                            <span class="ms-3">
+                                                <i class="far fa-clock me-1"></i> 
+                                                {{ timeAgo($post->created_at) }}
+                                            </span>
+
                                         </div>
                                     </div>
                                     <div class="topic-stats">
@@ -618,7 +630,11 @@
                             @endif
                             <div>       
                                 <h6 class="post-author">{{ $p->is_anonymous == 1 ? "Ẩn danh" : $p->author->name }}</h6>
-                                <span class="post-time">Đăng 2 giờ trước</span>
+                                {{-- <span class="post-time">Đăng 2 giờ trước</span> --}}
+                                <span class="">
+                                                <i class="far fa-clock me-1"></i> 
+                                                {{ timeAgo($post->created_at) }}
+                                            </span>
                             </div>
                         </div>
                         <div class="post-body">

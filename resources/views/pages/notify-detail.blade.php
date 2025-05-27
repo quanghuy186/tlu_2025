@@ -184,9 +184,9 @@
                                 <i class="fas fa-folder me-2"></i>{{ $notification->category->name }}
                             </a>
                         @endif
-                        <button onclick="window.print()" class="btn btn-outline-dark btn-block">
+                        {{-- <button onclick="window.print()" class="btn btn-outline-dark btn-block">
                             <i class="fas fa-print me-2"></i>In thông báo
-                        </button>
+                        </button> --}}
                     </div>
                 </div>
 

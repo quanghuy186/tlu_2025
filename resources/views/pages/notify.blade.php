@@ -38,7 +38,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">
+                        <button type="button" class="btn btn-outline-secondary px-5" style="padding: 12px" onclick="clearFilters()">
                             <i class="fas fa-undo me-1"></i>Xóa bộ lọc
                         </button>
                     </div>
@@ -65,7 +65,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="filter-group">
+                    {{-- <div class="filter-group">
                         <span class="filter-label">Nguồn:</span>
                         <select class="filter-select" name="source" onchange="submitFilter()">
                             <option value="all" {{ request('source') == 'all' || !request('source') ? 'selected' : '' }}>Tất cả nguồn</option>
@@ -74,7 +74,7 @@
                             <option value="departments" {{ request('source') == 'departments' ? 'selected' : '' }}>Các phòng ban</option>
                             <option value="student-affairs" {{ request('source') == 'student-affairs' ? 'selected' : '' }}>Phòng Công tác Sinh viên</option>
                         </select>
-                    </div>
+                    </div> --}}
                 </div>
             </form>
         </div>
@@ -200,14 +200,14 @@
 
             <!-- Sidebar -->
             <div class="col-lg-4">
-                <div class="create-notification-btn">
+                <div class="create-notification-btn mb-3">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNotificationModal">
                         <i class="fas fa-plus me-2"></i>Tạo thông báo mới
                     </button>
                 </div>
 
                 <!-- Categories -->
-                <div class="sidebar-card mt-3">
+                <div class="sidebar-card">
                     <h3 class="sidebar-title">Danh mục thông báo</h3>
                     <ul class="categories-list">
                         <li>
@@ -276,7 +276,7 @@
                                     <div class="mb-3">
                                         <label for="category_id" class="form-label fw-bold">Danh mục</label>
                                         <select class="form-select" id="category_id" name="category_id">
-                                            <option value="">-- Chọn danh mục --</option>
+                                            <option value="0">-- Chọn danh mục --</option>
                                             @foreach($notification_categories as $category)
                                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach

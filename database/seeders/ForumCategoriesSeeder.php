@@ -93,6 +93,7 @@ class ForumCategoriesSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'id' => 0,
                 'name' => 'Chưa phân loại',
                 'slug' => 'chua-phan-loai',
                 'description' => 'Danh mục mặc định cho các bài viết chưa được gán vào danh mục cụ thể.',

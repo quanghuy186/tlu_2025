@@ -17,7 +17,7 @@
     @endif
         <div class="unit-info">
             <div class="unit-name">{{$department->name}}</div>
-            <div class="unit-type">Đơn vị đào tạo</div>
+            <div class="unit-type">{{ $department->department_type == 'administrative' ? 'Đơn vị hành chính' : 'Đơn vị đào tạo' }}</div>
             <div class="unit-meta">
                 <div class="unit-meta-item">
                     <i class="fas fa-user-tie"></i>
@@ -79,7 +79,7 @@
                             <img src="https://via.placeholder.com/150x150?text=CNTT" alt="{{ $department->name }}" class="unit-detail-logo">
                             <div class="unit-detail-title">
                                 <div class="unit-detail-name">{{ $department->name }}</div>
-                                <div class="unit-detail-type">Đơn vị đào tạo</div>
+                                <div class="unit-detail-type">{{ $department->department_type == 'administrative' ? 'Đơn vị hành chính' : 'Đơn vị đào tạo' }}</div>
                                 <div class="unit-detail-meta">
                                     <div class="unit-detail-meta-item">
                                         <i class="fas fa-calendar-alt"></i>
