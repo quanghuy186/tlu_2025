@@ -211,15 +211,7 @@ Route::get('/chat/start/{userId}', [MessageController::class, 'startChat'])->nam
 
 Broadcast::routes(['middleware' => ['auth:web']]);
 
-Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
-Route::post('/forum', [ForumController::class, 'post'])->name('forum.post');
-Route::get('/forum/post/{id}', [ForumController::class, 'showPost'])->name('forum.post.show');
-// Route::get('/forum/posts/{id}', [ForumController::class, 'show'])->name('forum.posts.show');
-Route::get('/forum/posts/{id}/edit', [ForumController::class, 'edit'])->name('forum.posts.edit');
-Route::put('/forum/update', [ForumController::class, 'update'])->name('forum.post.update');
-Route::get('/api/forum/posts/{id}', [ForumController::class, 'getPostData']);
-// Route cho trang danh mục theo slug
-Route::get('/forum/category/{slug}', [ForumController::class, 'showCategory'])->name('forum.category');
+
 
 Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
     // Routes cho danh mục diễn đàn
@@ -259,24 +251,41 @@ Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
     });
 });
 
+// Thêm các routes này vào file web.php hoặc routes/forum.php
 
-Route::middleware(['auth'])->group(function () {
-    // Thêm bình luận mới
-    Route::post('/forum/comment', [ForumController::class, 'storeComment'])->name('forum.comment.store');
+// Forum routes
+Route::prefix('forum')->name('forum.')->group(function () {
+    // Main forum page với search và filter
+    Route::get('/', [ForumController::class, 'index'])->name('index');
     
-    // Thêm phản hồi cho bình luận
-    Route::post('/forum/comment/reply', [ForumController::class, 'storeReply'])->name('forum.comment.reply');
+    // API endpoint cho search AJAX
+    Route::get('/search', [ForumController::class, 'search'])->name('search');
     
-    // Xóa bình luận
-    Route::delete('/forum/comment/delete', [ForumController::class, 'deleteComment'])->name('forum.comment.delete');
+    // Create post
+    Route::post('/post', [ForumController::class, 'post'])->name('post')->middleware('auth');
+    
+    // Update post
+    Route::put('/post/update', [ForumController::class, 'update'])->name('post.update')->middleware('auth');
+    
+    // Get post data for editing
+    Route::get('/api/posts/{id}', [ForumController::class, 'getPostData'])->name('post.data')->middleware('auth');
+    
+    // Show single post
+    Route::get('/post/{id}', [ForumController::class, 'showPost'])->name('post.show');
+    
+    // Show category
+    Route::get('/category/{slug}', [ForumController::class, 'showCategory'])->name('category');
+    
+    // Comments
+    Route::post('/comment', [ForumController::class, 'storeComment'])->name('comment.store')->middleware('auth');
+    Route::post('/comment/reply', [ForumController::class, 'storeReply'])->name('comment.reply')->middleware('auth');
+    Route::delete('/comment', [ForumController::class, 'deleteComment'])->name('comment.delete')->middleware('auth');
+    Route::get('/post/{id}/comments', [ForumController::class, 'getComments'])->name('comments.get');
+    
+    // Likes
+    Route::post('/post/{id}/like', [ForumController::class, 'toggleLike'])->name('post.like')->middleware('auth');
+    Route::get('/post/{id}/like-info', [ForumController::class, 'getLikeInfo'])->name('post.like.info');
 });
-// API route để lấy comments (có thể sử dụng cho AJAX loading)
-Route::get('/api/forum/post/{id}/comments', [ForumController::class, 'getComments'])->name('api.forum.comments');
-
-// Like functionality
-Route::post('/forum/post/{id}/like', [App\Http\Controllers\Page\ForumController::class, 'toggleLike'])->name('forum.post.like');
-Route::get('/forum/post/{id}/like-info', [App\Http\Controllers\Page\ForumController::class, 'getLikeInfo'])->name('forum.post.like.info');
-
 // Route::get('/notification', [UserNotificationController::class, 'index'])->name('notification.index');
 // Route::get('/notification', [NotifycationController::class, 'notification'])->name('notification.index');
 

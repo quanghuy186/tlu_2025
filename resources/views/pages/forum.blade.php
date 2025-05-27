@@ -6,12 +6,10 @@
     <div class="container text-center">
         <h1>Diễn đàn trao đổi TLU</h1>
         <p>Nơi trao đổi, chia sẻ kiến thức, thông tin và giải đáp thắc mắc trong cộng đồng Đại học Thủy Lợi</p>
-        {{-- <div class="search-box bg-white p-2 rounded-pill d-flex align-items-center justify-content-between mt-4 mx-auto" style="max-width: 600px;">
-            <input type="text" class="border-0 flex-grow-1 p-2 ms-3" placeholder="Tìm kiếm chủ đề, bài viết...">
-            <button class="btn btn-primary rounded-pill px-4 py-2 fw-semibold"><i class="fas fa-search me-2"></i> Tìm kiếm</button>
-        </div> --}}
     </div>
 </section>
+
+
 
 {{-- @include('partials.create_post_modal') --}}
 
@@ -129,6 +127,8 @@
         </nav>
     </div>
 </div>
+
+
 
 
 <!-- Thêm phần tab để xem các bài viết theo trạng thái -->
@@ -388,6 +388,8 @@
     </div>
 </div>
 
+
+
 <!-- Modal xem lý do từ chối -->
 <div class="modal fade" id="rejectionReasonModal" tabindex="-1" aria-labelledby="rejectionReasonModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -510,7 +512,111 @@
     </div>
 </div>
 
-
+<div class="container my-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form action="{{ route('forum.index') }}" method="GET" id="searchFilterForm">
+                        <div class="row align-items-end">
+                            <!-- Search Input -->
+                            <div class="col-md-4 mb-3">
+                                <label for="search" class="form-label">
+                                    <i class="fas fa-search me-1"></i> Tìm kiếm
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="search" 
+                                       name="search" 
+                                       placeholder="Nhập từ khóa tìm kiếm..." 
+                                       value="{{ request('search') }}">
+                            </div>
+                            
+                            <!-- Category Filter -->
+                            <div class="col-md-3 mb-3">
+                                <label for="category" class="form-label">
+                                    <i class="fas fa-folder me-1"></i> Chuyên mục
+                                </label>
+                                <select class="form-select" id="category" name="category">
+                                    <option value="">Tất cả chuyên mục</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" 
+                                                {{ request('category') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                        @if($category->childCategories && $category->childCategories->count() > 0)
+                                            @foreach($category->childCategories as $child)
+                                                <option value="{{ $child->id }}" 
+                                                        {{ request('category') == $child->id ? 'selected' : '' }}>
+                                                    &nbsp;&nbsp;&nbsp;└─ {{ $child->name }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                            
+                            <!-- Sort Filter -->
+                            <div class="col-md-3 mb-3">
+                                <label for="sort" class="form-label">
+                                    <i class="fas fa-sort me-1"></i> Sắp xếp
+                                </label>
+                                <select class="form-select" id="sort" name="sort">
+                                    <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>
+                                        Mới nhất
+                                    </option>
+                                    <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>
+                                        Cũ nhất
+                                    </option>
+                                    <option value="most_viewed" {{ request('sort') == 'most_viewed' ? 'selected' : '' }}>
+                                        Xem nhiều nhất
+                                    </option>
+                                    <option value="most_commented" {{ request('sort') == 'most_commented' ? 'selected' : '' }}>
+                                        Bình luận nhiều nhất
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <!-- Items per page -->
+                            <div class="col-md-2 mb-3">
+                                <label for="per_page" class="form-label">
+                                    <i class="fas fa-list-ol me-1"></i> Hiển thị
+                                </label>
+                                <select class="form-select" id="per_page" name="per_page">
+                                    <option value="10" {{ request('per_page') == '10' ? 'selected' : '' }}>10</option>
+                                    <option value="20" {{ request('per_page') == '20' ? 'selected' : '' }}>20</option>
+                                    <option value="30" {{ request('per_page') == '30' ? 'selected' : '' }}>30</option>
+                                    <option value="50" {{ request('per_page') == '50' ? 'selected' : '' }}>50</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-3">
+                            <div class="col-12 d-flex justify-content-between align-items-center">
+                                <div>
+                                    @if(request()->filled('search') || request()->filled('category') || request()->filled('sort'))
+                                        <a href="{{ route('forum.index') }}" class="btn btn-link text-decoration-none">
+                                            <i class="fas fa-times-circle me-1"></i> Xóa bộ lọc
+                                        </a>
+                                    @endif
+                                    <span class="text-muted ms-3">
+                                        Tìm thấy <strong>{{ $latestPosts->total() }}</strong> bài viết
+                                    </span>
+                                </div>
+                                
+                                <div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-filter me-1"></i> Áp dụng
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Main Content -->
 <div class="container">
@@ -624,14 +730,13 @@
                                 alt="{{ $p->author->name }}" style="border-radius : 50%" 
                                 class="unit-logo">
                             @else
-                                <span class="avatar avatar-sm bg-primary text-white rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
-                                    {{ strtoupper(substr($p->author->name, 0, 1)) }}
-                                </span>
+                                <img src="{{ asset('user_default.jpg') }}" 
+                                alt="" class="unit-logo" style="border-radius : 50%;">
                             @endif
                             <div>       
                                 <h6 class="post-author">{{ $p->is_anonymous == 1 ? "Ẩn danh" : $p->author->name }}</h6>
                                 {{-- <span class="post-time">Đăng 2 giờ trước</span> --}}
-                                <span class="">
+                                <span>
                                                 <i class="far fa-clock me-1"></i> 
                                                 {{ timeAgo($post->created_at) }}
                                             </span>
@@ -905,37 +1010,424 @@
     });
 </script>
 
+
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Khi nhấn nút tạo bài viết mới
-        document.querySelector('.new-topic-btn').addEventListener('click', function(e) {
-            e.preventDefault();
-            var createPostModal = new bootstrap.Modal(document.getElementById('createPostModal'));
-            createPostModal.show();
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-submit form when changing filters (giữ lại cho dropdown)
+    const filterElements = ['#category', '#sort', '#per_page'];
+    
+    filterElements.forEach(selector => {
+        document.querySelector(selector).addEventListener('change', function() {
+            document.getElementById('searchFilterForm').submit();
         });
+    });
+    
+    // Chỉ search khi nhấn Enter trong ô tìm kiếm
+    const searchInput = document.getElementById('search');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('searchFilterForm').submit();
+            }
+        });
+    }
+});
+</script>
+
+<script>
+class ForumSearch {
+    constructor() {
+        this.searchInput = document.getElementById('search');
+        this.categorySelect = document.getElementById('category');
+        this.sortSelect = document.getElementById('sort');
+        this.perPageSelect = document.getElementById('per_page');
+        this.resultsContainer = document.querySelector('.latest-posts');
+        this.searchTimer = null;
+        this.isLoading = false;
         
-        // Xử lý khi nhấn nút đăng bài viết
-        document.getElementById('submitPost').addEventListener('click', function() {
-            // Kiểm tra form hợp lệ
-            var form = document.getElementById('newPostForm');
-            if (form.checkValidity()) {
-                // Submit form
-                form.submit();
-            } else {
-                // Kích hoạt validation của form
-                form.reportValidity();
+        this.init();
+    }
+    
+    init() {
+        // Bind events
+        // BỎ auto search khi nhập - chỉ search khi nhấn nút hoặc Enter
+        if (this.searchInput) {
+            this.searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.performSearch();
+                }
+            });
+        }
+        
+        // Auto submit on filter change (giữ lại cho dropdown)
+        [this.categorySelect, this.sortSelect, this.perPageSelect].forEach(element => {
+            if (element) {
+                element.addEventListener('change', () => this.performSearch());
             }
         });
         
-        // Debug form submit để xác định lỗi
-        document.getElementById('newPostForm').addEventListener('submit', function(e) {
-            console.log('Form đang được gửi...');
-            // Nếu muốn chặn submit để debug:
-            // e.preventDefault();
-            // console.log(new FormData(this));
+        // Handle pagination links
+        this.bindPaginationLinks();
+        
+        // Add search button click handler
+        const searchButton = document.querySelector('button[type="submit"]');
+        if (searchButton) {
+            searchButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.performSearch();
+            });
+        }
+    }
+    
+    async performSearch(page = 1) {
+        if (this.isLoading) return;
+        
+        this.isLoading = true;
+        const formData = new FormData();
+        
+        // Collect all form data
+        formData.append('q', this.searchInput ? this.searchInput.value : '');
+        formData.append('category', this.categorySelect ? this.categorySelect.value : '');
+        formData.append('sort', this.sortSelect ? this.sortSelect.value : 'latest');
+        formData.append('per_page', this.perPageSelect ? this.perPageSelect.value : '10');
+        formData.append('page', page);
+        
+        try {
+            const response = await fetch('/forum/search?' + new URLSearchParams(formData), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            if (!response.ok) throw new Error('Network response was not ok');
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.updateResults(data.data, data.pagination);
+                this.updateUrl(formData);
+            }
+        } catch (error) {
+            console.error('Search error:', error);
+            this.showErrorMessage('Có lỗi xảy ra khi tìm kiếm. Vui lòng thử lại.');
+        } finally {
+            this.isLoading = false;
+            this.hideLoadingIndicator();
+        }
+    }
+    
+    updateResults(posts, pagination) {
+        if (!this.resultsContainer) return;
+        
+        // Clear current results
+        this.resultsContainer.innerHTML = '';
+        
+        if (posts.length === 0) {
+            this.resultsContainer.innerHTML = `
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Không tìm thấy bài viết nào phù hợp với tiêu chí tìm kiếm.
+                </div>
+            `;
+            return;
+        }
+        
+        // Render posts
+        posts.forEach(post => {
+            this.resultsContainer.innerHTML += this.renderPost(post);
         });
-    });
+        
+        // Update pagination
+        this.updatePagination(pagination);
+        
+        // Re-bind like buttons
+        this.bindLikeButtons();
+    }
+    
+    renderPost(post) {
+        const timeAgo = this.getTimeAgo(post.created_at);
+        const authorName = post.is_anonymous == 1 ? "Ẩn danh" : post.author.name;
+        const avatarUrl = post.author.avatar 
+            ? `/storage/avatars/${post.author.avatar}` 
+            : '/user_default.jpg';
+        
+        return `
+            <div class="post-card">
+                <div class="post-header">
+                    <img src="${avatarUrl}" alt="${authorName}" class="unit-logo" style="border-radius: 50%;">
+                    <div>       
+                        <h6 class="post-author">${authorName}</h6>
+                        <span class="post-time">
+                            <i class="far fa-clock me-1"></i> ${timeAgo}
+                        </span>
+                    </div>
+                </div>
+                <div class="post-body">
+                    <h5 class="post-title">${this.escapeHtml(post.title)}</h5>
+                    <p class="post-text">${this.escapeHtml(post.content.substring(0, 200))}...</p>
+                    <a href="/forum/post/${post.id}" class="btn btn-sm btn-outline-primary">
+                        Đọc tiếp <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="post-footer">
+                    <div class="post-actions">
+                        <a href="#"><i class="far fa-comment"></i> ${post.comments_count} bình luận</a>
+                        <a href="#" class="like-button" data-post-id="${post.id}">
+                            <i class="far fa-heart"></i> 
+                            <span class="like-count">${post.likes_count || 0}</span> thích
+                        </a>
+                        <a href="#"><i class="far fa-eye ms-2 me-1"></i> ${post.view_count}</a>
+                    </div>
+                    <div class="post-meta">
+                        <span><i class="fas fa-folder me-1"></i>${post.category.name || ''}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    updatePagination(pagination) {
+        const paginationContainer = document.querySelector('.pagination-container');
+        if (!paginationContainer) return;
+        
+        let paginationHtml = '<ul class="pagination">';
+        
+        // Previous button
+        if (pagination.current_page > 1) {
+            paginationHtml += `
+                <li><a href="#" data-page="${pagination.current_page - 1}">
+                    <i class="fas fa-angle-double-left"></i>
+                </a></li>
+            `;
+        } else {
+            paginationHtml += '<li><a href="#" class="disabled"><i class="fas fa-angle-double-left"></i></a></li>';
+        }
+        
+        // Page numbers
+        for (let i = 1; i <= pagination.last_page; i++) {
+            if (i === pagination.current_page) {
+                paginationHtml += `<li><a href="#" class="active">${i}</a></li>`;
+            } else {
+                paginationHtml += `<li><a href="#" data-page="${i}">${i}</a></li>`;
+            }
+        }
+        
+        // Next button
+        if (pagination.has_more_pages) {
+            paginationHtml += `
+                <li><a href="#" data-page="${pagination.current_page + 1}">
+                    <i class="fas fa-angle-double-right"></i>
+                </a></li>
+            `;
+        } else {
+            paginationHtml += '<li><a href="#" class="disabled"><i class="fas fa-angle-double-right"></i></a></li>';
+        }
+        
+        paginationHtml += '</ul>';
+        paginationContainer.innerHTML = paginationHtml;
+        
+        // Bind pagination clicks
+        this.bindPaginationLinks();
+    }
+    
+    bindPaginationLinks() {
+        document.querySelectorAll('.pagination a[data-page]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = e.currentTarget.dataset.page;
+                this.performSearch(page);
+                
+                // Scroll to top of results
+                this.resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    }
+    
+    bindLikeButtons() {
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const postId = e.currentTarget.dataset.postId;
+                
+                try {
+                    const response = await fetch(`/forum/post/${postId}/like`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const likeCount = e.currentTarget.querySelector('.like-count');
+                        const icon = e.currentTarget.querySelector('i');
+                        
+                        likeCount.textContent = data.likeCount;
+                        
+                        if (data.action === 'liked') {
+                            icon.classList.remove('far');
+                            icon.classList.add('fas');
+                            e.currentTarget.classList.add('liked');
+                        } else {
+                            icon.classList.remove('fas');
+                            icon.classList.add('far');
+                            e.currentTarget.classList.remove('liked');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Like error:', error);
+                }
+            });
+        });
+    }
+    
+    showLoadingIndicator() {
+        const searchInput = document.getElementById('search');
+        if (searchInput) {
+            searchInput.classList.add('loading');
+        }
+        
+        // Add loading overlay to results
+        if (this.resultsContainer) {
+            this.resultsContainer.style.opacity = '0.5';
+        }
+    }
+    
+    hideLoadingIndicator() {
+        const searchInput = document.getElementById('search');
+        if (searchInput) {
+            searchInput.classList.remove('loading');
+        }
+        
+        if (this.resultsContainer) {
+            this.resultsContainer.style.opacity = '1';
+        }
+    }
+    
+    showErrorMessage(message) {
+        if (this.resultsContainer) {
+            this.resultsContainer.innerHTML = `
+                <div class="alert alert-danger text-center">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    ${message}
+                </div>
+            `;
+        }
+    }
+    
+    updateUrl(formData) {
+        const url = new URL(window.location);
+        
+        // Update URL parameters
+        for (const [key, value] of formData.entries()) {
+            if (value) {
+                url.searchParams.set(key, value);
+            } else {
+                url.searchParams.delete(key);
+            }
+        }
+        
+        // Update browser history without reload
+        window.history.pushState({}, '', url);
+    }
+    
+    escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
+    
+    getTimeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const seconds = Math.floor((now - date) / 1000);
+        
+        const intervals = {
+            năm: 31536000,
+            tháng: 2592000,
+            tuần: 604800,
+            ngày: 86400,
+            giờ: 3600,
+            phút: 60
+        };
+        
+        for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+            const interval = Math.floor(seconds / secondsInUnit);
+            if (interval >= 1) {
+                return `${interval} ${unit} trước`;
+            }
+        }
+        
+        return 'Vừa xong';
+    }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    new ForumSearch();
+});
 </script>
 
+
 @endsection
+
+<style>
+.loading {
+    background-image: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="20" fill="none" stroke="%230066cc" stroke-width="4"%3E%3Canimate attributeName="stroke-dasharray" values="0 126;126 126" dur="1.5s" repeatCount="indefinite"/%3E%3Canimate attributeName="stroke-dashoffset" values="0;-126" dur="1.5s" repeatCount="indefinite"/%3E%3C/circle%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px 20px;
+}
+
+.post-card {
+    transition: all 0.3s ease;
+}
+
+.pagination a.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.alert {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.card {
+    border: none;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #0066cc;
+    box-shadow: 0 0 0 0.25rem rgba(0, 102, 204, 0.25);
+}
+
+.btn-primary {
+    background-color: #0066cc;
+    border-color: #0066cc;
+}
+
+.btn-primary:hover {
+    background-color: #0052a3;
+    border-color: #0052a3;
+}
+</style>
 

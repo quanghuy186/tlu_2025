@@ -15,25 +15,33 @@ use Illuminate\Support\Facades\DB;
 
 class ForumController extends Controller
 {   
-    public function index()
+    public function index(Request $request)
     {
+        // Lấy parameters từ request
+        $search = $request->get('search');
+        $categoryId = $request->get('category');
+        $status = $request->get('status');
+        $sortBy = $request->get('sort', 'latest'); // Default: latest
+        $perPage = $request->get('per_page', 10); // Default: 10 items per page
+
+        // Query cơ bản cho categories
         $categories = ForumCategory::where('is_active', true)
-        ->with(['posts' => function($query) {
-            $query->where('status', 'approved')
-                ->orderBy('created_at', 'desc')
-                ->take(3);
-        }])
-        ->paginate(5);
+            ->with(['posts' => function($query) {
+                $query->where('status', 'approved')
+                    ->orderBy('created_at', 'desc')
+                    ->take(3);
+            }])
+            ->get();
         
+        // Query cho user posts nếu đã đăng nhập
         if (Auth::check()) {
             $userId = Auth::id();
             
             $userPosts = ForumPost::where('user_id', $userId)
-                ->with('category') // Eager loading relationship
+                ->with('category')
                 ->orderBy('created_at', 'desc')
                 ->get();
             
-            //colection
             $pendingPosts = $userPosts->where('status', 'pending');
             $approvedPosts = $userPosts->where('status', 'approved');
             $rejectedPosts = $userPosts->where('status', 'rejected');
@@ -44,41 +52,124 @@ class ForumController extends Controller
             $rejectedPosts = collect();
         }
         
-        // Kiểm tra nếu có query parameter post để hiển thị chi tiết bài viết
-        $selectedPost = null;
-        if (request()->has('post')) {
-            $postId = request()->get('post');
-            $selectedPost = ForumPost::with(['category', 'author', 'comments.user'])
-                ->findOrFail($postId);
-        }
-        
-        //lấy bài viết mới
-        $latestPosts = ForumPost::where('status', 'approved')
-        ->with(['category', 'author'])
-        ->withCount('comments')
-        ->withCount('likes') 
-        ->orderBy('created_at', 'desc')
-        ->take(5)
-        ->paginate(3);
+        // Query cho bài viết với tìm kiếm và lọc
+        $postsQuery = ForumPost::where('status', 'approved')
+            ->with(['category', 'author'])
+            ->withCount('comments')
+            ->withCount('likes');
 
+        // Áp dụng tìm kiếm
+        if ($search) {
+            $postsQuery->where(function($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('content', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Áp dụng lọc theo category
+        if ($categoryId) {
+            $postsQuery->where('category_id', $categoryId);
+        }
+
+        // Áp dụng sắp xếp
+        switch ($sortBy) {
+            case 'oldest':
+                $postsQuery->orderBy('created_at', 'asc');
+                break;
+            case 'most_viewed':
+                $postsQuery->orderBy('view_count', 'desc');
+                break;
+            case 'most_commented':
+                $postsQuery->orderBy('comments_count', 'desc');
+                break;
+            case 'latest':
+            default:
+                $postsQuery->orderBy('created_at', 'desc');
+                break;
+        }
+
+        // Phân trang
+        $latestPosts = $postsQuery->paginate($perPage)->withQueryString();
+
+        // Thống kê
         $totalPosts = ForumPost::where('status', 'approved')->count();
         $totalCategories = ForumCategory::where('is_active', 1)->count();
         $totalUsers = User::where('is_active', 1)->count();
 
         return view('pages.forum', [
             'categories' => $categories,
-            'userPosts' => $userPosts, // Tất cả bài viết của người dùng
-            'pendingPosts' => $pendingPosts, // Bài viết đang chờ duyệt
-            'approvedPosts' => $approvedPosts, // Bài viết đã duyệt
-            'rejectedPosts' => $rejectedPosts, // Bài viết bị từ chối
-            'selectedPost' => $selectedPost, // Bài viết được chọn để xem chi tiết
-            'latestPosts' => $latestPosts, // Các bài viết mới nhất
+            'userPosts' => $userPosts,
+            'pendingPosts' => $pendingPosts,
+            'approvedPosts' => $approvedPosts,
+            'rejectedPosts' => $rejectedPosts,
+            'latestPosts' => $latestPosts,
             'totalPosts' => $totalPosts,
             'totalCategories' => $totalCategories,
-            'totalUsers' => $totalUsers
+            'totalUsers' => $totalUsers,
+            'search' => $search,
+            'selectedCategory' => $categoryId,
+            'sortBy' => $sortBy,
+            'perPage' => $perPage
         ]);
     }
 
+    // API endpoint cho tìm kiếm AJAX
+    public function search(Request $request)
+    {
+        $search = $request->get('q');
+        $categoryId = $request->get('category');
+        $sortBy = $request->get('sort', 'latest');
+        $page = $request->get('page', 1);
+        $perPage = $request->get('per_page', 10);
+
+        $query = ForumPost::where('status', 'approved')
+            ->with(['category', 'author'])
+            ->withCount('comments')
+            ->withCount('likes');
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('content', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        switch ($sortBy) {
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'most_viewed':
+                $query->orderBy('view_count', 'desc');
+                break;
+            case 'most_commented':
+                $query->orderBy('comments_count', 'desc');
+                break;
+            case 'latest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $posts = $query->paginate($perPage);
+
+        return response()->json([
+            'success' => true,
+            'data' => $posts->items(),
+            'pagination' => [
+                'current_page' => $posts->currentPage(),
+                'last_page' => $posts->lastPage(),
+                'per_page' => $posts->perPage(),
+                'total' => $posts->total(),
+                'has_more_pages' => $posts->hasMorePages()
+            ]
+        ]);
+    }
+
+    // Các methods khác giữ nguyên như cũ
     public function post(Request $request){
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
@@ -132,20 +223,17 @@ class ForumController extends Controller
 
         $post = ForumPost::findOrFail($request->post_id);
         
-        // Kiểm tra quyền sở hữu bài viết
         if ($post->user_id != Auth::id()) {
             return redirect()->route('forum.index')
                 ->with('error', 'Bạn không có quyền chỉnh sửa bài viết này!');
         }
 
-        // Cập nhật thông tin bài viết
         $post->title = $request->title;
         $post->category_id = $request->category_id;
         $post->content = $request->content;
         $post->is_anonymous = $request->has('is_anonymous') ? true : false;
-        $post->status = 'pending'; // Reset trạng thái về chờ duyệt
+        $post->status = 'pending';
 
-        // Xử lý hình ảnh mới nếu có
         if ($request->hasFile('images')) {
             $imagesPath = $post->images ? json_decode($post->images, true) : [];
             
@@ -167,7 +255,6 @@ class ForumController extends Controller
     {
         $post = ForumPost::findOrFail($id);
         
-        // Kiểm tra quyền truy cập
         if ($post->user_id != Auth::id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
@@ -178,7 +265,6 @@ class ForumController extends Controller
             'category_id' => $post->category_id,
             'content' => $post->content,
             'images' => $post->images ? json_decode($post->images) : [],
-            // 'tags' => $post->tags,
             'is_anonymous' => (bool) $post->is_anonymous,
             'notify_replies' => (bool) $post->notify_replies,
         ]);
@@ -186,25 +272,20 @@ class ForumController extends Controller
 
     public function showPost($id)
     {
-        // Find the post with its relationships
         $post = ForumPost::with(['author', 'category', 'comments.author'])
             ->findOrFail($id);
         
-        // Increment view count
         $post->increment('view_count');
         
-        // Get like count
         $likeCount = DB::table('forum_likes')
             ->where('post_id', $post->id)
             ->count();
         
-        // Check if current user has liked the post
         $userLiked = Auth::check() ? DB::table('forum_likes')
             ->where('post_id', $post->id)
             ->where('user_id', Auth::id())
             ->exists() : false;
         
-        // Get related posts from the same category
         $relatedPosts = ForumPost::where('category_id', $post->category_id)
             ->where('id', '!=', $post->id)
             ->where('status', 'approved')
@@ -212,7 +293,6 @@ class ForumController extends Controller
             ->take(3)
             ->get();
         
-        // Get categories for the sidebar
         $categories = ForumCategory::with('children')->whereNull('parent_id')->get();
         
         return view('pages.forum_post_detail', compact(
@@ -227,22 +307,18 @@ class ForumController extends Controller
     public function showCategory($slug)
     {
         $category = ForumCategory::where('slug', $slug)->firstOrFail();
-        // Get posts for this category and its children (if any)
         $postsQuery = ForumPost::with(['author', 'category', 'comments'])
             ->where('status', 'approved');
             
         if ($category->childCategories && $category->childCategories->count() > 0) {
-            // If this is a parent category, include posts from child categories too
             $categoryIds = collect([$category->id]);
             $categoryIds = $categoryIds->merge($category->childCategories->pluck('id'));
             
             $postsQuery->whereIn('category_id', $categoryIds);
         } else {
-            // Just use this category's ID
             $postsQuery->where('category_id', $category->id);
         }
         
-        // Apply sorting (default to newest first)
         $sort = request('sort', 'newest');
         
         switch ($sort) {
@@ -261,10 +337,8 @@ class ForumController extends Controller
                 break;
         }
         
-        // Paginate the results
         $posts = $postsQuery->paginate(10)->withQueryString();
         
-        // Get categories for sidebar
         $categories = ForumCategory::with(['children', 'posts'])
             ->whereNull('parent_id')
             ->get();
@@ -287,7 +361,6 @@ class ForumController extends Controller
 
         $post = ForumPost::findOrFail($request->post_id);
         
-        // Chỉ cho phép bình luận trên bài viết đã duyệt
         if ($post->status != 'approved') {
             return redirect()->back()
                 ->with('error', 'Không thể bình luận trên bài viết chưa được duyệt.');
@@ -299,12 +372,6 @@ class ForumController extends Controller
         $comment->content = $request->content;
         $comment->is_anonymous = $request->has('is_anonymous') ? true : false;
         $comment->save();
-        
-        // Gửi thông báo cho tác giả bài viết (nếu có cài đặt nhận thông báo)
-        if ($post->notify_replies && $post->user_id != Auth::id()) {
-            // Gọi hàm gửi thông báo ở đây (có thể triển khai sau)
-            // $this->sendCommentNotification($post, $comment);
-        }
         
         return redirect()->back()
             ->with('success', 'Bình luận của bạn đã được đăng thành công.');
@@ -328,7 +395,6 @@ class ForumController extends Controller
         $post = ForumPost::findOrFail($request->post_id);
         $parentComment = ForumComment::findOrFail($request->parent_id);
         
-        // Kiểm tra xem parent comment có thuộc về post này không
         if ($parentComment->post_id != $post->id) {
             return redirect()->back()
                 ->with('error', 'Yêu cầu không hợp lệ.');
@@ -341,12 +407,6 @@ class ForumController extends Controller
         $reply->content = $request->content;
         $reply->is_anonymous = $request->has('is_anonymous') ? 1 : 0;
         $reply->save();
-        
-        // Gửi thông báo cho người comment gốc
-        if ($parentComment->user_id != Auth::id()) {
-            // Gọi hàm gửi thông báo ở đây (có thể triển khai sau)
-            // $this->sendReplyNotification($parentComment, $reply);
-        }
         
         return redirect()->back()
             ->with('success', 'Phản hồi của bạn đã được đăng thành công.');
@@ -366,16 +426,13 @@ class ForumController extends Controller
 
         $comment = ForumComment::findOrFail($request->comment_id);
         
-        // Kiểm tra quyền xóa (chỉ người viết comment hoặc admin mới được xóa)
         if ($comment->user_id != Auth::id()) {
             return redirect()->back()
                 ->with('error', 'Bạn không có quyền xóa bình luận này.');
         }
         
-        // Nếu có các phản hồi con, xóa chúng trước
         ForumComment::where('parent_id', $comment->id)->delete();
         
-        // Sau đó xóa comment chính
         $comment->delete();
         
         return redirect()->back()
@@ -389,14 +446,12 @@ class ForumController extends Controller
         $perPage = request('per_page', 10);
         $page = request('page', 1);
         
-        // Lấy các bình luận gốc (không có parent)
         $comments = ForumComment::with(['author', 'replies.author'])
             ->where('post_id', $postId)
             ->whereNull('parent_id')
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
         
-        // Format dữ liệu cho response
         $formattedComments = $comments->map(function($comment) {
             $formattedReplies = $comment->replies->map(function($reply) {
                 return [
@@ -449,7 +504,6 @@ class ForumController extends Controller
 
     public function toggleLike(Request $request, $postId)
     {
-        // Check if user is authenticated
         if (!Auth::check()) {
             return response()->json([
                 'success' => false,
@@ -460,14 +514,12 @@ class ForumController extends Controller
         $userId = Auth::id();
         $post = ForumPost::findOrFail($postId);
         
-        // Check if user has already liked the post
         $existingLike = DB::table('forum_likes')
             ->where('post_id', $postId)
             ->where('user_id', $userId)
             ->first();
         
         if ($existingLike) {
-            // If like exists, remove it (unlike)
             DB::table('forum_likes')
                 ->where('post_id', $postId)
                 ->where('user_id', $userId)
@@ -475,7 +527,6 @@ class ForumController extends Controller
             
             $action = 'unliked';
         } else {
-            // Otherwise, add a new like
             DB::table('forum_likes')->insert([
                 'post_id' => $postId,
                 'user_id' => $userId,
@@ -486,7 +537,6 @@ class ForumController extends Controller
             $action = 'liked';
         }
         
-        // Get the updated like count
         $likeCount = DB::table('forum_likes')
             ->where('post_id', $postId)
             ->count();
@@ -498,7 +548,6 @@ class ForumController extends Controller
         ]);
     }
 
-    // Add a method to get the like count and user's like status
     public function getLikeInfo(Request $request, $postId)
     {
         $post = ForumPost::findOrFail($postId);
@@ -521,5 +570,4 @@ class ForumController extends Controller
             'userLiked' => $userLiked
         ]);
     }
-
 }

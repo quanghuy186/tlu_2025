@@ -120,31 +120,89 @@
               @if ($users->hasPages())
                 <div class="pagination-container">
                     <ul class="pagination">
-                        {{-- Liên kết trang trước --}}
-                        @if ($users->onFirstPage())
-                            <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
-                        @else
-                            <li><a href="{{ $users->previousPageUrl() }}"><i class="fas fa-angle-double-left"></i></a></li>
+                        {{-- Nút First --}}
+                        @if ($users->currentPage() > 1)
+                            <li><a href="#" class="page-link" data-page="1">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a></li>
                         @endif
 
-                        {{-- Các phần tử phân trang --}}
-                        @foreach ($users->getUrlRange(1, $users->lastPage()) as $page => $url)
-                            @if ($page == $users->currentPage())
+                        {{-- Nút Previous --}}
+                        @if ($users->onFirstPage())
+                            <li class="disabled"><span><i class="fas fa-angle-left"></i></span></li>
+                        @else
+                            <li><a href="#" class="page-link" data-page="{{ $users->currentPage() - 1 }}">
+                                <i class="fas fa-angle-left"></i>
+                            </a></li>
+                        @endif
+
+                        {{-- Logic hiển thị số trang thông minh --}}
+                        @php
+                            $currentPage = $users->currentPage();
+                            $lastPage = $users->lastPage();
+                            $start = max(1, $currentPage - 2);
+                            $end = min($lastPage, $currentPage + 2);
+                            
+                            // Điều chỉnh để luôn hiển thị 5 trang nếu có thể
+                            if ($end - $start < 4) {
+                                if ($start == 1) {
+                                    $end = min($lastPage, $start + 4);
+                                } else {
+                                    $start = max(1, $end - 4);
+                                }
+                            }
+                        @endphp
+
+                        {{-- Hiển thị trang đầu và dấu ... nếu cần --}}
+                        @if ($start > 1)
+                            <li><a href="#" class="page-link" data-page="1">1</a></li>
+                            @if ($start > 2)
+                                <li class="disabled"><span>...</span></li>
+                            @endif
+                        @endif
+
+                        {{-- Hiển thị các trang trong khoảng --}}
+                        @for ($page = $start; $page <= $end; $page++)
+                            @if ($page == $currentPage)
                                 <li><a href="#" class="active">{{ $page }}</a></li>
                             @else
-                                <li><a href="{{ $url }}">{{ $page }}</a></li>
+                                <li><a href="#" class="page-link" data-page="{{ $page }}">{{ $page }}</a></li>
                             @endif
-                        @endforeach
+                        @endfor
 
-                        {{-- Liên kết trang tiếp theo --}}
+                        {{-- Hiển thị dấu ... và trang cuối nếu cần --}}
+                        @if ($end < $lastPage)
+                            @if ($end < $lastPage - 1)
+                                <li class="disabled"><span>...</span></li>
+                            @endif
+                            <li><a href="#" class="page-link" data-page="{{ $lastPage }}">{{ $lastPage }}</a></li>
+                        @endif
+
+                        {{-- Nút Next --}}
                         @if ($users->hasMorePages())
-                            <li><a href="{{ $users->nextPageUrl() }}"><i class="fas fa-angle-double-right"></i></a></li>
+                            <li><a href="#" class="page-link" data-page="{{ $users->currentPage() + 1 }}">
+                                <i class="fas fa-angle-right"></i>
+                            </a></li>
                         @else
-                            <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
+                            <li class="disabled"><span><i class="fas fa-angle-right"></i></span></li>
+                        @endif
+
+                        {{-- Nút Last --}}
+                        @if ($users->currentPage() < $users->lastPage())
+                            <li><a href="#" class="page-link" data-page="{{ $users->lastPage() }}">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a></li>
                         @endif
                     </ul>
+                    
+                    {{-- Hiển thị thông tin trang --}}
+                    <div class="pagination-info">
+                        Hiển thị {{ $users->firstItem() }} - {{ $users->lastItem() }} 
+                        của {{ $users->total() }} kết quả
+                        (Trang {{ $users->currentPage() }}/{{ $users->lastPage() }})
+                    </div>
                 </div>
-              @endif
+                @endif
             </div>
           </div>
         </div>

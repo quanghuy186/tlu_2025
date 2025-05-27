@@ -173,7 +173,7 @@
                     if (isImageFile(message.file_url)) {
                         messageContent = `<div><img src="${message.file_url}" class="img-fluid rounded" style="max-width: 200px;"></div>`;
                     } else {
-                        messageContent = `<div><a href="${message.file_url}" target="_blank" class="d-flex align-items-center">
+                        messageContent = `<div><a href="${message.file_url}" target="_blank" class="d-flex align-items-center text-black">
                             <i class="bi bi-file-earmark me-2"></i> Tập tin đính kèm
                         </a></div>`;
                     }

@@ -95,9 +95,7 @@
                 <div class="dropdown">
                     <a href="#" class="user-menu dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="modal" data-bs-target="#userInfoModal">
                         <img src="{{ Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar) : asset('user_default.jpg') }}" alt="User Avatar" class="user-avatar">
-                        <span>
-                            
-                            {{ Auth::user()->name }}</span>
+                        <span>{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li class="dropdown-header">Thông tin tài khoản</li>
