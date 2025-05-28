@@ -60,7 +60,7 @@
                       <option value="">Tất cả</option>
                       @foreach($roles as $role)
                         <option value="{{ $role->id }}" {{ request('role_id') == $role->id ? 'selected' : '' }}>
-                          {{ $role->name }}
+                          {{ $role->description }}
                         </option>
                       @endforeach
                     </select>
@@ -96,7 +96,7 @@
           <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
             <h5 class="card-title m-0 fw-bold text-primary">
               Danh sách tài khoản 
-              <span class="badge bg-info ms-2">{{ $users->total() }} kết quả</span>
+              <span class="badge bg-success text-white ms-2">{{ $users->total() }} kết quả</span>
             </h5>
             <div class="d-flex gap-2">
               <a href="{{ route('admin.user.import-excel') }}" class="btn btn-primary btn-sm d-flex align-items-center">

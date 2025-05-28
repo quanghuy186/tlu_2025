@@ -45,9 +45,9 @@ class UserController extends Controller
         }
         
         // Lọc theo vai trò
-        if ($request->has('role_id') && $request->role_id != '') {
+         if ($request->has('role_id') && $request->role_id != '') {
             $query->whereHas('roles', function($q) use ($request) {
-                $q->where('roles.id', $request->role_id);
+                $q->where('role_id', $request->role_id);
             });
         }
         
