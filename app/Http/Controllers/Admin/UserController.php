@@ -21,27 +21,57 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class UserController extends Controller
 {
-    public function index(){
-        // $hasPermission = false;
-        // $permission = 'view-user';
-        // $hasPermission = tluHasPermission(Auth::user(),$permission);
-       
-        // if(!$hasPermission){
-        //     return abort(403);
-        // }
-
-        // if(!Gate::allows('view-user')){
-        //     abort(403);
-        // }
-
-        $users = User::paginate(10);
-        return view('admin.user.index', compact('users'));
+    public function index(Request $request){
+        // Khởi tạo query
+        $query = User::query();
+        
+        // Tìm kiếm
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+        
+        // Lọc theo trạng thái kích hoạt
+        if ($request->has('email_verified') && $request->email_verified != '') {
+            $query->where('email_verified', $request->email_verified);
+        }
+        
+        // Lọc theo trạng thái tài khoản
+        if ($request->has('is_active') && $request->is_active != '') {
+            $query->where('is_active', $request->is_active);
+        }
+        
+        // Lọc theo vai trò
+        if ($request->has('role_id') && $request->role_id != '') {
+            $query->whereHas('roles', function($q) use ($request) {
+                $q->where('roles.id', $request->role_id);
+            });
+        }
+        
+        // Sắp xếp
+        $sortField = $request->get('sort_field', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+        $query->orderBy($sortField, $sortOrder);
+        
+        // Số lượng items trên mỗi trang
+        $perPage = $request->get('per_page', 10);
+        
+        // Phân trang với giữ lại các tham số tìm kiếm
+        $users = $query->paginate($perPage)->appends($request->all());
+        
+        // Lấy danh sách roles để hiển thị trong dropdown filter
+        $roles = Role::all();
+        
+        return view('admin.user.index', compact('users', 'roles'));
     }
 
+    // Các phương thức khác giữ nguyên như cũ...
+    
     public function showDepartment(){
         $users = DB::table('users')->get();
-
-
         return view('admin.user.department.index')->with('users', $users);
     }
 
@@ -77,7 +107,6 @@ class UserController extends Controller
         $sheet->setCellValue('A3', 'Trần Thị B');
         $sheet->setCellValue('B3', 'tranthib@example.com');
         $sheet->setCellValue('C3', '87654321');
-        // Các cột D và E để trống ở dòng 3 để minh họa rằng chúng là tùy chọn
         
         // Thêm chỉ dẫn
         $sheet->setCellValue('A5', 'Lưu ý:');
@@ -268,8 +297,6 @@ class UserController extends Controller
             $userHasRole->user_id = $user->id;
             $userHasRole->role_id = $user_role_id;
             $userHasRole->save();
-
-
             
             DB::commit();
             
@@ -351,6 +378,4 @@ class UserController extends Controller
                 ->with('error', "Không thể xóa tài khoản. Lỗi: " . $e->getMessage());
         }
     }
-
-    
 }
