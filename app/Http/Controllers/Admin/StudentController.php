@@ -7,16 +7,154 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\ClassRoom;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::with(['user', 'classWithDetails'])->paginate(10);
-        return view('admin.contact.student.index', compact('students'));
+        $query = Student::with(['user', 'class']);
+        
+        // Tìm kiếm
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('student_code', 'like', '%' . $search . '%')
+                  ->orWhereHas('user', function($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                      ->orWhere('email', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+        
+        // Lọc theo lớp
+        if ($request->has('class_id') && $request->class_id != '') {
+            $query->where('class_id', $request->class_id);
+        }
+        
+        // Lọc theo chương trình
+        if ($request->has('program') && $request->program != '') {
+            $query->where('program', $request->program);
+        }
+        
+        // Lọc theo trạng thái
+        if ($request->has('graduation_status') && $request->graduation_status != '') {
+            $query->where('graduation_status', $request->graduation_status);
+        }
+        
+        // Lọc theo năm nhập học
+        if ($request->has('enrollment_year') && $request->enrollment_year != '') {
+            $query->where('enrollment_year', $request->enrollment_year);
+        }
+        
+        // Sắp xếp
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+        
+        if ($sortBy == 'name') {
+            $query->join('users', 'students.user_id', '=', 'users.id')
+                  ->orderBy('users.name', $sortOrder)
+                  ->select('students.*');
+        } else {
+            $query->orderBy($sortBy, $sortOrder);
+        }
+        
+        // Số lượng items mỗi trang
+        $perPage = $request->get('per_page', 10);
+        
+        // Phân trang với giữ lại query parameters
+        $students = $query->paginate($perPage)->appends($request->query());
+        
+        // Lấy dữ liệu cho dropdown filters
+        $classes = ClassRoom::orderBy('class_name')->get();
+        $programs = Student::getPrograms();
+        $graduationStatuses = Student::getGraduationStatuses();
+        $enrollmentYears = Student::distinct()
+                                   ->whereNotNull('enrollment_year')
+                                   ->orderBy('enrollment_year', 'desc')
+                                   ->pluck('enrollment_year');
+
+         // Thống kê
+        $stats = [
+            'total' => Student::count(),
+            'student_k63' => Student::where('enrollment_year', 2021)->count(),
+            'student_k64' => Student::where('enrollment_year', 2022)->count(),
+            'student_k65' => Student::where('enrollment_year', 2023)->count(),
+            'student_k66' => Student::where('enrollment_year', 2024)->count(),
+
+            // 'total_class' => ClassRoom::count(),
+            // 'total_teacher' => ClassRoom::whereNotNull('teacher_id')->count(),
+
+            // 'with_manager' => Department::whereNotNull('user_id')->count(),
+            // 'without_manager' => Department::whereNull('user_id')->count(),
+            // 'root_departments' => Department::whereNull('parent_id')->count(),
+        ];
+        
+        return view('admin.contact.student.index', compact(
+            'students', 
+            'classes', 
+            'programs', 
+            'graduationStatuses',
+            'enrollmentYears',
+            'stats'
+        ));
+    }
+
+    /**
+     * Export danh sách sinh viên
+     */
+    public function export(Request $request)
+    {
+        // Áp dụng các filters giống như index
+        $query = Student::with(['user', 'class']);
+        
+        // Tìm kiếm
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('student_code', 'like', '%' . $search . '%')
+                  ->orWhereHas('user', function($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                      ->orWhere('email', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+        
+        // Lọc theo lớp
+        if ($request->has('class_id') && $request->class_id != '') {
+            $query->where('class_id', $request->class_id);
+        }
+        
+        // Lọc theo chương trình
+        if ($request->has('program') && $request->program != '') {
+            $query->where('program', $request->program);
+        }
+        
+        // Lọc theo trạng thái
+        if ($request->has('graduation_status') && $request->graduation_status != '') {
+            $query->where('graduation_status', $request->graduation_status);
+        }
+        
+        // Lọc theo năm nhập học
+        if ($request->has('enrollment_year') && $request->enrollment_year != '') {
+            $query->where('enrollment_year', $request->enrollment_year);
+        }
+        
+        $students = $query->get();
+        
+        // Export logic (CSV/Excel)
+        // ...
+    }
+
+    /**
+     * Reset filters và quay về trang đầu
+     */
+    public function resetFilters()
+    {
+        return redirect()->route('admin.student.index');
     }
 
     /**
@@ -56,13 +194,13 @@ class StudentController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'student', // Giả sử bạn có trường role trong bảng users
+            'role' => 'student',
         ]);
 
         // Upload avatar nếu có
         if ($request->hasFile('avatar')) {
             $avatarName = time() . '.' . $request->avatar->extension();
-            $request->avatar->storeAs('avatars', $avatarName);
+            $request->avatar->storeAs('avatars', $avatarName, 'public');
             $user->avatar = $avatarName;
             $user->save();
         }
@@ -86,7 +224,7 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        $student = Student::with(['user', 'classWithDetails'])->findOrFail($id);
+        $student = Student::with(['user', 'class'])->findOrFail($id);
         return view('admin.contact.student.detail', compact('student'));
     }
 
@@ -149,11 +287,11 @@ class StudentController extends Controller
         if ($request->hasFile('avatar')) {
             // Xóa avatar cũ nếu có
             if ($user->avatar) {
-                Storage::delete('avatars/' . $user->avatar);
+                Storage::delete('public/avatars/' . $user->avatar);
             }
             
             $avatarName = time() . '.' . $request->avatar->extension();
-            $request->avatar->storeAs('avatars', $avatarName);
+            $request->avatar->storeAs('avatars', $avatarName, 'public');
             $user->avatar = $avatarName;
         }
         

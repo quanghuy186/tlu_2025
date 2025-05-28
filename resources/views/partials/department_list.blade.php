@@ -124,18 +124,19 @@
                        
                         <div class="unit-detail-section">
                             @if($department->level == 1)
-                                <div class="unit-detail-section-title">Bộ môn trực thuộc</div>
-                                <div class="staff-list">
-                                    @foreach ($department->children as $child)
-                                        <div class="staff-item">
-                                            <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
-                                            <div class="staff-info">
-                                                <div class="staff-name">{{ $child->name }}</div>
-                                                <div class="staff-position">Trưởng BM: {{ $child->manager->name }}</div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
+                                    <div class="unit-detail-section-title">Bộ môn trực thuộc</div>
+                                    <div class="staff-list">
+                                        @foreach ($department->children as $child)
+                                                <div class="staff-item">
+                                                    <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
+                                                    <div class="staff-info">
+                                                        <div class="staff-name">{{ $child->name }}</div>
+                                                        <div class="staff-position">Trưởng BM: {{ $child->manager->name }}</div>
+                                                    </div>
+                                                </div>
+                                        @endforeach
+                                    </div>
+                                
                             @elseif($department->level == 2)
                                 <div class="unit-detail-section-title">Ngành trực thuộc</div>
                                 <div class="staff-list">
