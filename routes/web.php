@@ -93,6 +93,9 @@ Route::prefix('/admin')->name('admin.')->group(function(){
     Route::get('/teachers/{id}/edit', [TeacherController::class, 'edit'])->name('teacher.edit');
     Route::put('/teachers/{id}', [TeacherController::class, 'update'])->name('teacher.update');
     Route::delete('/teachers/{id}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
+     Route::post('/bulk-action', [TeacherController::class, 'bulkAction'])->name('teacher.bulk-action');
+    // Route::get('/export/excel', [TeacherController::class, 'export'])->name('export');
+        // Route::post('/import/excel', [TeacherController::class, 'import'])->name('import');
 
     // Routes quản lý lớp học
     Route::get('/classes', [ClassController::class, 'index'])->name('class.index');

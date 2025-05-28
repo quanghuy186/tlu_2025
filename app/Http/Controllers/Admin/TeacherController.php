@@ -14,27 +14,315 @@ use Illuminate\Validation\Rule;
 
 class TeacherController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of teachers with advanced search, filter and pagination
+     */
+    public function index(Request $request)
     {
-        $teachers = Teacher::with(['user', 'department'])->paginate(10);
-        return view('admin.contact.teacher.index', compact('teachers'));
+        // Start query with necessary relationships
+        $query = Teacher::with(['user', 'department']);
+
+        // Advanced search functionality
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('teacher_code', 'like', "%{$search}%")
+                  ->orWhere('specialization', 'like', "%{$search}%")
+                  ->orWhere('position', 'like', "%{$search}%")
+                  ->orWhere('office_location', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($userQuery) use ($search) {
+                      $userQuery->where('name', 'like', "%{$search}%")
+                                ->orWhere('email', 'like', "%{$search}%")
+                                ->orWhere('phone', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Filter by department
+        if ($request->filled('department_id') && $request->department_id !== '') {
+            $query->where('department_id', $request->department_id);
+        }
+
+        // Filter by academic rank
+        if ($request->filled('academic_rank') && $request->academic_rank !== '') {
+            $query->where('academic_rank', $request->academic_rank);
+        }
+
+        // Filter by status (active/inactive users)
+        if ($request->filled('status')) {
+            $query->whereHas('user', function ($userQuery) use ($request) {
+                if ($request->status === 'active') {
+                    $userQuery->whereNull('deleted_at');
+                } elseif ($request->status === 'inactive') {
+                    $userQuery->whereNotNull('deleted_at');
+                }
+            });
+        }
+
+        // Date range filter
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        // Sorting functionality
+        $sortField = $request->get('sort', 'created_at');
+        $sortDirection = $request->get('direction', 'desc');
+        
+        switch ($sortField) {
+            case 'name':
+                $query->join('users', 'teachers.user_id', '=', 'users.id')
+                      ->orderBy('users.name', $sortDirection)
+                      ->select('teachers.*');
+                break;
+            case 'email':
+                $query->join('users', 'teachers.user_id', '=', 'users.id')
+                      ->orderBy('users.email', $sortDirection)
+                      ->select('teachers.*');
+                break;
+            case 'department':
+                $query->leftJoin('departments', 'teachers.department_id', '=', 'departments.id')
+                      ->orderBy('departments.name', $sortDirection)
+                      ->select('teachers.*');
+                break;
+            case 'teacher_code':
+                $query->orderBy('teacher_code', $sortDirection);
+                break;
+            case 'academic_rank':
+                $query->orderBy('academic_rank', $sortDirection);
+                break;
+            case 'specialization':
+                $query->orderBy('specialization', $sortDirection);
+                break;
+            default:
+                $query->orderBy('teachers.created_at', $sortDirection);
+        }
+
+        // Pagination with custom per page
+        $perPage = $request->get('per_page', 10);
+        
+        // Validate per_page value
+        $allowedPerPage = [10, 25, 50, 100];
+        if (!in_array($perPage, $allowedPerPage)) {
+            $perPage = 10;
+        }
+
+        $teachers = $query->paginate($perPage);
+
+        // Preserve query parameters in pagination links
+        $teachers->appends($request->all());
+
+        // Get data for filter dropdowns
+        $departments = Department::orderBy('name')->get();
+        $academicRanks = Teacher::whereNotNull('academic_rank')
+                                ->distinct()
+                                ->pluck('academic_rank')
+                                ->sort()
+                                ->values();
+
+        // Statistics for dashboard
+        $stats = [
+            'total' => Teacher::count(),
+            'with_department' => Teacher::whereNotNull('department_id')->count(),
+            'without_department' => Teacher::whereNull('department_id')->count(),
+            'recent' => Teacher::where('created_at', '>=', now()->subDays(30))->count(),
+        ];
+
+        return view('admin.contact.teacher.index', compact(
+            'teachers', 
+            'departments', 
+            'academicRanks', 
+            'stats'
+        ));
     }
 
     /**
-     * Hiển thị form tạo giảng viên mới
+     * Export filtered results
+     */
+    public function export(Request $request)
+    {
+        // Apply same filters as index method
+        $query = Teacher::with(['user', 'department']);
+
+        // Apply all the same filters from index method
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('teacher_code', 'like', "%{$search}%")
+                  ->orWhere('specialization', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($userQuery) use ($search) {
+                      $userQuery->where('name', 'like', "%{$search}%")
+                                ->orWhere('email', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->filled('department_id') && $request->department_id !== '') {
+            $query->where('department_id', $request->department_id);
+        }
+
+        if ($request->filled('academic_rank') && $request->academic_rank !== '') {
+            $query->where('academic_rank', $request->academic_rank);
+        }
+
+        $teachers = $query->get();
+
+        // Return Excel file or CSV
+        return response()->streamDownload(function () use ($teachers) {
+            $handle = fopen('php://output', 'w');
+            
+            // CSV headers
+            fputcsv($handle, [
+                'Mã GV',
+                'Họ tên',
+                'Email',
+                'Điện thoại',
+                'Khoa/Bộ môn',
+                'Học hàm/Học vị',
+                'Chuyên ngành',
+                'Chức vụ',
+                'Phòng làm việc',
+                'Ngày tạo'
+            ]);
+
+            // Data rows
+            foreach ($teachers as $teacher) {
+                fputcsv($handle, [
+                    $teacher->teacher_code ?? '',
+                    $teacher->user->name ?? '',
+                    $teacher->user->email ?? '',
+                    $teacher->user->phone ?? '',
+                    $teacher->department->name ?? '',
+                    $teacher->academic_rank ?? '',
+                    $teacher->specialization ?? '',
+                    $teacher->position ?? '',
+                    $teacher->office_location ?? '',
+                    $teacher->created_at->format('d/m/Y H:i')
+                ]);
+            }
+
+            fclose($handle);
+        }, 'danh-sach-giang-vien-' . date('Y-m-d') . '.csv', [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="danh-sach-giang-vien-' . date('Y-m-d') . '.csv"',
+        ]);
+    }
+
+    /**
+     * Get teachers data for AJAX requests (for datatables or live search)
+     */
+    public function getData(Request $request)
+    {
+        $query = Teacher::with(['user', 'department']);
+
+        // Apply filters
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('teacher_code', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($userQuery) use ($search) {
+                      $userQuery->where('name', 'like', "%{$search}%")
+                                ->orWhere('email', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->filled('department_id')) {
+            $query->where('department_id', $request->department_id);
+        }
+
+        $teachers = $query->paginate($request->get('per_page', 10));
+
+        return response()->json([
+            'data' => $teachers->items(),
+            'pagination' => [
+                'total' => $teachers->total(),
+                'per_page' => $teachers->perPage(),
+                'current_page' => $teachers->currentPage(),
+                'last_page' => $teachers->lastPage(),
+                'from' => $teachers->firstItem(),
+                'to' => $teachers->lastItem(),
+            ]
+        ]);
+    }
+
+    /**
+     * Bulk actions for multiple teachers
+     */
+    public function bulkAction(Request $request)
+    {
+        $request->validate([
+            'action' => 'required|in:delete,assign_department,export',
+            'teacher_ids' => 'required|array',
+            'teacher_ids.*' => 'exists:teachers,id',
+            'department_id' => 'required_if:action,assign_department|exists:departments,id',
+        ]);
+
+        $teachers = Teacher::whereIn('id', $request->teacher_ids);
+
+        switch ($request->action) {
+            case 'delete':
+                $count = $teachers->count();
+                
+                // Delete associated users and their avatars
+                foreach ($teachers->get() as $teacher) {
+                    if ($teacher->user && $teacher->user->avatar) {
+                        Storage::disk('public')->delete('avatars/' . $teacher->user->avatar);
+                    }
+                    if ($teacher->user) {
+                        $teacher->user->delete();
+                    }
+                }
+                
+                $teachers->delete();
+                
+                return redirect()->back()->with('success', "Đã xóa {$count} giảng viên thành công!");
+
+            case 'assign_department':
+                $count = $teachers->update(['department_id' => $request->department_id]);
+                $department = Department::find($request->department_id);
+                
+                return redirect()->back()->with('success', "Đã phân công {$count} giảng viên vào khoa/bộ môn {$department->name}!");
+
+            case 'export':
+                $teachersList = $teachers->with(['user', 'department'])->get();
+                
+                return response()->streamDownload(function () use ($teachersList) {
+                    $handle = fopen('php://output', 'w');
+                    
+                    fputcsv($handle, ['Mã GV', 'Họ tên', 'Email', 'Khoa/Bộ môn', 'Học hàm/Học vị']);
+                    
+                    foreach ($teachersList as $teacher) {
+                        fputcsv($handle, [
+                            $teacher->teacher_code ?? '',
+                            $teacher->user->name ?? '',
+                            $teacher->user->email ?? '',
+                            $teacher->department->name ?? '',
+                            $teacher->academic_rank ?? '',
+                        ]);
+                    }
+                    
+                    fclose($handle);
+                }, 'selected-teachers-' . date('Y-m-d') . '.csv');
+        }
+    }
+
+    /**
+     * Show the form for creating a new teacher
      */
     public function create()
     {
-        $departments = Department::all();
+        $departments = Department::orderBy('name')->get();
         return view('admin.contact.teacher.create', compact('departments'));
     }
 
     /**
-     * Lưu giảng viên mới vào database
+     * Store a newly created teacher
      */
     public function store(Request $request)
     {
-        // Validate dữ liệu
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
@@ -50,25 +338,22 @@ class TeacherController extends Controller
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Tạo user mới
         $user = User::create([
             'name' => $validated['name'],
             'phone' => $validated['phone'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'teacher', // Giả sử bạn có trường role trong bảng users
+            'role' => 'teacher',
         ]);
-
 
         if ($request->hasFile('avatar')) {
             $avatarName = time() . '.' . $request->avatar->extension();
-            $request->avatar->storeAs('avatars', $avatarName);
+            $request->avatar->storeAs('avatars', $avatarName, 'public');
             $user->avatar = $avatarName;
             $user->save();
         }
 
-        // Tạo thông tin giảng viên
-        $teacher = Teacher::create([
+        Teacher::create([
             'user_id' => $user->id,
             'department_id' => $validated['department_id'] ?? null,
             'teacher_code' => $validated['teacher_code'] ?? null,
@@ -84,7 +369,7 @@ class TeacherController extends Controller
     }
 
     /**
-     * Hiển thị thông tin chi tiết giảng viên
+     * Display the specified teacher
      */
     public function show($id)
     {
@@ -93,23 +378,22 @@ class TeacherController extends Controller
     }
 
     /**
-     * Hiển thị form chỉnh sửa thông tin giảng viên
+     * Show the form for editing the specified teacher
      */
     public function edit($id)
     {
         $teacher = Teacher::with('user')->findOrFail($id);
-        $departments = Department::all();
+        $departments = Department::orderBy('name')->get();
         return view('admin.contact.teacher.edit', compact('teacher', 'departments'));
     }
 
     /**
-     * Cập nhật thông tin giảng viên
+     * Update the specified teacher
      */
     public function update(Request $request, $id)
     {
         $teacher = Teacher::findOrFail($id);
         
-        // Validate dữ liệu
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => [
@@ -136,7 +420,6 @@ class TeacherController extends Controller
             'password' => 'nullable|string|min:8',
         ]);
 
-        // Cập nhật thông tin user
         $user = User::find($teacher->user_id);
         $user->name = $validated['name'];
         $user->phone = $validated['phone'];
@@ -146,21 +429,18 @@ class TeacherController extends Controller
             $user->password = Hash::make($validated['password']);
         }
 
-        // Upload avatar mới nếu có
         if ($request->hasFile('avatar')) {
-            // Xóa avatar cũ nếu có
             if ($user->avatar) {
-                Storage::delete('avatars/' . $user->avatar);
+                Storage::disk('public')->delete('avatars/' . $user->avatar);
             }
             
             $avatarName = time() . '.' . $request->avatar->extension();
-            $request->avatar->storeAs('avatars', $avatarName);
+            $request->avatar->storeAs('avatars', $avatarName, 'public');
             $user->avatar = $avatarName;
         }
         
         $user->save();
 
-        // Cập nhật thông tin giảng viên
         $teacher->update([
             'department_id' => $validated['department_id'] ?? null,
             'teacher_code' => $validated['teacher_code'] ?? null,
@@ -176,19 +456,17 @@ class TeacherController extends Controller
     }
 
     /**
-     * Xóa giảng viên
+     * Remove the specified teacher
      */
     public function destroy($id)
     {
         $teacher = Teacher::findOrFail($id);
         $user = User::find($teacher->user_id);
         
-        // Xóa avatar nếu có
         if ($user && $user->avatar) {
-            Storage::delete('avatars/' . $user->avatar);
+            Storage::disk('public')->delete('avatars/' . $user->avatar);
         }
         
-        // Xóa teacher trước, sau đó xóa user
         $teacher->delete();
         if ($user) {
             $user->delete();
