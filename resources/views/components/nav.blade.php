@@ -118,36 +118,6 @@
         </div>
     </nav>
 
-  
-    {{-- <div class="modal fade user-info-modal" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="userInfoModalLabel">Thông tin cá nhân</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <img src="https://via.placeholder.com/200x200?text=User" alt="User Profile" class="avatar">
-                    <div class="user-details">
-                        <h4>{{ Auth::user()->name }}</h4>
-                        <span class="badge rounded-pill">Sinh viên</span>
-                    </div>
-                    <ul class="info-list">
-                        <li><i class="fas fa-id-card"></i> Mã số: SV12345678</li>
-                        <li><i class="fas fa-building"></i> Khoa Công nghệ thông tin</li>
-                        <li><i class="fas fa-envelope"></i> a.nv123456@tlu.edu.vn</li>
-                        <li><i class="fas fa-phone"></i> 0987654321</li>
-                        <li><i class="fas fa-map-marker-alt"></i> Hà Nội, Việt Nam</li>
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary">Cập nhật thông tin</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
     <div class="modal fade user-info-modal" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -155,82 +125,215 @@
                     <h5 class="modal-title" id="userInfoModalLabel">Thông tin cá nhân</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form id="updateProfileForm" action="" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')
-                        
-                        <div class="text-center mb-4">
-                            <div class="position-relative d-inline-block">
-                                <img src="{{ Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar)  : asset('user_default.jpg') }}" 
-                                     alt="User Profile" class="avatar" id="avatarPreview">
-                                <label for="avatarInput" class="avatar-upload-btn">
-                                    <i class="fas fa-camera"></i>
-                                </label>
-                                <input type="file" id="avatarInput" name="avatar" class="d-none" accept="image/*">
+                @if(hasRole(1, Auth::user()))
+                    <div class="modal-body">
+                        <form id="updateProfileForm" action="" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            
+                            <div class="text-center mb-4">
+                                <div class="position-relative d-inline-block">
+                                    <img src="{{ Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar)  : asset('user_default.jpg') }}" 
+                                        alt="User Profile" class="avatar" id="avatarPreview">
+                                    <label for="avatarInput" class="avatar-upload-btn">
+                                        <i class="fas fa-camera"></i>
+                                    </label>
+                                    <input type="file" id="avatarInput" name="avatar" class="d-none" accept="image/*">
+                                </div>
+                                <h4 class="mt-2">{{ Auth::user()->name }}</h4>
+                                <span class="badge rounded-pill">{{ Auth::user()->role ?? 'Sinh viên' }}</span>
                             </div>
-                            <h4 class="mt-2">{{ Auth::user()->name }}</h4>
-                            <span class="badge rounded-pill">{{ Auth::user()->role ?? 'Sinh viên' }}</span>
-                        </div>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="name"><i class="fas fa-user"></i> Họ và tên</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ Auth::user()->name }}">
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="name"><i class="fas fa-user"></i> Họ và tên</label>
+                                        <input type="text" class="form-control" id="name" name="name" value="{{ Auth::user()->name }}">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-12 mb-3">
-                                <div class="form-group">
-                                    <label for="studentId"><i class="fas fa-id-card"></i> Mã số sinh viên</label>
-                                    <input type="text" class="form-control" id="studentId" name="student_id" value="{{ Auth::user()->student_id ?? 'SV12345678' }}">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="faculty"><i class="fas fa-building"></i> Khoa</label>
-                                    <select class="form-select" id="faculty" name="faculty">
-                                        <option value="Công nghệ thông tin" {{ (Auth::user()->faculty ?? '') == 'Công nghệ thông tin' ? 'selected' : '' }}>Công nghệ thông tin</option>
-                                        <option value="Kỹ thuật tài nguyên nước" {{ (Auth::user()->faculty ?? '') == 'Kỹ thuật tài nguyên nước' ? 'selected' : '' }}>Kỹ thuật tài nguyên nước</option>
-                                        <option value="Kỹ thuật xây dựng" {{ (Auth::user()->faculty ?? '') == 'Kỹ thuật xây dựng' ? 'selected' : '' }}>Kỹ thuật xây dựng</option>
-                                        <option value="Kinh tế và Quản lý" {{ (Auth::user()->faculty ?? '') == 'Kinh tế và Quản lý' ? 'selected' : '' }}>Kinh tế và Quản lý</option>
-                                        <option value="Điện - Điện tử" {{ (Auth::user()->faculty ?? '') == 'Điện - Điện tử' ? 'selected' : '' }}>Điện - Điện tử</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 mb-3">
-                                <div class="form-group">
-                                    <label for="email"><i class="fas fa-envelope"></i> Email</label>
-                                    <input readonly type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->email }}">
-                                </div>
-                        </div>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="phone"><i class="fas fa-phone"></i> Số điện thoại</label>
-                                    <input type="tel" class="form-control" id="phone" name="phone" value="{{ Auth::user()->phone ?? '0987654321' }}">
+                            <div class="row mb-3">
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-group">
+                                        <label for="studentId"><i class="fas fa-id-card"></i> Mã số sinh viên</label>
+                                        <input type="text" class="form-control" id="studentId" name="student_id" value="{{ Auth::user()->student_id ?? 'SV12345678' }}">
+                                    </div>
                                 </div>
                             </div>
                             
-                        </div>
-
-                        <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ</label>
-                                    <input type="text" class="form-control" id="address" name="address" value="{{ Auth::user()->address ?? 'Hà Nội, Việt Nam' }}">
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="faculty"><i class="fas fa-building"></i> Khoa</label>
+                                        <select class="form-select" id="faculty" name="faculty">
+                                            <option value="Công nghệ thông tin" {{ (Auth::user()->faculty ?? '') == 'Công nghệ thông tin' ? 'selected' : '' }}>Công nghệ thông tin</option>
+                                            <option value="Kỹ thuật tài nguyên nước" {{ (Auth::user()->faculty ?? '') == 'Kỹ thuật tài nguyên nước' ? 'selected' : '' }}>Kỹ thuật tài nguyên nước</option>
+                                            <option value="Kỹ thuật xây dựng" {{ (Auth::user()->faculty ?? '') == 'Kỹ thuật xây dựng' ? 'selected' : '' }}>Kỹ thuật xây dựng</option>
+                                            <option value="Kinh tế và Quản lý" {{ (Auth::user()->faculty ?? '') == 'Kinh tế và Quản lý' ? 'selected' : '' }}>Kinh tế và Quản lý</option>
+                                            <option value="Điện - Điện tử" {{ (Auth::user()->faculty ?? '') == 'Điện - Điện tử' ? 'selected' : '' }}>Điện - Điện tử</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                    </form>
-                </div>
+
+                            <div class="col-md-12 mb-3">
+                                    <div class="form-group">
+                                        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                                        <input readonly type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->email }}">
+                                    </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="phone"><i class="fas fa-phone"></i> Số điện thoại</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ Auth::user()->phone ?? '0987654321' }}">
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                            <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ</label>
+                                        <input type="text" class="form-control" id="address" name="address" value="{{ Auth::user()->address ?? 'Hà Nội, Việt Nam' }}">
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+                @elseif(hasRole(2, Auth::user()))
+                    <div class="modal-body">
+                        <form id="updateProfileForm" action="" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            
+                            <div class="text-center mb-4">
+                                <div class="position-relative d-inline-block">
+                                    <img src="{{ Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar)  : asset('user_default.jpg') }}" 
+                                        alt="User Profile" class="avatar" id="avatarPreview">
+                                    <label for="avatarInput" class="avatar-upload-btn">
+                                        <i class="fas fa-camera"></i>
+                                    </label>
+                                    <input type="file" id="avatarInput" name="avatar" class="d-none" accept="image/*">
+                                </div>
+                                <h4 class="mt-2">{{ Auth::user()->name }}</h4>
+                                <span class="badge rounded-pill">{{ Auth::user()->role ?? 'Sinh viên' }}</span>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="name"><i class="fas fa-user"></i> Họ và tên</label>
+                                        <input type="text" class="form-control" id="name" name="name" value="{{ Auth::user()->name }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-group">
+                                        <label for="studentId"><i class="fas fa-id-card"></i> Mã số sinh viên</label>
+                                        <input type="text" class="form-control" id="studentId" name="student_id" value="{{ Auth::user()->student_id ?? 'SV12345678' }}">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="faculty"><i class="fas fa-building"></i> Khoa</label>
+                                        <select class="form-select" id="faculty" name="faculty">
+                                            <option value="Công nghệ thông tin" {{ (Auth::user()->faculty ?? '') == 'Công nghệ thông tin' ? 'selected' : '' }}>Công nghệ thông tin</option>
+                                            <option value="Kỹ thuật tài nguyên nước" {{ (Auth::user()->faculty ?? '') == 'Kỹ thuật tài nguyên nước' ? 'selected' : '' }}>Kỹ thuật tài nguyên nước</option>
+                                            <option value="Kỹ thuật xây dựng" {{ (Auth::user()->faculty ?? '') == 'Kỹ thuật xây dựng' ? 'selected' : '' }}>Kỹ thuật xây dựng</option>
+                                            <option value="Kinh tế và Quản lý" {{ (Auth::user()->faculty ?? '') == 'Kinh tế và Quản lý' ? 'selected' : '' }}>Kinh tế và Quản lý</option>
+                                            <option value="Điện - Điện tử" {{ (Auth::user()->faculty ?? '') == 'Điện - Điện tử' ? 'selected' : '' }}>Điện - Điện tử</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                    <div class="form-group">
+                                        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                                        <input readonly type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->email }}">
+                                    </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="phone"><i class="fas fa-phone"></i> Số điện thoại</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ Auth::user()->phone ?? '0987654321' }}">
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                            <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ</label>
+                                        <input type="text" class="form-control" id="address" name="address" value="{{ Auth::user()->address ?? 'Hà Nội, Việt Nam' }}">
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+                @elseif(hasRole(3, Auth()->user()))
+                    <div class="modal-body">
+                        <form id="updateProfileForm" action="" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            
+                            <div class="text-center mb-4">
+                                <div class="position-relative d-inline-block">
+                                    <img src="{{ Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar)  : asset('user_default.jpg') }}" 
+                                        alt="User Profile" class="avatar" id="avatarPreview">
+                                    <label for="avatarInput" class="avatar-upload-btn">
+                                        <i class="fas fa-camera"></i>
+                                    </label>
+                                    <input type="file" id="avatarInput" name="avatar" class="d-none" accept="image/*">
+                                </div>
+                                <h4 class="mt-2">{{ Auth::user()->managedDepartment->name }}</h4>
+                                <span class="badge rounded-pill text-primary">Đơn vị</span>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="name"><i class="fas fa-user"></i>Tên đơn vị</label>
+                           
+                                        <input type="text" class="form-control" id="name" name="name" value="{{ Auth::user()->managedDepartment->name }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                    <div class="form-group">
+                                        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                                        <input readonly type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->managedDepartment->email }}">
+                                    </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="phone"><i class="fas fa-phone"></i> Số điện thoại</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ Auth::user()->managedDepartment->phone ?? '' }}">
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                            <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ</label>
+                                        <input type="text" class="form-control" id="address" name="address" value="{{ Auth::user()->managedDepartment->address ?? 'Hà Nội, Việt Nam' }}">
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+                @endif
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                     <button type="submit" form="updateProfileForm" class="btn btn-primary">Lưu thay đổi</button>

@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use function Laravel\Prompts\table;
 function tluHasPermission($user, $permission){
         $email = $user->email;
         $result1 = 0;
@@ -28,6 +30,18 @@ function tluHasPermission($user, $permission){
         $result = $result1 + $result2;
         $hasPermission = $result > 0;
         return $hasPermission;
+}
+
+function hasRole($roleId, $user = null){
+        if (!$user) {
+            $user = Auth()->user();
+        }
+
+        if (!$user) {
+            return false;
+        }
+
+        return $user->roles()->where('role_id', $roleId)->exists();
 }
 
 if (!function_exists('timeAgo')) {

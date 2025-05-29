@@ -37,11 +37,6 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <button type="button" class="btn btn-outline-secondary px-5" style="padding: 12px" onclick="clearFilters()">
-                            <i class="fas fa-undo me-1"></i>Xóa bộ lọc
-                        </button>
-                    </div>
                 </div>
                 
                 <div class="filter-options">
@@ -75,7 +70,15 @@
                             <option value="student-affairs" {{ request('source') == 'student-affairs' ? 'selected' : '' }}>Phòng Công tác Sinh viên</option>
                         </select>
                     </div> --}}
+
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-outline-secondary px-5" onclick="clearFilters()">
+                            <i class="fas fa-undo me-1"></i>Xóa bộ lọc
+                        </button>
+                    </div>
                 </div>
+
+                
             </form>
         </div>
 
