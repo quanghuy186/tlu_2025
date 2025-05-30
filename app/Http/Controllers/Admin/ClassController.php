@@ -110,15 +110,15 @@ class ClassController extends Controller
     public function destroy($id)
     {
         $class = ClassRoom::findOrFail($id);
+        $class->teacher_id = null;
+        $class->save();
+        $class->students()->update(['class_id' => null]);
         $class->delete();
 
         return redirect()->route('admin.class.index')
             ->with('success', 'Lớp học đã được xóa thành công!');
     }
     
-    /**
-     * Lấy danh sách năm học gần đây
-     */
     private function getAcademicYears()
     {
         $currentYear = date('Y');

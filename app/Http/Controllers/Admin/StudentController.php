@@ -8,7 +8,10 @@ use App\Models\Student;
 use App\Models\User;
 use App\Models\ClassRoom;
 use App\Models\Teacher;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -84,13 +87,6 @@ class StudentController extends Controller
             'student_k64' => Student::where('enrollment_year', 2022)->count(),
             'student_k65' => Student::where('enrollment_year', 2023)->count(),
             'student_k66' => Student::where('enrollment_year', 2024)->count(),
-
-            // 'total_class' => ClassRoom::count(),
-            // 'total_teacher' => ClassRoom::whereNotNull('teacher_id')->count(),
-
-            // 'with_manager' => Department::whereNotNull('user_id')->count(),
-            // 'without_manager' => Department::whereNull('user_id')->count(),
-            // 'root_departments' => Department::whereNull('parent_id')->count(),
         ];
         
         return view('admin.contact.student.index', compact(
@@ -103,9 +99,6 @@ class StudentController extends Controller
         ));
     }
 
-    /**
-     * Export danh sách sinh viên
-     */
     public function export(Request $request)
     {
         // Áp dụng các filters giống như index
@@ -149,17 +142,11 @@ class StudentController extends Controller
         // ...
     }
 
-    /**
-     * Reset filters và quay về trang đầu
-     */
     public function resetFilters()
     {
         return redirect()->route('admin.student.index');
     }
 
-    /**
-     * Hiển thị form tạo sinh viên mới
-     */
     public function create()
     {
         $classes = ClassRoom::all();
@@ -315,21 +302,141 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        $student = Student::findOrFail($id);
-        $user = User::find($student->user_id);
-        
-        // Xóa avatar nếu có
-        if ($user && $user->avatar) {
-            Storage::delete('public/avatars/' . $user->avatar);
-        }
-        
-        // Xóa student trước, sau đó xóa user
-        $student->delete();
-        if ($user) {
-            $user->delete();
-        }
+        try {
+            DB::beginTransaction();
+            
+            $student = Student::findOrFail($id);
+            $user = User::find($student->user_id);
+            
+            // Xóa các quan hệ của user trước
+            if ($user) {
+                // Xóa user_has_roles
+                DB::table('user_has_roles')->where('user_id', $user->id)->delete();
+                
+                // Xóa user_has_permissions
+                DB::table('user_has_permissions')->where('user_id', $user->id)->delete();
+                
+                // Xóa avatar nếu có
+                if ($user->avatar && Storage::exists('public/avatars/' . $user->avatar)) {
+                    Storage::delete('public/avatars/' . $user->avatar);
+                }
+            }
+            
+            // Xóa student
+            $student->delete();
+            
+            // Xóa user
+            if ($user) {
+                $user->delete();
+            }
+            
+            DB::commit();
 
-        return redirect()->route('admin.student.index')
-            ->with('success', 'Sinh viên đã được xóa thành công!');
+            return redirect()->route('admin.student.index')
+                ->with('success', 'Sinh viên đã được xóa thành công!');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return redirect()->route('admin.student.index')
+                ->with('error', 'Không thể xóa sinh viên. Lỗi: ' . $e->getMessage());
+        }
     }
+
+    public function bulkDestroy(Request $request)     
+{         
+    try {             
+        // Validate input             
+        $request->validate([                 
+            'student_ids' => 'required|string'             
+        ]);                          
+        
+        // Chuyển đổi string thành array và làm sạch             
+        $studentIds = explode(',', $request->student_ids);             
+        $studentIds = array_filter(array_map('trim', $studentIds));             
+        $studentIds = array_map('intval', $studentIds);             
+        $studentIds = array_filter($studentIds, function($id) { return $id > 0; });                          
+        
+        if (empty($studentIds)) {                 
+            return redirect()->route('admin.student.index')                     
+                ->with('error', 'Không có sinh viên nào được chọn để xóa.');             
+        }                          
+        
+        DB::beginTransaction();                          
+        
+        // Lấy thông tin students và user_ids trước khi xóa             
+        $students = Student::whereIn('id', $studentIds)->get();             
+        
+        if ($students->isEmpty()) {                 
+            DB::rollBack();                 
+            return redirect()->route('admin.student.index')                     
+                ->with('error', 'Không tìm thấy sinh viên nào để xóa.');             
+        }
+        
+        $studentNames = [];             
+        $userIds = [];             
+        $avatarsToDelete = [];                          
+        
+        foreach ($students as $student) {                 
+            // Lấy tên sinh viên                 
+            $studentInfo = $student->student_code ?                      
+                $student->student_code . ' - ' . $student->user->name :                      
+                $student->user->name;                 
+            $studentNames[] = $studentInfo;                                  
+            
+            // Lấy user_id để xóa user                 
+            $userIds[] = $student->user_id;                                  
+            
+            // Lưu avatar để xóa file                 
+            if ($student->user && $student->user->avatar) {                     
+                $avatarsToDelete[] = $student->user->avatar;                 
+            }             
+        }                          
+        
+        // Xóa các quan hệ liên quan             
+        if (!empty($userIds)) {
+            DB::table('user_has_roles')->whereIn('user_id', $userIds)->delete();             
+            DB::table('user_has_permissions')->whereIn('user_id', $userIds)->delete();
+        }                          
+        
+        // Xóa students trước             
+        Student::whereIn('id', $studentIds)->delete();                          
+        
+        // Sau đó xóa users             
+        if (!empty($userIds)) {
+            User::whereIn('id', $userIds)->delete();             
+        }
+        
+        // Xóa files avatar             
+        foreach ($avatarsToDelete as $avatar) {                 
+            $avatarPath = 'public/avatars/' . $avatar;
+            if (Storage::exists($avatarPath)) {                     
+                Storage::delete($avatarPath);                 
+            }             
+        }                          
+        
+        DB::commit();                          
+        
+        $count = count($studentNames);             
+        $message = "Đã xóa thành công {$count} sinh viên";                          
+        
+        // Nếu ít hơn 5 sinh viên, liệt kê tên             
+        if ($count <= 5 && $count > 0) {                 
+            $message .= ": " . implode(', ', $studentNames);             
+        }                          
+        
+        return redirect()->route('admin.student.index')             
+            ->with('success', $message);                          
+            
+    } catch (\Exception $e) {             
+        DB::rollBack();             
+        Log::error('Student bulk delete error: ' . $e->getMessage());             
+        
+        return redirect()->route('admin.student.index')             
+            ->with('error', "Không thể xóa sinh viên. Lỗi: " . $e->getMessage());         
+    }     
+}
+
+    
+
 }

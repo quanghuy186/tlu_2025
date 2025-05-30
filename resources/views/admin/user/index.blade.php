@@ -99,6 +99,9 @@
               <span class="badge bg-success text-white ms-2">{{ $users->total() }} kết quả</span>
             </h5>
             <div class="d-flex gap-2">
+              <button id="bulkDeleteBtn" class="btn btn-danger btn-sm d-none" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
+                <i class="bi bi-trash me-2"></i>Xóa đã chọn (<span id="selectedCount">0</span>)
+              </button>
               <a href="{{ route('admin.user.import-excel') }}" class="btn btn-primary btn-sm d-flex align-items-center">
                 <i class="bi bi-file-earmark-excel me-2"></i>Nhập từ Excel
               </a>
@@ -112,6 +115,9 @@
                 <table class="table table-hover align-middle mb-0">
                   <thead class="table-light">
                     <tr>
+                      <th width="50" class="text-center">
+                        <input type="checkbox" class="form-check-input" id="selectAll">
+                      </th>
                       <th>
                         <a href="{{ request()->fullUrlWithQuery(['sort_field' => 'name', 'sort_order' => request('sort_order') == 'asc' ? 'desc' : 'asc']) }}" 
                            class="text-decoration-none text-dark">
@@ -138,6 +144,11 @@
                   <tbody>
                     @forelse ($users as $user)
                     <tr>
+                      <td class="text-center">
+                        <input type="checkbox" class="form-check-input user-checkbox" value="{{ $user->id }}" 
+                               data-user-name="{{ $user->name }}"
+                               @if(Auth::user()->id == $user->id) disabled @endif>
+                      </td>
                       <td>{{ $user->name }}</td>
                       <td><span class="text-muted">{{ $user->email }}</span></td>
                       <td class="text-center">
@@ -182,7 +193,7 @@
                     </tr>
                     @empty
                     <tr>
-                      <td colspan="5" class="text-center py-4">
+                      <td colspan="6" class="text-center py-4">
                         <div class="text-muted">
                           <i class="bi bi-inbox fs-3 d-block mb-2"></i>
                           Không tìm thấy kết quả nào
@@ -272,6 +283,32 @@
     </div>
   </div>  
 
+  <!-- Modal Xác nhận xóa nhiều tài khoản -->
+  <div class="modal fade" id="bulkDeleteModal" tabindex="-1" aria-labelledby="bulkDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bulkDeleteModalLabel">Xác nhận xóa nhiều tài khoản</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Bạn có chắc chắn muốn xóa <strong id="bulkDeleteCount">0</strong> tài khoản đã chọn?</p>
+          <div id="selectedUsersList" class="mb-3"></div>
+          <p class="text-danger">Lưu ý: Hành động này không thể hoàn tác.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <form id="bulkDeleteForm" action="{{ route('admin.user.bulkDestroy') }}" method="POST" class="d-inline">
+            @csrf
+            @method('DELETE')
+            <input type="hidden" name="user_ids" id="userIdsInput">
+            <button type="submit" class="btn btn-danger">Xóa tài khoản</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Khởi tạo tooltips
@@ -319,6 +356,63 @@
           }
         });
       }
+
+      // Xử lý chọn nhiều người dùng
+      const selectAllCheckbox = document.getElementById('selectAll');
+      const userCheckboxes = document.querySelectorAll('.user-checkbox:not([disabled])');
+      const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+      const selectedCountSpan = document.getElementById('selectedCount');
+      const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
+      const selectedUsersList = document.getElementById('selectedUsersList');
+      const userIdsInput = document.getElementById('userIdsInput');
+
+      // Cập nhật trạng thái nút xóa nhiều
+      function updateBulkDeleteButton() {
+        const checkedBoxes = document.querySelectorAll('.user-checkbox:checked');
+        const count = checkedBoxes.length;
+        
+        if (count > 0) {
+          bulkDeleteBtn.classList.remove('d-none');
+          selectedCountSpan.textContent = count;
+          bulkDeleteCountSpan.textContent = count;
+          
+          // Cập nhật danh sách người dùng được chọn
+          let usersList = '<ul class="mb-0">';
+          const userIds = [];
+          checkedBoxes.forEach(function(checkbox) {
+            const userName = checkbox.getAttribute('data-user-name');
+            usersList += `<li>${userName}</li>`;
+            userIds.push(checkbox.value);
+          });
+          usersList += '</ul>';
+          selectedUsersList.innerHTML = usersList;
+          userIdsInput.value = userIds.join(',');
+        } else {
+          bulkDeleteBtn.classList.add('d-none');
+        }
+      }
+
+      // Chọn/bỏ chọn tất cả
+      selectAllCheckbox.addEventListener('change', function() {
+        userCheckboxes.forEach(function(checkbox) {
+          checkbox.checked = selectAllCheckbox.checked;
+        });
+        updateBulkDeleteButton();
+      });
+
+      // Xử lý khi chọn/bỏ chọn từng checkbox
+      userCheckboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+          // Cập nhật trạng thái của checkbox "select all"
+          const allChecked = Array.from(userCheckboxes).every(cb => cb.checked);
+          const someChecked = Array.from(userCheckboxes).some(cb => cb.checked);
+          
+          selectAllCheckbox.checked = allChecked;
+          selectAllCheckbox.indeterminate = someChecked && !allChecked;
+          
+          updateBulkDeleteButton();
+        });
+      });
     });
   </script>
 
@@ -333,6 +427,16 @@
     .pagination-info {
       color: #6c757d;
       font-size: 0.875rem;
+    }
+    .form-check-input {
+      cursor: pointer;
+    }
+    #selectAll {
+      margin-top: 0;
+    }
+    .user-checkbox:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
     }
   </style>
 

@@ -216,6 +216,9 @@
                     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                         <h5 class="card-title m-0 fw-bold text-primary">Danh sách sinh viên</h5>
                         <div class="d-flex gap-2">
+                            <button id="bulkDeleteBtn" class="btn btn-danger btn-sm d-none" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
+                                <i class="bi bi-trash me-2"></i>Xóa đã chọn (<span id="selectedCount">0</span>)
+                            </button>
                             <a href="{{ route('admin.class.index') }}" class="btn btn-info btn-sm d-flex align-items-center">
                                 <i class="bi bi-mortarboard-fill me-2"></i>QL lớp học
                             </a>
@@ -249,6 +252,9 @@
                             <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
+                                        <th width="50" class="text-center">
+                                            <input type="checkbox" class="form-check-input" id="selectAll">
+                                        </th>
                                         <th>
                                             <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'student_code', 'sort_order' => request('sort_order') == 'asc' ? 'desc' : 'asc']) }}" 
                                                class="text-decoration-none text-dark">
@@ -286,6 +292,12 @@
                                 <tbody>
                                     @forelse ($students as $student)
                                     <tr>
+                                        <td class="text-center">
+                                            <input type="checkbox" class="form-check-input student-checkbox" 
+                                                   value="{{ $student->id }}" 
+                                                   data-student-name="{{ $student->user->name }}"
+                                                   data-student-code="{{ $student->student_code ?? 'N/A' }}">
+                                        </td>
                                         <td><span class="badge bg-light text-dark">{{ $student->student_code ?? 'Chưa cập nhật' }}</span></td>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -351,7 +363,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="8" class="text-center py-4">
+                                        <td colspan="9" class="text-center py-4">
                                             <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
                                             <p class="text-muted mt-2">Không có dữ liệu sinh viên</p>
                                         </td>
@@ -433,6 +445,39 @@
     </div>
 </div>
 
+<!-- Modal Xác nhận xóa nhiều sinh viên -->
+<div class="modal fade" id="bulkDeleteModal" tabindex="-1" aria-labelledby="bulkDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkDeleteModalLabel">Xác nhận xóa nhiều sinh viên</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa <strong id="bulkDeleteCount">0</strong> sinh viên đã chọn?</p>
+                <div id="selectedStudentsList" class="mb-3 table-responsive">
+                    <!-- Danh sách sinh viên được chọn sẽ được hiển thị ở đây -->
+                </div>
+                <p class="text-danger">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    <strong>Lưu ý:</strong> Hành động này sẽ xóa vĩnh viễn tất cả sinh viên đã chọn và tài khoản người dùng liên kết. Hành động này không thể hoàn tác.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form id="bulkDeleteForm" action="{{ route('admin.student.bulkDestroy') }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <input type="hidden" name="student_ids" id="studentIdsInput">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i>Xóa sinh viên
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('custom-js')
@@ -464,6 +509,64 @@
                 }
             });
         }
+
+        // Xử lý chọn nhiều sinh viên
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const studentCheckboxes = document.querySelectorAll('.student-checkbox');
+        const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+        const selectedCountSpan = document.getElementById('selectedCount');
+        const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
+        const selectedStudentsList = document.getElementById('selectedStudentsList');
+        const studentIdsInput = document.getElementById('studentIdsInput');
+
+        // Cập nhật trạng thái nút xóa nhiều
+        function updateBulkDeleteButton() {
+            const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
+            const count = checkedBoxes.length;
+            
+            if (count > 0) {
+                bulkDeleteBtn.classList.remove('d-none');
+                selectedCountSpan.textContent = count;
+                bulkDeleteCountSpan.textContent = count;
+                
+                // Cập nhật danh sách sinh viên được chọn
+                let studentsList = '<table class="table table-sm mb-0"><thead><tr><th>Mã SV</th><th>Họ tên</th></tr></thead><tbody>';
+                const studentIds = [];
+                checkedBoxes.forEach(function(checkbox) {
+                    const studentName = checkbox.getAttribute('data-student-name');
+                    const studentCode = checkbox.getAttribute('data-student-code');
+                    studentsList += `<tr><td>${studentCode}</td><td>${studentName}</td></tr>`;
+                    studentIds.push(checkbox.value);
+                });
+                studentsList += '</tbody></table>';
+                selectedStudentsList.innerHTML = studentsList;
+                studentIdsInput.value = studentIds.join(',');
+            } else {
+                bulkDeleteBtn.classList.add('d-none');
+            }
+        }
+
+        // Chọn/bỏ chọn tất cả
+        selectAllCheckbox.addEventListener('change', function() {
+            studentCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            updateBulkDeleteButton();
+        });
+
+        // Xử lý khi chọn/bỏ chọn từng checkbox
+        studentCheckboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                // Cập nhật trạng thái của checkbox "select all"
+                const allChecked = Array.from(studentCheckboxes).every(cb => cb.checked);
+                const someChecked = Array.from(studentCheckboxes).some(cb => cb.checked);
+                
+                selectAllCheckbox.checked = allChecked;
+                selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                
+                updateBulkDeleteButton();
+            });
+        });
     });
 
     // Auto-submit form on Enter key in search field
@@ -538,6 +641,23 @@
     .form-control:focus {
         box-shadow: 0 0 0 0.2rem rgba(65, 84, 241, 0.25);
         border-color: #4154f1;
+    }
+
+    .form-check-input {
+        cursor: pointer;
+    }
+
+    #selectAll {
+        margin-top: 0;
+    }
+
+    #selectedStudentsList table {
+        font-size: 0.875rem;
+    }
+
+    #bulkDeleteModal .modal-body {
+        max-height: 500px;
+        overflow-y: auto;
     }
 </style>
 @endsection

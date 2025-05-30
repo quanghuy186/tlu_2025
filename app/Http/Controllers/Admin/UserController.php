@@ -378,4 +378,63 @@ class UserController extends Controller
                 ->with('error', "Không thể xóa tài khoản. Lỗi: " . $e->getMessage());
         }
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        try {
+            // Validate input
+            $request->validate([
+                'user_ids' => 'required|string'
+            ]);
+            
+            // Chuyển đổi string thành array
+            $userIds = explode(',', $request->user_ids);
+            
+            // Loại bỏ ID của user hiện tại để tránh tự xóa chính mình
+            $currentUserId = Auth::user()->id;
+            $userIds = array_filter($userIds, function($id) use ($currentUserId) {
+                return $id != $currentUserId;
+            });
+            
+            if (empty($userIds)) {
+                return redirect()->route('admin.user.index')
+                    ->with('error', 'Không có tài khoản nào được chọn để xóa.');
+            }
+            
+            DB::beginTransaction();
+            
+            // Lấy thông tin users trước khi xóa
+            $users = User::whereIn('id', $userIds)->get();
+            $userNames = $users->pluck('name')->toArray();
+            
+            // Xóa các quan hệ liên quan
+            DB::table('user_has_roles')->whereIn('user_id', $userIds)->delete();
+            DB::table('user_has_permissions')->whereIn('user_id', $userIds)->delete();
+            
+            // Xóa students hoặc teachers nếu có
+            DB::table('students')->whereIn('user_id', $userIds)->delete();
+            DB::table('teachers')->whereIn('user_id', $userIds)->delete();
+            
+            // Xóa users
+            User::whereIn('id', $userIds)->delete();
+            
+            DB::commit();
+            
+            $count = count($userNames);
+            $message = "Đã xóa thành công {$count} tài khoản";
+            
+            // Nếu ít hơn 5 tài khoản, liệt kê tên
+            if ($count <= 5) {
+                $message .= ": " . implode(', ', $userNames);
+            }
+            
+            return redirect()->route('admin.user.index')
+                ->with('success', $message);
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('admin.user.index')
+                ->with('error', "Không thể xóa tài khoản. Lỗi: " . $e->getMessage());
+        }
+    }
 }

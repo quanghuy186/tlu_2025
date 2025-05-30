@@ -13,6 +13,7 @@ class ClassRoom extends Model
      * Tên bảng trong cơ sở dữ liệu
      */
     protected $table = 'classes';
+    
 
     /**
      * Các trường có thể gán dữ liệu hàng loạt
@@ -45,6 +46,11 @@ class ClassRoom extends Model
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);
+    }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class, 'class_id');
     }
     
     /**

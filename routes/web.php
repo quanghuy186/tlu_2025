@@ -105,7 +105,7 @@ Route::prefix('/admin')->name('admin.')->group(function(){
     Route::get('/classes/{id}/edit', [ClassController::class, 'edit'])->name('class.edit');
     Route::put('/classes/{id}', [ClassController::class, 'update'])->name('class.update');
     Route::delete('/classes/{id}', [ClassController::class, 'destroy'])->name('class.destroy');
-
+    Route::delete('class/destroy-multiple', [ClassController::class, 'destroyMultiple'])->name('class.destroyMultiple');
     // Routes quản lý sinh viên
     Route::get('/students', [StudentController::class, 'index'])->name('student.index');
     Route::get('/students/create', [StudentController::class, 'create'])->name('student.create');
@@ -114,6 +114,7 @@ Route::prefix('/admin')->name('admin.')->group(function(){
     Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('student.edit');
     Route::put('/students/{id}', [StudentController::class, 'update'])->name('student.update');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('student.destroy');
+    Route::delete('/students/bulk-destroy', [StudentController::class, 'bulkDestroy'])->name('student.bulkDestroy');
 });  // Department routes
 
 
@@ -129,6 +130,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
     Route::get('/user/{id}', [UserController::class, 'detail'])->name('user.detail');
     Route::delete('/admin/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::delete('/users/bulk-destroy', [UserController::class, 'bulkDestroy'])->name('user.bulkDestroy');
 
 
     // Route để hiển thị form nhập Excel
