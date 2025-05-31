@@ -449,11 +449,37 @@
                         </div>
                         
                         <!-- Pagination -->
-                        @if ($teachers->hasPages())
-                            <div class="d-flex justify-content-center align-items-center py-4">
-                                {{ $teachers->appends(request()->all())->links() }}
-                            </div>
-                        @endif
+                        <nav aria-label="Pagination" class="my-5">
+                            <ul class="pagination mb-0">
+                                @if ($teachers->onFirstPage())
+                                    <li class="page-item disabled"><span class="page-link">‹</span></li>
+                                @else
+                                    <li class="page-item"><a class="page-link" href="{{ $teachers->previousPageUrl() }}">‹</a></li>
+                                @endif
+
+                                @foreach ($teachers->links()->elements as $element)
+                                    @if (is_string($element))
+                                    <li class="page-item disabled"><span class="page-link">{{ $element }}</span></li>
+                                    @endif
+
+                                    @if (is_array($element))
+                                    @foreach ($element as $page => $url)
+                                        @if ($page == $teachers->currentPage())
+                                        <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                                        @else
+                                        <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                                        @endif
+                                    @endforeach
+                                    @endif
+                                @endforeach
+
+                                @if ($teachers->hasMorePages())
+                                    <li class="page-item"><a class="page-link" href="{{ $teachers->nextPageUrl() }}">›</a></li>
+                                @else
+                                    <li class="page-item disabled"><span class="page-link">›</span></li>
+                                @endif
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>

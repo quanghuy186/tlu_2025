@@ -105,7 +105,8 @@ Route::prefix('/admin')->name('admin.')->group(function(){
     Route::get('/classes/{id}/edit', [ClassController::class, 'edit'])->name('class.edit');
     Route::put('/classes/{id}', [ClassController::class, 'update'])->name('class.update');
     Route::delete('/classes/{id}', [ClassController::class, 'destroy'])->name('class.destroy');
-    Route::delete('class/destroy-multiple', [ClassController::class, 'destroyMultiple'])->name('class.destroyMultiple');
+    // Thêm route này vào nhóm routes admin
+Route::post('classes/bulk-destroy', [ClassController::class, 'bulkDestroy'])->name('class.bulk-destroy');
     // Routes quản lý sinh viên
     Route::get('/students', [StudentController::class, 'index'])->name('student.index');
     Route::get('/students/create', [StudentController::class, 'create'])->name('student.create');
