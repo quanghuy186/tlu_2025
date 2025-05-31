@@ -465,14 +465,14 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <form id="bulkDeleteForm" action="{{ route('admin.student.bulkDestroy') }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <input type="hidden" name="student_ids" id="studentIdsInput">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash me-1"></i>Xóa sinh viên
-                    </button>
-                </form>
+                <form id="bulkDeleteForm" action="{{ route('admin.student.bulk-delete') }}" method="POST" class="d-inline">
+    @csrf
+    @method('DELETE')
+    <input type="hidden" name="student_ids" id="studentIdsInput">
+    <button type="submit" class="btn btn-danger">
+        <i class="bi bi-trash me-1"></i>Xóa sinh viên
+    </button>
+</form>
             </div>
         </div>
     </div>
@@ -482,92 +482,111 @@
 
 @section('custom-js')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-        
-        // Delete modal
-        const deleteModal = document.getElementById('deleteConfirmModal');
-        if (deleteModal) {
-            deleteModal.addEventListener('show.bs.modal', function(event) {
-                const button = event.relatedTarget;
-                const studentId = button.getAttribute('data-student-id');
-                const studentName = button.getAttribute('data-student-name');
-                const deleteUrl = button.getAttribute('data-delete-url');
-                
-                const studentNameElement = deleteModal.querySelector('#deleteStudentName');
-                if (studentNameElement) {
-                    studentNameElement.textContent = studentName;
-                }
-                
-                const deleteForm = deleteModal.querySelector('#deleteStudentForm');
-                if (deleteForm) {
-                    deleteForm.action = deleteUrl;
-                }
-            });
-        }
-
-        // Xử lý chọn nhiều sinh viên
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const studentCheckboxes = document.querySelectorAll('.student-checkbox');
-        const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
-        const selectedCountSpan = document.getElementById('selectedCount');
-        const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
-        const selectedStudentsList = document.getElementById('selectedStudentsList');
-        const studentIdsInput = document.getElementById('studentIdsInput');
-
-        // Cập nhật trạng thái nút xóa nhiều
-        function updateBulkDeleteButton() {
-            const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
-            const count = checkedBoxes.length;
+    // Add this to your JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    
+    // Delete modal
+    const deleteModal = document.getElementById('deleteConfirmModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const studentId = button.getAttribute('data-student-id');
+            const studentName = button.getAttribute('data-student-name');
+            const deleteUrl = button.getAttribute('data-delete-url');
             
-            if (count > 0) {
-                bulkDeleteBtn.classList.remove('d-none');
-                selectedCountSpan.textContent = count;
-                bulkDeleteCountSpan.textContent = count;
-                
-                // Cập nhật danh sách sinh viên được chọn
-                let studentsList = '<table class="table table-sm mb-0"><thead><tr><th>Mã SV</th><th>Họ tên</th></tr></thead><tbody>';
-                const studentIds = [];
-                checkedBoxes.forEach(function(checkbox) {
-                    const studentName = checkbox.getAttribute('data-student-name');
-                    const studentCode = checkbox.getAttribute('data-student-code');
-                    studentsList += `<tr><td>${studentCode}</td><td>${studentName}</td></tr>`;
-                    studentIds.push(checkbox.value);
-                });
-                studentsList += '</tbody></table>';
-                selectedStudentsList.innerHTML = studentsList;
-                studentIdsInput.value = studentIds.join(',');
-            } else {
-                bulkDeleteBtn.classList.add('d-none');
+            const studentNameElement = deleteModal.querySelector('#deleteStudentName');
+            if (studentNameElement) {
+                studentNameElement.textContent = studentName;
             }
-        }
+            
+            const deleteForm = deleteModal.querySelector('#deleteStudentForm');
+            if (deleteForm) {
+                deleteForm.action = deleteUrl;
+            }
+        });
+    }
 
-        // Chọn/bỏ chọn tất cả
+    // Xử lý chọn nhiều sinh viên
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const studentCheckboxes = document.querySelectorAll('.student-checkbox');
+    const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+    const selectedCountSpan = document.getElementById('selectedCount');
+    const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
+    const selectedStudentsList = document.getElementById('selectedStudentsList');
+    const studentIdsInput = document.getElementById('studentIdsInput');
+
+    // Cập nhật trạng thái nút xóa nhiều
+    function updateBulkDeleteButton() {
+        const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
+        const count = checkedBoxes.length;
+        
+        if (count > 0) {
+            bulkDeleteBtn.classList.remove('d-none');
+            selectedCountSpan.textContent = count;
+            bulkDeleteCountSpan.textContent = count;
+            
+            // Define studentIds array first
+            const studentIds = [];
+            
+            // Cập nhật danh sách sinh viên được chọn
+            let studentsList = '<table class="table table-sm mb-0"><thead><tr><th>Mã SV</th><th>Họ tên</th></tr></thead><tbody>';
+            
+            checkedBoxes.forEach(function(checkbox) {
+                const studentName = checkbox.getAttribute('data-student-name');
+                const studentCode = checkbox.getAttribute('data-student-code');
+                studentsList += `<tr><td>${studentCode}</td><td>${studentName}</td></tr>`;
+                studentIds.push(checkbox.value);
+            });
+            
+            studentsList += '</tbody></table>';
+            selectedStudentsList.innerHTML = studentsList;
+            
+            // Set the input value
+            studentIdsInput.value = studentIds.join(',');
+        } else {
+            bulkDeleteBtn.classList.add('d-none');
+        }
+    }
+
+    // Chọn/bỏ chọn tất cả
+    if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', function() {
             studentCheckboxes.forEach(function(checkbox) {
                 checkbox.checked = selectAllCheckbox.checked;
             });
             updateBulkDeleteButton();
         });
+    }
 
-        // Xử lý khi chọn/bỏ chọn từng checkbox
-        studentCheckboxes.forEach(function(checkbox) {
-            checkbox.addEventListener('change', function() {
-                // Cập nhật trạng thái của checkbox "select all"
-                const allChecked = Array.from(studentCheckboxes).every(cb => cb.checked);
-                const someChecked = Array.from(studentCheckboxes).some(cb => cb.checked);
-                
-                selectAllCheckbox.checked = allChecked;
-                selectAllCheckbox.indeterminate = someChecked && !allChecked;
-                
-                updateBulkDeleteButton();
-            });
+    // Xử lý khi chọn/bỏ chọn từng checkbox
+    studentCheckboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            // Cập nhật trạng thái của checkbox "select all"
+            const allChecked = Array.from(studentCheckboxes).every(cb => cb.checked);
+            const someChecked = Array.from(studentCheckboxes).some(cb => cb.checked);
+            
+            selectAllCheckbox.checked = allChecked;
+            selectAllCheckbox.indeterminate = someChecked && !allChecked;
+            
+            updateBulkDeleteButton();
         });
     });
+    
+    // Add form submission handler
+    const bulkDeleteForm = document.getElementById('bulkDeleteForm');
+    if (bulkDeleteForm) {
+        bulkDeleteForm.addEventListener('submit', function() {
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Đang xử lý...';
+        });
+    }
+});
 
     // Auto-submit form on Enter key in search field
     document.getElementById('search').addEventListener('keypress', function(e) {

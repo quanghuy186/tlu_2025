@@ -94,7 +94,8 @@ Route::prefix('/admin')->name('admin.')->group(function(){
     Route::put('/teachers/{id}', [TeacherController::class, 'update'])->name('teacher.update');
     Route::delete('/teachers/{id}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
      Route::post('/bulk-action', [TeacherController::class, 'bulkAction'])->name('teacher.bulk-action');
-    // Route::get('/export/excel', [TeacherController::class, 'export'])->name('export');
+    
+     // Route::get('/export/excel', [TeacherController::class, 'export'])->name('export');
         // Route::post('/import/excel', [TeacherController::class, 'import'])->name('import');
 
     // Routes quản lý lớp học
@@ -106,7 +107,7 @@ Route::prefix('/admin')->name('admin.')->group(function(){
     Route::put('/classes/{id}', [ClassController::class, 'update'])->name('class.update');
     Route::delete('/classes/{id}', [ClassController::class, 'destroy'])->name('class.destroy');
     // Thêm route này vào nhóm routes admin
-Route::post('classes/bulk-destroy', [ClassController::class, 'bulkDestroy'])->name('class.bulk-destroy');
+    Route::post('classes/bulk-destroy', [ClassController::class, 'bulkDestroy'])->name('class.bulk-destroy');
     // Routes quản lý sinh viên
     Route::get('/students', [StudentController::class, 'index'])->name('student.index');
     Route::get('/students/create', [StudentController::class, 'create'])->name('student.create');
@@ -115,8 +116,9 @@ Route::post('classes/bulk-destroy', [ClassController::class, 'bulkDestroy'])->na
     Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('student.edit');
     Route::put('/students/{id}', [StudentController::class, 'update'])->name('student.update');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('student.destroy');
-    Route::delete('/students/bulk-destroy', [StudentController::class, 'bulkDestroy'])->name('student.bulkDestroy');
-});  // Department routes
+    // Route::delete('/students/bulk-destroy', [StudentController::class, 'bulkDestroy'])->name('student.bulkDestroy');
+    Route::delete('/students/bulk-delete', [StudentController::class, 'bulkDestroy'])->name('student.bulk-delete');
+});  
 
 
     
@@ -187,6 +189,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::get('/notifications/{id}/edit', [NotificationController::class, 'edit'])->name('notification.edit');
     Route::put('/notifications/{id}', [NotificationController::class, 'update'])->name('notification.update');
     Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notification.destroy');
+    Route::delete('notification/bulk-destroy', [NotificationController::class, 'bulkDestroy'])
+    ->name('notification.bulk-destroy');
 });
 
 //contact -----------------------------
