@@ -89,11 +89,11 @@ Route::prefix('/admin')->name('admin.')->group(function(){
     Route::get('/teachers', [TeacherController::class, 'index'])->name('teacher.index');
     Route::get('/teachers/create', [TeacherController::class, 'create'])->name('teacher.create');
     Route::post('/teachers', [TeacherController::class, 'store'])->name('teacher.store');
+    Route::post('/bulk-action', [TeacherController::class, 'bulkAction'])->name('teacher.bulk-action');
     Route::get('/teachers/{id}', [TeacherController::class, 'show'])->name('teacher.show');
     Route::get('/teachers/{id}/edit', [TeacherController::class, 'edit'])->name('teacher.edit');
     Route::put('/teachers/{id}', [TeacherController::class, 'update'])->name('teacher.update');
     Route::delete('/teachers/{id}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
-     Route::post('/bulk-action', [TeacherController::class, 'bulkAction'])->name('teacher.bulk-action');
     
      // Route::get('/export/excel', [TeacherController::class, 'export'])->name('export');
         // Route::post('/import/excel', [TeacherController::class, 'import'])->name('import');
@@ -102,22 +102,21 @@ Route::prefix('/admin')->name('admin.')->group(function(){
     Route::get('/classes', [ClassController::class, 'index'])->name('class.index');
     Route::get('/classes/create', [ClassController::class, 'create'])->name('class.create');
     Route::post('/classes', [ClassController::class, 'store'])->name('class.store');
+    Route::post('classes/bulk-destroy', [ClassController::class, 'bulkDestroy'])->name('class.bulk-destroy');
     Route::get('/classes/{id}', [ClassController::class, 'show'])->name('class.show');
     Route::get('/classes/{id}/edit', [ClassController::class, 'edit'])->name('class.edit');
     Route::put('/classes/{id}', [ClassController::class, 'update'])->name('class.update');
     Route::delete('/classes/{id}', [ClassController::class, 'destroy'])->name('class.destroy');
     // Thêm route này vào nhóm routes admin
-    Route::post('classes/bulk-destroy', [ClassController::class, 'bulkDestroy'])->name('class.bulk-destroy');
     // Routes quản lý sinh viên
     Route::get('/students', [StudentController::class, 'index'])->name('student.index');
     Route::get('/students/create', [StudentController::class, 'create'])->name('student.create');
     Route::post('/students', [StudentController::class, 'store'])->name('student.store');
+    Route::delete('/students/bulk-delete', [StudentController::class, 'bulkDestroy'])->name('student.bulk-delete');
     Route::get('/students/{id}', [StudentController::class, 'show'])->name('student.show');
     Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('student.edit');
     Route::put('/students/{id}', [StudentController::class, 'update'])->name('student.update');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('student.destroy');
-    // Route::delete('/students/bulk-destroy', [StudentController::class, 'bulkDestroy'])->name('student.bulkDestroy');
-    Route::delete('/students/bulk-delete', [StudentController::class, 'bulkDestroy'])->name('student.bulk-delete');
 });  
 
 
@@ -233,6 +232,7 @@ Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
         Route::get('/{id}/edit', [ForumCategoryController::class, 'edit'])->name('edit');
         Route::post('/{id}/update', [ForumCategoryController::class, 'update'])->name('update');
         Route::post('/{id}/destroy', [ForumCategoryController::class, 'destroy'])->name('destroy');
+        
     });
 
     Route::prefix('posts')->name('posts.')->group(function () {
@@ -243,7 +243,8 @@ Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
         Route::get('/{id}/edit', [ForumPostController::class, 'edit'])->name('edit');
         Route::post('/{id}/update', [ForumPostController::class, 'update'])->name('update');
         Route::delete('/{id}', [ForumPostController::class, 'destroy'])->name('destroy');
-        
+        Route::delete('/bulk-destroy', [ForumPostController::class, 'bulkDestroy'])
+    ->name('bulk-destroy');
         // Routes cho quản lý bài viết
         Route::get('/{id}/approve', [ForumPostController::class, 'approve'])->name('approve');
         Route::post('/{id}/reject', [ForumPostController::class, 'reject'])->name('reject');

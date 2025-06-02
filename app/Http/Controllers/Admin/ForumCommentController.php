@@ -107,4 +107,41 @@ class ForumCommentController extends Controller
             return back()->with('error', 'Đã xảy ra lỗi khi xóa bình luận: ' . $e->getMessage());
         }
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'post_ids' => 'required|json',
+        ]);
+
+        try {
+            $postIds = json_decode($request->post_ids, true);
+            
+            if (empty($postIds) || !is_array($postIds)) {
+                return redirect()->route('admin.forum.posts.index')
+                    ->with('error', 'Không có bài viết nào được chọn để xóa.');
+            }
+
+            DB::beginTransaction();
+
+            // First, delete related comments
+            DB::table('forum_comments')
+                ->whereIn('post_id', $postIds)
+                ->delete();
+
+            // Then delete posts
+            $deletedCount = ForumPost::whereIn('id', $postIds)->delete();
+
+            DB::commit();
+
+            return redirect()->route('admin.forum.posts.index')
+                ->with('success', "Đã xóa thành công {$deletedCount} bài viết.");
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return redirect()->route('admin.forum.posts.index')
+                ->with('error', 'Đã xảy ra lỗi khi xóa bài viết: ' . $e->getMessage());
+        }
+    }
 }
