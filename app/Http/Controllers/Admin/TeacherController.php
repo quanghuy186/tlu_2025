@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class TeacherController extends Controller
 {
@@ -251,64 +252,7 @@ class TeacherController extends Controller
     /**
      * Bulk actions for multiple teachers
      */
-    public function bulkAction(Request $request)
-    {
-        $request->validate([
-            'action' => 'required|in:delete,assign_department,export',
-            'teacher_ids' => 'required|array',
-            'teacher_ids.*' => 'exists:teachers,id',
-            'department_id' => 'required_if:action,assign_department|exists:departments,id',
-        ]);
-
-        $teachers = Teacher::whereIn('id', $request->teacher_ids);
-
-        switch ($request->action) {
-            case 'delete':
-                $count = $teachers->count();
-                
-                // Delete associated users and their avatars
-                foreach ($teachers->get() as $teacher) {
-                    if ($teacher->user && $teacher->user->avatar) {
-                        Storage::disk('public')->delete('avatars/' . $teacher->user->avatar);
-                    }
-                    if ($teacher->user) {
-                        $teacher->user->delete();
-                    }
-                }
-                
-                $teachers->delete();
-                
-                return redirect()->back()->with('success', "Đã xóa {$count} giảng viên thành công!");
-
-            case 'assign_department':
-                $count = $teachers->update(['department_id' => $request->department_id]);
-                $department = Department::find($request->department_id);
-                
-                return redirect()->back()->with('success', "Đã phân công {$count} giảng viên vào khoa/bộ môn {$department->name}!");
-
-            case 'export':
-                $teachersList = $teachers->with(['user', 'department'])->get();
-                
-                return response()->streamDownload(function () use ($teachersList) {
-                    $handle = fopen('php://output', 'w');
-                    
-                    fputcsv($handle, ['Mã GV', 'Họ tên', 'Email', 'Khoa/Bộ môn', 'Học hàm/Học vị']);
-                    
-                    foreach ($teachersList as $teacher) {
-                        fputcsv($handle, [
-                            $teacher->teacher_code ?? '',
-                            $teacher->user->name ?? '',
-                            $teacher->user->email ?? '',
-                            $teacher->department->name ?? '',
-                            $teacher->academic_rank ?? '',
-                        ]);
-                    }
-                    
-                    fclose($handle);
-                }, 'selected-teachers-' . date('Y-m-d') . '.csv');
-        }
-    }
-
+    
     /**
      * Show the form for creating a new teacher
      */
@@ -467,6 +411,16 @@ class TeacherController extends Controller
             Storage::disk('public')->delete('avatars/' . $user->avatar);
         }
         
+        if ($user) {
+            DB::table('user_has_roles')->where('user_id', $user->id)->delete();
+                
+            DB::table('user_has_permissions')->where('user_id', $user->id)->delete();
+                
+            if ($user->avatar && Storage::exists('public/avatars/' . $user->avatar)) {
+                Storage::delete('public/avatars/' . $user->avatar);                
+            }
+        }
+
         $teacher->delete();
         if ($user) {
             $user->delete();
@@ -475,4 +429,82 @@ class TeacherController extends Controller
         return redirect()->route('admin.teacher.index')
             ->with('success', 'Giảng viên đã được xóa thành công!');
     }
+
+    public function bulkAction(Request $request)
+    {
+        $request->validate([
+            'action' => 'required|in:delete,assign_department,export',
+            'teacher_ids' => 'required|array',
+            'teacher_ids.*' => 'exists:teachers,id',
+            'department_id' => 'required_if:action,assign_department|exists:departments,id',
+        ]);
+
+        $teachers = Teacher::whereIn('id', $request->teacher_ids);
+
+        switch ($request->action) {
+            case 'delete':
+                $count = $teachers->count();
+                
+                // Use transaction to ensure data consistency
+                DB::transaction(function () use ($teachers) {
+                    foreach ($teachers->get() as $teacher) {
+                        $user = User::find($teacher->user_id);
+                        
+                        if ($user) {
+                            // Delete user's roles and permissions
+                            DB::table('user_has_roles')->where('user_id', $user->id)->delete();
+                            DB::table('user_has_permissions')->where('user_id', $user->id)->delete();
+                            
+                            // Delete avatar if exists
+                            if ($user->avatar) {
+                                if (Storage::disk('public')->exists('avatars/' . $user->avatar)) {
+                                    Storage::disk('public')->delete('avatars/' . $user->avatar);
+                                }
+                            }
+                        }
+                        
+                        // Delete teacher first (to avoid foreign key constraint)
+                        $teacher->delete();
+                        
+                        // Then delete user
+                        if ($user) {
+                            $user->delete();
+                        }
+                    }
+                });
+                
+                return redirect()->back()->with('success', "Đã xóa {$count} giảng viên thành công!");
+
+            case 'assign_department':
+                $count = $teachers->update(['department_id' => $request->department_id]);
+                $department = Department::find($request->department_id);
+                
+                return redirect()->back()->with('success', "Đã phân công {$count} giảng viên vào khoa/bộ môn {$department->name}!");
+
+            case 'export':
+                $teachersList = $teachers->with(['user', 'department'])->get();
+                
+                return response()->streamDownload(function () use ($teachersList) {
+                    $handle = fopen('php://output', 'w');
+                    
+                    // Add BOM for Excel UTF-8 compatibility
+                    fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+                    
+                    fputcsv($handle, ['Mã GV', 'Họ tên', 'Email', 'Khoa/Bộ môn', 'Học hàm/Học vị']);
+                    
+                    foreach ($teachersList as $teacher) {
+                        fputcsv($handle, [
+                            $teacher->teacher_code ?? '',
+                            $teacher->user->name ?? '',
+                            $teacher->user->email ?? '',
+                            $teacher->department->name ?? '',
+                            $teacher->academic_rank ?? '',
+                        ]);
+                    }
+                    
+                    fclose($handle);
+                }, 'selected-teachers-' . date('Y-m-d') . '.csv');
+        }
+    }
+
 }
