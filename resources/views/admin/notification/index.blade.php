@@ -22,7 +22,7 @@
             <div class="card-header bg-white py-3">
               <h5 class="card-title m-0 fw-bold text-primary">Tìm kiếm và lọc</h5>
             </div>
-            <div class="card-body">
+            <div class="card-body mt-3">
               <form action="{{ route('admin.notification.index') }}" method="GET" id="filterForm">
                 <div class="row g-3">
                   <div class="col-md-4">
@@ -46,7 +46,7 @@
                       </select>
                     </div>
                   </div>
-                  <div class="col-md-4">
+                  {{-- <div class="col-md-4">
                     <div class="form-group">
                       <label for="status" class="form-label">Trạng thái</label>
                       <select class="form-select" id="status" name="status">
@@ -56,7 +56,7 @@
                         <option value="archived" {{ request('status') == 'archived' ? 'selected' : '' }}>Lưu trữ</option>
                       </select>
                     </div>
-                  </div>
+                  </div> --}}
                   <div class="col-md-3">
                     <div class="form-group">
                       <label for="date_from" class="form-label">Từ ngày</label>

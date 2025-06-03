@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ForumCategory;
+use App\Models\ForumComment;
 use App\Models\ForumPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -161,7 +162,7 @@ class ForumPostController extends Controller
     public function destroy($id)
     {
         $post = ForumPost::findOrFail($id);
-        
+        // $post_comment = ForumComment::findOrFail()
         // Xóa ảnh
         if ($post->images) {
             $images = json_decode($post->images, true);
@@ -169,6 +170,8 @@ class ForumPostController extends Controller
                 Storage::disk('public')->delete($image);
             }
         }
+        $post->comments()->delete();
+        $post->likes()->delete();
         
         $post->delete();
 

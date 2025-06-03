@@ -22,7 +22,7 @@
                     <div class="card-header bg-white py-3">
                         <h5 class="card-title m-0 fw-bold text-primary">Thêm bài viết mới</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body mt-3">
                         <form action="{{ route('admin.forum.posts.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             

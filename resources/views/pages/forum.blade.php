@@ -10,7 +10,6 @@
 </section>
 
 
-
 {{-- @include('partials.create_post_modal') --}}
 
 <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
@@ -38,7 +37,7 @@
                         <label for="category_id" class="col-sm-2 col-form-label">Chuyên mục <span class="text-danger"></span></label>
                         <div class="col-sm-10">
                             <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id">
-                                <option value="0">-- Chọn chuyên mục --</option>
+                                <option value="">-- Chọn chuyên mục --</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                         {{ $category->name }}
@@ -58,7 +57,6 @@
                             @error('content')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <small class="text-muted">Hỗ trợ định dạng Markdown</small>
                         </div>
                     </div>
                     
@@ -109,7 +107,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
-                <button type="submit" class="btn btn-success" id="submitPost">Đăng bài viết</button>
+                {{-- <button type="submit" class="btn btn-success" id="submitPost">Đăng bài viết</button> --}}
+                <button type="button" class="btn btn-success" onclick="document.getElementById('newPostForm').submit()">Đăng bài viết</button>
             </div>
         </div>
     </div>
@@ -430,7 +429,7 @@
                     <div class="row mb-3">
                         <label for="edit_title" class="col-sm-2 col-form-label">Tiêu đề <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control @error('title') is-invalid @enderror" id="edit_title" name="title" required>
+                            <input type="text" class="form-control @error('title') is-invalid @enderror" id="edit_title" name="title">
                             @error('title')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -440,7 +439,7 @@
                     <div class="row mb-3">
                         <label for="edit_category_id" class="col-sm-2 col-form-label">Chuyên mục <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
-                            <select class="form-select @error('category_id') is-invalid @enderror" id="edit_category_id" name="category_id" required>
+                            <select class="form-select @error('category_id') is-invalid @enderror" id="edit_category_id" name="category_id">
                                 <option value="">-- Chọn chuyên mục --</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -455,7 +454,7 @@
                     <div class="row mb-3">
                         <label for="edit_content" class="col-sm-2 col-form-label">Nội dung <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
-                            <textarea class="form-control @error('content') is-invalid @enderror" id="edit_content" name="content" rows="8" required></textarea>
+                            <textarea class="form-control @error('content') is-invalid @enderror" id="edit_content" name="content" rows="8"></textarea>
                             @error('content')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

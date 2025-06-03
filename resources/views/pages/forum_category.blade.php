@@ -144,7 +144,7 @@
                                                 </small>
                                                 <small class="me-3">
                                                     <i class="far fa-clock me-1"></i> 
-                                                    {{ $post->created_at->diffForHumans() }}
+                                                    {{  timeAgo($post->created_at) }}
                                                 </small>
                                             </div>
                                             
@@ -230,7 +230,7 @@
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span><i class="far fa-clock me-1"></i> Bài viết mới nhất</span>
                             <span class="text-muted small">
-                                {{ $posts->count() > 0 ? $posts->first()->created_at->diffForHumans() : 'Chưa có bài viết nào' }}
+                                {{ $posts->count() > 0 ? timeAgo($posts->first()->created_at) : 'Chưa có bài viết nào' }}
                             </span>
                         </li>
                     </ul>

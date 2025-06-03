@@ -173,10 +173,14 @@ class ForumController extends Controller
     public function post(Request $request){
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
+            'category_id' => 'nullable|exists:forum_categories,id', // Thêm exists để kiểm tra nếu có giá trị
             'content' => 'required|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'title.required' => 'Vui lòng điền tiêu đề',
+            'content.required' => 'Vui lòng điền nội dung',
         ]);
-
+        
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
@@ -191,9 +195,15 @@ class ForumController extends Controller
             }
         }
 
+        // Xử lý category_id
+        $categoryId = $request->category_id;
+        if ($categoryId == '0' || empty($categoryId)) {
+            $categoryId = null;
+        }
+
         $post = ForumPost::create([
             'title' => $request->title,
-            'category_id' => $request->category_id,
+            'category_id' => $categoryId, // Có thể null
             'user_id' => Auth::id(),
             'content' => $request->content,
             'images' => !empty($imagesPath) ? json_encode($imagesPath) : null,
