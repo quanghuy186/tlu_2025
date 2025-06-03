@@ -58,11 +58,26 @@ class Department extends Model
             ->orderBy('name');
     }
 
-    /**
-     * Get all descendant departments.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
+    public function teachers(){
+        return $this->hasMany(Teacher::class, 'department_id', 'id');
+    }
+
+    // Method để lấy tổng số cán bộ bao gồm cả đơn vị con
+    public function getTotalTeachersCountAttribute()
+    {
+        // Đếm số cán bộ của đơn vị hiện tại
+        $count = $this->teachers()->count();
+        
+        // Nếu có đơn vị con, đệ quy đếm số cán bộ của tất cả đơn vị con
+        if ($this->children->count() > 0) {
+            foreach ($this->children as $child) {
+                $count += $child->total_teachers_count;
+            }
+        }
+        
+        return $count;
+    }
+
     public function descendants()
     {
         return $this->children()->with('descendants');

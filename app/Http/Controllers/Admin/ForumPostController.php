@@ -255,4 +255,105 @@ class ForumPostController extends Controller
         return redirect()->route('admin.forum.posts.show', $post->id)
             ->with('success', $message);
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'post_ids' => 'required|array',
+            'post_ids.*' => 'required|exists:forum_posts,id'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu không hợp lệ'
+            ], 422);
+        }
+
+        try {
+            $posts = ForumPost::whereIn('id', $request->post_ids)->get();
+            $deletedCount = 0;
+
+            foreach ($posts as $post) {
+                // Kiểm tra quyền xóa (chỉ tác giả hoặc admin)
+                // if (Auth::id() == $post->user_id || Auth::user()->hasRole('admin')) {
+                    // Xóa ảnh
+                    if ($post->images) {
+                        $images = json_decode($post->images, true);
+                        foreach ($images as $image) {
+                            Storage::disk('public')->delete($image);
+                        }
+                    }
+                    
+                    $post->delete();
+                    $deletedCount++;
+                // }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Đã xóa thành công {$deletedCount} bài viết",
+                'deleted_count' => $deletedCount
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Có lỗi xảy ra khi xóa bài viết'
+            ], 500);
+        }
+    }
+
+    /**
+     * Cập nhật trạng thái nhiều bài viết
+     */
+    public function bulkUpdateStatus(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'post_ids' => 'required|array',
+            'post_ids.*' => 'required|exists:forum_posts,id',
+            'status' => 'required|in:approved,rejected',
+            'reject_reason' => 'required_if:status,rejected|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu không hợp lệ'
+            ], 422);
+        }
+
+        try {
+            $updateData = [
+                'status' => $request->status,
+                'approved_by' => Auth::id(),
+                'approved_at' => now()
+            ];
+
+            if ($request->status === 'rejected') {
+                $updateData['reject_reason'] = $request->reject_reason;
+            } else {
+                $updateData['reject_reason'] = null;
+            }
+
+            $updatedCount = ForumPost::whereIn('id', $request->post_ids)
+                ->where('status', 'pending')
+                ->update($updateData);
+
+            $statusText = $request->status === 'approved' ? 'phê duyệt' : 'từ chối';
+
+            return response()->json([
+                'success' => true,
+                'message' => "Đã {$statusText} thành công {$updatedCount} bài viết",
+                'updated_count' => $updatedCount
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Có lỗi xảy ra khi cập nhật trạng thái'
+            ], 500);
+        }
+    }
+
 }

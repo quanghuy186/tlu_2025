@@ -31,7 +31,7 @@
                 </div>
                 <div class="unit-meta-item">
                     <i class="fas fa-users"></i>
-                    <span>Số cán bộ: 45</span>
+                    <span>Số cán bộ: {{ $department->getTotalTeachersCountAttribute() }}</span>
                 </div>
                 <div class="unit-meta-item">
                     <i class="fas fa-map-marker-alt"></i>
@@ -87,7 +87,7 @@
                                     </div>
                                     <div class="unit-detail-meta-item">
                                         <i class="fas fa-users"></i>
-                                        <span>Số cán bộ: 45</span>
+                                        <span>Số cán bộ: {{ $department->getTotalTeachersCountAttribute() }}</span>
                                     </div>
                                     {{-- <div class="unit-detail-meta-item">
                                         <i class="fas fa-map-marker-alt"></i>

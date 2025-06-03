@@ -239,12 +239,13 @@ Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
         Route::get('/', [ForumPostController::class, 'index'])->name('index');
         Route::get('/create', [ForumPostController::class, 'create'])->name('create');
         Route::post('/store', [ForumPostController::class, 'store'])->name('store');
+        Route::post('/bulk-delete', [ForumPostController::class, 'bulkDelete'])->name('bulk-delete');
+    Route::post('/bulk-update-status', [ForumPostController::class, 'bulkUpdateStatus'])->name('bulk-update-status');
         Route::get('/{id}', [ForumPostController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [ForumPostController::class, 'edit'])->name('edit');
         Route::post('/{id}/update', [ForumPostController::class, 'update'])->name('update');
         Route::delete('/{id}', [ForumPostController::class, 'destroy'])->name('destroy');
-        Route::delete('/bulk-destroy', [ForumPostController::class, 'bulkDestroy'])
-    ->name('bulk-destroy');
+    
         // Routes cho quản lý bài viết
         Route::get('/{id}/approve', [ForumPostController::class, 'approve'])->name('approve');
         Route::post('/{id}/reject', [ForumPostController::class, 'reject'])->name('reject');

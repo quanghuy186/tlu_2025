@@ -21,8 +21,6 @@ class ContactController extends Controller
     }
 
     public function department(){
-        
-        // $departments = Department::with('manager')->paginate(10);
         $departments = Department::with('manager')->paginate(10);
         return view('pages.contact.department')->with('departments', $departments);
     }

@@ -81,11 +81,32 @@
                                 </div>
                             </div>
                         </form>
+
+                        <!-- Bulk Actions -->
+                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="bulk-actions" style="display: none;">
+                                <span class="me-2"><span id="selected-count">0</span> bài viết được chọn</span>
+                                <button type="button" class="btn btn-sm btn-success me-2" onclick="bulkUpdateStatus('approved')">
+                                    <i class="bi bi-check-circle me-1"></i>Duyệt
+                                </button>
+                                <button type="button" class="btn btn-sm btn-warning me-2" onclick="showRejectModal()">
+                                    <i class="bi bi-x-circle me-1"></i>Từ chối
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="showBulkDeleteModal()">
+                                    <i class="bi bi-trash me-1"></i>Xóa
+                                </button>
+                            </div>
+                        </div>
                         
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
+                                        <th width="3%">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="selectAll">
+                                            </div>
+                                        </th>
                                         <th width="5%">ID</th>
                                         <th width="25%">Tiêu đề</th>
                                         <th width="15%">Danh mục</th>
@@ -99,6 +120,11 @@
                                 <tbody>
                                     @forelse ($posts as $post)
                                     <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input post-checkbox" type="checkbox" value="{{ $post->id }}">
+                                            </div>
+                                        </td>
                                         <td><span class="badge bg-light text-dark">{{ $post->id }}</span></td>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -171,7 +197,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="8" class="text-center py-4">Không có dữ liệu bài viết</td>
+                                        <td colspan="9" class="text-center py-4">Không có dữ liệu bài viết</td>
                                     </tr>
                                     @endforelse
                                 </tbody>
@@ -212,16 +238,61 @@
     </div>
 </div>
 
+<!-- Modal Xác nhận xóa nhiều bài viết -->
+<div class="modal fade" id="bulkDeleteModal" tabindex="-1" aria-labelledby="bulkDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkDeleteModalLabel">Xác nhận xóa nhiều bài viết</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa <strong id="bulkDeleteCount">0</strong> bài viết đã chọn?</p>
+                <p class="text-danger">Lưu ý: Hành động này không thể hoàn tác.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" onclick="confirmBulkDelete()">Xóa bài viết</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Từ chối nhiều bài viết -->
+<div class="modal fade" id="bulkRejectModal" tabindex="-1" aria-labelledby="bulkRejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkRejectModalLabel">Từ chối nhiều bài viết</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn đang từ chối <strong id="bulkRejectCount">0</strong> bài viết.</p>
+                <div class="mb-3">
+                    <label for="bulkRejectReason" class="form-label">Lý do từ chối <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="bulkRejectReason" rows="3" required placeholder="Nhập lý do từ chối..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-warning" onclick="confirmBulkReject()">Từ chối</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('custom-js')
 <script>
+    // Khởi tạo tooltip
     document.addEventListener('DOMContentLoaded', function() {
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
         
+        // Modal xóa đơn lẻ
         const deleteModal = document.getElementById('deleteConfirmModal');
         if (deleteModal) {
             deleteModal.addEventListener('show.bs.modal', function(event) {
@@ -242,5 +313,234 @@
             });
         }
     });
+
+    // Biến lưu trữ các ID được chọn
+    let selectedPosts = [];
+
+    // Checkbox chọn tất cả
+    document.getElementById('selectAll').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.post-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+        updateSelectedPosts();
+    });
+
+    // Checkbox từng bài viết
+    document.querySelectorAll('.post-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateSelectedPosts();
+            
+            // Cập nhật trạng thái checkbox "chọn tất cả"
+            const allCheckboxes = document.querySelectorAll('.post-checkbox');
+            const checkedCheckboxes = document.querySelectorAll('.post-checkbox:checked');
+            document.getElementById('selectAll').checked = allCheckboxes.length === checkedCheckboxes.length && allCheckboxes.length > 0;
+        });
+    });
+
+    // Cập nhật danh sách bài viết được chọn
+    function updateSelectedPosts() {
+        selectedPosts = [];
+        document.querySelectorAll('.post-checkbox:checked').forEach(checkbox => {
+            selectedPosts.push(checkbox.value);
+        });
+        
+        // Hiển thị/ẩn bulk actions
+        const bulkActions = document.querySelector('.bulk-actions');
+        if (selectedPosts.length > 0) {
+            bulkActions.style.display = 'block';
+            document.getElementById('selected-count').textContent = selectedPosts.length;
+        } else {
+            bulkActions.style.display = 'none';
+        }
+    }
+
+    // Hiển thị modal xóa nhiều
+    function showBulkDeleteModal() {
+        if (selectedPosts.length === 0) {
+            showAlert('warning', 'Vui lòng chọn ít nhất một bài viết để xóa');
+            return;
+        }
+        
+        document.getElementById('bulkDeleteCount').textContent = selectedPosts.length;
+        const modal = new bootstrap.Modal(document.getElementById('bulkDeleteModal'));
+        modal.show();
+    }
+
+    // Xác nhận xóa nhiều
+    function confirmBulkDelete() {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('bulkDeleteModal'));
+        modal.hide();
+        
+        fetch('{{ route("admin.forum.posts.bulk-delete") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                post_ids: selectedPosts
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('success', data.message);
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showAlert('danger', data.message || 'Có lỗi xảy ra');
+            }
+        })
+        .catch(error => {
+            showAlert('danger', 'Có lỗi xảy ra khi xóa bài viết');
+        });
+    }
+
+    // Hiển thị modal từ chối nhiều
+    function showRejectModal() {
+        if (selectedPosts.length === 0) {
+            showAlert('warning', 'Vui lòng chọn ít nhất một bài viết để từ chối');
+            return;
+        }
+        
+        document.getElementById('bulkRejectCount').textContent = selectedPosts.length;
+        document.getElementById('bulkRejectReason').value = '';
+        const modal = new bootstrap.Modal(document.getElementById('bulkRejectModal'));
+        modal.show();
+    }
+
+    // Xác nhận từ chối nhiều
+    function confirmBulkReject() {
+        const rejectReason = document.getElementById('bulkRejectReason').value.trim();
+        
+        if (!rejectReason) {
+            showAlert('warning', 'Vui lòng nhập lý do từ chối');
+            return;
+        }
+        
+        const modal = bootstrap.Modal.getInstance(document.getElementById('bulkRejectModal'));
+        modal.hide();
+        
+        bulkUpdateStatus('rejected', rejectReason);
+    }
+
+    // Cập nhật trạng thái nhiều bài viết
+    function bulkUpdateStatus(status, rejectReason = null) {
+        if (selectedPosts.length === 0) {
+            showAlert('warning', 'Vui lòng chọn ít nhất một bài viết');
+            return;
+        }
+        
+        const data = {
+            post_ids: selectedPosts,
+            status: status
+        };
+        
+        if (rejectReason) {
+            data.reject_reason = rejectReason;
+        }
+        
+        fetch('{{ route("admin.forum.posts.bulk-update-status") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('success', data.message);
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showAlert('danger', data.message || 'Có lỗi xảy ra');
+            }
+        })
+        .catch(error => {
+            showAlert('danger', 'Có lỗi xảy ra khi cập nhật trạng thái');
+        });
+    }
+
+    // Hiển thị thông báo
+    function showAlert(type, message) {
+        const alertHtml = `
+            <div class="alert alert-${type} alert-dismissible fade show mb-3">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+        
+        const cardBody = document.querySelector('.card-body');
+        cardBody.insertAdjacentHTML('afterbegin', alertHtml);
+        
+        // Tự động ẩn sau 5 giây
+        setTimeout(() => {
+            const alert = cardBody.querySelector('.alert');
+            if (alert) {
+                alert.remove();
+            }
+        }, 5000);
+    }
 </script>
-@endsection 
+@endsection
+
+<style>
+    /* Thêm vào file CSS của bạn hoặc trong thẻ <style> */
+
+/* Hover effect cho các hàng khi có checkbox được chọn */
+.table tbody tr:has(.post-checkbox:checked) {
+    background-color: #f8f9fa !important;
+}
+
+/* Style cho bulk actions bar */
+.bulk-actions {
+    background-color: #f0f0f0;
+    padding: 10px 15px;
+    border-radius: 5px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Checkbox styling */
+.form-check-input {
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Hiệu ứng cho nút bulk actions */
+.bulk-actions button {
+    transition: all 0.3s ease;
+}
+
+.bulk-actions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .bulk-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .bulk-actions button {
+        width: 100%;
+    }
+}
+</style>

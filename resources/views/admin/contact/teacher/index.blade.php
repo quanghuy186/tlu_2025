@@ -246,30 +246,9 @@
                                         <input type="checkbox" id="selectAll" class="form-check-input">
                                         <label for="selectAll" class="form-check-label small">Chọn tất cả</label>
                                         
-                                        <div class="dropdown">
-                                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" 
-                                                    type="button" data-bs-toggle="dropdown" disabled id="bulkActionBtn">
-                                                Hành động hàng loạt
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                {{-- <li>
-                                                    <a class="dropdown-item" href="#" onclick="bulkAction('export')">
-                                                        <i class="bi bi-download me-2"></i>Xuất danh sách
-                                                    </a>
-                                                </li> --}}
-                                                <li>
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#bulkAssignModal">
-                                                        <i class="bi bi-building me-2"></i>Phân công khoa
-                                                    </a>
-                                                </li>
-                                                <li><hr class="dropdown-divider"></li>
-                                                <li>
-                                                    <a class="dropdown-item text-danger" href="#" onclick="bulkAction('delete')">
-                                                        <i class="bi bi-trash me-2"></i>Xóa được chọn
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <button id="bulkDeleteBtn" class="btn btn-danger btn-sm" onclick="bulkAction('delete')">
+                                            <i class="bi bi-trash me-2"></i>Xóa đã chọn
+                                        </button>   
                                     </div>
                                 </div>
                             </div>
@@ -583,6 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectAllTableCheckbox = document.getElementById('selectAllTable');
     const teacherCheckboxes = document.querySelectorAll('.teacher-checkbox');
     const bulkActionBtn = document.getElementById('bulkActionBtn');
+    const selectedCountSpan = document.getElementById('selectedCount');
     
     // Select all functionality
     if (selectAllCheckbox && selectAllTableCheckbox) {

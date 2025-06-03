@@ -475,12 +475,6 @@ class TeacherController extends Controller
                 
                 return redirect()->back()->with('success', "Đã xóa {$count} giảng viên thành công!");
 
-            case 'assign_department':
-                $count = $teachers->update(['department_id' => $request->department_id]);
-                $department = Department::find($request->department_id);
-                
-                return redirect()->back()->with('success', "Đã phân công {$count} giảng viên vào khoa/bộ môn {$department->name}!");
-
             case 'export':
                 $teachersList = $teachers->with(['user', 'department'])->get();
                 
