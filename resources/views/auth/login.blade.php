@@ -305,12 +305,12 @@
                         <form action="{{ route('login') }}" method="POST">
                             @csrf
                             <div class="form-floating">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                                <input class="form-control" id="email" name="email" placeholder="Email">
                                 <label for="email"><i class="fas fa-envelope me-2"></i>Email</label>
                             </div>
 
                             @if ($errors->has('email'))
-								<div class="text-danger alert alert-danger">{{ $errors->first('email') }}</div>
+								<div class="text-danger alert alert-danger small">{{ $errors->first('email') }}</div>
 							@endif
 
                             <div class="form-floating password-field">
@@ -322,7 +322,7 @@
                             </div>
 
                             @if ($errors->has('password'))
-                                <div class="text-danger alert alert-danger">{{ $errors->first('password') }}</div>
+                                <div class="text-danger alert alert-danger small">{{ $errors->first('password') }}</div>
                             @endif
 
                             <div class="form-check">
@@ -352,10 +352,6 @@
                 </div>
             </div>
         </div>
-{{--
-        <div class="back-to-home">
-            <a href="#"><i class="fas fa-arrow-left me-2"></i> Quay lại trang chủ</a>
-        </div> --}}
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

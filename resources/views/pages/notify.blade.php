@@ -279,7 +279,7 @@
                                     <div class="mb-3">
                                         <label for="category_id" class="form-label fw-bold">Danh mục</label>
                                         <select class="form-select" id="category_id" name="category_id">
-                                            <option value="0">-- Chọn danh mục --</option>
+                                            <option value="">-- Chọn danh mục --</option>
                                             @foreach($notification_categories as $category)
                                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach

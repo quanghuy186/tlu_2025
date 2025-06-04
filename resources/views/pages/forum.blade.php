@@ -885,7 +885,7 @@
 </div>
 
 <!-- New Topic Button -->
-<a href="#" class="new-topic-btn">
+<a href="#" class="new-topic-btn" data-bs-toggle="modal" data-bs-target="#createPostModal">
     <i class="fas fa-plus"></i>
 </a>
 

@@ -209,14 +209,16 @@ Route::prefix('/contact')->name('contact.')->middleware('auth')->group(function(
     Route::get('/department/sort', [ContactController::class, 'sort_department'])->name('department.sort');
 });
 
-Route::get('/chat', [MessageController::class, 'index'])->name('chat.index');
-Route::get('/messages/{user}', [MessageController::class, 'getMessages'])->name('chat.messages');
-Route::post('/messages', [MessageController::class, 'sendMessage'])->name('chat.send');
-Route::put('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('chat.read');
-Route::delete('/messages/{message}', [MessageController::class, 'deleteMessage'])->name('chat.delete');
+Route::name('chat.')->middleware('auth')->group(function(){
+   Route::get('/chat', [MessageController::class, 'index'])->name('index');
+    Route::get('/messages/{user}', [MessageController::class, 'getMessages'])->name('messages');
+    Route::post('/messages', [MessageController::class, 'sendMessage'])->name('send');
+    Route::put('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('read');
+    Route::delete('/messages/{message}', [MessageController::class, 'deleteMessage'])->name('delete');
 
-Route::get('/contacts', [MessageController::class, 'contacts'])->name('chat.contacts');
-Route::get('/chat/start/{userId}', [MessageController::class, 'startChat'])->name('chat.start');
+    Route::get('/contacts', [MessageController::class, 'contacts'])->name('contacts');
+    Route::get('/chat/start/{userId}', [MessageController::class, 'startChat'])->name('start');
+});
 
 Broadcast::routes(['middleware' => ['auth:web']]);
 

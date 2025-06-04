@@ -118,6 +118,9 @@
         </div>
     </nav>
 
+    <!-- Thêm vào đầu modal-body -->
+    
+
     <div class="modal fade user-info-modal" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -125,6 +128,7 @@
                     <h5 class="modal-title" id="userInfoModalLabel">Thông tin cá nhân</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+
                 @if(hasRole(1, Auth::user()))
                     <div class="modal-body">
                         <form id="updateProfileForm" action="" method="POST" enctype="multipart/form-data">

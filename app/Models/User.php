@@ -16,11 +16,6 @@ class User extends Authenticatable
     protected $table = 'users';
     protected $primaryKey = 'id';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -33,22 +28,12 @@ class User extends Authenticatable
         'email_verified',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'password_reset_token',
         'verification_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -70,12 +55,6 @@ class User extends Authenticatable
         return $this->email;
     }
 
-    /**
-     * Send the password reset notification.
-     *
-     * @param string $token
-     * @return void
-     */
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new \Illuminate\Auth\Notifications\ResetPassword($token));

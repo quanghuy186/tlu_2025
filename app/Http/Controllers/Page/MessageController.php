@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Page;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\User;
 use App\Events\MessageSent;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
 class MessageController extends Controller
 {
     public function index()

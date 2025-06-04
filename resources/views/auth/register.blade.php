@@ -385,7 +385,7 @@
         </div>
 
         <div class="back-to-home">
-            <a href="/"><i class="fas fa-arrow-left me-2"></i> Quay lại đăng nhập</a>
+            <a href="{{ route('login') }}"><i class="fas fa-arrow-left me-2"></i> Quay lại đăng nhập</a>
         </div>
     </div>
 
@@ -449,7 +449,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Toggle password visibility
         const passwordToggle = document.getElementById('passwordToggle');
         const passwordInput = document.getElementById('password');
 
@@ -473,25 +472,6 @@
             icon.classList.toggle('fa-eye');
             icon.classList.toggle('fa-eye-slash');
         });
-
-        // passwordConfirmInput.addEventListener('input', function() {
-        //     if (this.value !== passwordInput.value) {
-        //         this.setCustomValidity('Mật khẩu không khớp');
-        //     } else {
-        //         this.setCustomValidity('');
-        //     }
-        // });
-
-        // Validate email format
-        // const emailInput = document.getElementById('email');
-        // emailInput.addEventListener('input', function() {
-        //     const isValid = /[a-z0-9._%+-]+@e\.tlu\.edu\.vn$/.test(this.value);
-        //     if (!isValid) {
-        //         this.setCustomValidity('Email phải có định dạng @tlu.edu.vn');
-        //     } else {
-        //         this.setCustomValidity('');
-        //     }
-        // });
     </script>
 </body>
 </html>

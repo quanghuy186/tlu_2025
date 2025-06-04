@@ -39,6 +39,13 @@ class RoleSeeder extends Seeder
                 'updated_at' => $now,
             ],
             [
+                'id' => 4,
+                'role_name' => 'kiem_duyet_vien',
+                'description' => 'Kiểm duyệt viên (Censor)',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
                 'id' => 999,
                 'role_name' => 'admin',
                 'description' => 'Quản trị viên (admin)',

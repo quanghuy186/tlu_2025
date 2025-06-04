@@ -14,9 +14,6 @@ use Illuminate\View\View;
 
 class NewPasswordController extends Controller
 {
-    /**
-     * Hiển thị view đặt lại mật khẩu.
-     */
     public function create(Request $request): View
     {
         return view('auth.reset-password', [
@@ -26,18 +23,19 @@ class NewPasswordController extends Controller
         ]);
     }
 
-    /**
-     * Xử lý yêu cầu đặt lại mật khẩu mới.
-     */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'email.required' => 'Vui lòng nhập địa chỉ email.',
+            'email.email' => 'Địa chỉ email không hợp lệ.',
+            'password.required' => 'Vui lòng nhập mật khẩu.',
+            'password.confirmed' => 'Mật khẩu không khớp.',
         ]);
 
-        // Đặt lại mật khẩu của người dùng bằng mật khẩu mới
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
@@ -50,9 +48,8 @@ class NewPasswordController extends Controller
             }
         );
 
-        // Nếu mật khẩu được đặt lại thành công, chuyển hướng người dùng về trang đăng nhập
         return $status == Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
+                    ? redirect()->route('login')->with('success', 'Đặt lại mật khẩu thành công!')
                     : back()->withInput($request->only('email'))
                             ->withErrors(['email' => __($status)]);
     }
