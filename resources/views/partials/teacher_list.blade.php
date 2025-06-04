@@ -20,11 +20,14 @@
             </a>
         </div>
 
-        <div class="teacher-actions">
-            <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal{{ $teacher->id }}">
-                <i class="fas fa-eye"></i>
-            </a>
-        </div>
+        @can('view-detail-teacher', $teacher)
+            <div class="teacher-actions">
+                <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#teacherDetailModal{{ $teacher->id }}">
+                    <i class="fas fa-eye"></i>
+                </a>
+            </div>
+        @endcan
+        
     </div>
 
     <div class="modal fade" id="teacherDetailModal{{ $teacher->id }}" tabindex="-1" aria-hidden="true">

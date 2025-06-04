@@ -58,11 +58,13 @@
             @endif
         </div>
 
-        <div class="unit-actions mx-3">
-            <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#unitDetailModal{{ $department->id }}">
-                <i class="fas fa-eye"></i>
-            </a>
-        </div>
+        @can('view-detail-department', $department)
+            <div class="unit-actions mx-3">
+                <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#unitDetailModal{{ $department->id }}">
+                    <i class="fas fa-eye"></i>
+                </a>
+            </div>
+        @endcan
     </div>
 
     <div class="modal fade" id="unitDetailModal{{ $department->id }}" tabindex="-1" aria-labelledby="unitDetailModalLabel{{ $department->id }}" aria-hidden="true">
@@ -104,22 +106,6 @@
                                 <p>{{ $department->description }}</p>
                             </div>
                         </div>
-
-                        <!-- Leadership -->
-                        {{-- <div class="unit-detail-section">
-                            <div class="unit-detail-section-title">Ban lãnh đạo</div>
-                            <div class="leader-list">
-                                <div class="leader-item">
-                                    <img src="https://via.placeholder.com/150x150?text=Leader1" alt="Trưởng khoa" class="leader-avatar">
-                                    <div class="leader-info">
-                                        <div class="leader-name">TS. Nguyễn Thanh Tùng</div>
-                                        <div class="leader-position">Trưởng khoa</div>
-                                    </div>
-                                </div>
-
-
-                            </div>
-                        </div> --}}
 
                        
                         <div class="unit-detail-section">

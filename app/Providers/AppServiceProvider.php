@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Policies\DepartmentPolicy;
+use App\Policies\StudentPolicy;
+use App\Policies\TeacherPolicy;
 use App\Policies\UserHasRolePolicy;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -33,16 +36,9 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        // Gate::define('view-user', function(User $user) {
-        //     return tluHasPermission($user,'view-user');
-        // });
+        Gate::define('view-detail-teacher', [TeacherPolicy::class, 'view']);
+        Gate::define('view-detail-student', [StudentPolicy::class, 'view']);
+        Gate::define('view-detail-department', [DepartmentPolicy::class, 'view']);
 
-        // Gate::define('edit-user', function(User $user) {
-        //     return tluHasPermission($user,'edit-user');
-        // });
-
-        // Gate::define('update-user', [UserHasRolePolicy::class,'update']);
-
-        // Gate::define('view-contact-student');
     }
 }

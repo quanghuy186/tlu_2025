@@ -24,11 +24,13 @@
                 @endif
             </div>
         </div>
-        <div class="student-actions mx-3">
-            <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#studentDetailModal{{ $student->id }}">
-                <i class="fas fa-eye"></i>
-            </a>
-        </div>
+        @can( 'view-detail-student', $student)
+            <div class="student-actions mx-3">
+                <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#studentDetailModal{{ $student->id }}">
+                    <i class="fas fa-eye"></i>
+                </a>
+            </div>
+        @endcan
 
         <div class="student-actions">
             <a href="{{ route('chat.start', $student->user->id) }}" class="action-btn">
