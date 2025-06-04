@@ -203,11 +203,13 @@
 
             <!-- Sidebar -->
             <div class="col-lg-4">
-                <div class="create-notification-btn mb-3">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNotificationModal">
-                        <i class="fas fa-plus me-2"></i>Tạo thông báo mới
-                    </button>
-                </div>
+                @can('create-notification', $notifications)
+                    <div class="create-notification-btn mb-3">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNotificationModal">
+                            <i class="fas fa-plus me-2"></i>Tạo thông báo mới
+                        </button>
+                    </div>
+                @endcan
 
                 <!-- Categories -->
                 <div class="sidebar-card">

@@ -2,11 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\ForumPost;
 use App\Models\User;
 use App\Policies\DepartmentPolicy;
+use App\Policies\ForumPostPolicy;
 use App\Policies\StudentPolicy;
 use App\Policies\TeacherPolicy;
 use App\Policies\UserHasRolePolicy;
+use App\Policies\NotiticationPolicy;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Gate;
@@ -39,6 +42,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-detail-teacher', [TeacherPolicy::class, 'view']);
         Gate::define('view-detail-student', [StudentPolicy::class, 'view']);
         Gate::define('view-detail-department', [DepartmentPolicy::class, 'view']);
+        Gate::define('create-notification', [NotiticationPolicy::class, 'create']);
+        Gate::define('show-anonymously', [ForumPostPolicy::class, 'view']);
 
     }
 }

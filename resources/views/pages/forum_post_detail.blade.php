@@ -51,9 +51,13 @@
                                 <i class="fas fa-user"></i>
                             </span>
                             <div>
-                                <div class="fw-bold">Ẩn danh</div>
+                                @can('show-anonymously', $post)
+                                    <div class="fw-bold">{{ $post->author->name }}</div>
+                                @else
+                                    <div class="fw-bold">Ẩn danh</div>
+                                @endcan
                                 <small class="text-muted">Đăng {{ timeAgo($post->created_at) }}</small>
-                            </div>
+                            </div>  
                         @else
                             @if($post->author->avatar)
                                 <img src="{{ asset('storage/avatars/'.$post->author->avatar) }}" 
@@ -66,7 +70,7 @@
                             @endif
                             <div>
                                 <div class="fw-bold">{{ $post->author->name }}</div>
-                                <small class="text-muted">Đăng {{ $post->created_at->diffForHumans() }}</small>
+                                <small class="text-muted">Đăng {{ timeAgo($post->created_at) }}</small>
                             </div>
                         @endif
                     </div>
@@ -103,17 +107,6 @@
                             </div>
                         @endif
                     @endif
-                    
-                    <!-- Post Tags -->
-                    {{-- @if($post->tags && count($post->tags) > 0)
-                        <div class="post-tags my-3">
-                            @foreach($post->tags as $tag)
-                                <a href="{{ route('forum.tag', $tag->slug) }}" class="badge bg-light text-dark text-decoration-none me-1">
-                                    #{{ $tag->name }}
-                                </a>
-                            @endforeach
-                        </div>
-                    @endif --}}
                     
                     <!-- Post Statistics -->
                     <div class="post-stats mt-4 d-flex justify-content-between">
