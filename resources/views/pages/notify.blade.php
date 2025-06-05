@@ -274,7 +274,7 @@
                                         <label for="title" class="form-label fw-bold">
                                             Tiêu đề thông báo <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" class="form-control" id="title" name="title" required>
+                                        <input type="text" class="form-control" id="title" name="title">
                                         <div class="invalid-feedback"></div>
                                     </div>
 
@@ -293,7 +293,7 @@
                                         <label for="content" class="form-label fw-bold">
                                             Nội dung <span class="text-danger">*</span>
                                         </label>
-                                        <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                                        <textarea class="form-control" id="content" name="content" rows="5"></textarea>
                                         <div class="invalid-feedback"></div>
                                     </div>
 
