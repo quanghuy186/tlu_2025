@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\ForumPost;
 use App\Models\User;
 use App\Policies\DepartmentPolicy;
+use App\Policies\ForumCommentPolicy;
 use App\Policies\ForumPostPolicy;
 use App\Policies\StudentPolicy;
 use App\Policies\TeacherPolicy;
@@ -44,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-detail-department', [DepartmentPolicy::class, 'view']);
         Gate::define('create-notification', [NotiticationPolicy::class, 'create']);
         Gate::define('show-anonymously', [ForumPostPolicy::class, 'view']);
+        Gate::define('show-anonymously-comment', [ForumCommentPolicy::class, 'view']);
 
     }
 }

@@ -63,9 +63,16 @@
                         <!-- Nội dung bình luận -->
                         <div class="flex-grow-1">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0">
-                                    {{ $comment->is_anonymous ? 'Ẩn danh' : ($comment->author ? $comment->author->name : 'Người dùng') }}
-                                </h6>
+                                @can('show-anonymously-comment', $comment)
+                                    <h6 class="mb-0">
+                                        {{ ($comment->author ? $comment->author->name : 'Người dùng') }}
+                                    </h6>
+                                @else
+                                    <h6 class="mb-0">
+                                        {{ $comment->is_anonymous ? 'Ẩn danh' : ($comment->author ? $comment->author->name : 'Người dùng') }}
+                                    </h6>
+                                @endcan
+                                
                                 <small class="text-muted">  {{ timeAgo($comment->created_at) }}</small>
                             </div>
                             
@@ -150,9 +157,18 @@
                                                 <!-- Nội dung phản hồi -->
                                                 <div class="flex-grow-1">
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <h6 class="mb-0 small fw-bold">
-                                                            {{ $reply->is_anonymous ? 'Ẩn danh' : ($reply->author ? $reply->author->name : 'Người dùng') }}
-                                                        </h6>
+                                                        @can('show-anonymously-comment', $reply)
+                                                            <h6 class="mb-0">
+                                                                {{ ($reply->author ? $reply->author->name : 'Người dùng') }}
+                                                            </h6>
+                                                        @else
+                                                            <h6 class="mb-0 small fw-bold">
+                                                                {{ $reply->is_anonymous ? 'Ẩn danh' : ($reply->author ? $reply->author->name : 'Người dùng') }}
+                                                            </h6>
+                                                        @endcan 
+
+
+                                                        
                                                         <small class="text-muted">{{ timeAgo($reply->created_at) }}</small>
                                                     </div>
                                                     

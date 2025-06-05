@@ -644,7 +644,12 @@
                                     <div class="topic-content">
                                         <a href="{{ route('forum.post.show', $post->id) }}" class="topic-title">{{ $post->title }}</a>
                                         <div class="topic-info">
-                                            <span><i class="fas fa-user me-1"></i> {{ $post->is_anonymous == 1 ? "Ẩn danh" : $post->author->name }} </span>
+
+                                            @can('show-anonymously', $post)
+                                                <span><i class="fas fa-user me-1"></i> {{ $post->author->name }} </span>
+                                            @else   
+                                                <span><i class="fas fa-user me-1"></i> {{ $post->is_anonymous == 1 ? "Ẩn danh" : $post->author->name }} </span>
+                                            @endcan
 
                                             {{-- <span class="ms-3"><i class="far fa-clock me-1"></i> {{ $post->created_at->diffForHumans() }}</span> --}}
 
@@ -733,12 +738,16 @@
                                 alt="" class="unit-logo" style="border-radius : 50%;">
                             @endif
                             <div>       
-                                <h6 class="post-author">{{ $p->is_anonymous == 1 ? "Ẩn danh" : $p->author->name }}</h6>
-                                {{-- <span class="post-time">Đăng 2 giờ trước</span> --}}
+                                @can('show-anonymously', $p)
+                                    <h6 class="post-author">{{ $p->author->name }}</h6>
+                                @else   
+                                    <h6 class="post-author">{{ $p->is_anonymous == 1 ? "Ẩn danh" : $p->author->name }}</h6>
+                                @endcan
+
                                 <span>
-                                                <i class="far fa-clock me-1"></i> 
-                                                {{ timeAgo($post->created_at) }}
-                                            </span>
+                                    <i class="far fa-clock me-1"></i> 
+                                        {{ timeAgo($p->created_at) ?? 'Chưa xác định' }}
+                                </span>
                             </div>
                         </div>
                         <div class="post-body">
