@@ -26,7 +26,7 @@ class AdminMiddleware
             $query->where('role_name', 'kiem_duyet_vien');
         })->exists();
 
-        if (!$isAdmin || $censor) {
+        if (!$isAdmin && !$censor) {
             return redirect()->route('home.index')->with('error', 'Bạn không có quyền truy cập trang này.');
         }
 

@@ -112,7 +112,7 @@
                                 @if($notifications->first()->images)
                                     <img src="{{ asset('storage/' . explode(',', $notifications->first()->images)[0]) }}" alt="Featured Announcement">
                                 @else
-                                    <img src="https://images2.thanhnien.vn/528068263637045248/2024/1/25/3b690baedbd9a609207c76684a3413d0-65a11b0a7e79d880-17061562931311973368410.jpg" alt="Featured Announcement">
+                                    {{-- <img src="https://images2.thanhnien.vn/528068263637045248/2024/1/25/3b690baedbd9a609207c76684a3413d0-65a11b0a7e79d880-17061562931311973368410.jpg" alt="Featured Announcement"> --}}
                                 @endif
                                 <div class="featured-announcement-overlay">
                                     <div class="featured-announcement-date">
