@@ -20,35 +20,29 @@ class RoleController extends Controller
         return view("admin.role.create");
     }
 
-    public function store(Request $request){
-        // $validator = Validator::make($request->all(), [
-        //     'role_name' => 'required|string|max:100|unique:roles,role_name',
-        //     'description' => 'nullable|string|max:255',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return redirect()
-        //         ->route('admin.role.create')
-        //         ->withErrors($validator)
-        //         ->withInput();
-        // }
-
-        try {
-            Role::create([
-                'role_name' => $request->input('role_name'),
-                'description' => $request->input('description'),
+    public function store(Request $request)
+    {
+            $validated = $request->validate([
+                'role_name' => 'required|unique:roles,role_name|max:255',
+                'description' => 'required|max:1000',
+            ], [
+                'role_name.required' => 'Tên vai trò là bắt buộc',
+                'role_name.unique' => 'Tên vai trò này đã tồn tại trong hệ thống',
+                'role_name.max' => 'Tên vai trò không được vượt quá 255 ký tự',
+                'description.required' => 'Vui lòng nhập mô tả',
+                'description.max' => 'Mô tả không được vượt quá 1000 ký tự',
             ]);
 
+            Role::create([
+                'role_name' => $validated['role_name'],
+                'description' => $validated['description'] ?? null,
+            ]);
+            
             return redirect()
                 ->route('admin.role.index')
                 ->with('success', 'Vai trò đã được tạo thành công.');
-        } catch (\Exception $e) {
-            return redirect()
-                ->route('admin.role.create')
-                ->with('error', 'Đã xảy ra lỗi khi tạo vai trò: ' . $e->getMessage())
-                ->withInput();
-        }
-    }
+        
+    }   
 
     public function edit($id)
     {

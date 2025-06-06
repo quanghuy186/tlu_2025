@@ -22,7 +22,7 @@
           <div class="card-header bg-white py-3">
             <h5 class="card-title m-0 fw-bold text-primary">Thông tin quyền truy cập</h5>
           </div>
-          <div class="card-body">
+          <div class="card-body mt-3">
             @if (session('success'))
               <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}

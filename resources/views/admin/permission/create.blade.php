@@ -22,7 +22,7 @@
           <div class="card-header bg-white py-3">
             <h5 class="card-title m-0 fw-bold text-primary">Thông tin quyền truy cập</h5>
           </div>
-          <div class="card-body">
+          <div class="card-body mt-3">
             @if (session('success'))
               <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
@@ -42,24 +42,22 @@
               
               <div class="mb-3">
                 <label for="permission_name" class="form-label">Tên quyền <span class="text-danger">*</span></label>
-                <input type="text" class="form-control @error('permission_name') is-invalid @enderror" id="permission_name" name="permission_name" value="{{ old('permission_name') }}" required>
+                <input type="text" class="form-control @error('permission_name') is-invalid @enderror" id="permission_name" name="permission_name" value="{{ old('permission_name') }}">
                 <small class="text-muted">Ví dụ: users.create, users.view, products.edit</small>
-                @error('permission_name')
-                  <div class="invalid-feedback">
-                    {{ $message }}
-                  </div>
-                @enderror
+              
+
+                @if ($errors->has('permission_name'))
+                  <div class="text-danger alert alert-danger small">{{ $errors->first('permission_name') }}</div>
+                @endif
               </div>
               
               <div class="mb-3">
                 <label for="description" class="form-label">Mô tả</label>
                 <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="4">{{ old('description') }}</textarea>
                 <small class="text-muted">Mô tả ngắn gọn về chức năng của quyền này</small>
-                @error('description')
-                  <div class="invalid-feedback">
-                    {{ $message }}
-                  </div>
-                @enderror
+                 @if ($errors->has('description'))
+                  <div class="text-danger alert alert-danger small">{{ $errors->first('description') }}</div>
+                @endif
               </div>
               
               <div class="d-flex mt-4">
