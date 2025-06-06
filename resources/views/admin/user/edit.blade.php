@@ -6,7 +6,7 @@
     <h1>Chỉnh sửa tài khoản</h1>
     <nav>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Trang chủ</a></li>
         <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">Quản lý tài khoản</a></li>
         <li class="breadcrumb-item active">Chỉnh sửa</li>
       </ol>
@@ -19,7 +19,7 @@
             <div class="col-lg-8 mx-auto">
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white py-3">
-                        <h5 class="card-title m-0 fw-bold text-primary">Chỉnh sửa thông tin tài khoản</h5>
+                        <h4 class="card-title m-0 fw-bold text-primary">Sửa thông tin tài khoản</h4>
                     </div>
                     <div class="card-body">
                         @if ($errors->any())
@@ -36,7 +36,7 @@
                             @csrf
                             @method('PUT')
                             
-                            <div class="row mb-3">
+                            <div class="row my-3">
                                 <label for="email" class="col-sm-3 col-form-label">Email</label>
                                 <div class="col-sm-9">
                                     <input type="email" class="form-control" id="email" value="{{ $user->email }}" readonly disabled>

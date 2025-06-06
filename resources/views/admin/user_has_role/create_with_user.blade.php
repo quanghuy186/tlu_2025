@@ -6,12 +6,12 @@
     <h1>Gán vai trò người dùng</h1>
     <nav>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item">Tables</li>
-        <li class="breadcrumb-item active">General</li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">Quản lý tài khoản</a></li>
+        <li class="breadcrumb-item active">Chỉnh sửa</li>
       </ol>
     </nav>
-  </div><!-- End Page Title -->
+  </div>
 
   <section class="section py-4">
     <div class="container">
@@ -19,13 +19,13 @@
         <div class="col-lg-8">
           <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-              <h5 class="card-title mb-0">Gán vai trò cho người dùng</h5>
+              <h5 class="card-title mb-0 text-white">Gán vai trò cho người dùng</h5>
             </div>
             <div class="card-body">
               <form action="{{ route('admin.user_has_role.create') }}" method="POST">
                 @csrf
-                <div class="mb-4">
-                  <label for="userSelect" class="form-label fw-bold">Người dùng</label>
+                <div class="my-4">
+                  <label for="userSelect" class="form-label fw-bold">Thông tin người dùng</label>
                     <h2>{{ $user->email }} - {{ $user->name }}</h2>
                     <input type="hidden" name="user_id" value="{{ $user->id }}">
                 </div>

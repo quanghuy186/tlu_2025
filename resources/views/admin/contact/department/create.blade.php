@@ -19,17 +19,13 @@
             <div class="col-lg-12">
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white py-3">
-                        <h5 class="card-title m-0 fw-bold text-primary">Thông tin đơn vị mới</h5>
+                        <h5 class="card-title m-0 fw-bold text-primary">Thêm đơn vị mới</h5>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('admin.department.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             
-                            <div class="mb-4">
-                                <h6 class="fw-bold text-primary border-bottom pb-2">Thông tin đơn vị</h6>
-                            </div>
-                            
-                            <div class="row mb-3">
+                            <div class="row my-3">
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Tên đơn vị <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror" 

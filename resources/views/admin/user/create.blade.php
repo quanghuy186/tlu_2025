@@ -6,9 +6,9 @@
     <h1>Thêm tài khoản người dùng</h1>
     <nav>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item">Tables</li>
-        <li class="breadcrumb-item active">General</li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">Người dùng</a></li>
+        <li class="breadcrumb-item active">Thêm tài khoản người dùng</li>
       </ol>
     </nav>
   </div><!-- End Page Title -->
@@ -19,9 +19,9 @@
       <div class="col-lg-8">
         <div class="card shadow-sm">
           <div class="card-header bg-primary text-white">
-            <h5 class="card-title mb-0">Thêm tài khoản</h5>
+            <h5 class="card-title mb-0 text-white">Thêm tài khoản</h5>
           </div>
-          <div class="card-body">
+          <div class="card-body mt-3">
             <form action="{{ route('admin.user.create') }}" method="POST">
               @csrf
               <!-- User Information Section -->

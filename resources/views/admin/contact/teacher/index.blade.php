@@ -8,8 +8,8 @@
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Trang chủ</a></li>
-            <li class="breadcrumb-item">Quản lý</li>
-            <li class="breadcrumb-item active">Giảng viên</li>
+            <li class="breadcrumb-item">Quản lý danh bạ</li>
+            <li class="breadcrumb-item active">Cán bộ giảng viên</li>
         </ol>
     </nav>
 </div>

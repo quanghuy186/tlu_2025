@@ -7,7 +7,7 @@
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Trang chủ</a></li>
-            <li class="breadcrumb-item">Quản lý</li>
+            <li class="breadcrumb-item">Quản lý đơn vị</li>
             <li class="breadcrumb-item active">Đơn vị</li>
         </ol>
     </nav>

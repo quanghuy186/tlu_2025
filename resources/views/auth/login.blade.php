@@ -336,8 +336,12 @@
                         </form>
 
                         <script>
-                            @if (session('error'))
+                            @if(session('success'))
+                                toastr.success("{{ session('success') }}");
+                            @elseif(session('error'))
                                 toastr.error("{{ session('error') }}");
+                            @elseif(session('warning'))
+                                toastr.warning("{{ session('warning') }}");
                             @endif
                         </script>
                         

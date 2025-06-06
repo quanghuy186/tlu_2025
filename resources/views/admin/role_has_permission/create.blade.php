@@ -11,9 +11,9 @@
     <h1>Cấp quyền cho vai trò người dùng</h1>
     <nav>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item">Tables</li>
-        <li class="breadcrumb-item active">General</li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.role_has_permission') }}">Quản lý phân quyền</a></li>
+        <li class="breadcrumb-item active">Cấp quyền cho vai trò</li>
       </ol>
     </nav>
   </div><!-- End Page Title -->
@@ -24,14 +24,14 @@
         <div class="col-lg-8">
           <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-              <h5 class="card-title mb-0">Gán vai trò cho người dùng</h5>
+              <h5 class="card-title mb-0 text-white">Cấp quyền cho vai trò</h5>
             </div>
             <div class="card-body">
               <form action="{{ route('admin.role_has_permission.create') }}" method="POST" id="rolePermissionForm">
                 @csrf
 
                 @if (!empty($role_id))
-                  <div class="mb-4">
+                  <div class="my-4">
                     <label for="role_id" class="form-label fw-bold">Vai trò</label>
                     <select disabled class="form-select form-select-lg mb-3" name="role_id" id="role_id" aria-label="Chọn vai trò">
                       <option value="">-- Chọn vai trò --</option>

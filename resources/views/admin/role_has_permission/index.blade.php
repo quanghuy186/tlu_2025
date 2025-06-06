@@ -3,15 +3,15 @@
 @section('content')
 
 <div class="pagetitle">
-    <h1>Danh sách các quyền</h1>
+    <h1>Cấp quyền cho vai trò</h1>
     <nav>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item">Tables</li>
-        <li class="breadcrumb-item active">General</li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="">Người dùng</a></li>
+        <li class="breadcrumb-item active">Cấp quyền cho vai trò</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
   <section class="section py-4">
     <div class="container-fluid">

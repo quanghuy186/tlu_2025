@@ -34,7 +34,6 @@ use App\Http\Controllers\Page\IndexController as PageIndexController;
 use Illuminate\Contracts\Broadcasting\Broadcaster;
 use Illuminate\Support\Facades\Broadcast;
 
-// forgot password
 Route::middleware('guest')->group(function () {
     Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/', [LoginController::class, 'login']);
@@ -69,15 +68,13 @@ Route::prefix('/email')->name('verification.')->group(function(){
     Route::post('/resend', [RegisterController::class, 'resendVerificationEmail'])->name('resend');
 });
 
-
 Route::get('/change-password', [ChangePasswordController::class, 'show_form'])
         ->name('password.form');
     
-    // Xử lý đổi mật khẩu
 Route::post('/change-password', [ChangePasswordController::class, 'changePassword'])
         ->name('password.change');
 
-Route::prefix('/admin')->name('admin.')->group(function(){
+Route::prefix('/admin')->name('admin.')->middleware(['auth', 'admin'])->group(function(){
     Route::get('/departments', [DepartmentController::class, 'index'])->name('department.index');
     Route::get('/departments/create', [DepartmentController::class, 'create'])->name('department.create');
     Route::post('/departments', [DepartmentController::class, 'store'])->name('department.store');
@@ -121,7 +118,7 @@ Route::prefix('/admin')->name('admin.')->group(function(){
 
 
     
-Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     //user
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
@@ -224,7 +221,7 @@ Broadcast::routes(['middleware' => ['auth:web']]);
 
 
 
-Route::prefix('admin/forum')->name('admin.forum.')->group(function () {
+Route::prefix('admin/forum')->name('admin.forum.')->middleware(['auth', 'admin'])->group(function () {
     // Routes cho danh mục diễn đàn
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [ForumCategoryController::class, 'index'])->name('index');

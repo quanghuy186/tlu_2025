@@ -19,12 +19,12 @@
             <div class="col-lg-10">
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                        <h5 class="card-title m-0 fw-bold text-primary">Chỉnh sửa thông tin giảng viên</h5>
+                        <h5 class="card-title m-0 fw-bold text-primary">Sửa thông tin giảng viên</h5>
                         <a href="{{ route('admin.teacher.index') }}" class="btn btn-secondary btn-sm d-flex align-items-center">
                             <i class="bi bi-arrow-left me-1"></i> Quay lại
                         </a>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body my-3">
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul class="mb-0">

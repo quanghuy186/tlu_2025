@@ -6,9 +6,9 @@
     <h1>Quản lý quyền</h1>
     <nav>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-        <li class="breadcrumb-item">Hệ thống</li>
-        <li class="breadcrumb-item active">Quyền</li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">Quản lý tài khoản</a></li>
+        <li class="breadcrumb-item active">Quản lý quyền</li>
       </ol>
     </nav>
 </div><!-- End Page Title -->

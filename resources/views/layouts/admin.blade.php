@@ -343,7 +343,7 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
+        <a class="nav-link collapsed" href="#">
           <i class="bi bi-gear"></i>
           <span>Cài đặt</span>
         </a>

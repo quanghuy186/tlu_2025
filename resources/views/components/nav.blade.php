@@ -4,17 +4,19 @@
     <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để tiếp tục.</p>
 @endif
 
-<script>
-    @if(session('success'))
-        toastr.success("{{ session('success') }}");
-    @elseif(session('error'))
-        toastr.error("{{ session('error') }}");
-    @elseif(session('warning'))
-        toastr.warning("{{ session('warning') }}");
-    @endif
-</script>
+    
 
+      
 <body>
+    <script>
+        @if(session('success'))
+            toastr.success("{{ session('success') }}");
+        @elseif(session('error'))
+            toastr.error("{{ session('error') }}");
+        @elseif(session('warning'))
+            toastr.warning("{{ session('warning') }}");
+        @endif
+    </script>
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="container">
