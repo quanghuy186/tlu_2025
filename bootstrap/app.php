@@ -23,6 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'web' => \App\Http\Middleware\UpdateLastSeen::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'censor' => \App\Http\Middleware\CensorMiddleware::class,
+            'manager_admin' => \App\Http\Middleware\ManagerAdminMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

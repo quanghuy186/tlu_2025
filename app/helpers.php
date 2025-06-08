@@ -44,9 +44,6 @@ function hasRole($roleId, $user = null){
         return $user->roles()->where('role_id', $roleId)->exists();
 }
 
-// function tluCountRole($user = null){
-//     $user 
-// }
 
 if (!function_exists('timeAgo')) {
     function timeAgo($datetime) {

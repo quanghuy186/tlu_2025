@@ -118,11 +118,11 @@
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="{{route('admin.dashboard')}}" class="logo d-flex align-items-center">
-        <img src="{{ asset('assets/admin/img/logo.png') }} " alt="">
-        <span class="d-none d-lg-block">Hệ thống TLU</span>
+        <img src="https://cdn.haitrieu.com/wp-content/uploads/2021/10/Logo-DH-Thuy-Loi.png" alt="">
+        <span class="d-none d-lg-block">Trang quản lý</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+    </div>
 
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
@@ -134,11 +134,10 @@
         </li>
 
         <li class="nav-item dropdown pe-3">
-
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="{{ asset('assets/admin/img/profile-img.jpg') }} " alt="Profile" class="rounded-circle">
             <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
-          </a><!-- End Profile Iamge Icon -->
+          </a>
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
@@ -180,10 +179,6 @@
             </li>
 
             <li>
-              {{-- <a class="dropdown-item d-flex align-items-center" href="#">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Đăng xuất</span>
-              </a> --}}
 
               <form method="POST" action="{{ route('logout') }}" class="dropdown-item p-0">
                 @csrf
@@ -199,9 +194,8 @@
       </ul>
     </nav>
 
-  </header><!-- End Header -->
+  </header>
 
-  <!-- ======= Sidebar ======= -->
   <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
@@ -211,9 +205,10 @@
           <i class="bi bi-grid"></i>
           <span>Bảng điều khiển</span>
         </a>
-      </li><!-- End Dashboard Nav -->
+      </li>
 
-      <li class="nav-item">
+      @if(hasRole(999, Auth()->user())){
+        <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-person"></i><span>Người dùng</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -250,6 +245,8 @@
           </li> -->
         </ul>
       </li>
+      }
+      
 
       {{-- manager contact --}}
       <li class="nav-item">
@@ -297,8 +294,9 @@
             </a>
           </li>
         </ul>
-      </li><!-- End Tables Nav -->
+      </li>
 
+      @endif
       {{-- manager forum --}}
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">

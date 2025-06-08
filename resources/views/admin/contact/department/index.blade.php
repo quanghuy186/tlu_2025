@@ -250,6 +250,7 @@
                                                     @endif
                                                 </a>
                                             </th>
+                                            <th>Mô tả</th>
                                             <th>Trưởng đơn vị</th>
                                             <th>Thông tin liên hệ</th>
                                             <th>Đơn vị cha</th>
@@ -271,15 +272,21 @@
                                                             <span class="fw-medium">{{ $department->name }}</span>
                                                         </span>
                                                     </div>
-                                                    @if($department->description)
+                                                   
+                                                </td>
+                                                
+                                                <td>
+                                                    <span class="badge bg-light text-dark">{{ $department->code }}</span>
+                                                </td>
+
+                                                <td>
+                                                     @if($department->description)
                                                         <small class="text-muted d-block ms-{{ ($department->level * 3) + 4 }}">
                                                             {{ Str::limit($department->description, 80) }}
                                                         </small>
                                                     @endif
                                                 </td>
-                                                <td>
-                                                    <span class="badge bg-light text-dark">{{ $department->code }}</span>
-                                                </td>
+                                                
                                                 <td>
                                                     @if($department->manager)
                                                         <div class="d-flex align-items-center">

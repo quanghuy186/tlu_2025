@@ -115,12 +115,12 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth', 'admin'])->group(fu
     Route::put('/students/{id}', [StudentController::class, 'update'])->name('student.update');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('student.destroy');
 });  
-
-
     
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function(){
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'manager_admin'])->group(function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    //user
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function(){
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/user/create', [UserController::class, 'store'])->name('user.create');
@@ -170,7 +170,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     
     //API ajax Role has permission
     Route::get('/api/role_has_permission/getByRoleId/{role_id?}', [ApiRoleHasPermissionController::class, 'getByRoleId'])->name('api.role_has_permission.getRoleId');
+});
 
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'manager_admin'])->group(function(){
     Route::get('/notification-categories', [NotificationCategoryController::class, 'index'])->name('notification-category.index');
     Route::get('/notification-categories/create', [NotificationCategoryController::class, 'create'])->name('notification-category.create');
     Route::post('/notification-categories', [NotificationCategoryController::class, 'store'])->name('notification-category.store');
@@ -221,7 +223,7 @@ Broadcast::routes(['middleware' => ['auth:web']]);
 
 
 
-Route::prefix('admin/forum')->name('admin.forum.')->middleware(['auth', 'admin'])->group(function () {
+Route::prefix('admin/forum')->name('admin.forum.')->middleware(['auth', 'manager_admin'])->group(function () {
     // Routes cho danh mục diễn đàn
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [ForumCategoryController::class, 'index'])->name('index');

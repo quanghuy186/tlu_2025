@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
 
-class AdminMiddleware
+class CensorMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
@@ -18,18 +18,14 @@ class AdminMiddleware
 
         $user = Auth::user();
 
-        $isAdmin = $user->roles()->whereHas('role', function($query) {
-            $query->where('role_name', 'admin');
+        $censor = $user->roles()->whereHas('role', function($query) {
+            $query->where('role_name', 'kiem_duyet_vien');
         })->exists();
 
-        // $censor = $user->roles()->whereHas('role', function($query) {
-        //     $query->where('role_name', 'kiem_duyet_vien');
-        // })->exists();
-
-        if (!$isAdmin) {
+        if (!$censor) {
             return redirect()->back()->with('error', 'Bạn không có quyền truy cập trang này.');
         }
 
         return $next($request);
-    }                                             
+    }
 }
