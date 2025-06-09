@@ -31,6 +31,7 @@ use App\Models\UserHasPermission;
 use App\Http\Controllers\Notification\NotificationController as UserNotificationController;
 use App\Http\Controllers\Page\ForumController;
 use App\Http\Controllers\Page\IndexController as PageIndexController;
+use App\Models\ClassRoom;
 use Illuminate\Contracts\Broadcasting\Broadcaster;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -319,5 +320,8 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
-Route::get('/profile', [IndexController::class, 'update'])->name('profile.update')->middleware('auth');
+Route::put('/home', [IndexController::class, 'update'])->name('profile.update')->middleware('auth');
 
+Route::get('/api/classes', function () {
+    return ClassRoom::all();
+})->name('api.classes');

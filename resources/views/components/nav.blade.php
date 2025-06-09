@@ -4,9 +4,6 @@
     <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để tiếp tục.</p>
 @endif
 
-    
-
-      
 <body>
     <script>
         @if(session('success'))
@@ -203,21 +200,18 @@
                                 <div class="form-group">
                                     <label for="student_id"><i class="fas fa-id-card"></i> Mã số sinh viên</label>
                                     <input type="text" class="form-control" id="student_id" name="student[student_id]" 
-                                           value="{{ Auth::user()->student_id ?? 'SV12345678' }}">
+                                           value="{{ Auth::user()->student->student_code ?? 'SV12345678' }}">
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="faculty_student"><i class="fas fa-building"></i> Khoa</label>
-                                    <select class="form-select" id="faculty_student" name="student[faculty]">
-                                        <option value="Công nghệ thông tin" {{ (Auth::user()->faculty ?? '') == 'Công nghệ thông tin' ? 'selected' : '' }}>Công nghệ thông tin</option>
-                                        <option value="Kỹ thuật tài nguyên nước" {{ (Auth::user()->faculty ?? '') == 'Kỹ thuật tài nguyên nước' ? 'selected' : '' }}>Kỹ thuật tài nguyên nước</option>
-                                        <option value="Kỹ thuật xây dựng" {{ (Auth::user()->faculty ?? '') == 'Kỹ thuật xây dựng' ? 'selected' : '' }}>Kỹ thuật xây dựng</option>
-                                        <option value="Kinh tế và Quản lý" {{ (Auth::user()->faculty ?? '') == 'Kinh tế và Quản lý' ? 'selected' : '' }}>Kinh tế và Quản lý</option>
-                                        <option value="Điện - Điện tử" {{ (Auth::user()->faculty ?? '') == 'Điện - Điện tử' ? 'selected' : '' }}>Điện - Điện tử</option>
+                                    <label for="class_room"><i class="fas fa-building"></i> Lớp học</label>
+                                    <select class="form-select" id="class_room" name="student[class_id]" 
+                                            data-current-class-id="{{ Auth::user()->student->class_id ?? '' }}">
+                                        <option value="">-- Đang tải danh sách lớp học --</option>
                                     </select>
                                 </div>
                             </div>
@@ -248,7 +242,7 @@
                                 <div class="form-group">
                                     <label for="address_student"><i class="fas fa-map-marker-alt"></i> Địa chỉ</label>
                                     <input type="text" class="form-control" id="address_student" name="student[address]" 
-                                           value="{{ Auth::user()->address ?? 'Hà Nội, Việt Nam' }}">
+                                           value="{{ Auth::user()->address ?? 'Việt Nam' }}">
                                 </div>
                             </div>
                         </div>
@@ -543,6 +537,82 @@ document.addEventListener('DOMContentLoaded', function() {
                 reader.readAsDataURL(this.files[0]);
             }
         });
+    }
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal event listeners using vanilla JavaScript
+    const userInfoModal = document.getElementById('userInfoModal');
+    if (userInfoModal) {
+        userInfoModal.addEventListener('shown.bs.modal', function() {
+            // Kiểm tra nếu đang hiển thị form sinh viên
+            if (document.getElementById('role-form-1') && 
+                document.getElementById('role-form-1').style.display === 'block') {
+                loadClasses();
+            }
+        });
+    }
+    
+    // Role selector change event
+    const roleSelector = document.getElementById('role_selector');
+    if (roleSelector) {
+        roleSelector.addEventListener('change', function() {
+            if (this.value === '1') { 
+                loadClasses();
+            }
+        });
+    }
+
+    function loadClasses() {
+        const classSelect = document.getElementById('class_room');
+        
+        if (!classSelect) return;
+        
+        // Chỉ tải nếu chưa tải trước đó hoặc chỉ có tùy chọn mặc định
+        if (classSelect.options.length <= 1) {
+            // Lấy student_class_id từ data attribute
+            const currentClassId = classSelect.getAttribute('data-current-class-id') || '';
+            
+            fetch('/api/classes') // Sử dụng đường dẫn tuyệt đối thay vì route helper
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    classSelect.innerHTML = '<option value="">-- Chọn lớp học --</option>';
+                    
+                    // Thêm các lớp học vào dropdown
+                    if (Array.isArray(data) && data.length > 0) {
+                        data.forEach(classItem => {
+                            const option = document.createElement('option');
+                            option.value = classItem.id;
+                            option.textContent = classItem.class_name;
+                            
+                            // Chọn lớp học hiện tại của người dùng nếu có
+                            if (currentClassId && currentClassId == classItem.id) {
+                                option.selected = true;
+                            }
+                            
+                            classSelect.appendChild(option);
+                        });
+                    } else {
+                        console.log('Không có dữ liệu lớp học hoặc dữ liệu không đúng định dạng:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải danh sách lớp học:', error);
+                    classSelect.innerHTML = '<option value="">-- Lỗi khi tải danh sách --</option>';
+                });
+        }
+    }
+    
+    if (document.getElementById('role-form-1') && 
+        document.getElementById('role-form-1').style.display === 'block') {
+        loadClasses();
     }
 });
 </script>

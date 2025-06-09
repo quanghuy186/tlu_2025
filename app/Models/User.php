@@ -104,10 +104,9 @@ class User extends Authenticatable
     {
         return $this->receivedMessages()->where('is_read', false);
     }
-
-    /**
-     * Kiểm tra xem user có đang online không.
-     */
+    public function student(){
+        return $this->hasOne(Student::class);
+    }
     public function isOnline()
     {
         return $this->last_seen_at && $this->last_seen_at->diffInMinutes(now()) < 5;
