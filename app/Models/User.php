@@ -64,6 +64,16 @@ class User extends Authenticatable
         return $this->hasMany(UserHasRole::class, 'user_id', 'id');
     }
 
+    public function hasRole($roleId)
+    {
+        return $this->roles()->where('role_id', $roleId)->exists();
+    }
+
+    public function hasAnyRole(array $roleIds)
+    {
+        return $this->roles()->whereIn('role_id', $roleIds)->exists();
+    }
+
     public function permissions()
     {
         // Assuming you have a user_has_permissions pivot table

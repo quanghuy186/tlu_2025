@@ -25,7 +25,7 @@ class CensorMiddleware
         if (!$censor) {
             return redirect()->back()->with('error', 'Bạn không có quyền truy cập trang này.');
         }
-
+ 
         return $next($request);
     }
 }

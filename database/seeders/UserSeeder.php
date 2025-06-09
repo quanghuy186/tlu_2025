@@ -28,10 +28,26 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+
+            $admin = DB::table('users')->insertGetId([
+                'name' => "Quản trị viên",
+                'email' => 'admin@tlu.edu.vn',
+                'phone' => '024' . $faker->numerify('#######'),
+                'password' => Hash::make('password123'),
+                'is_active' => true,
+                'email_verified' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
             
             DB::table('user_has_roles')->insert([
                 'user_id' => $userId,
                 'role_id' => 4,
+            ]);
+
+            DB::table('user_has_roles')->insert([
+                'user_id' => $admin,
+                'role_id' => 999,
             ]);
     }
 }

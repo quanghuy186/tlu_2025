@@ -44,6 +44,21 @@ function hasRole($roleId, $user = null){
         return $user->roles()->where('role_id', $roleId)->exists();
 }
 
+function hasAllRoles(array $roleIds, $user = null)
+{
+    $user = $user ?? auth()->user();
+    
+    if (!$user) {
+        return false;
+    }
+    
+    // Đếm số vai trò khớp
+    $matchCount = $user->roles()->whereIn('role_id', $roleIds)->count();
+    
+    // Người dùng phải có tất cả các vai trò trong danh sách
+    return $matchCount === count($roleIds);
+}
+
 
 if (!function_exists('timeAgo')) {
     function timeAgo($datetime) {
