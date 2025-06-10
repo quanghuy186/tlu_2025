@@ -100,7 +100,7 @@
                         <li class="dropdown-header">Thông tin tài khoản</li>
                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#userInfoModal"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
                         <li><a class="dropdown-item" href="{{ route('password.form') }}"><i class="fas fa-cog"></i>Đổi mật khẩu</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-bell"></i> Thông báo</a></li>
+                        <li><a class="dropdown-item" href="{{ route('notification.index') }}"><i class="fas fa-bell"></i> Thông báo</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}" class="dropdown-item p-0">
@@ -267,9 +267,9 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="teacher_id"><i class="fas fa-id-card"></i> Mã giảng viên</label>
-                                    <input type="text" class="form-control" id="teacher_id" name="teacher[teacher_id]" 
-                                           value="{{ Auth::user()->teacher_id ?? 'GV12345678' }}">
+                                    <label for="teacher_code"><i class="fas fa-id-card"></i> Mã giảng viên</label>
+                                    <input type="text" class="form-control" id="teacher_code" name="teacher[teacher_code]" 
+                                           value="{{ Auth::user()->teacher->teacher_code ?? 'Chưa cập nhật' }}">
                                 </div>
                             </div>
                         </div>
@@ -277,13 +277,9 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="faculty_teacher"><i class="fas fa-building"></i> Khoa</label>
-                                    <select class="form-select" id="faculty_teacher" name="teacher[faculty]">
-                                        <option value="Công nghệ thông tin" {{ (Auth::user()->faculty ?? '') == 'Công nghệ thông tin' ? 'selected' : '' }}>Công nghệ thông tin</option>
-                                        <option value="Kỹ thuật tài nguyên nước" {{ (Auth::user()->faculty ?? '') == 'Kỹ thuật tài nguyên nước' ? 'selected' : '' }}>Kỹ thuật tài nguyên nước</option>
-                                        <option value="Kỹ thuật xây dựng" {{ (Auth::user()->faculty ?? '') == 'Kỹ thuật xây dựng' ? 'selected' : '' }}>Kỹ thuật xây dựng</option>
-                                        <option value="Kinh tế và Quản lý" {{ (Auth::user()->faculty ?? '') == 'Kinh tế và Quản lý' ? 'selected' : '' }}>Kinh tế và Quản lý</option>
-                                        <option value="Điện - Điện tử" {{ (Auth::user()->faculty ?? '') == 'Điện - Điện tử' ? 'selected' : '' }}>Điện - Điện tử</option>
+                                    <label for="department"><i class="fas fa-building"></i> Thuộc đơn vị</label>
+                                    <select class="form-select" id="department" name="teacher[department_id]" data-current-department-id="{{ Auth::user()->teacher->department_id ?? '' }}">
+                                        <option value="">Đang tải dữ liệu...</option>
                                     </select>
                                 </div>
                             </div>
@@ -319,7 +315,7 @@
                             </div>
                         </div>
                         
-                        <div class="row mb-3">
+                        {{-- <div class="row mb-3">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="academic_title"><i class="fas fa-graduation-cap"></i> Học hàm/Học vị</label>
@@ -331,7 +327,7 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     
                     <!-- Form cho Đơn vị (Role 3) -->
@@ -387,8 +383,8 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="address_department"><i class="fas fa-map-marker-alt"></i> Địa chỉ</label>
-                                    <input type="text" class="form-control" id="address_department" name="department[address]" 
+                                    <label for="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ</label>
+                                    <input type="text" class="form-control" id="address" name="department[address]" 
                                            value="{{ Auth::user()->managedDepartment->address ?? 'Hà Nội, Việt Nam' }}">
                                 </div>
                             </div>
@@ -414,16 +410,6 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="moderator_id"><i class="fas fa-id-badge"></i> Mã kiểm duyệt viên</label>
-                                    <input type="text" class="form-control" id="moderator_id" name="moderator[moderator_id]" 
-                                           value="{{ Auth::user()->moderator_id ?? 'MOD12345' }}">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <div class="form-group">
                                     <label for="email_moderator"><i class="fas fa-envelope"></i> Email</label>
                                     <input readonly type="email" class="form-control" id="email_moderator" 
                                            value="{{ Auth::user()->email }}">
@@ -440,22 +426,17 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="department_moderator"><i class="fas fa-building"></i> Thuộc đơn vị</label>
-                                    <select class="form-select" id="department_moderator" name="moderator[department_id]">
-                                        @foreach($departments ?? [] as $department)
-                                            <option value="{{ $department->id }}" 
-                                                {{ (Auth::user()->department_id ?? 0) == $department->id ? 'selected' : '' }}>
-                                                {{ $department->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <label for="address_mod"><i class="fas fa-map-marker-alt"></i> Địa chỉ</label>
+                                    <input type="text" class="form-control" id="address_mod" name="moderator[address_mod]" 
+                                           value="{{ Auth::user()->address ?? 'Việt Nam' }}">
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </form>
             </div>
@@ -487,132 +468,197 @@
         });
     </script>
 
-  <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Hàm để hiển thị form cho vai trò được chọn
-    function showRoleForm(roleId) {
-        // Ẩn tất cả các form vai trò
-        document.querySelectorAll('.role-form').forEach(form => {
-            form.style.display = 'none';
-        });
-        
-        // Hiển thị form cho vai trò được chọn
-        const selectedForm = document.getElementById(`role-form-${roleId}`);
-        if (selectedForm) {
-            selectedForm.style.display = 'block';
-        }
-    }
-    
-    // Xử lý sự kiện khi người dùng thay đổi vai trò
-    const roleSelector = document.getElementById('role_selector');
-    if (roleSelector) {
-        // Hiển thị form ban đầu dựa trên vai trò được chọn
-        showRoleForm(roleSelector.value);
-        
-        // Lắng nghe sự kiện thay đổi
-        roleSelector.addEventListener('change', function() {
-            showRoleForm(this.value);
-        });
-    } else {
-        // Nếu không có selector (chỉ có một vai trò), hiển thị form cho vai trò đó
-        const hiddenRoleInput = document.querySelector('input[name="role_id"]');
-        if (hiddenRoleInput) {
-            showRoleForm(hiddenRoleInput.value);
-        }
-    }
-    
-    // Xử lý xem trước avatar khi người dùng chọn file
-    const avatarInput = document.getElementById('avatarInput');
-    const avatarPreview = document.getElementById('avatarPreview');
-    
-    if (avatarInput && avatarPreview) {
-        avatarInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    avatarPreview.src = e.target.result;
-                };
-                
-                reader.readAsDataURL(this.files[0]);
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hàm để hiển thị form cho vai trò được chọn
+        function showRoleForm(roleId) {
+            // Ẩn tất cả các form vai trò
+            document.querySelectorAll('.role-form').forEach(form => {
+                form.style.display = 'none';
+            });
+            
+            // Hiển thị form cho vai trò được chọn
+            const selectedForm = document.getElementById(`role-form-${roleId}`);
+            if (selectedForm) {
+                selectedForm.style.display = 'block';
             }
-        });
-    }
-});
+        }
+        
+        // Xử lý sự kiện khi người dùng thay đổi vai trò
+        const roleSelector = document.getElementById('role_selector');
+        if (roleSelector) {
+            // Hiển thị form ban đầu dựa trên vai trò được chọn
+            showRoleForm(roleSelector.value);
+            
+            // Lắng nghe sự kiện thay đổi
+            roleSelector.addEventListener('change', function() {
+                showRoleForm(this.value);
+            });
+        } else {
+            // Nếu không có selector (chỉ có một vai trò), hiển thị form cho vai trò đó
+            const hiddenRoleInput = document.querySelector('input[name="role_id"]');
+            if (hiddenRoleInput) {
+                showRoleForm(hiddenRoleInput.value);
+            }
+        }
+        
+        // Xử lý xem trước avatar khi người dùng chọn file
+        const avatarInput = document.getElementById('avatarInput');
+        const avatarPreview = document.getElementById('avatarPreview');
+        
+        if (avatarInput && avatarPreview) {
+            avatarInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        avatarPreview.src = e.target.result;
+                    };
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        }
+    });
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Modal event listeners using vanilla JavaScript
-    const userInfoModal = document.getElementById('userInfoModal');
-    if (userInfoModal) {
-        userInfoModal.addEventListener('shown.bs.modal', function() {
-            // Kiểm tra nếu đang hiển thị form sinh viên
-            if (document.getElementById('role-form-1') && 
-                document.getElementById('role-form-1').style.display === 'block') {
-                loadClasses();
-            }
-        });
-    }
-    
-    // Role selector change event
-    const roleSelector = document.getElementById('role_selector');
-    if (roleSelector) {
-        roleSelector.addEventListener('change', function() {
-            if (this.value === '1') { 
-                loadClasses();
-            }
-        });
-    }
-
-    function loadClasses() {
-        const classSelect = document.getElementById('class_room');
-        
-        if (!classSelect) return;
-        
-        // Chỉ tải nếu chưa tải trước đó hoặc chỉ có tùy chọn mặc định
-        if (classSelect.options.length <= 1) {
-            // Lấy student_class_id từ data attribute
-            const currentClassId = classSelect.getAttribute('data-current-class-id') || '';
-            
-            fetch('/api/classes') // Sử dụng đường dẫn tuyệt đối thay vì route helper
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    classSelect.innerHTML = '<option value="">-- Chọn lớp học --</option>';
-                    
-                    // Thêm các lớp học vào dropdown
-                    if (Array.isArray(data) && data.length > 0) {
-                        data.forEach(classItem => {
-                            const option = document.createElement('option');
-                            option.value = classItem.id;
-                            option.textContent = classItem.class_name;
-                            
-                            // Chọn lớp học hiện tại của người dùng nếu có
-                            if (currentClassId && currentClassId == classItem.id) {
-                                option.selected = true;
-                            }
-                            
-                            classSelect.appendChild(option);
-                        });
-                    } else {
-                        console.log('Không có dữ liệu lớp học hoặc dữ liệu không đúng định dạng:', data);
-                    }
-                })
-                .catch(error => {
-                    console.error('Lỗi khi tải danh sách lớp học:', error);
-                    classSelect.innerHTML = '<option value="">-- Lỗi khi tải danh sách --</option>';
-                });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Modal event listeners using vanilla JavaScript
+        const userInfoModal = document.getElementById('userInfoModal');
+        if (userInfoModal) {
+            userInfoModal.addEventListener('shown.bs.modal', function() {
+                // Kiểm tra nếu đang hiển thị form sinh viên
+                if (document.getElementById('role-form-1') && 
+                    document.getElementById('role-form-1').style.display === 'block') {
+                    loadClasses();
+                }
+            });
         }
-    }
+        
+        // Role selector change event
+        const roleSelector = document.getElementById('role_selector');
+        if (roleSelector) {
+            roleSelector.addEventListener('change', function() {
+                if (this.value === '1') { 
+                    loadClasses();
+                }
+            });
+        }
+
+        function loadClasses() {
+            const classSelect = document.getElementById('class_room');
+            
+            if (!classSelect) return;
+            
+            // Chỉ tải nếu chưa tải trước đó hoặc chỉ có tùy chọn mặc định
+            if (classSelect.options.length <= 1) {
+                // Lấy student_class_id từ data attribute
+                const currentClassId = classSelect.getAttribute('data-current-class-id') || '';
+                
+                fetch('/api/classes') // Sử dụng đường dẫn tuyệt đối thay vì route helper
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        classSelect.innerHTML = '<option value="">-- Chọn lớp học --</option>';
+                        
+                        // Thêm các lớp học vào dropdown
+                        if (Array.isArray(data) && data.length > 0) {
+                            data.forEach(classItem => {
+                                const option = document.createElement('option');
+                                option.value = classItem.id;
+                                option.textContent = classItem.class_name;
+                                
+                                // Chọn lớp học hiện tại của người dùng nếu có
+                                if (currentClassId && currentClassId == classItem.id) {
+                                    option.selected = true;
+                                }
+                                
+                                classSelect.appendChild(option);
+                            });
+                        } else {
+                            console.log('Không có dữ liệu lớp học hoặc dữ liệu không đúng định dạng:', data);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi tải danh sách lớp học:', error);
+                        classSelect.innerHTML = '<option value="">-- Lỗi khi tải danh sách --</option>';
+                    });
+            }
+        }
+        
+        if (document.getElementById('role-form-1') && 
+            document.getElementById('role-form-1').style.display === 'block') {
+            loadClasses();
+        }
+    });
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const departmentDropdown = document.getElementById('department');
     
-    if (document.getElementById('role-form-1') && 
-        document.getElementById('role-form-1').style.display === 'block') {
-        loadClasses();
+    if (departmentDropdown) {
+        // Get the currently selected department ID from data attribute
+        const currentDepartmentId = departmentDropdown.getAttribute('data-current-department-id');
+        console.log('Current department ID:', currentDepartmentId);
+        
+        fetch('/api/department')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(departments => {
+                // Debug - log the departments from API
+                console.log('Departments from API:', departments);
+                
+                // Clear existing options
+                departmentDropdown.innerHTML = '';
+                
+                // Add a default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = "";
+                defaultOption.textContent = "Chọn đơn vị";
+                departmentDropdown.appendChild(defaultOption);
+                
+                // Add option for each department
+                departments.forEach(department => {
+                    const option = document.createElement('option');
+                    option.value = department.id; // Use ID as value, not name
+                    option.textContent = department.name;
+                    
+                    // Select the previously selected option based on ID
+                    // if (department.id.toString() === currentDepartmentId) {
+                    //     option.selected = true;
+                    // }
+
+                    if (currentDepartmentId && currentDepartmentId == department.id) {
+                        option.selected = true;
+                    }
+                    
+                    departmentDropdown.appendChild(option);
+                });
+                
+                // If no option was selected and we have options, select the first one
+                if (departmentDropdown.selectedIndex === 0 && departmentDropdown.options.length > 1) {
+                    departmentDropdown.selectedIndex = 1;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching departments:', error);
+                // Add a fallback option in case of error
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "Không thể tải dữ liệu";
+                departmentDropdown.appendChild(option);
+            });
     }
 });
 </script>

@@ -17,8 +17,6 @@ class IndexController extends Controller
             ->paginate(4);
         $userRoles = Auth()->user()->roles;
 
-        $classes = ClassRoom::all();
-
         return view('home.index')->with('notification_latests', $notification_latests)->with('userRoles', $userRoles)
         ->with('classes', $classes);
     }
@@ -103,16 +101,14 @@ class IndexController extends Controller
         $user->address = $studentData['address'];
     }
 
-    // Phương thức xử lý thông tin giảng viên
     private function validateAndUpdateTeacherInfo(Request $request, $user)
     {
         $validator = Validator::make($request->input('teacher'), [
             'name' => 'required|string|max:255',
-            'teacher_id' => 'required|string|max:20',
-            'faculty' => 'required|string|max:255',
+            'teacher_code' => 'required|string|max:20',
+            'department_id' => 'nullable',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
-            'academic_title' => 'nullable|string|max:50',
         ]);
         
         if ($validator->fails()) {
@@ -122,11 +118,14 @@ class IndexController extends Controller
         $teacherData = $request->input('teacher');
         
         $user->name = $teacherData['name'];
-        $user->teacher_id = $teacherData['teacher_id'];
-        $user->faculty = $teacherData['faculty'];
         $user->phone = $teacherData['phone'];
         $user->address = $teacherData['address'];
-        $user->academic_title = $teacherData['academic_title'];
+        // $user->academic_title = $teacherData['academic_title'];
+        if ($user->teacher) {
+            $user->teacher->teacher_code = $teacherData['teacher_code'];
+            $user->teacher->department_id = $teacherData['department_id'];
+            $user->teacher->save();
+        }
     }
 
     // Phương thức xử lý thông tin đơn vị
@@ -158,14 +157,12 @@ class IndexController extends Controller
         }
     }
 
-    // Phương thức xử lý thông tin kiểm duyệt viên (tiếp theo)
     private function validateAndUpdateModeratorInfo(Request $request, $user)
     {
         $validator = Validator::make($request->input('moderator'), [
             'name' => 'required|string|max:255',
-            'moderator_id' => 'required|string|max:20',
             'phone' => 'nullable|string|max:20',
-            'department_id' => 'nullable|exists:departments,id',
+            'address' => 'nullable',
         ]);
         
         if ($validator->fails()) {
@@ -175,9 +172,8 @@ class IndexController extends Controller
         $moderatorData = $request->input('moderator');
         
         $user->name = $moderatorData['name'];
-        $user->moderator_id = $moderatorData['moderator_id'];
         $user->phone = $moderatorData['phone'];
-        $user->department_id = $moderatorData['department_id'];
+        $user->address = $moderatorData['address_mod'];
     }
 
 

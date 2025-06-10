@@ -32,6 +32,7 @@ use App\Http\Controllers\Notification\NotificationController as UserNotification
 use App\Http\Controllers\Page\ForumController;
 use App\Http\Controllers\Page\IndexController as PageIndexController;
 use App\Models\ClassRoom;
+use App\Models\Department;
 use Illuminate\Contracts\Broadcasting\Broadcaster;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -325,3 +326,7 @@ Route::put('/home', [IndexController::class, 'update'])->name('profile.update')-
 Route::get('/api/classes', function () {
     return ClassRoom::all();
 })->name('api.classes');
+
+Route::get('/api/department', function () {
+    return Department::all();
+})->name('api.department');
