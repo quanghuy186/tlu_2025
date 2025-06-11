@@ -92,6 +92,9 @@ class ForumCategoriesSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+        ]);
+
+        DB::table('forum_categories')->insertOrIgnore([
             [
                 'id' => 0,
                 'name' => 'Chưa phân loại',
@@ -101,7 +104,7 @@ class ForumCategoriesSeeder extends Seeder
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
-            ],
+            ]
         ]);
     }
 }

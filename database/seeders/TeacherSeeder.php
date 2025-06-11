@@ -11,6 +11,36 @@ class TeacherSeeder extends Seeder
     {
         $faker = Faker::create('vi_VN');
         
+        $lastNames = [
+            'Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Huỳnh', 'Phan', 'Vũ', 'Võ', 'Đặng',
+            'Bùi', 'Đỗ', 'Hồ', 'Ngô', 'Dương', 'Lý', 'Đào', 'Đinh', 'Mai', 'Trịnh',
+            'Lương', 'Châu', 'Lâm', 'Đoàn', 'Tạ', 'Phùng', 'Tô', 'Thái', 'Hà', 'Lưu'
+        ];
+        
+        $middleNamesMale = [
+            'Văn', 'Hữu', 'Đức', 'Công', 'Minh', 'Quang', 'Hải', 'Mạnh', 'Đình', 'Anh',
+            'Xuân', 'Quốc', 'Bá', 'Thế', 'Đăng', 'Khắc', 'Khải', 'Trọng', 'Việt', 'Tuấn'
+        ];
+        
+        $middleNamesFemale = [
+            'Thị', 'Thu', 'Thúy', 'Ngọc', 'Hoài', 'Kim', 'Thanh', 'Thùy', 'Diễm', 'Mỹ',
+            'Hồng', 'Bích', 'Khánh', 'Phương', 'Quỳnh', 'Hà', 'Minh', 'Huyền', 'Thảo', 'Xuân'
+        ];
+
+        $firstNamesMale = [
+            'Nam', 'Hùng', 'Dũng', 'Hoàng', 'Bảo', 'Minh', 'Tuấn', 'Quân', 'Đạt', 'Tùng',
+            'Thanh', 'Hải', 'Cường', 'Phong', 'Long', 'Thành', 'Trung', 'Kiên', 'Sơn', 'Huy',
+            'Việt', 'Khải', 'Đức', 'Tâm', 'Thịnh', 'Tiến', 'Hiếu', 'Anh', 'Tú', 'Duy',
+            'Quang', 'Khoa', 'Trí', 'Phúc', 'Thắng', 'Thiện', 'Bình', 'An', 'Vũ', 'Ngọc'
+        ];
+        
+        $firstNamesFemale = [
+            'Linh', 'Hương', 'Thảo', 'Phương', 'Hà', 'Trang', 'Mai', 'Lan', 'Huyền', 'Ngọc',
+            'Anh', 'Yến', 'Chi', 'Nhung', 'Hạnh', 'Quỳnh', 'Thy', 'Vy', 'Trâm', 'Hiền',
+            'Ngân', 'Diệp', 'Thùy', 'Dung', 'Thúy', 'Vân', 'Hằng', 'Giang', 'Nhã', 'Loan',
+            'Trinh', 'Thanh', 'Thư', 'Châu', 'Diễm', 'Mỹ', 'Lệ', 'Duyên', 'Khánh', 'Minh'
+        ];
+        
         // Danh sách các bộ môn (level 2) - chỉ lấy các đơn vị đào tạo
         $departments = [
             // Bộ môn thuộc Khoa Kinh tế và quản lý
@@ -108,10 +138,20 @@ class TeacherSeeder extends Seeder
             $specializations = $departmentSpecializations[$departmentId] ?? ['Chuyên ngành khác'];
             $specialization = $faker->randomElement($specializations);
             
+            // Xác định giới tính ngẫu nhiên (60% nam, 40% nữ)
+            $isMale = $faker->boolean(60);
+            
+            // Tạo tên giáo viên dựa vào giới tính
+            $lastName = $faker->randomElement($lastNames);
+            $middleName = $isMale ? $faker->randomElement($middleNamesMale) : $faker->randomElement($middleNamesFemale);
+            $firstName = $isMale ? $faker->randomElement($firstNamesMale) : $faker->randomElement($firstNamesFemale);
+            
+            $fullName = $lastName . ' ' . $middleName . ' ' . $firstName;
+            
             // Tạo user
             $userId = DB::table('users')->insertGetId([
                 'id' => $startUserId + $i,
-                'name' => $faker->name,
+                'name' => $fullName,
                 'email' => 'gv' . str_pad($i, 4, '0', STR_PAD_LEFT) . '@tlu.edu.vn',
                 'phone' => '024' . $faker->numerify('#######'),
                 'password' => Hash::make('password123'),

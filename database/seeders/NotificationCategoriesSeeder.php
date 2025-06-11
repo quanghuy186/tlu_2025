@@ -51,6 +51,10 @@ class NotificationCategoriesSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            
+        ]);
+
+        DB::table('notification_categories')->insertOrIgnore([
             [
                 'id' => 0,
                 'name' => 'Khác',
