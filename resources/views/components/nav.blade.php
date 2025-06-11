@@ -314,20 +314,6 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        {{-- <div class="row mb-3">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="academic_title"><i class="fas fa-graduation-cap"></i> Học hàm/Học vị</label>
-                                    <select class="form-select" id="academic_title" name="teacher[academic_title]">
-                                        <option value="Thạc sĩ" {{ (Auth::user()->academic_title ?? '') == 'Thạc sĩ' ? 'selected' : '' }}>Thạc sĩ</option>
-                                        <option value="Tiến sĩ" {{ (Auth::user()->academic_title ?? '') == 'Tiến sĩ' ? 'selected' : '' }}>Tiến sĩ</option>
-                                        <option value="Phó Giáo sư" {{ (Auth::user()->academic_title ?? '') == 'Phó Giáo sư' ? 'selected' : '' }}>Phó Giáo sư</option>
-                                        <option value="Giáo sư" {{ (Auth::user()->academic_title ?? '') == 'Giáo sư' ? 'selected' : '' }}>Giáo sư</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
                     
                     <!-- Form cho Đơn vị (Role 3) -->
@@ -348,14 +334,9 @@
                         
                         <div class="row mb-3">
                             <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="department_type"><i class="fas fa-tag"></i> Loại đơn vị</label>
-                                    <select class="form-select" id="department_type" name="department[type]">
-                                        <option value="khoa" {{ (Auth::user()->managedDepartment->type ?? '') == 'khoa' ? 'selected' : '' }}>Khoa</option>
-                                        <option value="phong" {{ (Auth::user()->managedDepartment->type ?? '') == 'phong' ? 'selected' : '' }}>Phòng</option>
-                                        <option value="trung_tam" {{ (Auth::user()->managedDepartment->type ?? '') == 'trung_tam' ? 'selected' : '' }}>Trung tâm</option>
-                                        <option value="vien" {{ (Auth::user()->managedDepartment->type ?? '') == 'vien' ? 'selected' : '' }}>Viện</option>
-                                    </select>
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="department_description" style="height: 100px" name="department[description]">{{ Auth::user()->managedDepartment->description ?? '' }}</textarea>
+                                    <label for="department_description">Mô tả đơn vị {{ Auth::user()->managedDepartment->name ?? '' }}</label>
                                 </div>
                             </div>
                         </div>
@@ -365,7 +346,7 @@
                                 <div class="form-group">
                                     <label for="email_department"><i class="fas fa-envelope"></i> Email đơn vị</label>
                                     <input type="email" class="form-control" id="email_department" name="department[email]" 
-                                           value="{{ Auth::user()->managedDepartment->email ?? Auth::user()->email }}">
+                                           value="{{ Auth::user()->managedDepartment->email ?? 'Chưa cập nhật' }}">
                                 </div>
                             </div>
                         </div>
@@ -634,7 +615,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     option.value = department.id; // Use ID as value, not name
                     option.textContent = department.name;
                     
-                    // Select the previously selected option based on ID
+                    // Select the previously selected option based on IDF
                     // if (department.id.toString() === currentDepartmentId) {
                     //     option.selected = true;
                     // }

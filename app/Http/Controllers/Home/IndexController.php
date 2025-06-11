@@ -17,8 +17,7 @@ class IndexController extends Controller
             ->paginate(4);
         $userRoles = Auth()->user()->roles;
 
-        return view('home.index')->with('notification_latests', $notification_latests)->with('userRoles', $userRoles)
-        ->with('classes', $classes);
+        return view('home.index')->with('notification_latests', $notification_latests)->with('userRoles', $userRoles);
     }
 
     public function update(Request $request)
@@ -133,8 +132,8 @@ class IndexController extends Controller
     {
         $validator = Validator::make($request->input('department'), [
             'name' => 'required|string|max:255',
-            'type' => 'required|string|max:50',
             'email' => 'required|email|max:255',
+            'description' => 'nullable',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
         ]);
@@ -149,7 +148,7 @@ class IndexController extends Controller
         if ($user->managedDepartment) {
             $department = $user->managedDepartment;
             $department->name = $departmentData['name'];
-            $department->type = $departmentData['type'];
+            $department->description = $departmentData['description'];
             $department->email = $departmentData['email'];
             $department->phone = $departmentData['phone'];
             $department->address = $departmentData['address'];
