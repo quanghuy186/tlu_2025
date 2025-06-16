@@ -104,22 +104,11 @@ class Department extends Model
         return $query->whereNull('parent_id');
     }
 
-    /**
-     * Scope a query to include departments ordered by hierarchy.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
     public function scopeHierarchical($query)
     {
         return $query->orderBy('level')->orderBy('name');
     }
 
-    /**
-     * Lấy cây phân cấp đơn vị.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
     public static function getHierarchy()
     {
         return self::with('descendants')
@@ -127,12 +116,6 @@ class Department extends Model
             ->orderBy('name')
             ->get();
     }
-
-    /**
-     * Lấy danh sách đơn vị dạng phẳng với tên đã thụt lề cho dropdown.
-     *
-     * @return array
-     */
     public static function getSelectOptions()
     {
         $departments = self::orderBy('level')
@@ -149,12 +132,6 @@ class Department extends Model
         return $options;
     }
 
-    /**
-     * Lấy mã code tự động dựa trên tên.
-     *
-     * @param  string  $name
-     * @return string
-     */
     public static function generateCode($name)
     {
         $words = explode(' ', $name);
@@ -203,12 +180,6 @@ class Department extends Model
     {
         return $this->children()->count() === 0;
     }
-
-    /**
-     * Lấy đường dẫn đầy đủ của đơn vị (tên các đơn vị cha).
-     *
-     * @return string
-     */
     public function getFullPathAttribute()
     {
         $path = $this->name;
@@ -222,21 +193,11 @@ class Department extends Model
         return $path;
     }
 
-    /**
-     * Lấy tên người quản lý đơn vị hoặc null.
-     *
-     * @return string|null
-     */
     public function getManagerNameAttribute()
     {
         return $this->manager ? $this->manager->name : null;
     }
 
-    /**
-     * Lấy email người quản lý đơn vị hoặc null.
-     *
-     * @return string|null
-     */
     public function getManagerEmailAttribute()
     {
         return $this->manager ? $this->manager->email : null;

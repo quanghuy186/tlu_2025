@@ -144,32 +144,6 @@
                                     </select>
                                 </div>
                                 
-                                <!-- Lọc theo chương trình -->
-                                <div class="col-md-2">
-                                    <label for="program" class="form-label">Chương trình</label>
-                                    <select class="form-select" id="program" name="program" onchange="this.form.submit()">
-                                        <option value="">Tất cả chương trình</option>
-                                        @foreach($programs as $key => $program)
-                                            <option value="{{ $key }}" {{ request('program') == $key ? 'selected' : '' }}>
-                                                {{ $program }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                
-                                <!-- Lọc theo trạng thái -->
-                                <div class="col-md-2">
-                                    <label for="graduation_status" class="form-label">Trạng thái</label>
-                                    <select class="form-select" id="graduation_status" name="graduation_status" onchange="this.form.submit()">
-                                        <option value="">Tất cả trạng thái</option>
-                                        @foreach($graduationStatuses as $key => $status)
-                                            <option value="{{ $key }}" {{ request('graduation_status') == $key ? 'selected' : '' }}>
-                                                {{ $status }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                
                                 <!-- Lọc theo năm nhập học -->
                                 <div class="col-md-2">
                                     <label for="enrollment_year" class="form-label">Năm nhập học</label>
@@ -284,8 +258,6 @@
                                                 @endif
                                             </a>
                                         </th>
-                                        <th>Chương trình</th>
-                                        <th>Trạng thái</th>
                                         <th class="text-center" width="15%">Hành động</th>
                                     </tr>
                                 </thead>
@@ -325,17 +297,6 @@
                                             @endif
                                         </td>
                                         <td>{{ $student->enrollment_year ?? 'Chưa cập nhật' }}</td>
-                                        <td>{{ $student->getProgramName() }}</td>
-                                        <td>
-                                            @php
-                                                $statusClass = 'bg-secondary';
-                                                if($student->graduation_status == 'studying') $statusClass = 'bg-info';
-                                                elseif($student->graduation_status == 'graduated') $statusClass = 'bg-success';
-                                                elseif($student->graduation_status == 'suspended') $statusClass = 'bg-warning';
-                                                elseif($student->graduation_status == 'dropped') $statusClass = 'bg-danger';
-                                            @endphp
-                                            <span class="badge {{ $statusClass }} text-white">{{ $student->getGraduationStatusName() }}</span>
-                                        </td>
                                         <td>
                                             <div class="d-flex justify-content-center gap-2">
                                                 <!-- Edit Student -->

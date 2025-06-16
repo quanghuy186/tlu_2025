@@ -53,19 +53,13 @@
                                         elseif($student->graduation_status == 'suspended') $statusClass = 'bg-warning';
                                         elseif($student->graduation_status == 'dropped') $statusClass = 'bg-danger';
                                     @endphp
-                                    <span class="badge {{ $statusClass }} text-white">{{ $student->getGraduationStatusName() }}</span>
                                     
                                     <div class="mt-4 text-start">
                                         <p class="d-flex align-items-center mb-2">
                                             <i class="bi bi-envelope-fill text-primary me-2"></i>
                                             {{ $student->user->email }}
                                         </p>
-                                        @if($student->program)
-                                            <p class="d-flex align-items-center mb-2">
-                                                <i class="bi bi-book-fill text-primary me-2"></i>
-                                                {{ $student->getProgramName() }}
-                                            </p>
-                                        @endif
+                                        
                                         @if($student->enrollment_year)
                                             <p class="d-flex align-items-center mb-2">
                                                 <i class="bi bi-calendar-check text-primary me-2"></i>
@@ -139,16 +133,7 @@
                                                     <p class="mb-1 small text-muted fw-bold">Năm nhập học</p>
                                                     <p>{{ $student->enrollment_year ?? 'Chưa cập nhật' }}</p>
                                                 </div>
-                                                <div class="col-md-6 mb-3">
-                                                    <p class="mb-1 small text-muted fw-bold">Chương trình học</p>
-                                                    <p>{{ $student->getProgramName() }}</p>
-                                                </div>
-                                                <div class="col-md-6 mb-3">
-                                                    <p class="mb-1 small text-muted fw-bold">Trạng thái</p>
-                                                    <p>
-                                                        <span class="badge {{ $statusClass }} text-white">{{ $student->getGraduationStatusName() }}</span>
-                                                    </p>
-                                                </div>
+                                               
                                             </div>
                                         </div>
                                     </div>

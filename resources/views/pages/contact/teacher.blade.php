@@ -9,6 +9,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('contact.index') }}">Danh bạ</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Danh bạ Cán bộ Giảng viên</li>
                     </ol>
                 </nav>
@@ -17,9 +18,7 @@
     </div>
 </section>
 
-<!-- Main Content - For CBGV Access -->
 <div class="container mb-5" id="cbgv-access">
-    <!-- Search and Filter Section -->
     <div class="search-filter-container">
         
         <div class="filter-options">

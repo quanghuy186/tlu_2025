@@ -38,16 +38,6 @@ class StudentController extends Controller
             $query->where('class_id', $request->class_id);
         }
         
-        // Lọc theo chương trình
-        if ($request->has('program') && $request->program != '') {
-            $query->where('program', $request->program);
-        }
-        
-        // Lọc theo trạng thái
-        if ($request->has('graduation_status') && $request->graduation_status != '') {
-            $query->where('graduation_status', $request->graduation_status);
-        }
-        
         // Lọc theo năm nhập học
         if ($request->has('enrollment_year') && $request->enrollment_year != '') {
             $query->where('enrollment_year', $request->enrollment_year);
@@ -73,8 +63,6 @@ class StudentController extends Controller
         
         // Lấy dữ liệu cho dropdown filters
         $classes = ClassRoom::orderBy('class_name')->get();
-        $programs = Student::getPrograms();
-        $graduationStatuses = Student::getGraduationStatuses();
         $enrollmentYears = Student::distinct()
                                    ->whereNotNull('enrollment_year')
                                    ->orderBy('enrollment_year', 'desc')
@@ -92,8 +80,6 @@ class StudentController extends Controller
         return view('admin.contact.student.index', compact(
             'students', 
             'classes', 
-            'programs', 
-            'graduationStatuses',
             'enrollmentYears',
             'stats'
         ));
@@ -121,16 +107,6 @@ class StudentController extends Controller
             $query->where('class_id', $request->class_id);
         }
         
-        // Lọc theo chương trình
-        if ($request->has('program') && $request->program != '') {
-            $query->where('program', $request->program);
-        }
-        
-        // Lọc theo trạng thái
-        if ($request->has('graduation_status') && $request->graduation_status != '') {
-            $query->where('graduation_status', $request->graduation_status);
-        }
-        
         // Lọc theo năm nhập học
         if ($request->has('enrollment_year') && $request->enrollment_year != '') {
             $query->where('enrollment_year', $request->enrollment_year);
@@ -150,12 +126,10 @@ class StudentController extends Controller
     public function create()
     {
         $classes = ClassRoom::all();
-        $programs = Student::getPrograms();
-        $graduationStatuses = Student::getGraduationStatuses();
         $currentYear = date('Y');
         $enrollmentYears = range($currentYear - 10, $currentYear + 1);
         
-        return view('admin.contact.student.create', compact('classes', 'programs', 'graduationStatuses', 'enrollmentYears'));
+        return view('admin.contact.student.create', compact('classes', 'enrollmentYears'));
     }
 
     /**

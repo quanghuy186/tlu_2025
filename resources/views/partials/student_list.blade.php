@@ -6,19 +6,19 @@
         <div class="student-info">
             <div class="student-name">{{ $student->user->name ?? 'Chưa cập nhật' }}</div>
             <div class="student-id">
-                {{ $student->class ? $student->class->name : 'Chưa cập nhật' }} - 
+                {{ $student->class ? $student->class->name : 'Chưa cập nhật' }} 
                 {{ $student->student_code ?? 'Chưa cập nhật' }}
             </div>
             <div class="student-class">
-                Lớp: 
+                Lớp
                 @if($student->class)
                     <a href="#">{{ $student->class->class_name ?? 'Chưa cập nhật' }}</a>
                 @else
                     <span>Chưa cập nhật</span>
                 @endif
                 - 
-                @if($student->class->department)
-                    {{ $student->class->department->name }}
+                @if($student->class->department && $student->class->department->parent)
+                    {{ $student->class->department->parent->name }}
                 @else
                     Chưa cập nhật
                 @endif
@@ -76,11 +76,13 @@
                                 <i class="fas fa-building"></i>
                                 <span class="detail-label">Khoa:</span>
                                 <span class="detail-value">
-                                    @if($student->department)
-                                        <a href="#">{{ $student->department->name }}</a>
+
+                                    @if($student->class->department && $student->class->department->parent)
+                                        <a href="#">{{ $student->class->department->parent->name }}</a>
                                     @else
                                         Chưa cập nhật
                                     @endif
+                                    
                                 </span>
                             </li>
                             <li>

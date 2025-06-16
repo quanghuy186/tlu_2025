@@ -68,13 +68,15 @@ Route::prefix('/email')->name('verification.')->group(function(){
     Route::get('/verify', [RegisterController::class, 'notice'])->name('notice');
     Route::get('/verify/{token}', [RegisterController::class, 'verifyEmail'])->name('verify');
     Route::post('/resend', [RegisterController::class, 'resendVerificationEmail'])->name('resend');
-});
+})->middleware('guest');
+
+
 
 Route::get('/change-password', [ChangePasswordController::class, 'show_form'])
-        ->name('password.form');
+        ->name('password.form')->middleware('auth');
     
 Route::post('/change-password', [ChangePasswordController::class, 'changePassword'])
-        ->name('password.change');
+        ->name('password.change')->middleware('auth');
 
 Route::prefix('/admin')->name('admin.')->middleware(['auth', 'admin'])->group(function(){
     Route::get('/departments', [DepartmentController::class, 'index'])->name('department.index');
@@ -266,8 +268,6 @@ Route::prefix('admin/forum')->name('admin.forum.')->middleware(['auth', 'manager
     });
 });
 
-// Thêm các routes này vào file web.php hoặc routes/forum.php
-
 // Forum routes
 Route::prefix('forum')->name('forum.')->group(function () {
     // Main forum page với search và filter
@@ -276,10 +276,7 @@ Route::prefix('forum')->name('forum.')->group(function () {
     // API endpoint cho search AJAX
     Route::get('/search', [ForumController::class, 'search'])->name('search');
     
-    // Create post
     Route::post('/post', [ForumController::class, 'post'])->name('post')->middleware('auth');
-    
-    // Update post
     Route::put('/post/update', [ForumController::class, 'update'])->name('post.update')->middleware('auth');
     
     // Get post data for editing
@@ -288,7 +285,6 @@ Route::prefix('forum')->name('forum.')->group(function () {
     // Show single post
     Route::get('/post/{id}', [ForumController::class, 'showPost'])->name('post.show');
     
-    // Show category
     Route::get('/category/{slug}', [ForumController::class, 'showCategory'])->name('category');
     
     // Comments
@@ -301,9 +297,6 @@ Route::prefix('forum')->name('forum.')->group(function () {
     Route::post('/post/{id}/like', [ForumController::class, 'toggleLike'])->name('post.like')->middleware('auth');
     Route::get('/post/{id}/like-info', [ForumController::class, 'getLikeInfo'])->name('post.like.info');
 });
-// Route::get('/notification', [UserNotificationController::class, 'index'])->name('notification.index');
-// Route::get('/notification', [NotifycationController::class, 'notification'])->name('notification.index');
-
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('notification')->name('notification.')->group(function () {

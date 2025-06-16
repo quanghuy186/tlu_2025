@@ -17,14 +17,12 @@ class ForumController extends Controller
 {   
     public function index(Request $request)
     {
-        // Lấy parameters từ request
         $search = $request->get('search');
         $categoryId = $request->get('category');
         $status = $request->get('status');
         $sortBy = $request->get('sort', 'latest'); // Default: latest
         $perPage = $request->get('per_page', 10); // Default: 10 items per page
 
-        // Query cơ bản cho categories
         $categories = ForumCategory::where('is_active', true)
             ->with(['posts' => function($query) {
                 $query->where('status', 'approved')
@@ -52,13 +50,11 @@ class ForumController extends Controller
             $rejectedPosts = collect();
         }
         
-        // Query cho bài viết với tìm kiếm và lọc
         $postsQuery = ForumPost::where('status', 'approved')
             ->with(['category', 'author'])
             ->withCount('comments')
             ->withCount('likes');
 
-        // Áp dụng tìm kiếm
         if ($search) {
             $postsQuery->where(function($query) use ($search) {
                 $query->where('title', 'like', '%' . $search . '%')
@@ -66,12 +62,10 @@ class ForumController extends Controller
             });
         }
 
-        // Áp dụng lọc theo category
         if ($categoryId) {
             $postsQuery->where('category_id', $categoryId);
         }
 
-        // Áp dụng sắp xếp
         switch ($sortBy) {
             case 'oldest':
                 $postsQuery->orderBy('created_at', 'asc');
@@ -173,7 +167,7 @@ class ForumController extends Controller
     public function post(Request $request){
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'category_id' => 'nullable|exists:forum_categories,id', // Thêm exists để kiểm tra nếu có giá trị
+            'category_id' => 'nullable|exists:forum_categories,id', 
             'content' => 'required|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
@@ -195,7 +189,6 @@ class ForumController extends Controller
             }
         }
 
-        // Xử lý category_id
         $categoryId = $request->category_id;
         if ($categoryId == '0' || empty($categoryId)) {
             $categoryId = null;
@@ -203,7 +196,7 @@ class ForumController extends Controller
 
         $post = ForumPost::create([
             'title' => $request->title,
-            'category_id' => $categoryId, // Có thể null
+            'category_id' => $categoryId, 
             'user_id' => Auth::id(),
             'content' => $request->content,
             'images' => !empty($imagesPath) ? json_encode($imagesPath) : null,
@@ -361,7 +354,7 @@ class ForumController extends Controller
         $validator = Validator::make($request->all(), [
             'post_id' => 'required|exists:forum_posts,id',
             'content' => 'required|string|min:2|max:1000',
-        ]);
+        ], ['content.required' => 'Vui lòng nhập nội dung bình luận']);
 
         if ($validator->fails()) {
             return redirect()->back()
@@ -394,7 +387,7 @@ class ForumController extends Controller
             'post_id' => 'required|exists:forum_posts,id',
             'parent_id' => 'required|exists:forum_comments,id',
             'content' => 'required|string|min:2|max:1000',
-        ]);
+        ], ['content.required' => 'Vui lòng nhập nội dung!']);
 
         if ($validator->fails()) {
             return redirect()->back()
@@ -449,7 +442,6 @@ class ForumController extends Controller
             ->with('success', 'Bình luận đã được xóa thành công.');
     }
 
-   
     public function getComments($postId)
     {
         $post = ForumPost::findOrFail($postId);

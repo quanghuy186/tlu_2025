@@ -57,14 +57,14 @@
                             <li>
                                 <i class="fas fa-phone"></i>
                                 <span class="detail-label">Điện thoại:</span>
-                                <span class="detail-value">{{ $teacher->phone ?? 'Chưa cập nhật' }}</span>
+                                <span class="detail-value">{{ $teacher->user->phone ?? 'Chưa cập nhật' }}</span>
                             </li>
                             <li>
                                 <i class="fas fa-building"></i>
                                 <span class="detail-label">Đơn vị:</span>
                                 <span class="detail-value">
                                     @if($teacher->department)
-                                        <a href="#">{{ $teacher->department->name }}</a>
+                                        <a href="#">{{ $teacher->department->name }} - {{ $teacher->department->parent->name }}</a>
                                     @else
                                         Chưa cập nhật
                                     @endif
@@ -78,7 +78,7 @@
                             <li>
                                 <i class="fas fa-map-marker-alt"></i>
                                 <span class="detail-label">Địa chỉ:</span>
-                                <span class="detail-value">{{ $teacher->address ?? 'Chưa cập nhật' }}</span>
+                                <span class="detail-value">{{ $teacher->user->address ?? 'Chưa cập nhật' }}</span>
                             </li>
                             <li>
                                 <i class="fas fa-briefcase"></i>
