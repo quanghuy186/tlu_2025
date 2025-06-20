@@ -95,9 +95,11 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth', 'admin'])->group(fu
     Route::get('/teachers/{id}/edit', [TeacherController::class, 'edit'])->name('teacher.edit');
     Route::put('/teachers/{id}', [TeacherController::class, 'update'])->name('teacher.update');
     Route::delete('/teachers/{id}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
-    
-     // Route::get('/export/excel', [TeacherController::class, 'export'])->name('export');
-        // Route::post('/import/excel', [TeacherController::class, 'import'])->name('import');
+    Route::get('teachers/import/form', [TeacherController::class, 'importForm'])->name('teacher.import.form');
+    Route::post('teachers/import', [TeacherController::class, 'import'])->name('teacher.import');
+    Route::get('teachers/template/download', [TeacherController::class, 'downloadTemplate'])->name('teacher.download-template');
+    Route::get('teachers/export/excel', [TeacherController::class, 'exportExcel'])->name('teacher.export.excel');
+    Route::get('teachers/export/csv', [TeacherController::class, 'export'])->name('teacher.export');
 
     // Routes quản lý lớp học
     Route::get('/classes', [ClassController::class, 'index'])->name('class.index');
@@ -108,8 +110,8 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth', 'admin'])->group(fu
     Route::get('/classes/{id}/edit', [ClassController::class, 'edit'])->name('class.edit');
     Route::put('/classes/{id}', [ClassController::class, 'update'])->name('class.update');
     Route::delete('/classes/{id}', [ClassController::class, 'destroy'])->name('class.destroy');
-    // Thêm route này vào nhóm routes admin
-    // Routes quản lý sinh viên
+
+
     Route::get('/students', [StudentController::class, 'index'])->name('student.index');
     Route::get('/students/create', [StudentController::class, 'create'])->name('student.create');
     Route::post('/students', [StudentController::class, 'store'])->name('student.store');
@@ -118,6 +120,10 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth', 'admin'])->group(fu
     Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('student.edit');
     Route::put('/students/{id}', [StudentController::class, 'update'])->name('student.update');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('student.destroy');
+
+    Route::get('students/import/form', [StudentController::class, 'importForm'])->name('student.import.form');
+    Route::post('students/import', [StudentController::class, 'import'])->name('student.import');
+    Route::get('students/template/download', [StudentController::class, 'downloadTemplate'])->name('student.download-template');
 });  
     
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'manager_admin'])->group(function(){

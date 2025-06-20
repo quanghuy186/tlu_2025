@@ -95,11 +95,29 @@
                             </div>
                             <div class="col-md-6 text-end">
                                 <div class="d-flex gap-2 justify-content-end flex-wrap">
-                                    <!-- Export Button -->
-                                    {{-- <a href="{{ route('admin.teacher.export', request()->all()) }}" 
-                                       class="btn btn-outline-success btn-sm d-flex align-items-center">
-                                        <i class="bi bi-download me-2"></i>Xuất Excel
-                                    </a> --}}
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-success btn-sm dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+                                            <i class="bi bi-file-earmark-excel me-2"></i>Excel
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('admin.teacher.import.form') }}">
+                                                    <i class="bi bi-upload me-2"></i>Import từ Excel
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#" onclick="exportTeachers()">
+                                                    <i class="bi bi-download me-2"></i>Export ra Excel
+                                                </a>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('admin.teacher.download-template') }}">
+                                                    <i class="bi bi-file-earmark-arrow-down me-2"></i>Tải file mẫu
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                     
                                     <!-- Department Management -->
                                     <a href="{{ route('admin.department.index') }}" 

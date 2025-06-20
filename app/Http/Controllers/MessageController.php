@@ -55,7 +55,6 @@ class MessageController extends Controller
                 return $userId == $currentUserId;
             });
         
-        // Lấy thông tin người dùng
         return User::whereIn('id', $userIds)->get();
     }
     

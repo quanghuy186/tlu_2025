@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Support\Facades\Schema;
+
 
 class TeacherController extends Controller
 {
@@ -498,6 +503,423 @@ class TeacherController extends Controller
                     
                     fclose($handle);
                 }, 'selected-teachers-' . date('Y-m-d') . '.csv');
+        }
+    }
+
+    public function importForm()
+    {
+        $departments = Department::orderBy('name')->get();
+        return view('admin.contact.teacher.import', compact('departments'));
+    }
+
+    public function downloadTemplate()
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set headers
+        $headers = [
+            'A1' => 'Mã giảng viên',
+            'B1' => 'Họ và tên (*)',
+            'C1' => 'Email (*)',
+            'D1' => 'Mật khẩu (*)',
+            'E1' => 'Số điện thoại',
+            'F1' => 'Mã khoa/bộ môn',
+            'G1' => 'Học hàm/học vị',
+            'H1' => 'Chuyên ngành',
+            'I1' => 'Chức vụ',
+            'J1' => 'Phòng làm việc',
+            'K1' => 'Giờ làm việc'
+        ];
+
+        foreach ($headers as $cell => $value) {
+            $sheet->setCellValue($cell, $value);
+        }
+
+        // Style headers
+        $sheet->getStyle('A1:K1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'color' => ['rgb' => 'FFFFFF']
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => '4154f1']
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ]
+            ]
+        ]);
+
+        // Auto size columns
+        foreach (range('A', 'K') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Add sample data
+        $sampleData = [
+            ['GV001', 'Nguyễn Văn A', 'nguyenvana@example.com', 'password123', '0901234567', 'CNTT', 'Tiến sĩ', 'Khoa học máy tính', 'Giảng viên chính', 'A5-301', 'Thứ 2-6: 8h-17h'],
+            ['GV002', 'Trần Thị B', 'tranthib@example.com', 'password123', '0902345678', 'KTPM', 'Thạc sĩ', 'Kỹ thuật phần mềm', 'Giảng viên', 'A5-302', 'Thứ 2-6: 8h-17h'],
+        ];
+
+        $row = 2;
+        foreach ($sampleData as $data) {
+            $col = 'A';
+            foreach ($data as $value) {
+                $sheet->setCellValue($col . $row, $value);
+                $col++;
+            }
+            $row++;
+        }
+
+        // Add border to sample data
+        $sheet->getStyle('A2:K3')->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ]
+            ]
+        ]);
+
+        // Add instructions
+        $sheet->setCellValue('A5', 'HƯỚNG DẪN:');
+        $sheet->getStyle('A5')->getFont()->setBold(true);
+        
+        $instructions = [
+            'A6' => '1. Các cột có dấu (*) là bắt buộc phải điền',
+            'A7' => '2. Mã khoa/bộ môn phải tồn tại trong hệ thống',
+            'A8' => '3. Email phải là duy nhất và đúng định dạng',
+            'A9' => '4. Mật khẩu phải có ít nhất 8 ký tự',
+            'A10' => '5. Mã giảng viên phải là duy nhất',
+            'A11' => '6. Xóa các dòng mẫu (dòng 2-3) trước khi nhập dữ liệu thật'
+        ];
+
+        foreach ($instructions as $cell => $instruction) {
+            $sheet->setCellValue($cell, $instruction);
+        }
+
+        // Add list of departments
+        $sheet->setCellValue('M1', 'DANH SÁCH KHOA/BỘ MÔN:');
+        $sheet->getStyle('M1')->getFont()->setBold(true);
+        
+        $departments = Department::select( 'name')->orderBy('name')->get();
+        $row = 2;
+        foreach ($departments as $dept) {
+            $sheet->setCellValue('M' . $row, $dept->slug);
+            $sheet->setCellValue('N' . $row, $dept->name);
+            $row++;
+        }
+
+        // Add list of academic ranks
+        $sheet->setCellValue('P1', 'HỌC HÀM/HỌC VỊ:');
+        $sheet->getStyle('P1')->getFont()->setBold(true);
+        
+        $ranks = ['Giáo sư', 'Phó Giáo sư', 'Tiến sĩ', 'Thạc sĩ', 'Cử nhân', 'Kỹ sư'];
+        $row = 2;
+        foreach ($ranks as $rank) {
+            $sheet->setCellValue('P' . $row, $rank);
+            $row++;
+        }
+
+        // Create file
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'mau_import_giang_vien.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+        $writer->save($temp_file);
+
+        return response()->download($temp_file, $fileName)->deleteFileAfterSend(true);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls|max:10240', // Max 10MB
+            'default_department_id' => 'nullable|exists:departments,id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $file = $request->file('file');
+            $spreadsheet = IOFactory::load($file->getPathname());
+            $worksheet = $spreadsheet->getActiveSheet();
+            
+            $highestRow = $worksheet->getHighestRow();
+            $highestColumn = $worksheet->getHighestColumn();
+
+            $imported = 0;
+            $skipped = 0;
+            $errors = [];
+
+            // Get departments mapping by slug
+            $departments = Department::pluck('id')->toArray();
+            
+            // Bắt đầu từ dòng 2 (bỏ qua header)
+            for ($row = 2; $row <= $highestRow; $row++) {
+                try {
+                    // Đọc dữ liệu từng cell
+                    $teacherCode = $worksheet->getCell('A' . $row)->getValue();
+                    $name = $worksheet->getCell('B' . $row)->getValue();
+                    $email = $worksheet->getCell('C' . $row)->getValue();
+                    $password = $worksheet->getCell('D' . $row)->getValue();
+                    $phone = $worksheet->getCell('E' . $row)->getValue();
+                    $departmentCode = $worksheet->getCell('F' . $row)->getValue();
+                    $academicRank = $worksheet->getCell('G' . $row)->getValue();
+                    $specialization = $worksheet->getCell('H' . $row)->getValue();
+                    $position = $worksheet->getCell('I' . $row)->getValue();
+                    $officeLocation = $worksheet->getCell('J' . $row)->getValue();
+                    $officeHours = $worksheet->getCell('K' . $row)->getValue();
+
+                    // Skip empty rows
+                    if (empty($name) && empty($email)) {
+                        continue;
+                    }
+
+                    // Trim values
+                    $teacherCode = $teacherCode ? trim(strval($teacherCode)) : null;
+                    $name = $name ? trim(strval($name)) : '';
+                    $email = $email ? trim(strval($email)) : '';
+                    $password = $password ? trim(strval($password)) : '';
+                    $phone = $phone ? trim(strval($phone)) : null;
+                    $departmentCode = $departmentCode ? trim(strval($departmentCode)) : null;
+                    $academicRank = $academicRank ? trim(strval($academicRank)) : null;
+                    $specialization = $specialization ? trim(strval($specialization)) : null;
+                    $position = $position ? trim(strval($position)) : null;
+                    $officeLocation = $officeLocation ? trim(strval($officeLocation)) : null;
+                    $officeHours = $officeHours ? trim(strval($officeHours)) : null;
+
+                    // Validate required fields
+                    if (empty($name)) {
+                        $errors[] = "Dòng {$row}: Thiếu họ tên";
+                        $skipped++;
+                        continue;
+                    }
+                    
+                    if (empty($email)) {
+                        $errors[] = "Dòng {$row}: Thiếu email";
+                        $skipped++;
+                        continue;
+                    }
+                    
+                    if (empty($password)) {
+                        $errors[] = "Dòng {$row}: Thiếu mật khẩu";
+                        $skipped++;
+                        continue;
+                    }
+
+                    // Validate email format
+                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        $errors[] = "Dòng {$row}: Email không hợp lệ: '{$email}'";
+                        $skipped++;
+                        continue;
+                    }
+
+                    // Check if email already exists
+                    if (User::where('email', $email)->exists()) {
+                        $errors[] = "Dòng {$row}: Email '{$email}' đã tồn tại";
+                        $skipped++;
+                        continue;
+                    }
+
+                    // Check if teacher code already exists
+                    if ($teacherCode && Teacher::where('teacher_code', $teacherCode)->exists()) {
+                        $errors[] = "Dòng {$row}: Mã giảng viên '{$teacherCode}' đã tồn tại";
+                        $skipped++;
+                        continue;
+                    }
+
+                    // Get department ID
+                    $departmentId = null;
+                    if ($departmentCode) {
+                        if (isset($departments[$departmentCode])) {
+                            $departmentId = $departments[$departmentCode];
+                        } else {
+                            // Try to find by name
+                            $foundDept = Department::where('slug', $departmentCode)
+                                                ->orWhere('name', 'LIKE', '%' . $departmentCode . '%')
+                                                ->first();
+                            if ($foundDept) {
+                                $departmentId = $foundDept->id;
+                            } else {
+                                $errors[] = "Dòng {$row}: Khoa/bộ môn '{$departmentCode}' không tồn tại";
+                                $skipped++;
+                                continue;
+                            }
+                        }
+                    } else {
+                        $departmentId = $request->default_department_id;
+                    }
+
+                    // Validate password length
+                    if (strlen($password) < 8) {
+                        $errors[] = "Dòng {$row}: Mật khẩu phải có ít nhất 8 ký tự";
+                        $skipped++;
+                        continue;
+                    }
+
+                    // Create user
+                    $user = User::create([
+                        'name' => $name,
+                        'email' => $email,
+                        'password' => Hash::make($password),
+                        'phone' => $phone,
+                        'role' => 'teacher',
+                    ]);
+
+                    // Assign role if using role tables
+                    if (Schema::hasTable('user_has_roles')) {
+                        DB::table('user_has_roles')->insert([
+                            'user_id' => $user->id,
+                            'role_id' => 2, // Assuming 2 is teacher role
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                    }
+
+                    // Create teacher
+                    Teacher::create([
+                        'user_id' => $user->id,
+                        'teacher_code' => $teacherCode,
+                        'department_id' => $departmentId,
+                        'academic_rank' => $academicRank,
+                        'specialization' => $specialization,
+                        'position' => $position,
+                        'office_location' => $officeLocation,
+                        'office_hours' => $officeHours,
+                    ]);
+
+                    $imported++;
+
+                } catch (\Exception $e) {
+                    $errors[] = "Dòng {$row}: " . $e->getMessage();
+                    $skipped++;
+                }
+            }
+
+            DB::commit();
+
+            // Prepare result message
+            $message = "Import hoàn tất: {$imported} giảng viên được thêm thành công";
+            if ($skipped > 0) {
+                $message .= ", {$skipped} dòng bị bỏ qua";
+            }
+
+            // Limit errors display
+            $displayErrors = array_slice($errors, 0, 10);
+            if (count($errors) > 10) {
+                $displayErrors[] = "... và " . (count($errors) - 10) . " lỗi khác";
+            }
+
+            return redirect()->route('admin.teacher.index')
+                ->with('success', $message)
+                ->with('import_errors', $displayErrors);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Lỗi khi import file: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Export danh sách giảng viên ra Excel
+     */
+    public function exportExcel(Request $request)
+    {
+        try {
+            // Apply filters same as index
+            $query = Teacher::with(['user', 'department']);
+            
+            // Apply search and filters
+            if ($request->filled('search')) {
+                $search = trim($request->search);
+                $query->where(function ($q) use ($search) {
+                    $q->where('teacher_code', 'like', "%{$search}%")
+                    ->orWhere('specialization', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($userQuery) use ($search) {
+                        $userQuery->where('name', 'like', "%{$search}%")
+                                    ->orWhere('email', 'like', "%{$search}%");
+                    });
+                });
+            }
+
+            if ($request->filled('department_id')) {
+                $query->where('department_id', $request->department_id);
+            }
+
+            if ($request->filled('academic_rank')) {
+                $query->where('academic_rank', $request->academic_rank);
+            }
+
+            $teachers = $query->get();
+
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Set headers
+            $headers = [
+                'A1' => 'STT',
+                'B1' => 'Mã giảng viên',
+                'C1' => 'Họ và tên',
+                'D1' => 'Email',
+                'E1' => 'Số điện thoại',
+                'F1' => 'Khoa/Bộ môn',
+                'G1' => 'Học hàm/Học vị',
+                'H1' => 'Chuyên ngành',
+                'I1' => 'Chức vụ',
+                'J1' => 'Phòng làm việc',
+                'K1' => 'Ngày tạo'
+            ];
+
+            foreach ($headers as $cell => $value) {
+                $sheet->setCellValue($cell, $value);
+            }
+
+            // Style headers
+            $sheet->getStyle('A1:K1')->applyFromArray([
+                'font' => ['bold' => true],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => '4154f1']
+                ],
+                'font' => ['color' => ['rgb' => 'FFFFFF']]
+            ]);
+
+            // Add data
+            $row = 2;
+            foreach ($teachers as $index => $teacher) {
+                $sheet->setCellValue('A' . $row, $index + 1);
+                $sheet->setCellValue('B' . $row, $teacher->teacher_code ?? '');
+                $sheet->setCellValue('C' . $row, $teacher->user->name);
+                $sheet->setCellValue('D' . $row, $teacher->user->email);
+                $sheet->setCellValue('E' . $row, $teacher->user->phone ?? '');
+                $sheet->setCellValue('F' . $row, $teacher->department ? $teacher->department->name : '');
+                $sheet->setCellValue('G' . $row, $teacher->academic_rank ?? '');
+                $sheet->setCellValue('H' . $row, $teacher->specialization ?? '');
+                $sheet->setCellValue('I' . $row, $teacher->position ?? '');
+                $sheet->setCellValue('J' . $row, $teacher->office_location ?? '');
+                $sheet->setCellValue('K' . $row, $teacher->created_at->format('d/m/Y'));
+                $row++;
+            }
+
+            // Auto size columns
+            foreach (range('A', 'K') as $col) {
+                $sheet->getColumnDimension($col)->setAutoSize(true);
+            }
+
+            // Create file
+            $writer = new Xlsx($spreadsheet);
+            $fileName = 'danh_sach_giang_vien_' . date('Y-m-d_His') . '.xlsx';
+            $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+            $writer->save($temp_file);
+
+            return response()->download($temp_file, $fileName)->deleteFileAfterSend(true);
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Lỗi khi xuất file: ' . $e->getMessage());
         }
     }
 

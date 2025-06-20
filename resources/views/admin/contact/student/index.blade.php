@@ -199,12 +199,31 @@
                             <a href="{{ route('admin.teacher.index') }}" class="btn btn-info btn-sm d-flex align-items-center">
                                 <i class="bi bi-person-badge me-2"></i>QL giảng viên
                             </a>
+
+                             <!-- Dropdown cho Import/Export -->
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+                                    <i class="bi bi-file-earmark-excel me-2"></i>Thêm từ file Excel
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.student.import.form') }}">
+                                            <i class="bi bi-upload me-2"></i>Nhập từ Excel
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.student.download-template') }}">
+                                            <i class="bi bi-file-earmark-arrow-down me-2"></i>Tải file mẫu
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
                             <a href="{{ route('admin.student.create') }}" class="btn btn-success btn-sm d-flex align-items-center">
                                 <i class="bi bi-plus-circle me-2"></i>Thêm sinh viên
                             </a>
-                            {{-- <button type="button" class="btn btn-warning btn-sm d-flex align-items-center" onclick="exportStudents()">
-                                <i class="bi bi-download me-2"></i>Xuất Excel
-                            </button> --}}
+                        
                         </div>
                     </div>
                     <div class="card-body p-0">
