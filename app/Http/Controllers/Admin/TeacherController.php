@@ -604,11 +604,10 @@ class TeacherController extends Controller
         $sheet->setCellValue('M1', 'DANH SÁCH KHOA/BỘ MÔN:');
         $sheet->getStyle('M1')->getFont()->setBold(true);
         
-        $departments = Department::select( 'name')->orderBy('name')->get();
+        $departments = Department::select( 'code')->orderBy('code')->get();
         $row = 2;
         foreach ($departments as $dept) {
-            $sheet->setCellValue('M' . $row, $dept->slug);
-            $sheet->setCellValue('N' . $row, $dept->name);
+            $sheet->setCellValue('N' . $row, $dept->code);
             $row++;
         }
 
@@ -653,8 +652,8 @@ class TeacherController extends Controller
             $skipped = 0;
             $errors = [];
 
-            // Get departments mapping by slug
-            $departments = Department::pluck('id')->toArray();
+            // Get departments mapping by code
+            $departments = Department::pluck('id', 'code')->toArray();
             
             // Bắt đầu từ dòng 2 (bỏ qua header)
             for ($row = 2; $row <= $highestRow; $row++) {
@@ -730,25 +729,26 @@ class TeacherController extends Controller
                         continue;
                     }
 
-                    // Get department ID
+                    // Find department ID by code
                     $departmentId = null;
                     if ($departmentCode) {
+                        // Check if department code exists in our mapping
                         if (isset($departments[$departmentCode])) {
                             $departmentId = $departments[$departmentCode];
                         } else {
-                            // Try to find by name
-                            $foundDept = Department::where('slug', $departmentCode)
-                                                ->orWhere('name', 'LIKE', '%' . $departmentCode . '%')
-                                                ->first();
+                            // Try to find by code directly in case of case sensitivity issues
+                            $foundDept = Department::where('code', $departmentCode)->first();
+                            
                             if ($foundDept) {
                                 $departmentId = $foundDept->id;
                             } else {
-                                $errors[] = "Dòng {$row}: Khoa/bộ môn '{$departmentCode}' không tồn tại";
+                                $errors[] = "Dòng {$row}: Mã đơn vị '{$departmentCode}' không tồn tại";
                                 $skipped++;
                                 continue;
                             }
                         }
                     } else {
+                        // Use default department if no department code provided
                         $departmentId = $request->default_department_id;
                     }
 
@@ -820,106 +820,6 @@ class TeacherController extends Controller
             DB::rollBack();
             return redirect()->back()
                 ->with('error', 'Lỗi khi import file: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Export danh sách giảng viên ra Excel
-     */
-    public function exportExcel(Request $request)
-    {
-        try {
-            // Apply filters same as index
-            $query = Teacher::with(['user', 'department']);
-            
-            // Apply search and filters
-            if ($request->filled('search')) {
-                $search = trim($request->search);
-                $query->where(function ($q) use ($search) {
-                    $q->where('teacher_code', 'like', "%{$search}%")
-                    ->orWhere('specialization', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($userQuery) use ($search) {
-                        $userQuery->where('name', 'like', "%{$search}%")
-                                    ->orWhere('email', 'like', "%{$search}%");
-                    });
-                });
-            }
-
-            if ($request->filled('department_id')) {
-                $query->where('department_id', $request->department_id);
-            }
-
-            if ($request->filled('academic_rank')) {
-                $query->where('academic_rank', $request->academic_rank);
-            }
-
-            $teachers = $query->get();
-
-            $spreadsheet = new Spreadsheet();
-            $sheet = $spreadsheet->getActiveSheet();
-
-            // Set headers
-            $headers = [
-                'A1' => 'STT',
-                'B1' => 'Mã giảng viên',
-                'C1' => 'Họ và tên',
-                'D1' => 'Email',
-                'E1' => 'Số điện thoại',
-                'F1' => 'Khoa/Bộ môn',
-                'G1' => 'Học hàm/Học vị',
-                'H1' => 'Chuyên ngành',
-                'I1' => 'Chức vụ',
-                'J1' => 'Phòng làm việc',
-                'K1' => 'Ngày tạo'
-            ];
-
-            foreach ($headers as $cell => $value) {
-                $sheet->setCellValue($cell, $value);
-            }
-
-            // Style headers
-            $sheet->getStyle('A1:K1')->applyFromArray([
-                'font' => ['bold' => true],
-                'fill' => [
-                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'startColor' => ['rgb' => '4154f1']
-                ],
-                'font' => ['color' => ['rgb' => 'FFFFFF']]
-            ]);
-
-            // Add data
-            $row = 2;
-            foreach ($teachers as $index => $teacher) {
-                $sheet->setCellValue('A' . $row, $index + 1);
-                $sheet->setCellValue('B' . $row, $teacher->teacher_code ?? '');
-                $sheet->setCellValue('C' . $row, $teacher->user->name);
-                $sheet->setCellValue('D' . $row, $teacher->user->email);
-                $sheet->setCellValue('E' . $row, $teacher->user->phone ?? '');
-                $sheet->setCellValue('F' . $row, $teacher->department ? $teacher->department->name : '');
-                $sheet->setCellValue('G' . $row, $teacher->academic_rank ?? '');
-                $sheet->setCellValue('H' . $row, $teacher->specialization ?? '');
-                $sheet->setCellValue('I' . $row, $teacher->position ?? '');
-                $sheet->setCellValue('J' . $row, $teacher->office_location ?? '');
-                $sheet->setCellValue('K' . $row, $teacher->created_at->format('d/m/Y'));
-                $row++;
-            }
-
-            // Auto size columns
-            foreach (range('A', 'K') as $col) {
-                $sheet->getColumnDimension($col)->setAutoSize(true);
-            }
-
-            // Create file
-            $writer = new Xlsx($spreadsheet);
-            $fileName = 'danh_sach_giang_vien_' . date('Y-m-d_His') . '.xlsx';
-            $temp_file = tempnam(sys_get_temp_dir(), $fileName);
-            $writer->save($temp_file);
-
-            return response()->download($temp_file, $fileName)->deleteFileAfterSend(true);
-
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Lỗi khi xuất file: ' . $e->getMessage());
         }
     }
 

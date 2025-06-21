@@ -82,7 +82,6 @@ class ForumController extends Controller
                 break;
         }
 
-        // Phân trang
         $latestPosts = $postsQuery->paginate($perPage)->withQueryString();
 
         // Thống kê
@@ -107,7 +106,6 @@ class ForumController extends Controller
         ]);
     }
 
-    // API endpoint cho tìm kiếm AJAX
     public function search(Request $request)
     {
         $search = $request->get('q');
@@ -163,7 +161,6 @@ class ForumController extends Controller
         ]);
     }
 
-    // Các methods khác giữ nguyên như cũ
     public function post(Request $request){
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
