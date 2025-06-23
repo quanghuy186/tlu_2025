@@ -51,11 +51,7 @@ function hasAllRoles(array $roleIds, $user = null)
     if (!$user) {
         return false;
     }
-    
-    // Đếm số vai trò khớp
     $matchCount = $user->roles()->whereIn('role_id', $roleIds)->count();
-    
-    // Người dùng phải có tất cả các vai trò trong danh sách
     return $matchCount === count($roleIds);
 }
 

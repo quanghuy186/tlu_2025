@@ -15,17 +15,17 @@ class ForumCommentController extends Controller
         $query = ForumComment::with(['post', 'user'])
             ->orderBy('created_at', 'desc');
 
-        // Lọc theo nội dung bình luận
+        // Nội dung 
         if ($request->has('search') && !empty($request->search)) {
             $query->where('content', 'like', '%' . $request->search . '%');
         }
 
-        // Lọc theo bài viết
+        // Bài viết
         if ($request->has('post_id') && !empty($request->post_id)) {
             $query->where('post_id', $request->post_id);
         }
 
-        // Lọc theo loại bình luận (gốc hoặc phản hồi)
+        // Lọc theo loại bình luận 
         if ($request->has('parent_id')) {
             if ($request->parent_id === 'parent') {
                 $query->whereNull('parent_id');
@@ -33,8 +33,7 @@ class ForumCommentController extends Controller
                 $query->whereNotNull('parent_id');
             }
         }
-
-        // Lọc theo trạng thái ẩn danh
+        //ẩn danh
         if ($request->has('is_anonymous') && $request->is_anonymous !== '') {
             $query->where('is_anonymous', $request->is_anonymous);
         }
@@ -124,12 +123,10 @@ class ForumCommentController extends Controller
 
             DB::beginTransaction();
 
-            // First, delete related comments
             DB::table('forum_comments')
                 ->whereIn('post_id', $postIds)
                 ->delete();
 
-            // Then delete posts
             $deletedCount = ForumPost::whereIn('id', $postIds)->delete();
 
             DB::commit();

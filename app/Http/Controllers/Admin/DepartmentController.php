@@ -17,10 +17,9 @@ class DepartmentController extends Controller
 {
     public function index(Request $request)
     {
-        // Khởi tạo query builder
         $query = Department::with('manager', 'parent', 'children');
 
-        // Tìm kiếm theo từ khóa
+        //search
         if ($request->filled('search')) {
             $searchTerm = $request->search;
             $query->where(function($q) use ($searchTerm) {
@@ -36,7 +35,7 @@ class DepartmentController extends Controller
             });
         }
 
-        // Lọc theo đơn vị cha
+        // filter
         if ($request->filled('parent_filter') && $request->parent_filter !== 'all') {
             if ($request->parent_filter === 'root') {
                 $query->whereNull('parent_id');
@@ -45,12 +44,10 @@ class DepartmentController extends Controller
             }
         }
 
-        // Lọc theo cấp độ
         if ($request->filled('level_filter') && $request->level_filter !== 'all') {
             $query->where('level', $request->level_filter);
         }
 
-        // Lọc theo trạng thái có người quản lý
         if ($request->filled('manager_filter') && $request->manager_filter !== 'all') {
             if ($request->manager_filter === 'has_manager') {
                 $query->whereNotNull('user_id');
@@ -59,7 +56,6 @@ class DepartmentController extends Controller
             }
         }
 
-        // Sắp xếp
         $sortBy = $request->get('sort_by', 'level');
         $sortOrder = $request->get('sort_order', 'asc');
         
@@ -70,23 +66,18 @@ class DepartmentController extends Controller
         } elseif ($sortBy === 'created_at') {
             $query->orderBy('created_at', $sortOrder);
         } else {
-            // Mặc định sắp xếp theo level và name
             $query->orderBy('level', 'asc')->orderBy('name', 'asc');
         }
 
-        // Số lượng hiển thị mỗi trang
         $perPage = $request->get('per_page', 10);
         $perPage = in_array($perPage, [5, 10, 15, 25, 50]) ? $perPage : 10;
 
-        // Phân trang
         $departments = $query->paginate($perPage)->appends($request->all());
 
-        // Lấy danh sách đơn vị cha để làm filter
         $parentDepartments = Department::whereNull('parent_id')
             ->orderBy('name')
             ->get();
 
-        // Lấy danh sách cấp độ để làm filter
         $levels = Department::select('level')
             ->distinct()
             ->orderBy('level')
@@ -130,6 +121,40 @@ class DepartmentController extends Controller
             'manager_name' => 'required|string|max:255',
             'manager_email' => 'required|email|max:255|unique:users,email',
             'manager_avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'name.required' => 'Tên đơn vị không được để trống',
+            'name.string' => 'Tên đơn vị phải là chuỗi ký tự',
+            'name.max' => 'Tên đơn vị không được vượt quá 100 ký tự',
+
+            'code.required' => 'Mã đơn vị không được để trống',
+            'code.string' => 'Mã đơn vị phải là chuỗi ký tự',
+            'code.max' => 'Mã đơn vị không được vượt quá 20 ký tự',
+            'code.unique' => 'Mã đơn vị đã tồn tại trong hệ thống',
+
+            'parent_id.exists' => 'Đơn vị cha không hợp lệ',
+
+            'description.string' => 'Mô tả phải là chuỗi ký tự',
+
+            'phone.string' => 'Số điện thoại phải là chuỗi ký tự',
+            'phone.max' => 'Số điện thoại không được vượt quá 20 ký tự',
+
+            'email.email' => 'Email không đúng định dạng',
+            'email.max' => 'Email không được vượt quá 100 ký tự',
+
+            'address.string' => 'Địa chỉ phải là chuỗi ký tự',
+
+            'manager_name.required' => 'Tên người quản lý không được để trống',
+            'manager_name.string' => 'Tên người quản lý phải là chuỗi ký tự',
+            'manager_name.max' => 'Tên người quản lý không được vượt quá 255 ký tự',
+
+            'manager_email.required' => 'Email người quản lý không được để trống',
+            'manager_email.email' => 'Email người quản lý không đúng định dạng',
+            'manager_email.max' => 'Email người quản lý không được vượt quá 255 ký tự',
+            'manager_email.unique' => 'Email người quản lý đã tồn tại trong hệ thống',
+
+            'manager_avatar.image' => 'Ảnh đại diện phải là tệp hình ảnh',
+            'manager_avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif',
+            'manager_avatar.max' => 'Ảnh đại diện không được vượt quá 2MB',
         ]);
 
         if ($validator->fails()) {
@@ -141,7 +166,6 @@ class DepartmentController extends Controller
         DB::beginTransaction();
 
         try {
-            // Tính toán level dựa trên đơn vị cha
             $level = 0;
             if ($request->parent_id) {
                 $parentDepartment = Department::find($request->parent_id);
@@ -150,7 +174,6 @@ class DepartmentController extends Controller
                 }
             }
 
-            // Tạo người quản lý mới cho đơn vị
             $randomPassword = Str::random(10);
             $manager = new User();
             $manager->name = $request->manager_name;
@@ -159,7 +182,6 @@ class DepartmentController extends Controller
             $manager->email_verified = 0;
             $manager->is_active = 1;
 
-            // Xử lý upload avatar nếu có
             if ($request->hasFile('manager_avatar')) {
                 $avatar = $request->file('manager_avatar');
                 $filename = time() . '_' . Str::slug(pathinfo($avatar->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $avatar->getClientOriginalExtension();
@@ -169,7 +191,6 @@ class DepartmentController extends Controller
 
             $manager->save();
 
-            // Tạo đơn vị mới và liên kết với người quản lý
             $department = new Department();
             $department->name = $request->name;
             $department->code = $request->code;
@@ -242,7 +263,6 @@ class DepartmentController extends Controller
     {
         $department = Department::with('manager')->findOrFail($id);
         
-        // Chuẩn bị quy tắc xác thực
         $rules = [
             'name' => 'required|string|max:100',
             'code' => [
@@ -264,7 +284,6 @@ class DepartmentController extends Controller
             'manager_avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
 
-        // Kiểm tra nếu email người quản lý thay đổi
         if ($department->manager && $request->manager_email != $department->manager->email) {
             $rules['manager_email'] = 'required|email|max:255|unique:users,email';
         } else {
@@ -282,7 +301,6 @@ class DepartmentController extends Controller
         DB::beginTransaction();
 
         try {
-            // Ngăn chặn chu kỳ trong phân cấp
             if ($request->parent_id) {
                 $descendantIds = $this->getAllDescendantIds($department->id);
                 if (in_array($request->parent_id, $descendantIds)) {
@@ -292,7 +310,6 @@ class DepartmentController extends Controller
                 }
             }
 
-            // Tính toán cấp độ mới
             $oldLevel = $department->level;
             $newLevel = 0;
             
@@ -305,15 +322,12 @@ class DepartmentController extends Controller
             
             $levelDifference = $newLevel - $oldLevel;
 
-            // Cập nhật thông tin người quản lý
             $resetPassword = false;
             $newPassword = '';
             $managerId = null;
 
             if ($department->manager) {
-                // Cập nhật người quản lý hiện tại
                 $department->manager->name = $request->manager_name;
-                
                 // Nếu email thay đổi, cập nhật email và tạo mật khẩu mới
                 if ($request->manager_email != $department->manager->email) {
                     $department->manager->email = $request->manager_email;
@@ -322,14 +336,12 @@ class DepartmentController extends Controller
                     $resetPassword = true;
                 }
                 
-                // Xử lý upload avatar mới (nếu có)
                 if ($request->hasFile('manager_avatar')) {
                     // Xóa avatar cũ nếu có
                     if ($department->manager->avatar) {
                         Storage::disk('public')->delete('avatars/' . $department->manager->avatar);
                     }
                     
-                    // Upload avatar mới
                     $avatar = $request->file('manager_avatar');
                     $filename = time() . '_' . Str::slug(pathinfo($avatar->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $avatar->getClientOriginalExtension();
                     $avatar->storeAs('avatars', $filename, 'public');
@@ -348,7 +360,6 @@ class DepartmentController extends Controller
                 $manager->email_verified = 0;
                 $manager->is_active = 1;
                 
-                // Xử lý upload avatar nếu có
                 if ($request->hasFile('manager_avatar')) {
                     $avatar = $request->file('manager_avatar');
                     $filename = time() . '_' . Str::slug(pathinfo($avatar->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $avatar->getClientOriginalExtension();
@@ -362,7 +373,6 @@ class DepartmentController extends Controller
                 $resetPassword = true;
             }
 
-            // Cập nhật thông tin đơn vị
             $department->name = $request->name;
             $department->code = $request->code;
             $department->parent_id = $request->parent_id;
@@ -374,14 +384,12 @@ class DepartmentController extends Controller
             $department->level = $newLevel;
             $department->save();
 
-            // Cập nhật cấp độ cho tất cả đơn vị con nếu cấp độ thay đổi
             if ($levelDifference != 0) {
                 $this->updateDescendantLevels($department->id, $levelDifference);
             }
 
             DB::commit();
 
-            // Thông báo thành công
             $successMessage = 'Đơn vị đã được cập nhật thành công.';
             if ($resetPassword) {
                 $successMessage .= ' Mật khẩu mới cho tài khoản ' . $request->manager_email . ': ' . $newPassword;
@@ -405,28 +413,21 @@ class DepartmentController extends Controller
             DB::beginTransaction();
             
             $department = Department::with('manager')->findOrFail($id);
-            
             // Kiểm tra xem đơn vị có đơn vị con không
             if ($department->children()->count() > 0) {
                 return redirect()->back()
                     ->with('error', 'Không thể xóa đơn vị này vì nó có các đơn vị con.');
             }
             
-            // Lưu ID người dùng để xóa sau
             $userId = $department->user_id;
-            
-            // Quan trọng: Ngắt liên kết người dùng khỏi đơn vị trước
             $department->user_id = null;
             $department->save();
             
-            // Xóa đơn vị
             $department->delete();
             
-            // Nếu có user_id và user tồn tại, xóa user
             if ($userId) {
                 $user = User::find($userId);
                 if ($user) {
-                    // Xóa avatar nếu có
                     if ($user->avatar) {
                         Storage::disk('public')->delete('avatars/' . $user->avatar);
                     }

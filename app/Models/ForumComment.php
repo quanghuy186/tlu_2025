@@ -29,13 +29,11 @@ class ForumComment extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
   
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
   
     public function parent()
     {
@@ -47,12 +45,10 @@ class ForumComment extends Model
         return $this->hasMany(ForumComment::class, 'parent_id');
     }
 
-
     public function scopeParents($query)
     {
         return $query->whereNull('parent_id');
     }
-
 
     public function scopeReplies($query)
     {

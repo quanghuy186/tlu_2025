@@ -22,7 +22,6 @@ class ForumPostController extends Controller
             $query->where('category_id', $request->category_id);
         }
         
-        // Lọc theo trạng thái
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
         }
@@ -47,12 +46,22 @@ class ForumPostController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
+            'title' => 'required|max:255',
             'category_id' => 'required|exists:forum_categories,id',
-            'content' => 'required|string',
+            'content' => 'required',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_anonymous' => 'boolean',
+        ], [
+            'title.required' => 'Tiêu đề không được để trống',
+            'title.max' => 'Tiêu đề không được vượt quá 255 ký tự',
+            'category_id.required' => 'Danh mục không được để trống',
+            'category_id.exists' => 'Danh mục không tồn tại hoặc đã bị xóa',
+            'content.required' => 'Nội dung không được để trống',
+            'images.*.image' => 'Tệp tải lên phải là hình ảnh',
+            'images.*.mimes' => 'Ảnh chỉ được chấp nhận các định dạng: jpeg, png, jpg, gif',
+            'images.*.max' => 'Kích thước mỗi ảnh không được vượt quá 2MB',
         ]);
+
 
         if ($validator->fails()) {
             return redirect()->back()
@@ -108,13 +117,25 @@ class ForumPostController extends Controller
     {
         $post = ForumPost::findOrFail($id);
         
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
+       $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255',
             'category_id' => 'required|exists:forum_categories,id',
-            'content' => 'required|string',
+            'content' => 'required',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_anonymous' => 'boolean',
+        ], [
+            'title.required' => 'Tiêu đề không được để trống',
+            'title.max' => 'Tiêu đề không được vượt quá 255 ký tự',
+
+            'category_id.required' => 'Danh mục không được để trống',
+            'category_id.exists' => 'Danh mục đã chọn không tồn tại',
+
+            'content.required' => 'Nội dung không được để trống',
+
+            'images.*.image' => 'Mỗi tệp tải lên phải là hình ảnh',
+            'images.*.mimes' => 'Ảnh chỉ chấp nhận các định dạng: jpeg, png, jpg, gif',
+            'images.*.max' => 'Kích thước mỗi ảnh không được vượt quá 2MB',
         ]);
+
 
         if ($validator->fails()) {
             return redirect()->back()
@@ -179,9 +200,6 @@ class ForumPostController extends Controller
             ->with('success', 'Bài viết đã được xóa thành công!');
     }
     
-    /**
-     * Phê duyệt bài viết
-     */
     public function approve($id)
     {
         $post = ForumPost::findOrFail($id);
@@ -197,9 +215,6 @@ class ForumPostController extends Controller
             ->with('success', 'Bài viết đã được phê duyệt!');
     }
     
-    /**
-     * Từ chối bài viết
-     */
     public function reject(Request $request, $id)
     {
         $post = ForumPost::findOrFail($id);
@@ -225,9 +240,6 @@ class ForumPostController extends Controller
             ->with('success', 'Bài viết đã bị từ chối!');
     }
     
-    /**
-     * Ghim/bỏ ghim bài viết
-     */
     public function togglePin($id)
     {
         $post = ForumPost::findOrFail($id);
@@ -242,9 +254,6 @@ class ForumPostController extends Controller
             ->with('success', $message);
     }
     
-    /**
-     * Khóa/mở khóa bài viết
-     */
     public function toggleLock($id)
     {
         $post = ForumPost::findOrFail($id);
@@ -278,9 +287,6 @@ class ForumPostController extends Controller
             $deletedCount = 0;
 
             foreach ($posts as $post) {
-                // Kiểm tra quyền xóa (chỉ tác giả hoặc admin)
-                // if (Auth::id() == $post->user_id || Auth::user()->hasRole('admin')) {
-                    // Xóa ảnh
                     if ($post->images) {
                         $images = json_decode($post->images, true);
                         foreach ($images as $image) {
@@ -290,7 +296,6 @@ class ForumPostController extends Controller
                     
                     $post->delete();
                     $deletedCount++;
-                // }
             }
 
             return response()->json([

@@ -17,12 +17,10 @@ class ForumCategory extends Model
         'is_active'
     ];
     
-    // Mặc định là_active là true
     protected $attributes = [
         'is_active' => true
     ];
     
-    // Các quan hệ
     public function posts()
     {
         return $this->hasMany(ForumPost::class, 'category_id', 'id');
@@ -38,7 +36,6 @@ class ForumCategory extends Model
         return $this->hasMany(ForumCategory::class, 'parent_id');
     }
     
-    // Các phương thức tiện ích
     public function isActive()
     {
         return (bool) $this->is_active;
@@ -49,7 +46,6 @@ class ForumCategory extends Model
         return $this->children()->count() > 0;
     }
     
-    // Scope queries
     public function scopeActive($query)
     {
         return $query->where('is_active', true);

@@ -102,12 +102,7 @@
                                         <ul class="dropdown-menu">
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('admin.teacher.import.form') }}">
-                                                    <i class="bi bi-upload me-2"></i>Import từ Excel
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="#" onclick="exportTeachers()">
-                                                    <i class="bi bi-download me-2"></i>Export ra Excel
+                                                    <i class="bi bi-upload me-2"></i>Nhập từ file Excel
                                                 </a>
                                             </li>
                                             <li><hr class="dropdown-divider"></li>

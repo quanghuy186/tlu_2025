@@ -7,7 +7,6 @@ use App\Models\UserHasRole;
 
 class Role extends Model
 {
-
     protected $table = 'roles';
     protected $primaryKey = 'id';
     protected $fillable = [

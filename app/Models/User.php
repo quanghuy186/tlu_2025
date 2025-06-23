@@ -89,17 +89,11 @@ class User extends Authenticatable
         return $this->hasMany(Message::class, 'sender_user_id');
     }
 
-    /**
-     * Get messages received by this user.
-     */
     public function receivedMessages()
     {
         return $this->hasMany(Message::class, 'recipient_user_id');
     }
 
-    /**
-     * Get unread messages for this user.
-     */
     public function unreadMessages()
     {
         return $this->receivedMessages()->where('is_read', false);

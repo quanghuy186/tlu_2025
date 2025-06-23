@@ -102,9 +102,9 @@
               <button id="bulkDeleteBtn" class="btn btn-danger btn-sm d-none" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
                 <i class="bi bi-trash me-2"></i>Xóa đã chọn (<span id="selectedCount">0</span>)
               </button>
-              <a href="{{ route('admin.user.import-excel') }}" class="btn btn-primary btn-sm d-flex align-items-center">
+              {{-- <a href="{{ route('admin.user.import-excel') }}" class="btn btn-primary btn-sm d-flex align-items-center">
                 <i class="bi bi-file-earmark-excel me-2"></i>Nhập từ Excel
-              </a>
+              </a> --}}
               <a href="{{ route('admin.user.create') }}" class="btn btn-success btn-sm d-flex align-items-center">
                 <i class="bi bi-plus-circle me-2"></i>Thêm tài khoản
               </a>

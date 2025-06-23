@@ -12,60 +12,54 @@ use Illuminate\Validation\Rule;
 class ClassController extends Controller
 {
     public function index(Request $request)
-{
-    $query = ClassRoom::with(['department', 'teacherWithUser']);
-    
-    // Tìm kiếm
-    if ($request->filled('search')) {
-        $search = $request->input('search');
-        $query->where(function($q) use ($search) {
-            $q->where('class_code', 'like', "%{$search}%")
-              ->orWhere('class_name', 'like', "%{$search}%");
-        })
-        ->orWhereHas('department', function($q) use ($search) {
-            $q->where('name', 'like', "%{$search}%");
-        })
-        ->orWhereHas('teacherWithUser.user', function($q) use ($search) {
-            $q->where('name', 'like', "%{$search}%");
-        });
+    {
+        $query = ClassRoom::with(['department', 'teacherWithUser']);
+        
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('class_code', 'like', "%{$search}%")
+                ->orWhere('class_name', 'like', "%{$search}%");
+            })
+            ->orWhereHas('department', function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            })
+            ->orWhereHas('teacherWithUser.user', function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            });
+        }
+        
+        if ($request->filled('academic_year')) {
+            $query->where('academic_year', $request->input('academic_year'));
+        }
+        
+        if ($request->filled('semester')) {
+            $query->where('semester', $request->input('semester'));
+        }
+        
+        if ($request->filled('department_id')) {
+            $query->where('department_id', $request->input('department_id'));
+        }
+        
+        if ($request->filled('teacher_id')) {
+            $query->where('teacher_id', $request->input('teacher_id'));
+        }
+        
+        $classes = $query->paginate(10)->withQueryString();
+        
+        $departments = Department::all();
+        $teachers = Teacher::with('user')->get();
+        $academicYears = $this->getAcademicYears();
+        $semesters = $this->getSemesters();
+        
+        return view('admin.contact.class.index', compact(
+            'classes', 
+            'departments', 
+            'teachers', 
+            'academicYears', 
+            'semesters'
+        ));
     }
-    
-    // Lọc theo năm học
-    if ($request->filled('academic_year')) {
-        $query->where('academic_year', $request->input('academic_year'));
-    }
-    
-    // Lọc theo học kỳ
-    if ($request->filled('semester')) {
-        $query->where('semester', $request->input('semester'));
-    }
-    
-    // Lọc theo khoa/bộ môn
-    if ($request->filled('department_id')) {
-        $query->where('department_id', $request->input('department_id'));
-    }
-    
-    // Lọc theo giảng viên
-    if ($request->filled('teacher_id')) {
-        $query->where('teacher_id', $request->input('teacher_id'));
-    }
-    
-    $classes = $query->paginate(10)->withQueryString();
-    
-    // Lấy dữ liệu cho các bộ lọc
-    $departments = Department::all();
-    $teachers = Teacher::with('user')->get();
-    $academicYears = $this->getAcademicYears();
-    $semesters = $this->getSemesters();
-    
-    return view('admin.contact.class.index', compact(
-        'classes', 
-        'departments', 
-        'teachers', 
-        'academicYears', 
-        'semesters'
-    ));
-}
 
 
     public function create()

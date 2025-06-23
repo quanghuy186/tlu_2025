@@ -7,13 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Department extends Model
 {
-    use HasFactory; // Đã loại bỏ SoftDeletes
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    use HasFactory; 
+    protected $table = 'departments';
     protected $fillable = [
         'name',
         'code',
@@ -26,32 +21,16 @@ class Department extends Model
         'level',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
     protected $casts = [
         'level' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
-    /**
-     * Get the parent department.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function parent()
     {
         return $this->belongsTo(Department::class, 'parent_id');
     }
-
-    /**
-     * Get the children departments.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function children()
     {
         return $this->hasMany(Department::class, 'parent_id')
@@ -62,19 +41,15 @@ class Department extends Model
         return $this->hasMany(Teacher::class, 'department_id', 'id');
     }
 
-    // Method để lấy tổng số cán bộ bao gồm cả đơn vị con
+    //tổng gv
     public function getTotalTeachersCountAttribute()
     {
-        // Đếm số cán bộ của đơn vị hiện tại
         $count = $this->teachers()->count();
-        
-        // Nếu có đơn vị con, đệ quy đếm số cán bộ của tất cả đơn vị con
         if ($this->children->count() > 0) {
             foreach ($this->children as $child) {
                 $count += $child->total_teachers_count;
             }
         }
-        
         return $count;
     }
 
@@ -83,22 +58,11 @@ class Department extends Model
         return $this->children()->with('descendants');
     }
 
-    /**
-     * Get the user that manages this department.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function manager()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    /**
-     * Scope a query to only include root departments.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
     public function scopeRoot($query)
     {
         return $query->whereNull('parent_id');
@@ -143,18 +107,15 @@ class Department extends Model
             }
         }
         
-        // Nếu mã quá ngắn, thêm chữ D cho Department
         if (strlen($code) < 2) {
             $code = 'D' . $code;
         }
         
-        // Tìm số cuối cùng
         $similar = self::where('code', 'like', $code . '%')
             ->orderBy('code', 'desc')
             ->first();
             
         if ($similar) {
-            // Tìm số trong mã
             preg_match('/(\d+)$/', $similar->code, $matches);
             
             if (isset($matches[1])) {
@@ -171,15 +132,10 @@ class Department extends Model
         return $code;
     }
 
-    /**
-     * Kiểm tra nếu đơn vị có thể xóa (không có đơn vị con).
-     *
-     * @return bool
-     */
-    public function canDelete()
-    {
-        return $this->children()->count() === 0;
-    }
+    // public function canDelete()
+    // {
+    //     return $this->children()->count() === 0;
+    // }
     public function getFullPathAttribute()
     {
         $path = $this->name;
@@ -209,7 +165,6 @@ class Department extends Model
             return asset('storage/avatars/' . $this->avatar);
         }
         
-        // Avatar mặc định dựa trên chữ cái đầu của tên
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=4e73df&color=ffffff&size=150';
     }
 

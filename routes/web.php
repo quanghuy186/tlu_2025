@@ -70,8 +70,6 @@ Route::prefix('/email')->name('verification.')->group(function(){
     Route::post('/resend', [RegisterController::class, 'resendVerificationEmail'])->name('resend');
 })->middleware('guest');
 
-
-
 Route::get('/change-password', [ChangePasswordController::class, 'show_form'])
         ->name('password.form')->middleware('auth');
     
@@ -110,7 +108,6 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth', 'admin'])->group(fu
     Route::get('/classes/{id}/edit', [ClassController::class, 'edit'])->name('class.edit');
     Route::put('/classes/{id}', [ClassController::class, 'update'])->name('class.update');
     Route::delete('/classes/{id}', [ClassController::class, 'destroy'])->name('class.destroy');
-
 
     Route::get('/students', [StudentController::class, 'index'])->name('student.index');
     Route::get('/students/create', [StudentController::class, 'create'])->name('student.create');
