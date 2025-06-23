@@ -325,4 +325,4 @@ Route::get('/api/classes', function () {
 
 Route::get('/api/department', function () {
     return Department::all();
-})->name('api.department');
+})->name('api.department')->middleware('auth');

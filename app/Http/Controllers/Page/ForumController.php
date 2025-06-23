@@ -275,7 +275,14 @@ class ForumController extends Controller
         $post = ForumPost::with(['author', 'category', 'comments.author'])
             ->findOrFail($id);
         
-        $post->increment('view_count');
+        // $post->increment('view_count');
+
+        $viewKey = "post_viewed_{$post->id}";
+    
+        if(!session()->has($viewKey) && Auth::id() !== $post->user_id) {
+            $post->increment('view_count');
+            session()->put($viewKey, true);
+        }
         
         $likeCount = DB::table('forum_likes')
             ->where('post_id', $post->id)

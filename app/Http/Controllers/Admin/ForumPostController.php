@@ -97,8 +97,15 @@ class ForumPostController extends Controller
         $post = ForumPost::with(['category', 'author', 'approver', 'comments'])->findOrFail($id);
         
         // Tăng lượt xem nếu không phải là người tạo bài viết
-        if (Auth::id() !== $post->user_id) {
+        // if (Auth::id() !== $post->user_id) {
+        //     $post->increment('view_count');
+        // }s
+
+        $viewKey = "post_viewed_{$post->id}";
+    
+        if (!session()->has($viewKey) && Auth::id() !== $post->user_id) {
             $post->increment('view_count');
+            session()->put($viewKey, true);
         }
         
         return view('admin.forum.posts.detail', compact('post'));

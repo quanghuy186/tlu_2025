@@ -23,7 +23,7 @@ class CensorMiddleware
         })->exists();
 
         if (!$censor) {
-            return redirect()->back()->with('error', 'Bạn không có quyền truy cập trang này.');
+            return redirect()->route('home.index')->with('error', 'Bạn không có quyền truy cập trang này.');
         }
  
         return $next($request);
