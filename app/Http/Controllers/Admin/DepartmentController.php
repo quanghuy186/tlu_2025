@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClassRoom;
 use App\Models\Department;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -337,7 +339,6 @@ class DepartmentController extends Controller
                 }
                 
                 if ($request->hasFile('manager_avatar')) {
-                    // Xóa avatar cũ nếu có
                     if ($department->manager->avatar) {
                         Storage::disk('public')->delete('avatars/' . $department->manager->avatar);
                     }
@@ -351,7 +352,6 @@ class DepartmentController extends Controller
                 $department->manager->save();
                 $managerId = $department->manager->id;
             } else {
-                // Tạo người quản lý mới nếu chưa có
                 $newPassword = Str::random(10);
                 $manager = new User();
                 $manager->name = $request->manager_name;
@@ -421,6 +421,8 @@ class DepartmentController extends Controller
             
             $userId = $department->user_id;
             $department->user_id = null;
+            ClassRoom::where('department_id', $department->id)->update(['department_id' => null]);
+            Teacher::where('department_id', $department->id)->update(['department_id' => null]);
             $department->save();
             
             $department->delete();
@@ -428,6 +430,7 @@ class DepartmentController extends Controller
             if ($userId) {
                 $user = User::find($userId);
                 if ($user) {
+                    DB::table('user_has_roles')->where('user_id', $userId)->delete();
                     if ($user->avatar) {
                         Storage::disk('public')->delete('avatars/' . $user->avatar);
                     }

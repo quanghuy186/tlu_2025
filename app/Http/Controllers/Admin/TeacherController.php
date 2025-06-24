@@ -20,15 +20,10 @@ use Illuminate\Support\Facades\Schema;
 
 class TeacherController extends Controller
 {
-    /**
-     * Display a listing of teachers with advanced search, filter and pagination
-     */
     public function index(Request $request)
     {
-        // Start query with necessary relationships
         $query = Teacher::with(['user', 'department']);
 
-        // Advanced search functionality
         if ($request->filled('search')) {
             $search = trim($request->search);
             $query->where(function ($q) use ($search) {
@@ -144,81 +139,74 @@ class TeacherController extends Controller
         ));
     }
 
-    /**
-     * Export filtered results
-     */
-    public function export(Request $request)
-    {
-        // Apply same filters as index method
-        $query = Teacher::with(['user', 'department']);
+    
+    // public function export(Request $request)
+    // {
+    //     $query = Teacher::with(['user', 'department']);
 
-        // Apply all the same filters from index method
-        if ($request->filled('search')) {
-            $search = trim($request->search);
-            $query->where(function ($q) use ($search) {
-                $q->where('teacher_code', 'like', "%{$search}%")
-                  ->orWhere('specialization', 'like', "%{$search}%")
-                  ->orWhereHas('user', function ($userQuery) use ($search) {
-                      $userQuery->where('name', 'like', "%{$search}%")
-                                ->orWhere('email', 'like', "%{$search}%");
-                  });
-            });
-        }
+    //     if ($request->filled('search')) {
+    //         $search = trim($request->search);
+    //         $query->where(function ($q) use ($search) {
+    //             $q->where('teacher_code', 'like', "%{$search}%")
+    //               ->orWhere('specialization', 'like', "%{$search}%")
+    //               ->orWhereHas('user', function ($userQuery) use ($search) {
+    //                   $userQuery->where('name', 'like', "%{$search}%")
+    //                             ->orWhere('email', 'like', "%{$search}%");
+    //               });
+    //         });
+    //     }
 
-        if ($request->filled('department_id') && $request->department_id !== '') {
-            $query->where('department_id', $request->department_id);
-        }
+    //     if ($request->filled('department_id') && $request->department_id !== '') {
+    //         $query->where('department_id', $request->department_id);
+    //     }
 
-        if ($request->filled('academic_rank') && $request->academic_rank !== '') {
-            $query->where('academic_rank', $request->academic_rank);
-        }
+    //     if ($request->filled('academic_rank') && $request->academic_rank !== '') {
+    //         $query->where('academic_rank', $request->academic_rank);
+    //     }
 
-        $teachers = $query->get();
+    //     $teachers = $query->get();
 
-        // Return Excel file or CSV
-        return response()->streamDownload(function () use ($teachers) {
-            $handle = fopen('php://output', 'w');
+    //     // Return Excel file or CSV
+    //     return response()->streamDownload(function () use ($teachers) {
+    //         $handle = fopen('php://output', 'w');
             
-            // CSV headers
-            fputcsv($handle, [
-                'Mã GV',
-                'Họ tên',
-                'Email',
-                'Điện thoại',
-                'Khoa/Bộ môn',
-                'Học hàm/Học vị',
-                'Chuyên ngành',
-                'Chức vụ',
-                'Phòng làm việc',
-                'Ngày tạo'
-            ]);
+    //         // CSV headers
+    //         fputcsv($handle, [
+    //             'Mã GV',
+    //             'Họ tên',
+    //             'Email',
+    //             'Điện thoại',
+    //             'Khoa/Bộ môn',
+    //             'Học hàm/Học vị',
+    //             'Chuyên ngành',
+    //             'Chức vụ',
+    //             'Phòng làm việc',
+    //             'Ngày tạo'
+    //         ]);
 
-            // Data rows
-            foreach ($teachers as $teacher) {
-                fputcsv($handle, [
-                    $teacher->teacher_code ?? '',
-                    $teacher->user->name ?? '',
-                    $teacher->user->email ?? '',
-                    $teacher->user->phone ?? '',
-                    $teacher->department->name ?? '',
-                    $teacher->academic_rank ?? '',
-                    $teacher->specialization ?? '',
-                    $teacher->position ?? '',
-                    $teacher->office_location ?? '',
-                    $teacher->created_at->format('d/m/Y H:i')
-                ]);
-            }
+    //         // Data rows
+    //         foreach ($teachers as $teacher) {
+    //             fputcsv($handle, [
+    //                 $teacher->teacher_code ?? '',
+    //                 $teacher->user->name ?? '',
+    //                 $teacher->user->email ?? '',
+    //                 $teacher->user->phone ?? '',
+    //                 $teacher->department->name ?? '',
+    //                 $teacher->academic_rank ?? '',
+    //                 $teacher->specialization ?? '',
+    //                 $teacher->position ?? '',
+    //                 $teacher->office_location ?? '',
+    //                 $teacher->created_at->format('d/m/Y H:i')
+    //             ]);
+    //         }
 
-            fclose($handle);
-        }, 'danh-sach-giang-vien-' . date('Y-m-d') . '.csv', [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="danh-sach-giang-vien-' . date('Y-m-d') . '.csv"',
-        ]);
-    }
+    //         fclose($handle);
+    //     }, 'danh-sach-giang-vien-' . date('Y-m-d') . '.csv', [
+    //         'Content-Type' => 'text/csv',
+    //         'Content-Disposition' => 'attachment; filename="danh-sach-giang-vien-' . date('Y-m-d') . '.csv"',
+    //     ]);
+    // }
 
-    /**
-     * Get teachers data for AJAX requests (for datatables or live search)
-     */
     public function getData(Request $request)
     {
         $query = Teacher::with(['user', 'department']);
@@ -254,22 +242,12 @@ class TeacherController extends Controller
         ]);
     }
 
-    /**
-     * Bulk actions for multiple teachers
-     */
-    
-    /**
-     * Show the form for creating a new teacher
-     */
     public function create()
     {
         $departments = Department::orderBy('name')->get();
         return view('admin.contact.teacher.create', compact('departments'));
     }
 
-    /**
-     * Store a newly created teacher
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -285,7 +263,14 @@ class TeacherController extends Controller
             'office_location' => 'nullable|string|max:100',
             'office_hours' => 'nullable|string',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        ],[
+            'name.required' => 'Tên giảng viên là bắt buộc',
+            'email.unique' => 'Email đã được sử dụng',
+            'teacher_code.unique' => 'Mã giảng viên đã tồn tại',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
+            'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB',
+        ]
+    );
 
         $user = User::create([
             'name' => $validated['name'],
@@ -317,9 +302,6 @@ class TeacherController extends Controller
             ->with('success', 'Giảng viên đã được tạo thành công!');
     }
 
-    /**
-     * Display the specified teacher
-     */
     public function show($id)
     {
         $teacher = Teacher::with(['user', 'department'])->findOrFail($id);

@@ -12,16 +12,10 @@ class NotifycationController extends Controller
 {
     public function notification(Request $request){
         $notification_categories = NotificationCategory::all();
-        
-        // Khởi tạo query
         $query = Notification::with(['user', 'category']);
-        
-        // Filter theo danh mục
         if ($request->filled('category') && $request->category != 'all') {
             $query->where('category_id', $request->category);
         }
-        
-        // Filter theo nguồn (user department)
         if ($request->filled('source') && $request->source != 'all') {
             $query->whereHas('user.managedDepartment', function($q) use ($request) {
                 switch($request->source) {
@@ -97,11 +91,9 @@ class NotifycationController extends Controller
         $notification_categories = NotificationCategory::all();
         $current_category = NotificationCategory::findOrFail($category_id);
         
-        // Khởi tạo query với category filter
         $query = Notification::with(['user', 'category'])
             ->where('category_id', $category_id);
         
-        // Filter theo nguồn
         if ($request->filled('source') && $request->source != 'all') {
             $query->whereHas('user.managedDepartment', function($q) use ($request) {
                 switch($request->source) {
@@ -121,7 +113,6 @@ class NotifycationController extends Controller
             });
         }
         
-        // Filter theo từ khóa
         if ($request->filled('search')) {
             $query->where(function($q) use ($request) {
                 $q->where('title', 'like', '%' . $request->search . '%')
@@ -129,7 +120,6 @@ class NotifycationController extends Controller
             });
         }
         
-        // Sắp xếp
         $sort = $request->get('sort', 'newest');
         switch($sort) {
             case 'oldest':
@@ -161,7 +151,6 @@ class NotifycationController extends Controller
             ->with('current_filters', $request->all());
     }
 
-    // Xem chi tiết một thông báo
     public function show($id)
     {
         $notification = Notification::with(['user', 'category'])->findOrFail($id);
@@ -205,7 +194,6 @@ class NotifycationController extends Controller
 
         $imagePaths = [];
         
-        // Xử lý upload nhiều hình ảnh
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('notifications', 'public');
@@ -221,7 +209,6 @@ class NotifycationController extends Controller
             'images' => !empty($imagePaths) ? implode(',', $imagePaths) : null
         ]);
 
-        // Check if request is AJAX
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,

@@ -79,9 +79,13 @@ class NotificationController extends Controller
             'content' => 'required|string',
             'category_id' => 'nullable|exists:notification_categories,id',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ],[
+            'title.required' => 'Tiêu đề không được để trống',
+            'content.required' => 'Nội dung không được bỏ trống',
+            'images.*.image' => 'Mỗi file tải lên phải là hình ảnh',
+            'images.*.max' => 'Ảnh không được lớn hơn 2MB',
         ]);
 
-        // Handle file uploads if images exist
         $imagePaths = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {

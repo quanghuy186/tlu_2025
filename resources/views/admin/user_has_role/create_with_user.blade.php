@@ -56,8 +56,6 @@
                                 </div>
                             @endif
                         @endforeach
-
-
                       </div>
                     </div>
                   </div>
@@ -81,3 +79,72 @@
 
 
 @endsection
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const specialRoles = [1, 2, 3]; // Hoặc {!! $specialRoles ?? '[1, 2, 3]' !!};
+      
+      const roleCheckboxes = document.querySelectorAll('input[name="role_id[]"]');
+      
+      roleCheckboxes.forEach(function(checkbox) {
+          checkbox.addEventListener('change', function() {
+              const roleId = parseInt(this.value);
+              if (this.checked && specialRoles.includes(roleId)) {
+                  hideOtherSpecialRoles(roleId);
+              } else if (!this.checked && specialRoles.includes(roleId)) {
+                  showAllSpecialRoles();
+              }
+          });
+      });
+      
+      function hideOtherSpecialRoles(selectedRoleId) {
+          roleCheckboxes.forEach(function(checkbox) {
+              const roleId = parseInt(checkbox.value);
+              const roleContainer = checkbox.closest('.col-md-6');
+              
+              if (specialRoles.includes(roleId) && roleId !== selectedRoleId) {
+                  roleContainer.style.display = 'none';
+                  checkbox.checked = false; // Bỏ chọn vai trò
+              }
+          });
+      }
+      
+      function showAllSpecialRoles() {
+          let anySpecialRoleSelected = false;
+          
+          roleCheckboxes.forEach(function(checkbox) {
+              const roleId = parseInt(checkbox.value);
+              if (checkbox.checked && specialRoles.includes(roleId)) {
+                  anySpecialRoleSelected = true;
+              }
+          });
+          
+          if (!anySpecialRoleSelected) {
+              roleCheckboxes.forEach(function(checkbox) {
+                  const roleId = parseInt(checkbox.value);
+                  const roleContainer = checkbox.closest('.col-md-6');
+                  
+                  if (specialRoles.includes(roleId)) {
+                      roleContainer.style.display = '';
+                  }
+              });
+          }
+      }
+      
+      function checkInitialState() {
+          let selectedSpecialRole = null;
+          
+          roleCheckboxes.forEach(function(checkbox) {
+              const roleId = parseInt(checkbox.value);
+              if (checkbox.checked && specialRoles.includes(roleId)) {
+                  selectedSpecialRole = roleId;
+              }
+          });
+          
+          if (selectedSpecialRole) {
+              hideOtherSpecialRoles(selectedSpecialRole);
+          }
+      }
+      
+      checkInitialState();
+  });
+</script>

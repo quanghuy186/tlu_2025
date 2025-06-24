@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
+use App\Models\Teacher;
 use App\Models\UserHasPermission;
 use App\Models\UserHasRole;
 use Illuminate\Support\Facades\Hash;
@@ -22,10 +23,8 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 class UserController extends Controller
 {
     public function index(Request $request){
-        // Khởi tạo query
         $query = User::query();
         
-        // Tìm kiếm
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -34,17 +33,14 @@ class UserController extends Controller
             });
         }
         
-        // Lọc theo trạng thái kích hoạt
         if ($request->has('email_verified') && $request->email_verified != '') {
             $query->where('email_verified', $request->email_verified);
         }
         
-        // Lọc theo trạng thái tài khoản
         if ($request->has('is_active') && $request->is_active != '') {
             $query->where('is_active', $request->is_active);
         }
         
-        // Lọc theo vai trò
          if ($request->has('role_id') && $request->role_id != '') {
             $query->whereHas('roles', function($q) use ($request) {
                 $q->where('role_id', $request->role_id);
@@ -56,19 +52,16 @@ class UserController extends Controller
         $sortOrder = $request->get('sort_order', 'desc');
         $query->orderBy($sortField, $sortOrder);
         
-        // Số lượng items trên mỗi trang
         $perPage = $request->get('per_page', 10);
         
         // Phân trang với giữ lại các tham số tìm kiếm
         $users = $query->paginate($perPage)->appends($request->all());
         
-        // Lấy danh sách roles để hiển thị trong dropdown filter
         $roles = Role::all();
         
         return view('admin.user.index', compact('users', 'roles'));
     }
 
-    // Các phương thức khác giữ nguyên như cũ...
     
     public function showDepartment(){
         $users = DB::table('users')->get();
@@ -127,13 +120,12 @@ class UserController extends Controller
         $sheet->getColumnDimension('D')->setWidth(50);
         $sheet->getColumnDimension('E')->setWidth(50);
         
-        // Chuẩn bị header cho việc download
+        // download
         $filename = 'user_import_template.xlsx';
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
         
-        // Tạo file writer và gửi output tới browser
         $writer = new Xlsx($spreadsheet);
         $writer->save('php://output');
         exit;
@@ -281,7 +273,6 @@ class UserController extends Controller
             
             $user_role_id = $request->role_id;
             
-            // Now we can use $user->id
             if ($user_role_id == 1) {
                 DB::table('students')->insert([
                     'user_id' => $user->id,
@@ -367,6 +358,15 @@ class UserController extends Controller
             $user = User::findOrFail($id);
             $userName = $user->name;
             DB::table('user_has_roles')->where('user_id', $id)->delete();
+            DB::table('students')->where('user_id', $id)->delete();
+            DB::table('teachers')->where('user_id', $id)->delete();
+            if ($user->managedDepartment) {
+                $departmentId = $user->managedDepartment->id;
+                ClassRoom::where('department_id', $departmentId)->update(['department_id' => null]);
+                Teacher::where('department_id', $departmentId)->update(['department_id' => null]);
+                DB::table('departments')->where('user_id', $id)->update(['user_id' => null]);
+            }
+
             $user->delete();
             DB::commit();
             
@@ -382,7 +382,6 @@ class UserController extends Controller
     public function bulkDestroy(Request $request)
     {
         try {
-            // Validate input
             $request->validate([
                 'user_ids' => 'required|string'
             ]);
@@ -403,15 +402,11 @@ class UserController extends Controller
             
             DB::beginTransaction();
             
-            // Lấy thông tin users trước khi xóa
             $users = User::whereIn('id', $userIds)->get();
             $userNames = $users->pluck('name')->toArray();
             
-            // Xóa các quan hệ liên quan
             DB::table('user_has_roles')->whereIn('user_id', $userIds)->delete();
             DB::table('user_has_permissions')->whereIn('user_id', $userIds)->delete();
-            
-            // Xóa students hoặc teachers nếu có
             DB::table('students')->whereIn('user_id', $userIds)->delete();
             DB::table('teachers')->whereIn('user_id', $userIds)->delete();
             

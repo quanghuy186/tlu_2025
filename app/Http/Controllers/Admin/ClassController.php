@@ -87,26 +87,15 @@ class ClassController extends Controller
                 'class_code.string' => 'Mã lớp học phải là chuỗi ký tự',
                 'class_code.max' => 'Mã lớp học không được vượt quá 20 ký tự',
                 'class_code.unique' => 'Mã lớp học đã tồn tại, vui lòng chọn mã khác',
-                
-                // Messages cho class_name
                 'class_name.required' => 'Vui lòng nhập tên lớp học',
                 'class_name.string' => 'Tên lớp học phải là chuỗi ký tự',
                 'class_name.max' => 'Tên lớp học không được vượt quá 100 ký tự',
-                
-                // Messages cho department_id
                 'department_id.exists' => 'Khoa/Phòng ban được chọn không tồn tại',
-                
-                // Messages cho academic_year
                 'academic_year.required' => 'Vui lòng nhập năm học',
                 'academic_year.string' => 'Năm học phải là chuỗi ký tự',
                 'academic_year.max' => 'Năm học không được vượt quá 20 ký tự',
-                
-                // Messages cho semester
                 'semester.string' => 'Học kỳ phải là chuỗi ký tự',
                 'semester.max' => 'Học kỳ không được vượt quá 20 ký tự',
-                
-                // Messages cho teacher_id
-
         ]);
 
         // Tạo lớp học mới

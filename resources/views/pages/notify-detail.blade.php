@@ -22,7 +22,6 @@
     </div>
 </section>
 
-<!-- Notification Detail Section -->
 <section class="notification-detail-section">
     <div class="container">
         <div class="row">
@@ -53,7 +52,6 @@
                         </div>
                     </div>
 
-                    <!-- Featured Image -->
                     @if($notification->images)
                         <div class="notification-images">
                             @php
@@ -92,12 +90,10 @@
                         </div>
                     @endif
 
-                    <!-- Content -->
                     <div class="notification-content">
                         {!! nl2br(e($notification->content)) !!}
                     </div>
 
-                    <!-- Share Buttons -->
                     <div class="share-section">
                         <h5>Chia sẻ thông báo:</h5>
                         <div class="share-buttons">
@@ -190,7 +186,6 @@
                     </div>
                 </div>
 
-                <!-- Categories -->
                 <div class="sidebar-card">
                     <h3 class="sidebar-title">Danh mục thông báo</h3>
                     <ul class="categories-list">
@@ -206,7 +201,6 @@
                     </ul>
                 </div>
 
-                <!-- Recent Announcements -->
                 <div class="sidebar-card">
                     <h3 class="sidebar-title">Thông báo gần đây</h3>
                     <ul class="recent-posts">

@@ -283,7 +283,7 @@
                 <div class="col-md-5">
                     <div class="left-panel">
                         <div class="decoration decoration-1"></div>
-                        <div class="decoration decoration-2"></div>
+                        {{-- <div class="decoration decoration-2"></div> --}}
 
                         <h3>Tham gia cộng đồng TLU</h3>
                         <p>Hãy đăng ký tài khoản để truy cập vào hệ thống tra cứu và trao đổi thông tin để kết nối với cộng đồng Đại học Thủy Lợi.</p>
@@ -355,7 +355,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-text mb-3">Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số.</div>
                             @if ($errors->has('password'))
 								<div class="text-danger alert alert-danger">{{ $errors->first('password') }}</div>
 							@endif

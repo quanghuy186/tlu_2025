@@ -26,10 +26,10 @@
                     <div class="row mb-3">
                         <label for="title" class="col-sm-2 col-form-label">Tiêu đề <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title') }}" required>
-                            @error('title')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}">
+                            @if($errors->has('title'))
+								<div class="text-danger alert alert-danger">{{ $errors->first('title') }}</div>
+							@endif
                         </div>
                     </div>
                     
@@ -71,17 +71,6 @@
                         </div>
                     </div>
                     
-                    {{-- <div class="row mb-3">
-                        <label for="tags" class="col-sm-2 col-form-label">Thẻ</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control @error('tags') is-invalid @enderror" id="tags" name="tags" value="{{ old('tags') }}" placeholder="Thêm thẻ (phân cách bằng dấu phẩy)">
-                            @error('tags')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <small class="text-muted">Ví dụ: toán cao cấp, kinh nghiệm học tập, tài liệu</small>
-                        </div>
-                    </div> --}}
-                    
                     <div class="row mb-3">
                         <div class="col-sm-10 offset-sm-2">
                             <div class="form-check">
@@ -92,17 +81,6 @@
                             </div>
                         </div>
                     </div>
-                    
-                    {{-- <div class="row mb-3">
-                        <div class="col-sm-10 offset-sm-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="notify_replies" name="notify_replies" {{ old('notify_replies') ? 'checked' : '' }} checked>
-                                <label class="form-check-label" for="notify_replies">
-                                    Thông báo cho tôi khi có bình luận mới
-                                </label>
-                            </div>
-                        </div>
-                    </div> --}}
                 </form>
             </div>
             <div class="modal-footer">
@@ -114,8 +92,6 @@
     </div>
 </div>
 
-
-<!-- Breadcrumb -->
 <div class="breadcrumb-container">
     <div class="container">
         <nav aria-label="breadcrumb">
@@ -127,10 +103,6 @@
     </div>
 </div>
 
-
-
-
-<!-- Thêm phần tab để xem các bài viết theo trạng thái -->
 <div class="container my-4">
     <div class="row">
         <div class="col-12">
@@ -168,7 +140,6 @@
                     </ul>
                     
                     <div class="tab-content" id="myPostsTabContent">
-                        <!-- Tab tất cả bài viết -->
                         <div class="tab-pane fade show active" id="posts-all" role="tabpanel" aria-labelledby="posts-all-tab">
                             @if(isset($userPosts) && count($userPosts) > 0)
                                 <div class="table-responsive">
@@ -387,8 +358,6 @@
     </div>
 </div>
 
-
-
 <!-- Modal xem lý do từ chối -->
 <div class="modal fade" id="rejectionReasonModal" tabindex="-1" aria-labelledby="rejectionReasonModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -458,7 +427,6 @@
                             @error('content')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <small class="text-muted">Hỗ trợ định dạng Markdown</small>
                         </div>
                     </div>
                     
@@ -486,17 +454,6 @@
                                 <input class="form-check-input" type="checkbox" id="edit_is_anonymous" name="is_anonymous">
                                 <label class="form-check-label" for="edit_is_anonymous">
                                     Đăng ẩn danh (người xem sẽ không thấy tên tác giả)
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-sm-10 offset-sm-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="edit_notify_replies" name="notify_replies" checked>
-                                <label class="form-check-label" for="edit_notify_replies">
-                                    Thông báo cho tôi khi có bình luận mới
                                 </label>
                             </div>
                         </div>
@@ -898,7 +855,6 @@
     <i class="fas fa-plus"></i>
 </a>
 
-
 <!-- JavaScript để xử lý chức năng -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -944,12 +900,9 @@
             // Mở modal chỉnh sửa
             var editModal = new bootstrap.Modal(document.getElementById('editPostModal'));
             
-            // Tải dữ liệu bài viết bằng AJAX (giả lập)
-            // Trong thực tế, bạn sẽ cần gọi API để lấy dữ liệu bài viết
             fetch(`/api/forum/posts/${postId}`)
                 .then(response => response.json())
                 .then(data => {
-                    // Điền dữ liệu vào form
                     document.getElementById('edit_title').value = data.title;
                     document.getElementById('edit_category_id').value = data.category_id;
                     document.getElementById('edit_content').value = data.content;
@@ -957,7 +910,6 @@
                     document.getElementById('edit_is_anonymous').checked = data.is_anonymous;
                     document.getElementById('edit_notify_replies').checked = data.notify_replies;
                     
-                    // Hiển thị hình ảnh hiện tại (nếu có)
                     var imageContainer = document.getElementById('image_preview_container');
                     imageContainer.innerHTML = '';
                     

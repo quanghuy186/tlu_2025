@@ -55,21 +55,7 @@ class RoleController extends Controller
     {
         $role = Role::findOrFail($id);
 
-        // Validate the input
-        // $validator = Validator::make($request->all(), [
-        //     'role_name' => 'required|string|max:100|unique:roles,role_name,' . $id,
-        //     'description' => 'nullable|string|max:255',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return redirect()
-        //         ->route('admin.role.edit', $id)
-        //         ->withErrors($validator)
-        //         ->withInput();
-        // }
-
         try {
-            // Update the role
             $role->update([
                 'role_name' => $request->input('role_name'),
                 'description' => $request->input('description'),

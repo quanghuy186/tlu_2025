@@ -26,7 +26,6 @@ class PermissionController extends Controller
                 'permission_name' => 'required|unique:permissions,permission_name|max:255',
                 'description' => 'required|max:1000',
             ], [
-                // Thông báo lỗi bằng tiếng Việt
                 'permission_name.required' => 'Tên quyền truy cập là bắt buộc',
                 'permission_name.unique' => 'Tên quyền truy cập này đã tồn tại',
                 'permission_name.max' => 'Tên quyền truy cập không được vượt quá 255 ký tự',
@@ -34,7 +33,6 @@ class PermissionController extends Controller
                 'description.max' => 'Mô tả không được vượt quá 1000 ký tự',
             ]);
 
-            // Create the new permission
             Permission::create([
                 'permission_name' => $validated['permission_name'],
                 'description' => $validated['description'] ?? null,
@@ -56,21 +54,7 @@ class PermissionController extends Controller
     {
         $permission = Permission::findOrFail($id);
 
-        // Validate the input
-        // $validator = Validator::make($request->all(), [
-        //     'permission_name' => 'required|string|max:100|unique:permissions,permission_name,' . $id,
-        //     'description' => 'nullable|string|max:255',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return redirect()
-        //         ->route('admin.permission.edit', $id)
-        //         ->withErrors($validator)
-        //         ->withInput();
-        // }
-
         try {
-            // Update the permission
             $permission->update([
                 'permission_name' => $request->input('permission_name'),
                 'description' => $request->input('description'),

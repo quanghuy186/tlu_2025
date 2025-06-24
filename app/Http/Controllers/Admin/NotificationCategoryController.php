@@ -29,6 +29,9 @@ class NotificationCategoryController extends Controller
             'description' => 'nullable|string',
             'icon' => 'nullable|string|max:50',
             'display_order' => 'nullable|integer',
+        ],[
+            'name.required' => 'Tên thông báo khồn được  để  trống',
+            'slug.unique' => 'Slug đã tồn tại, vui lòng chọn slug khác',
         ]);
 
         $category = new NotificationCategory();
@@ -55,11 +58,14 @@ class NotificationCategoryController extends Controller
         $category = NotificationCategory::findOrFail($id);
         
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|max:255',
             'slug' => 'nullable|string|max:255|unique:notification_categories,slug,' . $id,
-            'description' => 'nullable|string',
+            'description' => 'nullable',
             'icon' => 'nullable|string|max:50',
             'display_order' => 'nullable|integer',
+        ],[
+            'name.required' => 'Tên thông báo khồn được  để  trống',
+            'slug.unique' => 'Slug đã tồn tại, vui lòng chọn slug khác',
         ]);
 
         $category->name = $request->name;

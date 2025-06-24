@@ -170,12 +170,12 @@ class ForumController extends Controller
         ], [
             'title.required' => 'Vui lòng điền tiêu đề',
             'content.required' => 'Vui lòng điền nội dung',
+            'images.*.image' => 'Tệp tải lên phải là hình ảnh hợp lệ',
+            'images.*.max' => 'Ảnh không được lớn hơn 2MB',
         ]);
         
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->back()->with('Bài viết chưa được đăng vui lòng kiểm tra lại nội dung');
         }
 
         $imagesPath = [];
@@ -210,7 +210,7 @@ class ForumController extends Controller
         $validator = Validator::make($request->all(), [
             'post_id' => 'required|exists:forum_posts,id',
             'title' => 'required|string|max:255',
-            'category_id' => 'required|exists:forum_categories,id',
+            'category_id' => 'nullable|exists:forum_categories,id',
             'content' => 'required|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);

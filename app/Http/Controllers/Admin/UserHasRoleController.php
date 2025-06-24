@@ -43,13 +43,53 @@ class UserHasRoleController extends Controller
         return redirect(route('admin.user.index'))->with('success', "Gán vai trò thành công");
     }
 
-    public function create_with_user($id){
+    // public function create_with_user($id){
+    //     $user = User::find($id);
+    //     $list_roles = Role::all();
+    //     $list_user_has_roles = UserHasRole::where('user_id', $user->id)->pluck('role_id')->toArray();
+    //     return view('admin.user_has_role.create_with_user')
+    //     ->with('list_roles', $list_roles)
+    //     ->with('id', $id)->with('user', $user)
+    //     ->with('list_user_has_roles', $list_user_has_roles);
+    // }
+
+    public function create_with_user($id)
+    {
         $user = User::find($id);
-        $list_roles = Role::all();
+        
+        $allRoles = Role::all();
+        
         $list_user_has_roles = UserHasRole::where('user_id', $user->id)->pluck('role_id')->toArray();
+        
+        $specialRoles = [1, 2, 3];
+        
+        $hasSpecialRole = !empty(array_intersect($list_user_has_roles, $specialRoles));
+        
+        $userSpecialRoles = array_intersect($list_user_has_roles, $specialRoles);
+        
+        if ($hasSpecialRole) {
+            $list_roles = $allRoles->filter(function($role) use ($userSpecialRoles, $specialRoles) {
+                if (in_array($role->id, $userSpecialRoles)) {
+                    return true;
+                }
+                
+                if (!in_array($role->id, $specialRoles)) {
+                    return true;
+                }
+                
+                return false;
+            });
+        } else {
+            $list_roles = $allRoles;
+        }
+        
+        $specialRolesJson = json_encode($specialRoles);
+        
         return view('admin.user_has_role.create_with_user')
-        ->with('list_roles', $list_roles)
-        ->with('id', $id)->with('user', $user)
-        ->with('list_user_has_roles', $list_user_has_roles);
+            ->with('list_roles', $list_roles)
+            ->with('id', $id)
+            ->with('user', $user)
+            ->with('list_user_has_roles', $list_user_has_roles)
+            ->with('specialRoles', $specialRolesJson);
     }
 }

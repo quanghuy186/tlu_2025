@@ -14,7 +14,6 @@ class StudentSeeder extends Seeder
     {
         $faker = Faker::create('vi_VN');
         
-        // Lấy tất cả các lớp đã có
         $classes = DB::table('classes')->get();
         
         $users = [];
@@ -28,7 +27,6 @@ class StudentSeeder extends Seeder
         // Tạo danh sách mã sinh viên duy nhất
         $usedStudentCodes = [];
         
-        // Danh sách họ và tên phổ biến Việt Nam
         $lastNames = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Vũ', 'Võ', 'Đặng', 'Bùi', 'Đỗ', 'Hồ', 'Ngô', 'Dương', 'Lý'];
         $maleFirstNames = ['Anh', 'Bảo', 'Cường', 'Dũng', 'Đức', 'Hải', 'Hoàng', 'Hùng', 'Khang', 'Long', 'Minh', 'Nam', 'Phúc', 'Quang', 'Sơn', 'Thành', 'Tuấn', 'Việt'];
         $femaleFirstNames = ['An', 'Anh', 'Chi', 'Dung', 'Giang', 'Hà', 'Hạnh', 'Hương', 'Lan', 'Linh', 'Mai', 'My', 'Nga', 'Phương', 'Thảo', 'Thu', 'Trang', 'Vy'];
@@ -143,8 +141,8 @@ class StudentSeeder extends Seeder
             echo "  Batch " . ($index + 1) . "/" . count($roleChunks) . " completed\n";
         }
         
-        echo "\n✅ Successfully created " . count($students) . " students for " . count($classes) . " classes\n";
-        echo "📊 Trung bình: " . round(count($students) / count($classes), 1) . " sinh viên/lớp\n";
+        echo "\nSuccessfully created " . count($students) . " students for " . count($classes) . " classes\n";
+        echo "Trung bình: " . round(count($students) / count($classes), 1) . " sinh viên/lớp\n";
     }
     
     /**
@@ -160,18 +158,18 @@ class StudentSeeder extends Seeder
         
         foreach ($popularMajors as $major) {
             if (strpos($classCode, $major) !== false) {
-                return rand(35, 45); // 35-45 sinh viên
+                return rand(10, 15); // 35-45 sinh viên
             }
         }
         
         foreach ($mediumMajors as $major) {
             if (strpos($classCode, $major) !== false) {
-                return rand(25, 35); // 25-35 sinh viên
+                return rand(10, 25); // 25-35 sinh viên
             }
         }
         
         // Các ngành khác
-        return rand(20, 30); // 20-30 sinh viên
+        return rand(10, 20); // 20-30 sinh viên
     }
     
     /**

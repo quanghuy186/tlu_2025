@@ -107,7 +107,6 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate dữ liệu
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -118,9 +117,14 @@ class StudentController extends Controller
             'program' => 'nullable|string|max:50',
             'graduation_status' => 'nullable|string|max:20',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ],[
+            'name.required' => 'Tên sinh viên là bắt buộc',
+            'email.unique' => 'Email đã được sử dụng',
+            'student_code.unique' => 'Mã sinh viên đã tồn tại',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
+            'avatar.max' => 'Ảnh đại diện không được vượt quá 2MB',
         ]);
 
-        // Tạo user mới
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -203,6 +207,12 @@ class StudentController extends Controller
             'graduation_status' => 'nullable|string|max:20',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'password' => 'nullable|string|min:8',
+        ],[
+            'name.required' => 'Tên sinh viên là bắt buộc',
+            'email.unique' => 'Email đã được sử dụng',
+            'student_code.unique' => 'Mã sinh viên đã tồn tại',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
+            'avatar.max' => 'Ảnh đại diện không được vượt quá 2MB',
         ]);
 
         // Cập nhật thông tin user

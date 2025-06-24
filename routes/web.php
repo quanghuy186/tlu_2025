@@ -248,10 +248,10 @@ Route::prefix('admin/forum')->name('admin.forum.')->middleware(['auth', 'manager
         Route::get('/create', [ForumPostController::class, 'create'])->name('create');
         Route::post('/store', [ForumPostController::class, 'store'])->name('store');
         Route::post('/bulk-delete', [ForumPostController::class, 'bulkDelete'])->name('bulk-delete');
-    Route::post('/bulk-update-status', [ForumPostController::class, 'bulkUpdateStatus'])->name('bulk-update-status');
+        Route::post('/bulk-update-status', [ForumPostController::class, 'bulkUpdateStatus'])->name('bulk-update-status');
         Route::get('/{id}', [ForumPostController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [ForumPostController::class, 'edit'])->name('edit');
-        Route::post('/{id}/update', [ForumPostController::class, 'update'])->name('update');
+        Route::put('/{id}/update', [ForumPostController::class, 'update'])->name('update');
         Route::delete('/{id}', [ForumPostController::class, 'destroy'])->name('destroy');
     
         // Routes cho quản lý bài viết

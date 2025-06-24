@@ -47,14 +47,13 @@ class ForumPostController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
-            'category_id' => 'required|exists:forum_categories,id',
+            'category_id' => 'nullable|exists:forum_categories,id',
             'content' => 'required',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_anonymous' => 'boolean',
         ], [
             'title.required' => 'Tiêu đề không được để trống',
             'title.max' => 'Tiêu đề không được vượt quá 255 ký tự',
-            'category_id.required' => 'Danh mục không được để trống',
             'category_id.exists' => 'Danh mục không tồn tại hoặc đã bị xóa',
             'content.required' => 'Nội dung không được để trống',
             'images.*.image' => 'Tệp tải lên phải là hình ảnh',
@@ -126,18 +125,14 @@ class ForumPostController extends Controller
         
        $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
-            'category_id' => 'required|exists:forum_categories,id',
+            'category_id' => 'nullable|exists:forum_categories,id',
             'content' => 'required',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
             'title.required' => 'Tiêu đề không được để trống',
             'title.max' => 'Tiêu đề không được vượt quá 255 ký tự',
-
-            'category_id.required' => 'Danh mục không được để trống',
             'category_id.exists' => 'Danh mục đã chọn không tồn tại',
-
             'content.required' => 'Nội dung không được để trống',
-
             'images.*.image' => 'Mỗi tệp tải lên phải là hình ảnh',
             'images.*.mimes' => 'Ảnh chỉ chấp nhận các định dạng: jpeg, png, jpg, gif',
             'images.*.max' => 'Kích thước mỗi ảnh không được vượt quá 2MB',

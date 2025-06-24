@@ -15,10 +15,10 @@
                     <div class="row mb-3">
                         <label for="title" class="col-sm-2 col-form-label">Tiêu đề <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title') }}" required>
-                            @error('title')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title') }}">
+                            @if ($errors->has('title'))
+								<div class="text-danger alert alert-danger">{{ $errors->first('title') }}</div>
+							@endif
                         </div>
                     </div>
                     
@@ -52,7 +52,7 @@
                     <div class="row mb-3">
                         <label for="content" class="col-sm-2 col-form-label">Nội dung <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
-                            <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" rows="8" required>{{ old('content') }}</textarea>
+                            <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" rows="8">{{ old('content') }}</textarea>
                             @error('content')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

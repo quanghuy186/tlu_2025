@@ -29,18 +29,18 @@
                             <div class="row mb-3">
                                 <label for="title" class="col-sm-2 col-form-label">Tiêu đề <span class="text-danger">*</span></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title') }}" required>
+                                    <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title') }}">
 
                                     @if($errors->has('title'))
-                                        <div class="text-danger alert alert-danger small">{{ $errors->first('title') }}</div>
+                                        <div class="text-danger alert alert-danger small mt-2">{{ $errors->first('title') }}</div>
                                     @endif
                                 </div>
                             </div>
                             
                             <div class="row mb-3">
-                                <label for="category_id" class="col-sm-2 col-form-label">Danh mục <span class="text-danger">*</span></label>
+                                <label for="category_id" class="col-sm-2 col-form-label">Danh mục <span class="text-danger"></span></label>
                                 <div class="col-sm-10">
-                                    <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
+                                    <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id">
                                         <option value="">-- Chọn danh mục --</option>
                                         @foreach($categories as $category)
                                             <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -50,7 +50,7 @@
                                     </select>
                                     
                                     @if($errors->has('category_id'))
-                                        <div class="text-danger alert alert-danger small">{{ $errors->first('category_id') }}</div>
+                                        <div class="text-danger alert alert-danger small mt-2">{{ $errors->first('category_id') }}</div>
                                     @endif
                                 </div>
                             </div>
@@ -58,9 +58,9 @@
                             <div class="row mb-3">
                                 <label for="content" class="col-sm-2 col-form-label">Nội dung <span class="text-danger">*</span></label>
                                 <div class="col-sm-10">
-                                    <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" rows="8" required>{{ old('content') }}</textarea>
+                                    <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" rows="8">{{ old('content') }}</textarea>
                                     @if($errors->has('content'))
-                                        <div class="text-danger alert alert-danger small">{{ $errors->first('content') }}</div>
+                                        <div class="text-danger alert alert-danger small mt-2">{{ $errors->first('content') }}</div>
                                     @endif
                                     <small class="text-muted">Hỗ trợ định dạng Markdown</small>
                                 </div>
@@ -71,7 +71,7 @@
                                 <div class="col-sm-10">
                                     <input type="file" class="form-control @error('images.*') is-invalid @enderror" id="images" name="images[]" multiple accept="image/*">
                                     @if($errors->has('images.*'))
-                                        <div class="text-danger alert alert-danger small">{{ $errors->first('images.*') }}</div>
+                                        <div class="text-danger alert alert-danger small mt-2">{{ $errors->first('images.*') }}</div>
                                     @endif
                                     <small class="text-muted">Có thể chọn nhiều hình ảnh (JPG, PNG, GIF - Tối đa 2MB/ảnh)</small>
                                 </div>

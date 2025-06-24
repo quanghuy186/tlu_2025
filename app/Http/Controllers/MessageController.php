@@ -10,12 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
-    /**
-     * Hiển thị trang chat
-     */
     public function index(Request $request)
     {
-        // Lấy danh sách người dùng đã có lịch sử trò chuyện với người dùng hiện tại
         $users = $this->getUsersWithChatHistory();
         
         // Kiểm tra xem có người dùng mới được chọn từ danh bạ không
