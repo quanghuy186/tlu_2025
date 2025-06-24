@@ -127,7 +127,6 @@ class IndexController extends Controller
         }
     }
 
-    // Phương thức xử lý thông tin đơn vị
     private function validateAndUpdateDepartmentInfo(Request $request, $user)
     {
         $validator = Validator::make($request->input('department'), [
@@ -144,7 +143,6 @@ class IndexController extends Controller
         
         $departmentData = $request->input('department');
         
-        // Cập nhật thông tin đơn vị
         if ($user->managedDepartment) {
             $department = $user->managedDepartment;
             $department->name = $departmentData['name'];
