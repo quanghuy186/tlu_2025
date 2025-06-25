@@ -33,8 +33,13 @@ class ForumPostController extends Controller
         
         $posts = $query->orderBy('created_at', 'desc')->paginate(10);
         $categories = ForumCategory::all();
-        
-        return view('admin.forum.posts.index', compact('posts', 'categories'));
+
+        $toltal_post = ForumPost::all()->count();
+        $toltal_post_approved = ForumPost::where('status', 'approved')->count();
+        $toltal_post_reject_reason = ForumPost::where('status', 'reject_reason')->count();
+        $toltal_pendding = ForumPost::where('status', 'pendding')->count();
+
+        return view('admin.forum.posts.index', compact('posts', 'categories', 'toltal_post', 'toltal_post_approved', 'toltal_pendding', 'toltal_post_reject_reason'));
     }
 
     public function create()
@@ -95,11 +100,6 @@ class ForumPostController extends Controller
     {
         $post = ForumPost::with(['category', 'author', 'approver', 'comments'])->findOrFail($id);
         
-        // Tăng lượt xem nếu không phải là người tạo bài viết
-        // if (Auth::id() !== $post->user_id) {
-        //     $post->increment('view_count');
-        // }s
-
         $viewKey = "post_viewed_{$post->id}";
     
         if (!session()->has($viewKey) && Auth::id() !== $post->user_id) {
@@ -147,7 +147,6 @@ class ForumPostController extends Controller
 
         $imagesPath = $post->images ? json_decode($post->images, true) : [];
         
-        // Xử lý ảnh mới
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('forum/posts', 'public');
@@ -155,7 +154,6 @@ class ForumPostController extends Controller
             }
         }
         
-        // Xử lý xóa ảnh
         if ($request->has('remove_images')) {
             foreach ($request->remove_images as $index) {
                 if (isset($imagesPath[$index])) {

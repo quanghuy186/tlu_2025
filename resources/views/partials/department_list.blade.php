@@ -117,7 +117,7 @@
                                                     <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
                                                     <div class="staff-info">
                                                         <div class="staff-name">{{ $child->name }}</div>
-                                                        <div class="staff-position">Trưởng BM: {{ $child->manager->name }}</div>
+                                                        <div class="staff-position">Trưởng BM: {{ $child->manager->name ?? 'Chưa phân công' }}</div>
                                                     </div>
                                                 </div>
                                         @endforeach
@@ -131,7 +131,7 @@
                                             <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
                                             <div class="staff-info">
                                                 <div class="staff-name">{{ $child->name }}</div>
-                                                <div class="staff-position">Trưởng ngành: {{ $child->manager->name }}</div>
+                                                <div class="staff-position">Trưởng ngành: {{ $child->manager->name ?? 'Chưa phân công' }}</div>
                                             </div>
                                         </div>
                                     @endforeach
@@ -144,7 +144,7 @@
                                             <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
                                             <div class="staff-info">
                                                 <div class="staff-name">{{ $child->name }}</div>
-                                                <div class="staff-position">Trưởng đơn vị: {{ $child->manager->name }}</div>
+                                                <div class="staff-position">Trưởng đơn vị: {{ $child->manager->name ?? 'Chưa phân công' }}</div>
                                             </div>
                                         </div>
                                     @endforeach

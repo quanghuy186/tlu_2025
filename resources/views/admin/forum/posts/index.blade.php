@@ -13,6 +13,74 @@
     </nav>
 </div><!-- End Page Title -->
 
+<div class="row container">
+    <div class="col-xxl-3 col-md-6">
+        <div class="card info-card revenue-card">
+            <div class="card-body">
+                <h5 class="card-title">Tổng số bài viết</h5>
+                <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-file-text"></i>
+                    </div>
+                    <div class="ps-3">
+                        <span class="text-muted small">{{ $toltal_post }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xxl-3 col-md-6">
+        <div class="card info-card revenue-card">
+            <div class="card-body">
+                <h5 class="card-title">Bài viết đã duyệt</h5>
+                <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div class="ps-3">
+                        <span class="text-success small">
+                            {{ $toltal_post_approved }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xxl-3 col-md-6">
+        <div class="card info-card customers-card">
+            <div class="card-body">
+                <h5 class="card-title">Bài viết đang chờ duyệt</h5>
+                <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+                    <div class="ps-3">
+                        <span class="text-warning small">{{ $toltal_pendding }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xxl-3 col-md-6">
+        <div class="card info-card revenue-card">
+            <div class="card-body">
+                <h5 class="card-title">Bài viết bị từ chối</h5>
+                <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-x-circle"></i>
+                    </div>
+                    <div class="ps-3">
+                        <span class="text-danger small">{{ $toltal_post_reject_reason }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <section class="section py-4">
     <div class="container-fluid">
         <div class="row">
@@ -168,20 +236,13 @@
                                         <td>{{ $post->created_at->format('d/m/Y') }}</td>
                                         <td>
                                             <div class="d-flex justify-content-center gap-2">
-                                                <!-- View Post -->
                                                 <a href="{{ route('admin.forum.posts.show', $post->id) }}" data-bs-toggle="tooltip" data-bs-title="Xem chi tiết" class="btn btn-sm btn-info">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
                                                 
-                                                <!-- Edit Post (Only author or admin) -->
-                                                {{-- @if(auth()->id() == $post->user_id || auth()->user()->hasRole('admin')) --}}
                                                 <a href="{{ route('admin.forum.posts.edit', $post->id) }}" data-bs-toggle="tooltip" data-bs-title="Chỉnh sửa" class="btn btn-sm btn-primary">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>
-                                                {{-- @endif --}}
-                                                
-                                                <!-- Delete Post (Only author or admin) -->
-                                                {{-- @if(auth()->id() == $post->user_id || auth()->user()->hasRole('admin')) --}}
                                                 <a href="#" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#deleteConfirmModal"
@@ -191,7 +252,6 @@
                                                     class="btn btn-sm btn-danger">
                                                     <i class="bi bi-trash-fill"></i>
                                                 </a>
-                                                {{-- @endif --}}
                                             </div>
                                         </td>
                                     </tr>
