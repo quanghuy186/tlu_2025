@@ -25,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'censor' => \App\Http\Middleware\CensorMiddleware::class,
             'manager_admin' => \App\Http\Middleware\ManagerAdminMiddleware::class,
+            'redirect_admin' => \App\Http\Middleware\RedirectAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
