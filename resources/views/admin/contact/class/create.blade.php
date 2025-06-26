@@ -94,7 +94,7 @@
                                         </select>
                                     </div>
                                     
-                                    <div class="col-md-6 mb-3">
+                                    {{-- <div class="col-md-6 mb-3">
                                         <label for="semester" class="form-label">Học kỳ</label>
                                         <select class="form-select" id="semester" name="semester">
                                             <option value="">-- Chọn học kỳ --</option>
@@ -104,7 +104,7 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             

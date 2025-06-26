@@ -40,7 +40,7 @@
                                         <h4 class="mb-2">{{ $class->class_name }}</h4>
                                         <p class="text-muted mb-2">Mã lớp: <span class="badge bg-light text-dark">{{ $class->class_code }}</span></p>
                                         <p class="text-muted mb-3">Năm học: <span class="badge bg-info text-white">{{ $class->academic_year }}</span></p>
-                                        <p class="text-muted">Học kỳ: {{ $class->semester ?? 'Chưa xác định' }}</p>
+                                        {{-- <p class="text-muted">Học kỳ: {{ $class->semester ?? 'Chưa xác định' }}</p> --}}
                                     </div>
                                 </div>
                             </div>

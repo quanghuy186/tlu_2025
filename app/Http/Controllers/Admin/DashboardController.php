@@ -104,16 +104,11 @@ class DashboardController extends Controller
         
         $dailyDataJson = json_encode($dailyData);
         $monthlyDataJson = json_encode($monthlyData);
-        
+
 
         //thống kê tài khoản người dùng
         $count_account_success = User::where('is_active', 1)->where('email_verified', 1)->count();
         $count_account_error = User::where('is_active', 0)->orwhere('email_verified', 0)->count();
-
-        $count_account_success = User::where('is_active', 1)->where('email_verified', 1)->count();
-        $count_account_error = User::where('is_active', 0)->orwhere('email_verified', 0)->count();
-        
-        // User accounts daily data
         $userDailyData = [
             'active' => array_fill(0, $daysInMonth, 0),
             'inactive' => array_fill(0, $daysInMonth, 0),

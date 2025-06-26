@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PostApprovedMail;
 use App\Models\ForumCategory;
 use App\Models\ForumComment;
 use App\Models\ForumPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
@@ -210,7 +212,8 @@ class ForumPostController extends Controller
             'approved_at' => now(),
             'reject_reason' => null,
         ]);
-        
+        $author = $post->author;
+        Mail::to($author->email)->send(new PostApprovedMail($post));
         return redirect()->route('admin.forum.posts.show', $post->id)
             ->with('success', 'Bài viết đã được phê duyệt!');
     }

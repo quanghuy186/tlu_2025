@@ -93,22 +93,22 @@
                             <li>
                                 <i class="fas fa-phone"></i>
                                 <span class="detail-label">Điện thoại:</span>
-                                <span class="detail-value">{{ $student->phone ?? 'Chưa cập nhật' }}</span>
+                                <span class="detail-value">{{ $student->user->phone ?? 'Chưa cập nhật' }}</span>
                             </li>
                             <li>
                                 <i class="fas fa-map-marker-alt"></i>
                                 <span class="detail-label">Địa chỉ:</span>
-                                <span class="detail-value">{{ $student->address ?? 'Chưa cập nhật' }}</span>
+                                <span class="detail-value">{{ $student->user->address ?? 'Chưa cập nhật' }}</span>
                             </li>
                             <li>
                                 <i class="fas fa-calendar-alt"></i>
                                 <span class="detail-label">Ngày sinh:</span>
-                                <span class="detail-value">{{ $student->birthday ? date('d/m/Y', strtotime($student->birthday)) : 'Chưa cập nhật' }}</span>
+                                <span class="detail-value">{{ $student->user->birthday ? date('d/m/Y', strtotime($student->birthday)) : 'Chưa cập nhật' }}</span>
                             </li>
                             <li>
                                 <i class="fas fa-id-card"></i>
                                 <span class="detail-label">CCCD:</span>
-                                <span class="detail-value">{{ $student->id_card ?? 'Chưa cập nhật' }}</span>
+                                <span class="detail-value">{{ $student->user->id_card ?? 'Chưa cập nhật' }}</span>
                             </li>
                         </ul>
                     </div>

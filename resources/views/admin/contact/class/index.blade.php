@@ -16,9 +16,6 @@
 <section class="section py-4">
     <div class="container-fluid">
         <div class="row">
-
-            
-
             <div class="col-lg-12">
                 <!-- Search and Filter Card -->
                 <div class="card shadow-sm border-0 mb-4">
@@ -143,7 +140,6 @@
                                             <th>Giảng viên phụ trách</th>
                                             <th>Khoa/Bộ môn</th>
                                             <th>Năm học</th>
-                                            <th>Học kỳ</th>
                                             <th class="text-center" width="15%">Hành động</th>
                                         </tr>
                                     </thead>
@@ -184,7 +180,6 @@
                                                 @endif
                                             </td>
                                             <td><span class="badge bg-info text-white">{{ $class->academic_year }}</span></td>
-                                            <td>{{ $class->semester ?? 'Chưa xác định' }}</td>
                                             <td>
                                                 <div class="d-flex justify-content-center gap-2">
                                                     <!-- Edit Class -->

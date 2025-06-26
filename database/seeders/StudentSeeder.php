@@ -91,7 +91,6 @@ class StudentSeeder extends Seeder
                     'updated_at' => now(),
                 ];
                 
-                // Tạo student
                 $students[] = [
                     'id' => $studentId++,
                     'user_id' => $userId,
@@ -102,7 +101,6 @@ class StudentSeeder extends Seeder
                     'updated_at' => now(),
                 ];
                 
-                // Gán role sinh viên (role_id = 1)
                 $userHasRoles[] = [
                     'user_id' => $userId,
                     'role_id' => 1,
@@ -117,7 +115,6 @@ class StudentSeeder extends Seeder
             }
         }
         
-        // Insert dữ liệu theo batch
         echo "\nBắt đầu insert dữ liệu...\n";
         
         echo "Inserting " . count($users) . " users...\n";
@@ -144,10 +141,7 @@ class StudentSeeder extends Seeder
         echo "\nSuccessfully created " . count($students) . " students for " . count($classes) . " classes\n";
         echo "Trung bình: " . round(count($students) / count($classes), 1) . " sinh viên/lớp\n";
     }
-    
-    /**
-     * Xác định số lượng sinh viên theo lớp
-     */
+ 
     private function getStudentCountByClass($class)
     {
         $classCode = $class->class_code;
@@ -158,28 +152,22 @@ class StudentSeeder extends Seeder
         
         foreach ($popularMajors as $major) {
             if (strpos($classCode, $major) !== false) {
-                return rand(10, 15); // 35-45 sinh viên
+                return rand(35, 45); // 35-45 sinh viên
             }
         }
         
         foreach ($mediumMajors as $major) {
             if (strpos($classCode, $major) !== false) {
-                return rand(10, 25); // 25-35 sinh viên
+                return rand(25, 35); // 25-35 sinh viên
             }
         }
         
         // Các ngành khác
-        return rand(10, 20); // 20-30 sinh viên
+        return rand(20, 30); // 20-30 sinh viên
     }
     
-    /**
-     * Tạo mã sinh viên theo format chuẩn
-     */
     private function generateStudentCode($courseCode, $departmentId, $sequence)
     {
-        // Format: [Khóa][Mã ngành][Số thứ tự]
-        // Ví dụ: 63IT0001, 64BA0123
-        
         $majorCodes = [
             // Mapping department_id to major code
             41 => 'HY', 42 => 'CE', 43 => 'TE', 44 => 'CM',
@@ -199,9 +187,6 @@ class StudentSeeder extends Seeder
         return $courseCode . $majorCode . $sequenceNumber;
     }
     
-    /**
-     * Xác định trạng thái active dựa trên năm nhập học
-     */
     private function getActiveStatus($enrollmentYear)
     {
         $currentYear = 2024;
