@@ -65,7 +65,7 @@
         
         <p>Bài viết của bạn hiện đã có thể được xem bởi tất cả người dùng trên diễn đàn. Cảm ơn bạn đã đóng góp!</p>
         
-        <a href="{{ route('forum.posts.show', $post->id) }}" class="button">Xem bài viết</a>
+        <a href="{{ route('forum.post.show', $post->id) }}" class="button">Xem bài viết</a>
         
         <p>Nếu bạn có bất kỳ câu hỏi hoặc cần hỗ trợ gì, đừng ngần ngại liên hệ với chúng tôi.</p>
         
