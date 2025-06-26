@@ -54,7 +54,7 @@
     </div>
     
     <div class="content">
-        <p>Xin chào {{ $post->user->name }},</p>
+        <p>Xin chào {{ $post->author->name }},</p>
         
         <p>Chúng tôi vui mừng thông báo rằng bài viết của bạn đã được phê duyệt và đã được xuất bản trên diễn đàn.</p>
         
