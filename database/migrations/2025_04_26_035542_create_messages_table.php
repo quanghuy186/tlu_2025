@@ -21,8 +21,8 @@ return new class extends Migration
             $table->boolean('is_read')->default(false);
             $table->boolean('is_deleted')->default(false);
             $table->timestamp('sent_at')->useCurrent();
-            $table->foreign('sender_user_id')->references('id')->on('users');
-            $table->foreign('recipient_user_id')->references('id')->on('users');
+            $table->foreign('sender_user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('recipient_user_id')->references('id')->on('users')->onDelete('set null');
 
             $table->timestamps();
         });

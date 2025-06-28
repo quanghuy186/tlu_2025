@@ -34,13 +34,7 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-    // approved_by INTEGER REFERENCES users(user_id), -- Người duyệt bài
-    // approved_at TIMESTAMP, -- Thời điểm duyệt
-    // reject_reason TEXT, -- Lý do từ chối nếu có
-
-    /**
-     * Reverse the migrations.
-     */
+ 
     public function down(): void
     {
         Schema::dropIfExists('forum_posts');

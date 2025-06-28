@@ -34,11 +34,14 @@
         .button {
             display: inline-block;
             background-color: #007bff;
-            color: white;
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
             margin: 20px 0;
+        }
+
+        a{
+            color: #ffffff;
         }
         .post-info {
             background-color: #f8f9fa;

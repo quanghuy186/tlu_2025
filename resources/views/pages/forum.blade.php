@@ -796,14 +796,14 @@
                 <!-- Active Topics Card -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fas fa-fire me-2"></i> Chủ đề nổi bật
+                        <i class="fas fa-fire me-2"></i> Bài viết nổi bật
                     </div>
                     <div class="list-group list-group-flush">
-                        @forelse($latestPosts as $post)
-                            <a href="{{ route('forum.post', $post->id) }}" class="list-group-item list-group-item-action">
+                        @forelse($mostLikedPosts as $post)
+                            <a href="{{ route('forum.post.show', $post->id) }}" class="list-group-item list-group-item-action">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-truncate">{{ $post->title }}</span>
-                                    <span class="badge rounded-pill bg-primary">{{ $post->comments_count }}</span>
+                                    <span class="badge rounded-pill bg-primary">{{ $post->likes_count }}</span>
                                 </div>
                             </a>
                         @empty

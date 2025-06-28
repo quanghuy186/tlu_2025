@@ -83,6 +83,12 @@ class ForumController extends Controller
         }
 
         $latestPosts = $postsQuery->paginate($perPage)->withQueryString();
+        $mostLikedPosts = ForumPost::where('status', 'approved')
+                           ->with(['category', 'author'])
+                           ->withCount('likes')
+                           ->orderBy('likes_count', 'desc')
+                           ->take(10) 
+                           ->get();
 
         // Thống kê
         $totalPosts = ForumPost::where('status', 'approved')->count();
@@ -102,7 +108,8 @@ class ForumController extends Controller
             'search' => $search,
             'selectedCategory' => $categoryId,
             'sortBy' => $sortBy,
-            'perPage' => $perPage
+            'perPage' => $perPage,
+            'mostLikedPosts' => $mostLikedPosts
         ]);
     }
 
