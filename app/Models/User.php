@@ -22,6 +22,7 @@ class User extends Authenticatable
         'password',
         'phone',
         'avatar',
+        'address',
         'is_active',
         'verification_token',
         'verification_token_expiry',

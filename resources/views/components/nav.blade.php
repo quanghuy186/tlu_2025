@@ -117,8 +117,6 @@
             </div>
         </div>
     </nav>
-
-    <!-- Thêm vào đầu modal-body -->
     
 
 <div class="modal fade user-info-modal" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
@@ -130,6 +128,15 @@
             </div>
             
             <div class="modal-body">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <form id="updateProfileForm" action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -346,7 +353,7 @@
                                 <div class="form-group">
                                     <label for="email_department"><i class="fas fa-envelope"></i> Email đơn vị</label>
                                     <input type="email" class="form-control" id="email_department" name="department[email]" 
-                                           value="{{ Auth::user()->managedDepartment->email ?? 'Chưa cập nhật' }}">
+                                           value="{{ Auth::user()->managedDepartment->email ?? '' }}">
                                 </div>
                             </div>
                         </div>
@@ -419,12 +426,11 @@
                         </div>
                         
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" form="updateProfileForm" class="btn btn-primary">Lưu thay đổi</button>
+                    </div>
                 </form>
-            </div>
-            
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="submit" form="updateProfileForm" class="btn btn-primary">Lưu thay đổi</button>
             </div>
         </div>
     </div>
@@ -505,11 +511,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Modal event listeners using vanilla JavaScript
         const userInfoModal = document.getElementById('userInfoModal');
         if (userInfoModal) {
             userInfoModal.addEventListener('shown.bs.modal', function() {
-                // Kiểm tra nếu đang hiển thị form sinh viên
                 if (document.getElementById('role-form-1') && 
                     document.getElementById('role-form-1').style.display === 'block') {
                     loadClasses();
@@ -517,7 +521,6 @@
             });
         }
         
-        // Role selector change event
         const roleSelector = document.getElementById('role_selector');
         if (roleSelector) {
             roleSelector.addEventListener('change', function() {
@@ -531,13 +534,10 @@
             const classSelect = document.getElementById('class_room');
             
             if (!classSelect) return;
-            
-            // Chỉ tải nếu chưa tải trước đó hoặc chỉ có tùy chọn mặc định
             if (classSelect.options.length <= 1) {
-                // Lấy student_class_id từ data attribute
                 const currentClassId = classSelect.getAttribute('data-current-class-id') || '';
                 
-                fetch('/api/classes') // Sử dụng đường dẫn tuyệt đối thay vì route helper
+                fetch('/api/classes') 
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -546,15 +546,11 @@
                     })
                     .then(data => {
                         classSelect.innerHTML = '<option value="">-- Chọn lớp học --</option>';
-                        
-                        // Thêm các lớp học vào dropdown
                         if (Array.isArray(data) && data.length > 0) {
                             data.forEach(classItem => {
                                 const option = document.createElement('option');
                                 option.value = classItem.id;
                                 option.textContent = classItem.class_name;
-                                
-                                // Chọn lớp học hiện tại của người dùng nếu có
                                 if (currentClassId && currentClassId == classItem.id) {
                                     option.selected = true;
                                 }
@@ -585,9 +581,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const departmentDropdown = document.getElementById('department');
     
     if (departmentDropdown) {
-        // Get the currently selected department ID from data attribute
         const currentDepartmentId = departmentDropdown.getAttribute('data-current-department-id');
-        console.log('Current department ID:', currentDepartmentId);
+        // console.log('Current department ID:', currentDepartmentId);
         
         fetch('/api/department')
             .then(response => {
@@ -640,6 +635,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 option.textContent = "Không thể tải dữ liệu";
                 departmentDropdown.appendChild(option);
             });
+    }
+});
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('updateProfileForm');
+    
+    if (form) {
+        console.log('Form được tìm thấy');
+        
+        form.addEventListener('submit', function(event) {
+            console.log('Form đang được submit');
+            
+            // Chỉ sử dụng cho mục đích debug
+            // event.preventDefault();
+            
+            // Hiển thị dữ liệu form
+            const formData = new FormData(this);
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+        });
+        
+        const submitBtn = document.querySelector('button[type="submit"][form="updateProfileForm"]');
+        if (submitBtn) {
+            console.log('Nút submit được tìm thấy');
+            submitBtn.addEventListener('click', function() {
+                console.log('Nút submit được click');
+            });
+        } else {
+            console.error('Không tìm thấy nút submit!');
+        }
+    } else {
+        console.error('Không tìm thấy form với ID updateProfileForm!');
     }
 });
 </script>

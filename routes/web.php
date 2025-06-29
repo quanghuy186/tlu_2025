@@ -291,3 +291,4 @@ Route::get('/api/department', function () {
 })->name('api.department')->middleware('auth');
 
 Route::put('/home', [IndexController::class, 'update'])->name('profile.update')->middleware('auth');
+// Route::put('/profile/update', [App\Http\Controllers\Home\IndexController::class, 'update'])->name('profile.update');
