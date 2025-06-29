@@ -226,7 +226,7 @@ Route::prefix('admin/forum')->name('admin.forum.')->middleware(['auth', 'manager
     });
 });
 
-Route::prefix('/contact')->name('contact.')->middleware(['auth', 'redirect_admin'])->group(function(){
+Route::prefix('/contact')->name('contact.')->middleware(['guest', 'guest'])->group(function(){
     Route::get('/', [ContactController::class, 'index'])->name('index');
     Route::get('/student', [ContactController::class, 'student'])->name('student');
     Route::get('/student/search', [ContactController::class, 'search_student'])->name('student.search');
