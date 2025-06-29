@@ -9,7 +9,6 @@
     </div>
 </section>
 
-
 {{-- @include('partials.create_post_modal') --}}
 
 <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
@@ -234,9 +233,6 @@
                                                 <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        {{-- <a href="{{ route('forum.index') }}?post={{ $post->id }}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
-                                                            <i class="far fa-eye"></i>
-                                                        </a> --}}
                                                         <button type="button" class="btn btn-sm btn-outline-secondary edit-post-btn" data-post-id="{{ $post->id }}" title="Chỉnh sửa">
                                                             <i class="far fa-edit"></i>
                                                         </button>
@@ -398,7 +394,7 @@
                     <div class="row mb-3">
                         <label for="edit_title" class="col-sm-2 col-form-label">Tiêu đề <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control @error('title') is-invalid @enderror" id="edit_title" name="title">
+                            <input type="text" class="form-control @error('title') is-invalid @enderror" id="edit_title" name="title" value="">
                             @error('title')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -475,7 +471,6 @@
                 <div class="card-body">
                     <form action="{{ route('forum.index') }}" method="GET" id="searchFilterForm">
                         <div class="row align-items-end">
-                            <!-- Search Input -->
                             <div class="col-md-4 mb-3">
                                 <label for="search" class="form-label">
                                     <i class="fas fa-search me-1"></i> Tìm kiếm
@@ -574,12 +569,9 @@
     </div>
 </div>
 
-<!-- Main Content -->
 <div class="container">
     <div class="row">
-        <!-- Left Column - Categories and Posts -->
         <div class="col-lg-8">
-            <!-- Forum Categories -->
             @foreach($categories as $parentCategory)
                 <div class="forum-card">
                     <div class="card-header d-flex justify-content-between align-items-center">
@@ -634,7 +626,6 @@
                         @endif
                     </div>
                     
-                    <!-- Danh mục con (nếu có) -->
                     @if($parentCategory->childCategories && $parentCategory->childCategories->count() > 0)
                         @foreach($parentCategory->childCategories as $childCategory)
                             <div class="card-header child-category d-flex justify-content-between align-items-center">
@@ -682,7 +673,6 @@
             @endforeach
 
             <div class="latest-posts">
-
                 @foreach ($latestPosts as $p)
                     <div class="post-card">
                         <div class="post-header">
@@ -717,7 +707,6 @@
                             <div class="post-actions">
                                 <a href="#"><i class="far fa-comment"></i> {{ $p->comments_count }} bình luận</a>
                                 
-                                <!-- Updated like button with like count -->
                                 <a href="#" class="like-button {{ Auth::check() && $p->likedByUser(Auth::id()) ? 'liked' : '' }}" data-post-id="{{ $p->id }}">
                                     <i class="{{ Auth::check() && $p->likedByUser(Auth::id()) ? 'fas' : 'far' }} fa-heart"></i> 
                                     <span class="like-count">{{ $p->likes_count }}</span> thích
@@ -736,18 +725,15 @@
                 
             </div>
 
-            <!-- Pagination -->
             @if ($latestPosts->hasPages())
                 <div class="pagination-container">
                     <ul class="pagination">
-                        {{-- Liên kết trang trước --}}
                         @if ($latestPosts->onFirstPage())
                             <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
                         @else
                             <li><a href="{{ $latestPosts->previousPageUrl() }}"><i class="fas fa-angle-double-left"></i></a></li>
                         @endif
 
-                        {{-- Các phần tử phân trang --}}
                         @foreach ($latestPosts->getUrlRange(1, $latestPosts->lastPage()) as $page => $url)
                             @if ($page == $latestPosts->currentPage())
                                 <li><a href="#" class="active">{{ $page }}</a></li>
@@ -756,7 +742,6 @@
                             @endif
                         @endforeach
 
-                        {{-- Liên kết trang tiếp theo --}}
                         @if ($latestPosts->hasMorePages())
                             <li><a href="{{ $latestPosts->nextPageUrl() }}"><i class="fas fa-angle-double-right"></i></a></li>
                         @else
@@ -767,10 +752,8 @@
             @endif
         </div>
 
-        <!-- Right Column - Sidebar -->
         <div class="col-lg-4">
             <div class="forum-sidebar">
-                <!-- Statistics Card -->
                 <div class="card">
                     <div class="card-header">
                         <i class="fas fa-chart-bar me-2"></i> Thống kê diễn đàn
@@ -788,12 +771,9 @@
                             <span><i class="fas fa-reply"></i> Bài viết</span>
                             <span class="fw-bold">  {{ $totalPosts }} </span>
                         </div>
-
-
                     </div>
                 </div>
 
-                <!-- Active Topics Card -->
                 <div class="card">
                     <div class="card-header">
                         <i class="fas fa-fire me-2"></i> Bài viết nổi bật
@@ -819,7 +799,6 @@
                     </div>
                     <div class="list-group list-group-flush">
                         @forelse($categories as $parentCategory)
-                            <!-- Danh mục cha -->
                             <a href="{{ route('forum.category', $parentCategory->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                 <span>
                                     <i class="fas fa-folder me-2"></i> {{ $parentCategory->name }}
@@ -827,7 +806,6 @@
                                 <span class="badge rounded-pill bg-primary">{{ $parentCategory->posts_count ?? $parentCategory->posts->count() }}</span>
                             </a>
                             
-                            <!-- Danh mục con (nếu có) -->
                             @if($parentCategory->childCategories && $parentCategory->childCategories->count() > 0)
                                 @foreach($parentCategory->childCategories as $childCategory)
                                     <a href="{{ route('forum.category', $childCategory->slug) }}" class="list-group-item list-group-item-action d-flex ps-4 justify-content-between align-items-center">
@@ -850,15 +828,12 @@
     </div>
 </div>
 
-<!-- New Topic Button -->
 <a href="#" class="new-topic-btn" data-bs-toggle="modal" data-bs-target="#createPostModal">
     <i class="fas fa-plus"></i>
 </a>
 
-<!-- JavaScript để xử lý chức năng -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Xử lý hiển thị lý do từ chối
         var currentPostId = null;
         
         document.querySelectorAll('.view-rejection-reason').forEach(function(button) {
@@ -870,19 +845,15 @@
             });
         });
         
-        // Xử lý nút chỉnh sửa bài bị từ chối
         document.querySelector('.edit-rejected-post').addEventListener('click', function() {
-            // Đóng modal hiện tại
             var currentModal = bootstrap.Modal.getInstance(document.getElementById('rejectionReasonModal'));
             currentModal.hide();
             
-            // Hiển thị modal chỉnh sửa bài viết
             if (currentPostId) {
                 openEditPostModal(currentPostId);
             }
         });
         
-        // Xử lý tất cả các nút chỉnh sửa bài viết
         document.querySelectorAll('.edit-post-btn').forEach(function(button) {
             button.addEventListener('click', function() {
                 var postId = this.getAttribute('data-post-id');
@@ -890,17 +861,12 @@
             });
         });
         
-        // Hàm mở modal chỉnh sửa và tải dữ liệu
         function openEditPostModal(postId) {
             if (!postId) return;
-            
-            // Thiết lập ID bài viết cần chỉnh sửa
             document.getElementById('edit_post_id').value = postId;
-            
-            // Mở modal chỉnh sửa
             var editModal = new bootstrap.Modal(document.getElementById('editPostModal'));
             
-            fetch(`/api/forum/posts/${postId}`)
+            fetch(`/forum/api/posts/${postId}`)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('edit_title').value = data.title;
@@ -909,22 +875,33 @@
                     document.getElementById('edit_tags').value = data.tags;
                     document.getElementById('edit_is_anonymous').checked = data.is_anonymous;
                     document.getElementById('edit_notify_replies').checked = data.notify_replies;
+                    document.getElementById('edit_images').checked = data.images;
                     
-                    var imageContainer = document.getElementById('image_preview_container');
+                    
+                     var imageContainer = document.getElementById('image_preview_container');
                     imageContainer.innerHTML = '';
                     
-                    if (data.images && data.images.length > 0) {
+                    // First, check if we have images and it's an array
+                    if (data.images && Array.isArray(data.images) && data.images.length > 0) {
                         data.images.forEach(function(image, index) {
                             var col = document.createElement('div');
                             col.className = 'col-md-3 mb-2';
                             
                             var card = document.createElement('div');
-                            card.className = 'card';
+                            card.className = 'card h-100';
+                            
+                            var imgWrapper = document.createElement('div');
+                            imgWrapper.className = 'image-wrapper';
+                            imgWrapper.style.height = '120px';
+                            imgWrapper.style.overflow = 'hidden';
                             
                             var img = document.createElement('img');
                             img.className = 'card-img-top';
                             img.src = `/storage/${image}`;
                             img.alt = `Hình ảnh ${index + 1}`;
+                            img.style.objectFit = 'cover';
+                            img.style.height = '100%';
+                            img.style.width = '100%';
                             
                             var cardBody = document.createElement('div');
                             cardBody.className = 'card-body p-2';
@@ -932,14 +909,23 @@
                             var removeBtn = document.createElement('button');
                             removeBtn.className = 'btn btn-sm btn-danger w-100';
                             removeBtn.textContent = 'Xóa';
-                            removeBtn.setAttribute('data-image-id', index);
-                            removeBtn.addEventListener('click', function() {
-                                // Xử lý xóa hình ảnh
+                            removeBtn.type = 'button'; // Ensure it doesn't submit the form
+                            removeBtn.setAttribute('data-image-path', image);
+                            removeBtn.onclick = function() {
+                                // Add a hidden input to track removed images
+                                var hiddenInput = document.createElement('input');
+                                hiddenInput.type = 'hidden';
+                                hiddenInput.name = 'removed_images[]';
+                                hiddenInput.value = image;
+                                document.getElementById('editPostForm').appendChild(hiddenInput);
+                                
+                                // Remove the image card
                                 col.remove();
-                            });
+                            };
                             
+                            imgWrapper.appendChild(img);
+                            card.appendChild(imgWrapper);
                             cardBody.appendChild(removeBtn);
-                            card.appendChild(img);
                             card.appendChild(cardBody);
                             col.appendChild(card);
                             imageContainer.appendChild(col);
@@ -948,12 +934,10 @@
                         imageContainer.innerHTML = '<p class="text-muted">Không có hình ảnh</p>';
                     }
                     
-                    // Mở modal
                     editModal.show();
                 })
                 .catch(error => {
                     console.error('Error fetching post data:', error);
-                    // Trong trường hợp thực tế, mở modal với form trống
                     editModal.show();
                 });
         }
@@ -969,8 +953,6 @@
         });
     });
 </script>
-
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -1201,7 +1183,6 @@ class ForumSearch {
                 const page = e.currentTarget.dataset.page;
                 this.performSearch(page);
                 
-                // Scroll to top of results
                 this.resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });

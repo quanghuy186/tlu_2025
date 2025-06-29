@@ -134,7 +134,6 @@
                     @csrf
                     @method('PUT')
                     
-                    <!-- Avatar và thông tin chung -->
                     <div class="text-center mb-4">
                         <div class="position-relative d-inline-block">
                             <img src="{{ Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar) : asset('user_default.jpg') }}" 

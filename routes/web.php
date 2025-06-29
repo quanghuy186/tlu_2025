@@ -38,7 +38,6 @@ use Illuminate\Support\Facades\Broadcast;
 
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
-Route::put('/home', [IndexController::class, 'update'])->name('profile.update')->middleware('auth');
 Route::middleware('guest')->group(function () {
     Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/', [LoginController::class, 'login']);
@@ -226,7 +225,7 @@ Route::prefix('admin/forum')->name('admin.forum.')->middleware(['auth', 'manager
     });
 });
 
-Route::prefix('/contact')->name('contact.')->middleware(['guest', 'guest'])->group(function(){
+Route::prefix('/contact')->name('contact.')->middleware(['auth', 'redirect_admin'])->group(function(){
     Route::get('/', [ContactController::class, 'index'])->name('index');
     Route::get('/student', [ContactController::class, 'student'])->name('student');
     Route::get('/student/search', [ContactController::class, 'search_student'])->name('student.search');
@@ -290,3 +289,5 @@ Route::get('/api/classes', function () {
 Route::get('/api/department', function () {
     return Department::all();
 })->name('api.department')->middleware('auth');
+
+Route::put('/home', [IndexController::class, 'update'])->name('profile.update')->middleware('auth');

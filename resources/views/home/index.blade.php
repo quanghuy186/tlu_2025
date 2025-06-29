@@ -75,19 +75,6 @@
         </div>
     </section>
 
-    
-<script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/685a503b2cf7fb190c96c9d7/1iugciqr2';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-</script>
-
     <!-- Announcements Section -->
     <section class="announcement-section mt-3">
         <div class="container">
@@ -106,10 +93,10 @@
                                         <div class="day">{{ date('d', strtotime($item->created_at ?? now())) }}</div>
                                         <div class="month">{{ strtoupper(date('M', strtotime($item->created_at ?? now()))) }}</div>
                                     </div>
-                                    <h5>{{ $item->title ?? 'Thông báo cập nhật hệ thống danh bạ điện tử' }}</h5>
-                                    <p>{{ $item->content ?? 'Hệ thống danh bạ điện tử Trường Đại học Thủy Lợi sẽ được nâng cấp vào ngày 10/03/2025. Trong thời gian cập nhật, hệ thống sẽ tạm ngưng hoạt động từ 22:00 đến 23:59.' }}</p>
+                                    <h5>{{ $item->title ?? '' }}</h5>
+                                    <p>{{ $item->content ?? '' }}</p>
                                     <div class="meta">
-                                        <i class="fas fa-user me-1"></i> {{ $item->user->managedDepartment->name }} 
+                                        <i class="fas fa-user me-1"></i> {{ $item->user->managedDepartment->name ?? 'Chưa cập nhật'}} 
                                     </div>
                                 </div>
                             </div>
@@ -137,8 +124,6 @@
             </div>
         </div>
     </section>
-
-    
 
     <section class="stats-section">
         <div class="container">

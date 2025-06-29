@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/Logo_TLU.png') }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="user-id" content="{{ Auth::id() }}">
@@ -1180,33 +1181,6 @@
         background-color: var(--secondary-color);
     }
 
-    /* New Topic Button */
-    .new-topic-btn {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background-color: var(--accent-color);
-        color: white;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s;
-        z-index: 1000;
-    }
-
-    .new-topic-btn:hover {
-        transform: translateY(-5px) rotate(90deg);
-        background-color: #e64a19;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        color: white;
-    }
-
-    /* New Message Button */
     .new-message-btn {
         position: fixed;
         bottom: 30px;
@@ -1232,9 +1206,6 @@
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         color: white;
     }
-
-    /* Pagination Styles */
-    /* Bootstrap Pagination */
     .pagination {
         margin-top: 20px;
         margin-bottom: 40px;
@@ -2855,9 +2826,9 @@
     }
 
 /* tao bai viet */
-    .new-topic-btn {
+.new-topic-btn {
     position: fixed;
-    bottom: 30px;
+    bottom: 100px;
     right: 30px;
     width: 60px;
     height: 60px;
