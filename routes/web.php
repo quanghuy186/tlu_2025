@@ -184,6 +184,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'manager_admin'])->g
     Route::get('/notifications/{id}', [NotificationController::class, 'detail'])->name('notification.detail');
     Route::get('/notifications/{id}/edit', [NotificationController::class, 'edit'])->name('notification.edit');
     Route::put('/notifications/{id}', [NotificationController::class, 'update'])->name('notification.update');
+    Route::get('/notifications/{id}/toggle-pin', [NotificationController::class, 'togglePin'])->name('notification.toggle-pin');
+
     Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notification.destroy');
     Route::delete('notification/bulk-destroy', [NotificationController::class, 'bulkDestroy'])
     ->name('notification.bulk-destroy');

@@ -17,27 +17,22 @@ class NotificationController extends Controller
     {
         $query = Notification::with(['user', 'category']);
         
-        // Xử lý tìm kiếm
         if ($request->has('search') && !empty($request->search)) {
             $query->search($request->search);
         }
         
-        // Xử lý lọc theo danh mục
         if ($request->has('category_id') && !empty($request->category_id)) {
             $query->byCategory($request->category_id);
         }
         
-        // Xử lý lọc theo trạng thái
         if ($request->has('status') && !empty($request->status)) {
             $query->where('status', $request->status);
         }
         
-        // Xử lý lọc theo mức độ ưu tiên
         if ($request->has('priority') && !empty($request->priority)) {
             $query->byPriority($request->priority);
         }
         
-        // Xử lý lọc theo khoảng thời gian
         if ($request->has('date_from') && !empty($request->date_from)) {
             $dateFrom = Carbon::createFromFormat('d/m/Y', $request->date_from)->startOfDay();
             $query->where('created_at', '>=', $dateFrom);
@@ -48,16 +43,13 @@ class NotificationController extends Controller
             $query->where('created_at', '<=', $dateTo);
         }
         
-        // Sắp xếp kết quả
         $sortField = $request->input('sort_field', 'created_at');
         $sortDirection = $request->input('sort_direction', 'desc');
         $query->orderBy($sortField, $sortDirection);
         
-        // Phân trang kết quả
         $perPage = $request->input('per_page', 10);
         $notifications = $query->paginate($perPage)->withQueryString();
         
-        // Lấy danh sách danh mục để hiển thị trong form lọc
         $categories = NotificationCategory::orderBy('name')->get();
         
         return view('admin.notification.index', compact('notifications', 'categories'));
@@ -190,6 +182,20 @@ class NotificationController extends Controller
         
         return redirect()->route('admin.notification.index')
             ->with('success', 'Thông báo đã được xóa thành công.');
+    }
+
+    public function togglePin($id)
+    {
+        $notify = Notification::findOrFail($id);
+        
+        $notify->update([
+            'is_pinned' => !$notify->is_pinned
+        ]);
+        
+        $message = $notify->is_pinned ? 'Thông báo đã được ghim!' : 'Thông báo đã được bỏ ghim!';
+        
+        return redirect()->route('admin.notification.detail', $notify->id)
+            ->with('success', $message);
     }
     
     public function bulkDestroy(Request $request)

@@ -21,6 +21,11 @@
                     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                         <h5 class="card-title m-0 fw-bold text-primary">Chi tiết thông báo</h5>
                         <div>
+                             <button type="button" class="btn btn-{{ $notification->is_pinned ? 'warning' : 'outline-warning' }} btn-sm" 
+                                    onclick="window.location.href='{{ route('admin.notification.toggle-pin', $notification->id) }}'">
+                                    <i class="bi bi-pin-angle{{ $notification->is_pinned ? '-fill' : '' }} me-1"></i> 
+                                    {{ $notification->is_pinned ? 'Bỏ ghim' : 'Ghim' }}
+                                </button>
                             <a href="{{ route('admin.notification.edit', $notification->id) }}" class="btn btn-primary btn-sm">
                                 <i class="bi bi-pencil-square me-1"></i>Chỉnh sửa
                             </a>

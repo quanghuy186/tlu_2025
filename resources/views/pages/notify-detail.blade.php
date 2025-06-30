@@ -145,9 +145,13 @@
                                                 <span class="related-date">
                                                     <i class="far fa-calendar-alt"></i> {{ $related->created_at->format('d/m/Y') }}
                                                 </span>
-                                                @if($related->user)
+                                                @if($related->user->managedDepartment)
                                                     <span class="related-author">
-                                                        <i class="fas fa-user" data-bs-title="{{ $related->user->managedDepartment->name }}"></i> {{ $related->user->name }} 
+                                                        <i class="fas fa-user" data-bs-title="{{ $related->user->managedDepartment->name }}"></i> {{ $related->user->managedDepartment->name }}
+                                                    </span>
+                                                @elseif($related->user->name)
+                                                    <span class="related-author">
+                                                        <i class="fas fa-user" data-bs-title="{{ $related->user->name }}"></i> {{ $related->user->name }} 
                                                     </span>
                                                 @endif
                                             </div>

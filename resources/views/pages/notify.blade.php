@@ -103,28 +103,31 @@
             <div class="col-lg-8 mb-4">
                 @if($notifications->count() > 0)
                     <!-- Featured Announcement (First item if exists) -->
-                    @if($notifications->currentPage() == 1 && $notifications->first())
+                    
+                    @if($notifications->currentPage() == 1 && $notification_gim)
                         <div class="featured-announcement mb-4">
                             <div class="featured-announcement-badge">
                                 <i class="fas fa-star me-1"></i> Nổi bật
                             </div>
                             <div class="featured-announcement-image">
-                                @if($notifications->first()->images)
-                                    <img src="{{ asset('storage/' . explode(',', $notifications->first()->images)[0]) }}" alt="Featured Announcement">
+                                @if($notification_gim->images)
+                                    <img src="{{ asset('storage/' . explode(',', $notification_gim->images)[0]) }}" alt="Featured Announcement">
                                 @else
-                                    {{-- <img src="https://images2.thanhnien.vn/528068263637045248/2024/1/25/3b690baedbd9a609207c76684a3413d0-65a11b0a7e79d880-17061562931311973368410.jpg" alt="Featured Announcement"> --}}
+                                    <div class="placeholder-image">
+                                        <i class="fas fa-image"></i>
+                                    </div>
                                 @endif
                                 <div class="featured-announcement-overlay">
                                     <div class="featured-announcement-date">
-                                        <i class="far fa-calendar-alt me-1"></i> {{ $notifications->first()->created_at->format('d/m/Y') }}
+                                        <i class="far fa-calendar-alt me-1"></i> {{ $notification_gim->created_at->format('d/m/Y') }}
                                     </div>
                                     <h2 class="featured-announcement-title">
-                                        <a href="{{ route('notification.show', $notifications->first()->id) }}">{{ $notifications->first()->title }}</a>
+                                        <a href="{{ route('notification.show', $notification_gim->id) }}">{{ $notification_gim->title }}</a>
                                     </h2>
                                     <div class="featured-announcement-excerpt">
-                                        {{ Str::limit($notifications->first()->content, 200) }}
+                                        {{ Str::limit($notification_gim->content, 200) }}
                                     </div>
-                                    <a href="{{ route('notification.show', $notifications->first()->id) }}" class="featured-announcement-button">
+                                    <a href="{{ route('notification.show', $notification_gim->id) }}" class="featured-announcement-button">
                                         <i class="fas fa-eye me-1"></i> Xem chi tiết
                                     </a>
                                 </div>
@@ -134,7 +137,7 @@
 
                     <!-- Announcements Grid -->
                     <div class="row">
-                        @foreach ($notifications->skip($notifications->currentPage() == 1 ? 1 : 0) as $notification)
+                        @foreach ($notifications as $notification)
                             <div class="col-md-6 mb-4">
                                 <div class="announcement-card">
                                     <div class="announcement-header">
@@ -167,10 +170,12 @@
                                             <div class="announcement-author">
                                                 <img src="{{ $notification->user && $notification->user->avatar ? asset('storage/avatars/'.$notification->user->avatar) : asset('user_default.jpg') }}" alt="Author">
                                                 <span>
-                                                    @if($notification->user && $notification->user->managedDepartment)
+                                                    
+
+                                                    @if($notification->user->managedDepartment)
                                                         {{ $notification->user->managedDepartment->name }}
                                                     @else
-                                                        Không xác định
+                                                        {{ $notification->user->name }}
                                                     @endif
                                                 </span>
                                             </div>

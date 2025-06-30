@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->text('content');
             $table->string('images')->nullable();
+            $table->boolean('is_pinned')->default(false);
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreignId('category_id')->nullable()->constrained('notification_categories')->onDelete('set null');
             $table->timestamps();

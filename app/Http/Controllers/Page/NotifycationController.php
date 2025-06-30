@@ -35,7 +35,6 @@ class NotifycationController extends Controller
             });
         }
         
-        // Filter theo từ khóa tìm kiếm
         if ($request->filled('search')) {
             $query->where(function($q) use ($request) {
                 $q->where('title', 'like', '%' . $request->search . '%')
@@ -43,7 +42,6 @@ class NotifycationController extends Controller
             });
         }
         
-        // Sắp xếp
         $sort = $request->get('sort', 'newest');
         switch($sort) {
             case 'oldest':
@@ -60,16 +58,24 @@ class NotifycationController extends Controller
                 break;
         }
         
-        // Phân trang
         $notifications = $query->paginate(6)->withQueryString();
+
+        // $notification_gim = Notification::with(['user', 'category'])
+        //     ->where('is_pinned', 1)
+        //     ->orderBy('created_at', 'desc')
+        //     ->take(1)
+        //     ->get();
+
+        $notification_gim = Notification::with(['user', 'category'])
+        ->where('is_pinned', 1)
+        ->orderBy('created_at', 'desc')
+        ->first();
         
-        // Thông báo mới nhất (sidebar)
         $notification_latests = Notification::with(['user', 'category'])
             ->orderBy('created_at', 'desc')
             ->take(4)
             ->get();
             
-        // Đếm thông báo theo danh mục
         $category_counts = [];
         foreach($notification_categories as $category) {
             $category_counts[$category->id] = Notification::where('category_id', $category->id)->count();
@@ -82,7 +88,8 @@ class NotifycationController extends Controller
             ->with('notification_latests', $notification_latests)
             ->with('category_counts', $category_counts)
             ->with('total_notifications', $total_notifications)
-            ->with('current_filters', $request->all());
+            ->with('current_filters', $request->all())
+            ->with('notification_gim', $notification_gim);
     }
 
     // Xem thông báo theo danh mục

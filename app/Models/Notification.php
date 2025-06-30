@@ -16,7 +16,8 @@ class Notification extends Model
         'user_id',
         'content',
         'images',
-        'category_id'
+        'category_id',
+        'is_pinned'
     ];
 
     public function user()
