@@ -1,5 +1,7 @@
 @include('components.header')
 
+<title>@yield('title')</title>
+
 @include('components.nav')
 
 @yield('content')
@@ -34,27 +36,11 @@
 {{-- teacher --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Đây là nơi để thiết lập logic hiển thị quyền truy cập phù hợp
-        // Đoạn code bên dưới có thể được sửa đổi dựa trên logic xác thực thực tế
-
-        // Ví dụ: Kiểm tra vai trò người dùng
-        // const userRole = 'cbgv'; 
-
-        // if (userRole === 'cbgv') {
-        //     document.getElementById('cbgv-access').style.display = 'block';
-        //     document.getElementById('student-access').style.display = 'none';
-        // } else if (userRole === 'student') {
-        //     document.getElementById('cbgv-access').style.display = 'none';
-        //     document.getElementById('student-access').style.display = 'block';
-        // }
-
-        // Khởi tạo tooltips nếu cần
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         });
 
-        // Xử lý sự kiện tìm kiếm
         const searchInput = document.querySelector('.search-box input');
         const searchButton = document.querySelector('.search-box button');
 
@@ -70,14 +56,10 @@
             }
         });
 
-        // Hàm tìm kiếm giảng viên (mô phỏng)
         function searchTeachers(query) {
             console.log('Tìm kiếm giảng viên với từ khóa:', query);
-            // Thực hiện logic tìm kiếm thực tế ở đây
-            // Ví dụ: gửi AJAX request đến server
         }
 
-        // Xử lý sự kiện thay đổi bộ lọc
         const filterSelects = document.querySelectorAll('.filter-select');
         filterSelects.forEach(select => {
             select.addEventListener('change', function() {
@@ -85,24 +67,20 @@
             });
         });
 
-        // Hàm áp dụng bộ lọc (mô phỏng)
         function applyFilters() {
             const sortBy = document.querySelector('select[class="filter-select"]:nth-child(1)').value;
             const department = document.querySelector('select[class="filter-select"]:nth-child(2)').value;
             const position = document.querySelector('select[class="filter-select"]:nth-child(3)').value;
 
             console.log('Áp dụng bộ lọc:', { sortBy, department, position });
-            // Thực hiện logic lọc thực tế ở đây
         }
 
-        // Xử lý chuyển đổi kiểu xem
         const viewButtons = document.querySelectorAll('.view-options button');
         viewButtons.forEach(button => {
             button.addEventListener('click', function() {
                 viewButtons.forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
 
-                // Thay đổi kiểu xem (danh sách hoặc lưới)
                 const isList = this.querySelector('i').classList.contains('fa-list');
                 if (isList) {
                     document.querySelector('.teacher-list').classList.remove('grid-view');
@@ -116,17 +94,14 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Xử lý chuyển đổi kiểu xem
         const viewOptionButtons = document.querySelectorAll('.view-options button');
         const studentLists = document.querySelectorAll('.student-list');
 
         viewOptionButtons.forEach(button => {
             button.addEventListener('click', function() {
-                // Cập nhật trạng thái active
                 viewOptionButtons.forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
 
-                // Thay đổi kiểu xem
                 const isGridView = this.querySelector('i').classList.contains('fa-th-large');
                 studentLists.forEach(list => {
                     if (isGridView) {
@@ -138,7 +113,6 @@
             });
         });
 
-        // Xử lý tìm kiếm
         const searchInputs = document.querySelectorAll('.search-box input');
         const searchButtons = document.querySelectorAll('.search-box button');
 
@@ -158,11 +132,8 @@
 
         function performSearch(query) {
             query = query.trim().toLowerCase();
-            console.log('Đang tìm kiếm: ' + query);
-            // Thực hiện tìm kiếm tại đây (gửi yêu cầu Ajax hoặc lọc dữ liệu hiện có)
         }
 
-        // Xử lý bộ lọc
         const filterSelects = document.querySelectorAll('.filter-select');
         filterSelects.forEach(select => {
             select.addEventListener('change', function() {
@@ -171,32 +142,26 @@
         });
 
         function applyFilters() {
-            // Thu thập tất cả các giá trị bộ lọc
             const filters = {};
             filterSelects.forEach(select => {
                 const filterName = select.previousElementSibling.textContent.trim().replace(':', '').toLowerCase();
                 filters[filterName] = select.value;
             });
 
-            console.log('Đang áp dụng bộ lọc:', filters);
-            // Áp dụng bộ lọc tại đây (gửi yêu cầu Ajax hoặc lọc dữ liệu hiện có)
         }
     });
 </script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Xử lý chuyển đổi kiểu xem
         const viewOptionButtons = document.querySelectorAll('.view-options button');
         const unitList = document.querySelector('.unit-list');
 
         viewOptionButtons.forEach(button => {
             button.addEventListener('click', function() {
-                // Cập nhật trạng thái active
                 viewOptionButtons.forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
 
-                // Thay đổi kiểu xem
                 const isGridView = this.querySelector('i').classList.contains('fa-th-large');
                 if (isGridView) {
                     unitList.classList.add('grid-view');
@@ -206,7 +171,6 @@
             });
         });
 
-        // Xử lý tìm kiếm
         const searchInput = document.querySelector('.search-box input');
         const searchButton = document.querySelector('.search-box button');
 
@@ -222,11 +186,8 @@
 
         function performSearch(query) {
             query = query.trim().toLowerCase();
-            console.log('Đang tìm kiếm: ' + query);
-            // Thực hiện tìm kiếm tại đây (gửi yêu cầu Ajax hoặc lọc dữ liệu hiện có)
         }
 
-        // Xử lý bộ lọc
         const filterSelects = document.querySelectorAll('.filter-select');
         filterSelects.forEach(select => {
             select.addEventListener('change', function() {
@@ -235,45 +196,37 @@
         });
 
         function applyFilters() {
-            // Thu thập tất cả các giá trị bộ lọc
             const filters = {};
             filterSelects.forEach(select => {
                 const filterName = select.previousElementSibling.textContent.trim().replace(':', '').toLowerCase();
                 filters[filterName] = select.value;
             });
 
-            console.log('Đang áp dụng bộ lọc:', filters);
-            // Áp dụng bộ lọc tại đây (gửi yêu cầu Ajax hoặc lọc dữ liệu hiện có)
         }
     });
 </script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Xử lý hiển thị form phản hồi
         document.querySelectorAll('.reply-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const commentId = this.getAttribute('data-comment-id');
                 const replyForm = document.getElementById('reply-form-' + commentId);
                 
-                // Ẩn tất cả các form phản hồi khác
                 document.querySelectorAll('.reply-form').forEach(form => {
                     if (form.id !== 'reply-form-' + commentId) {
                         form.classList.add('d-none');
                     }
                 });
                 
-                // Toggle hiển thị form phản hồi hiện tại
                 replyForm.classList.toggle('d-none');
                 
-                // Focus vào textarea nếu form đang hiển thị
                 if (!replyForm.classList.contains('d-none')) {
                     replyForm.querySelector('textarea').focus();
                 }
             });
         });
         
-        // Xử lý xác nhận xóa bình luận
         document.querySelectorAll('.delete-comment-btn').forEach(button => {
             button.addEventListener('click', function(e) {
                 if (!confirm('Bạn có chắc chắn muốn xóa bình luận này?')) {
@@ -282,18 +235,15 @@
             });
         });
         
-        // Xử lý tải thêm bình luận
         const loadMoreBtn = document.getElementById('loadMoreComments');
         if (loadMoreBtn) {
             loadMoreBtn.addEventListener('click', function() {
                 const postId = this.getAttribute('data-post-id');
                 const page = parseInt(this.getAttribute('data-page')) + 1;
                 
-                // Hiển thị trạng thái đang tải
                 this.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Đang tải...';
                 this.disabled = true;
                 
-                // Gọi API để lấy thêm bình luận
                 fetch(`/api/forum/post/${postId}/comments?page=${page}`)
                     .then(response => {
                         if (!response.ok) {
@@ -302,38 +252,30 @@
                         return response.json();
                     })
                     .then(data => {
-                        // Thêm bình luận vào danh sách
                         const commentsList = document.querySelector('.comments-list');
                         
                         if (data.data.length > 0) {
                             data.data.forEach(comment => {
                                 const commentHtml = createCommentHtml(comment);
                                 if (commentsList.querySelector('.text-center')) {
-                                    // Nếu có thông báo "chưa có bình luận", xóa nó đi
                                     commentsList.innerHTML = '';
                                 } else if (commentsList.children.length > 0) {
-                                    // Thêm đường phân cách nếu đã có bình luận khác
                                     commentsList.insertAdjacentHTML('beforeend', '<hr class="my-3">');
                                 }
                                 
-                                // Thêm bình luận mới
                                 commentsList.insertAdjacentHTML('beforeend', commentHtml);
                             });
                             
-                            // Cập nhật trạng thái nút
                             this.innerHTML = '<i class="fas fa-sync-alt me-1"></i> Tải thêm bình luận';
                             this.disabled = false;
                             this.setAttribute('data-page', page);
                             
-                            // Ẩn nút nếu đã tải hết bình luận
                             if (page >= data.meta.last_page) {
                                 this.classList.add('d-none');
                             }
                             
-                            // Gắn sự kiện cho các phần tử mới
                             attachCommentEventListeners();
                         } else {
-                            // Nếu không có thêm bình luận, ẩn nút
                             this.classList.add('d-none');
                         }
                     })
@@ -345,9 +287,7 @@
             });
         }
         
-        // Hàm tạo HTML cho bình luận từ dữ liệu API
         function createCommentHtml(comment) {
-            // Tạo HTML cho avatar
             let avatarHtml = '';
             if (comment.is_anonymous) {
                 avatarHtml = `
@@ -370,7 +310,6 @@
                 }
             }
             
-            // Tạo nút xóa (nếu có quyền)
             let deleteButtonHtml = '';
             if (comment.can_delete) {
                 deleteButtonHtml = `
@@ -385,7 +324,6 @@
                 `;
             }
             
-            // Tạo HTML cho form phản hồi
             let replyFormHtml = '';
             if (isAuthenticated) {
                 replyFormHtml = `
@@ -426,13 +364,11 @@
                 `;
             }
             
-            // Tạo HTML cho các phản hồi
             let repliesHtml = '';
             if (comment.replies && comment.replies.length > 0) {
                 let repliesContent = '';
                 
                 comment.replies.forEach(reply => {
-                    // Tạo HTML cho avatar của phản hồi
                     let replyAvatarHtml = '';
                     if (reply.is_anonymous) {
                         replyAvatarHtml = `
@@ -455,7 +391,6 @@
                         }
                     }
                     
-                    // Tạo nút xóa phản hồi (nếu có quyền)
                     let replyDeleteButtonHtml = '';
                     if (reply.can_delete) {
                         replyDeleteButtonHtml = `
@@ -472,7 +407,6 @@
                         `;
                     }
                     
-                    // Tạo HTML cho phản hồi
                     repliesContent += `
                         <div class="reply-item mb-2" id="comment-${reply.id}">
                             <div class="d-flex">
@@ -496,7 +430,6 @@
                     `;
                 });
                 
-                // Ghép HTML phản hồi vào container
                 repliesHtml = `
                     <div class="replies-list mt-3 ps-3 border-start">
                         ${repliesContent}
@@ -504,7 +437,6 @@
                 `;
             }
             
-            // Tạo HTML hoàn chỉnh cho bình luận
             return `
                 <div class="comment-item" id="comment-${comment.id}">
                     <div class="d-flex">
@@ -535,43 +467,35 @@
             `;
         }
         
-        // Hàm gắn sự kiện cho các phần tử bình luận mới
         function attachCommentEventListeners() {
-            // Gắn sự kiện cho nút phản hồi
             document.querySelectorAll('.reply-btn').forEach(button => {
                 button.removeEventListener('click', handleReplyClick);
                 button.addEventListener('click', handleReplyClick);
             });
             
-            // Gắn sự kiện cho nút xóa bình luận
             document.querySelectorAll('.delete-comment-btn').forEach(button => {
                 button.removeEventListener('click', handleDeleteClick);
                 button.addEventListener('click', handleDeleteClick);
             });
         }
         
-        // Hàm xử lý sự kiện click nút phản hồi
         function handleReplyClick() {
             const commentId = this.getAttribute('data-comment-id');
             const replyForm = document.getElementById('reply-form-' + commentId);
             
-            // Ẩn tất cả các form phản hồi khác
             document.querySelectorAll('.reply-form').forEach(form => {
                 if (form.id !== 'reply-form-' + commentId) {
                     form.classList.add('d-none');
                 }
             });
             
-            // Toggle hiển thị form phản hồi hiện tại
             replyForm.classList.toggle('d-none');
             
-            // Focus vào textarea nếu form đang hiển thị
             if (!replyForm.classList.contains('d-none')) {
                 replyForm.querySelector('textarea').focus();
             }
         }
         
-        // Hàm xử lý sự kiện click nút xóa bình luận
         function handleDeleteClick(e) {
             if (!confirm('Bạn có chắc chắn muốn xóa bình luận này?')) {
                 e.preventDefault();
@@ -580,45 +504,36 @@
     });
 </script>
 
-{{-- like --}}
+{{-- like  --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    // Handle likes for all posts
     const setupLikeButtons = () => {
         document.querySelectorAll('.like-button').forEach(button => {
-            // Remove previous event listeners
             const newButton = button.cloneNode(true);
             button.parentNode.replaceChild(newButton, button);
             
-            // Get post ID from data attribute
             const postId = newButton.getAttribute('data-post-id');
             
-            // Fetch initial like info
             fetchLikeInfo(postId, newButton);
             
-            // Add click event listener
             newButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 
-                // Toggle like
                 toggleLike(postId, newButton);
             });
         });
     };
     
-    // Function to fetch like info
     const fetchLikeInfo = (postId, button) => {
         fetch(`/forum/post/${postId}/like-info`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Update like count
                     const likeCountElement = button.querySelector('.like-count');
                     if (likeCountElement) {
                         likeCountElement.textContent = data.likeCount;
                     }
                     
-                    // Update button appearance based on whether user has liked
                     if (data.userLiked) {
                         button.classList.add('liked');
                         button.querySelector('i').classList.remove('far');
@@ -635,9 +550,7 @@
             });
     };
     
-    // Function to toggle like
     const toggleLike = (postId, button) => {
-        // Send AJAX request to toggle like
         fetch(`/forum/post/${postId}/like`, {
             method: 'POST',
             headers: {
@@ -658,13 +571,11 @@
         })
         .then(data => {
             if (data.success) {
-                // Update like count
                 const likeCountElement = button.querySelector('.like-count');
                 if (likeCountElement) {
                     likeCountElement.textContent = data.likeCount;
                 }
                 
-                // Update button appearance
                 if (data.action === 'liked') {
                     button.classList.add('liked');
                     button.querySelector('i').classList.remove('far');

@@ -1,6 +1,10 @@
 {{-- resources/views/admin/contact/teacher/import.blade.php --}}
 @extends('layouts/admin')
 
+@section('title')
+   Nhập danh sách giảng viên từ excel
+@endsection
+
 @section('content')
 <div class="pagetitle">
     <h1>Thêm giảng viên từ Excel</h1>

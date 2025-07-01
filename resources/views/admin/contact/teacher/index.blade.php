@@ -1,6 +1,10 @@
 {{-- resources/views/admin/contact/teacher/index.blade.php --}}
 @extends('layouts/admin')
 
+@section('title')
+    Quản lý danh bạ giảng viên
+@endsection
+
 @section('content')
 
 <div class="pagetitle">

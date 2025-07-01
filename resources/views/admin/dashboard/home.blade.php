@@ -1,5 +1,9 @@
 @extends('layouts/admin')
 
+@section('title')
+   Trang quản lý hệ thống trao đổi và tra cứu thông tin nội bộ TLU
+@endsection
+
 @section('content')
 <div class="pagetitle">
   <h1>Bảng điều khiển</h1>

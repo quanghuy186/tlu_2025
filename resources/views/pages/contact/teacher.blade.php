@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Danh bạ cán bộ giảng viên
+@endsection
+
 @section('content')
 <section class="page-title">
     <div class="container">
@@ -67,7 +71,6 @@
         
     </div>
 
-    <!-- Teacher List -->
     <div class="teacher-list-container" id="teacher-list-container">
         <div class="teacher-list-header">
             <div class="teacher-count">
@@ -80,14 +83,12 @@
             </div>
         </div>
 
-        <!-- Teacher List Items -->
         <div class="teacher-list">
             @include('partials.teacher_list', ['teachers' => $teachers])
         </div>
     </div>
 </div>
 
-<!-- Access Denied - For Student Access (Hidden by default) -->
 <div class="container mb-5" id="student-access" style="display: none;">
     <div class="access-denied">
         <i class="fas fa-lock"></i>
@@ -102,7 +103,6 @@
 @section('custom-js')
 <script>
 $(document).ready(function() {
-    // Biến để lưu trữ các tham số hiện tại
     let currentFilters = {
         fullname: '{{ $fullname ?? '' }}',
         department_id: '{{ $department_id ?? 'all' }}',
@@ -110,7 +110,6 @@ $(document).ready(function() {
         sort: '{{ $sort ?? 'name' }}'
     };
     
-    // Hàm gửi Ajax request chung
     function sendAjaxRequest(url, data, successCallback) {
         showLoading();
         
@@ -143,7 +142,6 @@ $(document).ready(function() {
         });
     }
     
-    // Xử lý sự kiện click pagination
     $(document).on('click', '.page-link', function(e) {
         e.preventDefault();
         

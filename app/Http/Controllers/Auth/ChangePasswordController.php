@@ -10,22 +10,11 @@ use Illuminate\Support\Facades\Hash;
 
 class ChangePasswordController extends Controller
 {
-    /**
-     * Hiển thị form đổi mật khẩu
-     *
-     * @return \Illuminate\View\View
-     */
     public function show_form()
     {
         return view("auth.change-password");
     }
 
-    /**
-     * Xử lý thay đổi mật khẩu
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function changePassword(Request $request)
     {
         $request->validate([
@@ -48,20 +37,19 @@ class ChangePasswordController extends Controller
         $user->password = Hash::make($request->new_password);
         $user->save();
             
-        // $this->logPasswordChange($user->id);
-
         return redirect()->route('home.index')->with('success', 'Thay đổi mật khẩu thành công vui lòng đăng xuất để cập nhật');
     }
-    private function logPasswordChange($userId)
-    {
-        DB::table('system_logs')->insert([
-            'user_id' => $userId,
-            'action' => 'password_change',
-            'details' => 'User changed password',
-            'ip_address' => request()->ip(),
-            'user_agent' => request()->userAgent(),
-            'is_active' => true,
-            'created_at' => now()
-        ]);
-    }
+
+    // private function logPasswordChange($userId)
+    // {
+    //     DB::table('system_logs')->insert([
+    //         'user_id' => $userId,
+    //         'action' => 'password_change',
+    //         'details' => 'User changed password',
+    //         'ip_address' => request()->ip(),
+    //         'user_agent' => request()->userAgent(),
+    //         'is_active' => true,
+    //         'created_at' => now()
+    //     ]);
+    // }
 }

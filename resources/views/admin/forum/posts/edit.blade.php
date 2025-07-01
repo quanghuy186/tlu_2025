@@ -1,5 +1,9 @@
 @extends('layouts/admin')
 
+@section('title')
+   Chỉnh sửa thông tin bài viết diễn đàn
+@endsection
+
 @section('content')
 
 <div class="pagetitle">

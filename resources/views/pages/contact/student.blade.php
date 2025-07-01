@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Danh bạ sinh viên
+@endsection
+
 @section('content')
 <section class="page-title">
     <div class="container">
@@ -18,9 +22,7 @@
     </div>
 </section>
 
-<!-- Main Content - For Students -->
 <div class="container mb-5" id="cbgv-access">
-    <!-- Search and Filter Section -->
     <div class="search-filter-container">
         
         <div class="filter-options">
@@ -78,29 +80,22 @@
             </div>
         </div>
 
-        <!-- Student List Items -->
         <div class="student-list">
             @include('partials.student_list', ['students' => $students])
 
-            
-        <!-- Pagination -->
-        
                 </div>
-            </div>
         </div>
-    @endsection
+    </div>
+@endsection
 
 @section('custom-js')
 <script>
     $(document).ready(function(){
-        // Biến để lưu trữ các tham số tìm kiếm hiện tại
         var currentSearch = "{{ $fullname ?? '' }}";
         var currentClass = "{{ $class_id ?? 'all' }}";
         var currentYear = "{{ $enrollment_year ?? 'all' }}";
         
-        // Hàm chung để tải dữ liệu khi có thay đổi bất kỳ
         function loadData(options) {
-            // Cập nhật các biến nếu có tham số tương ứng
             if (options.fullname !== undefined) {
                 currentSearch = options.fullname;
             }
@@ -111,32 +106,26 @@
                 currentYear = options.enrollment_year;
             }
             
-            // Xác định URL dựa trên loại hành động
             var url = options.sort 
                 ? "{{ route('contact.student.sort') }}" 
                 : "{{ route('contact.student.search') }}";
             
-            // Chuẩn bị dữ liệu gửi đi
             var data = {
                 fullname: currentSearch,
                 class_id: currentClass,
                 enrollment_year: currentYear
             };
             
-            // Thêm tham số sort nếu có
             if (options.sort) {
                 data.sort = options.sort;
             }
             
-            // Thêm tham số page nếu có
             if (options.page) {
                 data.page = options.page;
             }
             
-            // Hiển thị loading indicator (tùy chọn)
             $(".student-list").addClass("loading");
             
-            // Gửi yêu cầu Ajax
             $.ajax({
                 url: url,
                 type: "GET",
@@ -151,37 +140,32 @@
             });
         }
         
-        // Xử lý sự kiện khi select sắp xếp thay đổi
         $("#sortSelect").change(function() {
             loadData({
                 sort: $(this).val()
             });
         });
         
-        // Xử lý sự kiện khi select lớp thay đổi
         $("#classSelect").change(function() {
             loadData({
                 class_id: $(this).val()
             });
         });
         
-        // Xử lý sự kiện khi select khóa thay đổi
         $("#yearSelect").change(function() {
             loadData({
                 enrollment_year: $(this).val()
             });
         });
         
-        // Xử lý form tìm kiếm bằng Ajax
         $("#searchForm").submit(function(e) {
-            e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+            e.preventDefault(); 
             
             loadData({
                 fullname: $("input[name='fullname']").val()
             });
         });
         
-        // Xử lý phân trang bằng Ajax
         $(document).on('click', '.page-link', function(e) {
             e.preventDefault();
             
@@ -191,13 +175,11 @@
                 page: page
             });
             
-            // Scroll to top of list (optional)
             $('html, body').animate({
                 scrollTop: $(".student-list-container").offset().top - 100
             }, 200);
         });
         
-        // Thêm loading indicator CSS (tùy chọn)
         $("<style>")
             .prop("type", "text/css")
             .html(`
@@ -215,8 +197,7 @@
                     background: rgba(255, 255, 255, 0.7) url('/images/spinner.gif') no-repeat center center;
                     z-index: 5;
                 }
-            `)
-            .appendTo("head");
+        `).appendTo("head");
     });
 </script>
 @endsection

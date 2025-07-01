@@ -1,5 +1,9 @@
 @extends('layouts/admin')
 
+@section('title')
+   Chỉnh sửa danh mục bài viết diễn đàn
+@endsection
+
 @section('content')
 <div class="pagetitle">
     <h1>Chỉnh sửa danh mục diễn đàn</h1>

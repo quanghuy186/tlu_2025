@@ -1,6 +1,10 @@
 <!-- resources/views/forum/category.blade.php -->
 @extends('layouts.app')
 
+@section('title')
+    Danh mục bài viết diễn đàn
+@endsection
+
 @section('content')
 <!-- Breadcrumb -->
 <div class="breadcrumb-container">

@@ -92,7 +92,6 @@ class NotifycationController extends Controller
             ->with('notification_gim', $notification_gim);
     }
 
-    // Xem thông báo theo danh mục
     public function notificationByCategory($category_id, Request $request)
     {
         $notification_categories = NotificationCategory::all();
@@ -162,7 +161,7 @@ class NotifycationController extends Controller
     {
         $notification = Notification::with(['user', 'category'])->findOrFail($id);
         
-        // Lấy thông báo liên quan (cùng danh mục)
+        // Lấy thông báo liên quan cùng danh mục
         $related_notifications = Notification::with(['user', 'category'])
             ->where('category_id', $notification->category_id)
             ->where('id', '!=', $id)

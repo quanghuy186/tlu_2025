@@ -31,7 +31,6 @@ class ForumController extends Controller
             }])
             ->get();
         
-        // Query cho user posts nếu đã đăng nhập
         if (Auth::check()) {
             $userId = Auth::id();
             

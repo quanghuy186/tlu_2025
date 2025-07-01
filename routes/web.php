@@ -243,13 +243,15 @@ Route::prefix('/contact')->name('contact.')->middleware(['auth', 'redirect_admin
 });
 
 Route::name('chat.')->middleware(['auth', 'redirect_admin'])->group(function(){
-   Route::get('/chat', [MessageController::class, 'index'])->name('index');
+    Route::get('/chat', [MessageController::class, 'index'])->name('index');
     Route::get('/messages/{user}', [MessageController::class, 'getMessages'])->name('messages');
     Route::post('/messages', [MessageController::class, 'sendMessage'])->name('send');
     Route::put('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('read');
     Route::delete('/messages/{message}', [MessageController::class, 'deleteMessage'])->name('delete');
-    Route::get('/contacts', [MessageController::class, 'contacts'])->name('contacts');
+    // Route::get('/contacts', [MessageController::class, 'contacts'])->name('contacts');
     Route::get('/chat/start/{userId}', [MessageController::class, 'startChat'])->name('start');
+
+    Route::delete('/conversations/{user}', [MessageController::class, 'deleteConversation'])->name('conversation.delete');
 });
 Broadcast::routes(['middleware' => ['auth:web']]);
 

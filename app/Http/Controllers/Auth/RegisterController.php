@@ -43,15 +43,13 @@ class RegisterController extends Controller
             'terms.required' => 'Vui lòng chấp nhận điều khoản sử dụng',
         ]);
 
-        // Kiểm tra xem email đã tồn tại trong hệ thống nhưng chưa được xác thực chưa
         $existingUser = User::where('email', $request->email)->first();
 
         if ($existingUser && !$existingUser->email_verified) {
-            // Tạo token xác thực mới và thời gian hết hạn
+            // Tạo token xác thực mới
             $verificationToken = Str::random(64);
             $tokenExpiry = Carbon::now()->addDays(3);
 
-            // Cập nhật thông tin người dùng
             $existingUser->name = $request->name;
             $existingUser->password = Hash::make($request->password);
             $existingUser->verification_token = $verificationToken;
@@ -65,12 +63,11 @@ class RegisterController extends Controller
                 ->with('success', 'Tài khoản của bạn đã tồn tại nhưng chưa được xác thực. Vui lòng kiểm tra email để xác thực tài khoản!');
         }
 
-        // Nếu email chưa tồn tại hoặc đã được xác thực (không xử lý ở trên), thì kiểm tra unique
         if ($existingUser) {
             return back()->with('error', 'Email này đã được đăng ký trước đó');
         }
 
-        // Tạo token xác thực và thời gian hết hạn
+        // Tạo token xác thực                                                                                      
         $verificationToken = Str::random(64);
         $tokenExpiry = Carbon::now()->addDays(3);
 
@@ -87,7 +84,6 @@ class RegisterController extends Controller
                 'email_verified' => false,
             ]);
 
-            // Gửi email xác thực
             Mail::to($user->email)->send(new VerificationEmail($user));
 
             DB::commit();
@@ -108,9 +104,6 @@ class RegisterController extends Controller
         return view('auth.verify')->with('success', 'Đăng ký thành công vui lòng kiểm tra email để xác thực!');
     }
 
-    /**
-     * Gửi lại email xác thực
-     */
     public function resendVerificationEmail(Request $request)
     {
         $request->validate([
@@ -148,7 +141,6 @@ class RegisterController extends Controller
             $user->verification_resent_count = 0;
         }
 
-        // Tạo token mới
         $user->verification_token = Str::random(64);
         $user->verification_token_expiry = Carbon::now()->addDays(3);
         $user->verification_resent_count += 1;

@@ -1,5 +1,9 @@
 @extends('layouts/admin')
 
+@section('title')
+    Nhập danh sách sinh viên file excel
+@endsection
+
 @section('content')
 <div class="pagetitle">
     <h1>Import sinh viên từ Excel</h1>

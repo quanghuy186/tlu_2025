@@ -13,16 +13,13 @@ use App\Mail\VerificationEmail;
 
 class VerificationController extends Controller
 {
-    // Hiển thị form đăng ký
     public function showRegistrationForm()
     {
         return view('auth.register');
     }
 
-    // Xử lý đăng ký
     public function register(Request $request)
     {
-        // Validate dữ liệu đầu vào
         $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -30,11 +27,9 @@ class VerificationController extends Controller
             'phone' => 'nullable|string|max:20',
         ]);
 
-        // Tạo token xác thực và thời gian hết hạn
         $verificationToken = Str::random(64);
         $tokenExpiry = Carbon::now()->addDays(3);
 
-        // Tạo người dùng mới
         $user = User::create([
             'full_name' => $request->full_name,
             'email' => $request->email,
@@ -46,20 +41,16 @@ class VerificationController extends Controller
             'email_verified' => false,
         ]);
 
-        // Gửi email xác thực
         $this->sendVerificationEmail($user);
 
-        // Chuyển hướng với thông báo
         return redirect()->route('verification.notice')->with('status', 'Vui lòng kiểm tra email của bạn để xác thực tài khoản!');
     }
 
-    // Hiển thị thông báo xác thực
     public function notice()
     {
         return view('auth.verify');
     }
 
-    // Gửi lại email xác thực
     public function resend(Request $request)
     {
         $request->validate([
@@ -76,7 +67,6 @@ class VerificationController extends Controller
             return redirect()->route('login')->with('status', 'Email của bạn đã được xác thực. Vui lòng đăng nhập.');
         }
 
-        // Giới hạn số lần gửi lại email
         $resendLimit = 5;
         $cooldownPeriod = 15; // minutes
 
@@ -88,7 +78,6 @@ class VerificationController extends Controller
                 return back()->withErrors(['email' => "Vui lòng đợi {$minutesLeft} phút trước khi gửi lại email xác thực."]);
             }
 
-            // Reset counter after cooldown
             $user->verification_resent_count = 0;
         }
 
@@ -99,13 +88,11 @@ class VerificationController extends Controller
         $user->last_verification_resent_at = Carbon::now();
         $user->save();
 
-        // Gửi email xác thực
         $this->sendVerificationEmail($user);
 
         return back()->with('status', 'Link xác thực đã được gửi lại vào email của bạn!');
     }
 
-    // Xác thực email
     public function verify(Request $request, $token)
     {
         $user = User::where('verification_token', $token)->first();

@@ -1,5 +1,9 @@
 @extends('layouts/admin')
 
+@section('title')
+   Thêm tài khoản người dùng
+@endsection
+
 @section('content')
 
 <div class="pagetitle">

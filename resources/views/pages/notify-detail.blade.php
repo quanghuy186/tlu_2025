@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Xem chi tiết thông báo
+@endsection
+
 @section('content')
 
 <section class="page-title">

@@ -73,10 +73,8 @@ class ContactController extends Controller
             });
         }
 
-        // Modified sorting to handle null managers
         switch ($sortBy) {
             case 'name':
-                // First sort by whether manager exists, then by name
                 $query->orderByRaw('CASE WHEN users.name IS NULL THEN 1 ELSE 0 END')
                     ->orderBy('users.name', 'asc');
                 break;
@@ -85,7 +83,6 @@ class ContactController extends Controller
                     ->orderBy('users.name', 'desc');
                 break;
             default:
-                // Default to sorting by department name if no sorting specified
                 $query->orderBy('departments.name', 'asc');
         }
         
@@ -129,7 +126,6 @@ class ContactController extends Controller
             ->select('teachers.*')
             ->with(['user', 'department']);
         
-        // Thêm điều kiện tìm kiếm theo tên hoặc mã cán bộ
         if (!empty($fullname)) {
             $query->where(function($q) use ($fullname) {
                 $q->where('users.name', 'LIKE', "%{$fullname}%")
@@ -137,17 +133,14 @@ class ContactController extends Controller
             });
         }
         
-        // Thêm điều kiện lọc theo department_id
         if (!empty($department_id) && $department_id != 'all') {
             $query->where('teachers.department_id', $department_id);
         }
         
-        // Thêm điều kiện lọc theo academic_rank
         if (!empty($selected_rank) && $selected_rank != 'all') {
             $query->where('teachers.academic_rank', $selected_rank);
         }
         
-        // Áp dụng sắp xếp
         switch ($sort) {
             case 'name':
                 $query->orderBy('users.name', 'asc');
@@ -167,13 +160,11 @@ class ContactController extends Controller
                 $query->orderBy('users.name', 'asc');
         }
         
-        // Phân trang
         $teachers = $query->paginate(10);
         
-        // Thêm các tham số vào pagination links
         $teachers->appends($request->all());
         
-        // Kiểm tra nếu là yêu cầu Ajax
+        // nếu là Ajax
         if ($request->ajax()) {
             return view('partials.teacher_list', compact('teachers'))->render();
         }
@@ -236,10 +227,8 @@ class ContactController extends Controller
         
         $teachers = $query->paginate(10);
         
-        // Thêm các tham số vào pagination links
         $teachers->appends($request->all());
         
-        // Trả về partial view khi được gọi bằng Ajax
         return view('partials.teacher_list', compact('teachers'))->render();
     }
 
@@ -299,7 +288,6 @@ class ContactController extends Controller
         
         $students = $query->paginate(10);
         
-        // Kiểm tra nếu là yêu cầu Ajax
         if ($request->ajax()) {
             return view('partials.student_list', compact('students'));
         }
@@ -353,7 +341,6 @@ class ContactController extends Controller
         
         $students = $query->paginate(10);
         
-        // Trả về partial view khi được gọi bằng Ajax
         return view('partials.student_list', compact('students'));
     }
 }

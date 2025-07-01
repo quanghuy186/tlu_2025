@@ -1,5 +1,9 @@
 @extends('layouts/admin')
 
+@section('title')
+    Thêm danh bạ giảng viên mới
+@endsection
+
 @section('content')
 
 <div class="pagetitle">

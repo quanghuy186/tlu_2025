@@ -20,7 +20,6 @@ class Department extends Model
         'address',
         'level',
     ];
-
     protected $casts = [
         'level' => 'integer',
         'created_at' => 'datetime',
@@ -31,6 +30,7 @@ class Department extends Model
     {
         return $this->belongsTo(Department::class, 'parent_id');
     }
+
     public function children()
     {
         return $this->hasMany(Department::class, 'parent_id')
@@ -132,10 +132,6 @@ class Department extends Model
         return $code;
     }
 
-    // public function canDelete()
-    // {
-    //     return $this->children()->count() === 0;
-    // }
     public function getFullPathAttribute()
     {
         $path = $this->name;

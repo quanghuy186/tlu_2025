@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Danh sách các loại danh bạ
+@endsection
+
 @section('content')
     <!-- Hero Section -->
     <section class="hero-section">

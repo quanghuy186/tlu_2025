@@ -1,5 +1,9 @@
 @extends('layouts/admin')
 
+@section('title')
+   Danh sách các vai trò của người dùng
+@endsection
+
 @section('content')
 
 <div class="pagetitle">

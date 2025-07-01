@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Danh sách bài viết diễn đàn
+@endsection
+
 @section('content')
 
 <section class="forum-header">

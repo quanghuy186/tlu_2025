@@ -10,24 +10,18 @@ use Illuminate\View\View;
 
 class PasswordResetLinkController extends Controller
 {
-    /**
-     * Hiển thị form yêu cầu đặt lại mật khẩu.
-     */
     public function create(): View
     {
         return view('auth.forgot-password');
     }
 
-    /**
-     * Xử lý yêu cầu đặt lại mật khẩu.
-     */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'email' => ['required', 'email'],
         ]);
 
-        // Gửi liên kết đặt lại mật khẩu đến địa chỉ email này
+        // Gửi liên kết đặt lại mật khẩu đến địa chỉ email 
         $status = Password::sendResetLink(
             $request->only('email')
         );

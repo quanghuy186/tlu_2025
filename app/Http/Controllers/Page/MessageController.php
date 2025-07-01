@@ -12,7 +12,6 @@ class MessageController extends Controller
 {
     public function index()
     {
-        // Lấy danh sách người dùng để chat
         $users = User::where('id', '!=', Auth::id())->get();
         return view('chat.index', compact('users'));
     }
@@ -60,7 +59,6 @@ class MessageController extends Controller
         $message->sent_at = now();
         $message->save();
 
-        // Broadcast sự kiện
         broadcast(new MessageSent($message))->toOthers();
 
         return response()->json(['message' => $message]);
@@ -83,7 +81,6 @@ class MessageController extends Controller
     {
         $message = Message::findOrFail($messageId);
         
-        // Chỉ người gửi hoặc người nhận mới có thể xóa
         if ($message->sender_user_id == Auth::id() || $message->recipient_user_id == Auth::id()) {
             $message->is_deleted = true;
             $message->save();

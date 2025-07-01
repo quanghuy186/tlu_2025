@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+   Tin nhắn
+@endsection
+
 @section('content')
     <div class="container mt-5">
         <div class="row">
@@ -12,16 +16,10 @@
                                 <li class="list-group-item user-item" data-id="{{ $user->id }}">
                                     <div class="d-flex align-items-center">
                                         <div class="avatar me-3">
-                                            <!-- Avatar hoặc icon người dùng -->
                                             <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                                                 <img src="{{ $user->avatar ? asset('storage/avatars/'.$user->avatar) : asset('user_default.jpg') }}" >
-                                                {{-- {{ $user->avatar ? $user->avatar : asset('user_default.jpg') }} --}}
                                             </div>
                                         </div>
-                                        {{-- <div>
-                                            <h6 class="mb-0">{{ $user->name }}</h6>
-                                            <small class="text-muted last-seen"> {{ $user->isOnline ? 'Trực tuyến' : 'Hoạt động x phút trước'}}</small>
-                                        </div> --}}
 
                                         <small class="text-muted last-seen">
                                             @foreach ($user->roles as $role)
@@ -56,12 +54,30 @@
             
             <div class="col-md-9">
                 <div class="card">
+                    {{-- <div class="card-header d-flex align-items-center">
+                        <div id="chat-with">Chọn người dùng để bắt đầu trò chuyện</div>
+                    </div> --}}
+
                     <div class="card-header d-flex align-items-center">
                         <div id="chat-with">Chọn người dùng để bắt đầu trò chuyện</div>
+                        <div class="ms-auto">
+                            <div class="dropdown" id="chat-actions" style="display: none;">
+                                <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item text-danger" href="#" id="delete-conversation">
+                                        <i class="bi bi-trash me-2"></i>Xóa cuộc trò chuyện
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
+
+
                     <div class="card-body">
                         <div id="messages-container" class="mb-3" style="height: 400px; overflow-y: auto;">
-                            <!-- Tin nhắn sẽ được hiển thị ở đây -->
                             <div class="text-center py-5 text-muted" id="no-messages">
                                 <i class="bi bi-chat"></i>
                                 <p>Chọn người dùng để bắt đầu trò chuyện</p>
@@ -95,15 +111,12 @@
 @section('custom-js')
     <script>
         $(document).ready(function() {
-            // Kiểm tra xem có tham số new_user_id trên URL không
             const urlParams = new URLSearchParams(window.location.search);
             const newUserId = urlParams.get('new_user_id');
             
             if (newUserId) {
-                // Tự động chọn người dùng mới
                 $(`.user-item[data-id="${newUserId}"]`).click();
                 
-                // Xóa tham số khỏi URL để tránh chọn lại khi tải lại trang
                 const url = new URL(window.location);
                 url.searchParams.delete('new_user_id');
                 window.history.replaceState({}, '', url);
@@ -112,34 +125,26 @@
 
         let currentRecipientId = null;
         
-        // Xử lý khi chọn người dùng
         $('.user-item').on('click', function() {
             const userId = $(this).data('id');
             const userName = $(this).find('h6').text();
             currentRecipientId = userId;
             
-            // Hiển thị tên người được chọn
             $('#chat-with').text(`Đang trò chuyện với ${userName}`);
             
-            // Hiển thị form nhắn tin
             $('#message-form').removeClass('d-none');
             $('#recipient-id').val(userId);
             
-            // Hiển thị loading
             $('#messages-container').html('<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
             
-            // Tải tin nhắn
             loadMessages(userId);
             
-            // Đánh dấu là đã chọn
             $('.user-item').removeClass('active');
             $(this).addClass('active');
             
-            // Ẩn badge thông báo
             $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
         });
         
-        // Tải tin nhắn
         function loadMessages(userId) {
             $.ajax({
                 url: `/messages/${userId}`,
@@ -152,7 +157,6 @@
             });
         }
         
-        // Hiển thị tin nhắn
         function displayMessages(messages) {
             const container = $('#messages-container');
             container.empty();
@@ -203,25 +207,21 @@
             });
         }
         
-        // Kiểm tra file có phải là hình ảnh
         function isImageFile(url) {
             const extensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
             return extensions.some(ext => url.toLowerCase().endsWith(ext));
         }
         
-        // Format thời gian
         function formatTime(dateTime) {
             const date = new Date(dateTime);
             return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }
         
-        // Cuộn xuống cuối cùng
         function scrollToBottom() {
             const container = document.getElementById('messages-container');
             container.scrollTop = container.scrollHeight;
         }
         
-        // Đánh dấu tin nhắn đã đọc
         function markMessagesAsRead(messages) {
             const unreadMessages = messages.filter(msg => 
                 !msg.is_read && msg.recipient_user_id == '{{ Auth::id() }}'
@@ -238,7 +238,6 @@
             });
         }
         
-        // Gửi tin nhắn
         $('#message-form').on('submit', function(e) {
             e.preventDefault();
             
@@ -259,22 +258,18 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    // Thêm tin nhắn vào giao diện
                     const message = response.message;
                     const messageContent = formData.get('content') || '';
                     
-                    // Reset form
                     $('#message-input').val('');
                     $('#file-input').val('');
                     $('#file-preview').addClass('d-none');
                     
-                    // Tải lại tin nhắn
                     loadMessages(currentRecipientId);
                 }
             });
         });
         
-        // Xử lý chọn file
         $('#attach-btn').on('click', function() {
             $('#file-input').click();
         });
@@ -294,37 +289,25 @@
             $('#file-preview').addClass('d-none');
         });
         
-        // Kiểm tra và thiết lập Echo để lắng nghe sự kiện
         document.addEventListener('DOMContentLoaded', function() {
-            // Kiểm tra xem Echo đã được khởi tạo chưa
             if (typeof window.Echo === 'undefined') {
-                console.error('Laravel Echo chưa được khởi tạo. Hãy kiểm tra file bootstrap.js');
                 
-                // Khởi tạo Pusher trực tiếp nếu Echo không tồn tại
                 if (typeof Pusher !== 'undefined') {
-                    console.log('Đang khởi tạo kết nối Pusher trực tiếp...');
                     
-                    // Khởi tạo Pusher
                     Pusher.logToConsole = true;
                     const pusher = new Pusher('{{ env("PUSHER_APP_KEY") }}', {
                         cluster: '{{ env("PUSHER_APP_CLUSTER") }}',
                         encrypted: true
                     });
                     
-                    // Đăng ký kênh private
                     const channel = pusher.subscribe('private-chat.{{ Auth::id() }}');
                     
-                    // Lắng nghe sự kiện
                     channel.bind('message.sent', function(data) {
-                        console.log('Nhận được tin nhắn:', data);
                         const message = data.message;
                         
-                        // Nếu đang trò chuyện với người gửi tin nhắn
                         if (currentRecipientId && currentRecipientId == message.sender_user_id) {
-                            // Tải lại tin nhắn
                             loadMessages(currentRecipientId);
                             
-                            // Đánh dấu đã đọc
                             $.ajax({
                                 url: `/messages/${message.id}/read`,
                                 method: 'PUT',
@@ -333,7 +316,6 @@
                                 }
                             });
                         } else {
-                            // Hiển thị thông báo có tin nhắn mới
                             const userItem = $(`.user-item[data-id="${message.sender_user_id}"]`);
                             const unreadBadge = userItem.find('.unread-badge');
                             const badge = unreadBadge.find('.badge');
@@ -341,11 +323,9 @@
                             unreadBadge.removeClass('d-none');
                             badge.text(parseInt(badge.text() || 0) + 1);
                             
-                            // Thông báo âm thanh
                             const audio = new Audio('/notification.mp3');
                             audio.play();
                             
-                            // Hiển thị notification nếu được cho phép
                             if (Notification.permission === 'granted') {
                                 const sender = userItem.find('h6').text();
                                 const notification = new Notification('Tin nhắn mới', {
@@ -364,20 +344,11 @@
                     console.error('Cả Laravel Echo và Pusher JS đều không được tải!');
                 }
             } else {
-                console.log('Echo đã được khởi tạo, đang lắng nghe sự kiện...');
-                
-                // Sử dụng Echo bình thường
                 window.Echo.private('chat.{{ Auth::id() }}')
                     .listen('.message.sent', (e) => {
-                        console.log('Nhận được tin nhắn từ Echo:', e);
                         const message = e.message;
-                        
-                        // Nếu đang trò chuyện với người gửi tin nhắn
                         if (currentRecipientId && currentRecipientId == message.sender_user_id) {
-                            // Tải lại tin nhắn
                             loadMessages(currentRecipientId);
-                            
-                            // Đánh dấu đã đọc
                             $.ajax({
                                 url: `/messages/${message.id}/read`,
                                 method: 'PUT',
@@ -386,19 +357,15 @@
                                 }
                             });
                         } else {
-                            // Hiển thị thông báo có tin nhắn mới
                             const userItem = $(`.user-item[data-id="${message.sender_user_id}"]`);
                             const unreadBadge = userItem.find('.unread-badge');
                             const badge = unreadBadge.find('.badge');
                             
                             unreadBadge.removeClass('d-none');
                             badge.text(parseInt(badge.text() || 0) + 1);
-                            
-                            // Thông báo âm thanh
                             const audio = new Audio('/notification.mp3');
                             audio.play();
                             
-                            // Hiển thị notification nếu được cho phép
                             if (Notification.permission === 'granted') {
                                 const sender = userItem.find('h6').text();
                                 const notification = new Notification('Tin nhắn mới', {
@@ -414,6 +381,64 @@
                         }
                     });
             }
-        });
+    });
+
+    function showChatActions() {
+        $('#chat-actions').show();
+    }
+
+    function hideChatActions() {
+        $('#chat-actions').hide();
+    }
+
+    $('#delete-conversation').on('click', function(e) {
+        e.preventDefault();
+        
+        if (!currentRecipientId) return;
+        
+        if (confirm('Bạn có chắc chắn muốn xóa toàn bộ cuộc trò chuyện này không? Hành động này không thể hoàn tác.')) {
+            $.ajax({
+                url: `/conversations/${currentRecipientId}`,
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#messages-container').html('<div class="text-center py-5 text-muted"><p>Cuộc trò chuyện đã được xóa</p></div>');
+                    
+                    $('#chat-with').text('Chọn người dùng để bắt đầu trò chuyện');
+                    $('#message-form').addClass('d-none');
+                    hideChatActions();
+                    currentRecipientId = null;
+                    
+                    alert('Cuộc trò chuyện đã được xóa thành công.');
+                },
+                error: function() {
+                    alert('Đã xảy ra lỗi khi xóa cuộc trò chuyện. Vui lòng thử lại sau.');
+                }
+            });
+        }
+    });
+
+    $('.user-item').on('click', function() {
+        const userId = $(this).data('id');
+        const userName = $(this).find('h6').text();
+        currentRecipientId = userId;
+        
+        $('#chat-with').text(`Đang trò chuyện với ${userName}`);
+        $('#message-form').removeClass('d-none');
+        $('#recipient-id').val(userId);
+        
+        $('#messages-container').html('<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+        loadMessages(userId);
+        $('.user-item').removeClass('active');
+        $(this).addClass('active');
+        $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
+    });
+
+    $('.user-item').on('click', function() {
+        $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
+        showChatActions();
+    });
     </script>
 @endsection

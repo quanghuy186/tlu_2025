@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Danh bạ đơn vị
+@endsection
+
 @section('content')
 <div class="container">
 
@@ -113,7 +117,6 @@
             });
         }
         
-        // Xử lý sự kiện khi select sắp xếp thay đổi
         $("#sortSelect").change(function() {
             loadData({
                 sort: $(this).val()
@@ -121,14 +124,13 @@
         });
         
         $("#searchForm").submit(function(e) {
-            e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+            e.preventDefault();
             
             loadData({
                 fullname: $("input[name='fullname']").val()
             });
         });
         
-        // Xử lý phân trang bằng Ajax
         $(document).on('click', '.page-link', function(e) {
             e.preventDefault();
             
@@ -138,13 +140,11 @@
                 page: page
             });
             
-            // Scroll to top of list (optional)
             $('html, body').animate({
                 scrollTop: $(".unit-list-container").offset().top - 100
             }, 200);
         });
         
-        // Thêm loading indicator CSS (tùy chọn)
         $("<style>")
             .prop("type", "text/css")
             .html(`
@@ -162,8 +162,7 @@
                     background: rgba(255, 255, 255, 0.7) url('/images/spinner.gif') no-repeat center center;
                     z-index: 5;
                 }
-            `)
-            .appendTo("head");
+        `).appendTo("head");
     });
 </script>
 @endsection

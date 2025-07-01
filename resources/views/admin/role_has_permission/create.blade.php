@@ -1,5 +1,9 @@
 @extends('layouts/admin')
 
+@section('title')
+   Cấp quyền cho vai trò người dùng
+@endsection
+
 @section('content')
 
 <?php

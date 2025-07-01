@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Xem chi tiết bài viết diễn đàn
+@endsection
+
 @section('content')
 <div class="breadcrumb-container">
     <div class="container">

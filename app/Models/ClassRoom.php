@@ -21,18 +21,22 @@ class ClassRoom extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+    
     public function department()
     {
         return $this->belongsTo(Department::class);
     }
+
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);
     }
+
     public function students()
     {
         return $this->hasMany(Student::class, 'class_id');
     }
+
     public function teacherWithUser()
     {
         return $this->belongsTo(Teacher::class, 'teacher_id')->with('user');

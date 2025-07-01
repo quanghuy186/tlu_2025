@@ -1,9 +1,13 @@
 @extends('layouts/admin')
 
+@section('title')
+   Phân quyền cho người dùng
+@endsection
+
 @section('content')
 
 <div class="pagetitle">
-    <h1>Gán vai trò người dùng</h1>
+    <h1>Gán quyền cho người dùng</h1>
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Trang chủ</a></li>
