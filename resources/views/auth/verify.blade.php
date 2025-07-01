@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xác thực tài khoản TLU của bạn</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/Logo_TLU.png') }}">
+
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Arial, sans-serif;

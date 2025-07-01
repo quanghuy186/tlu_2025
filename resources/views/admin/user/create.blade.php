@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Thêm tài khoản người dùng</li>
       </ol>
     </nav>
-  </div><!-- End Page Title -->
+  </div>
 
   <section class="section py-4">
   <div class="container">
@@ -28,7 +28,6 @@
           <div class="card-body mt-3">
             <form action="{{ route('admin.user.create') }}" method="POST">
               @csrf
-              <!-- User Information Section -->
               <div class="mb-4">
                 <div class="row">
                   <div class="col-md-12 mb-3">
@@ -52,7 +51,6 @@
                 </div>
               </div>
               
-              <!-- Account Information Section -->
               <div class="mb-4">
                 <h6 class="fw-bold pb-2 border-bottom mb-3">Thông tin tài khoản</h6>
                 <div class="row">
@@ -79,32 +77,36 @@
                 </div>
               </div>
               
-              <!-- Role Information Section -->
               <div class="mb-4">
-                {{-- <h6 class="fw-bold pb-2 border-bottom mb-3">Lớp học</h6> --}}
-                <div class="mb-3">
-                  <label class="form-label">Chọn lớp học <span class="text-danger"></span></label>
-                  <select id="class_id" class="form-select" name="class_id" required>
-                        <option value="1">Chọn lớp học</option>
-                         @foreach ($list_classes as $c)
-                            <option name="class_id" value="{{ $c->id }}">{{ $c->class_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-
-                {{-- <h6 class="fw-bold pb-2 border-bottom mb-3">Phân quyền</h6> --}}
                 <div class="mb-3">
                   <label class="form-label">Chọn vai trò <span class="text-danger">*</span></label>
                   <select id="role_id" class="form-select" name="role_id" required>
-                        <option value="1">Chọn vai trò</option>
+                        <option value="">Chọn vai trò</option>
                          @foreach ($list_roles as $r)
-                            <option name="role_id" value="{{ $r->id }}">{{ $r->description }}</option>
+                            <option value="{{ $r->id }}" data-role-name="{{ $r->name ?? $r->description }}">{{ $r->description }}</option>
                         @endforeach
                     </select>
                 </div>
 
+                <div class="mb-3" id="class_selection" style="display: none;">
+                  <label class="form-label">Chọn lớp học <span class="text-danger"></span></label>
+                  <select id="class_id" class="form-select" name="class_id">
+                        <option value="">Chọn lớp học</option>
+                         @foreach ($list_classes as $c)
+                            <option value="{{ $c->id }}">{{ $c->class_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
+                <div class="mb-3" id="department_selection" style="display: none;">
+                  <label class="form-label">Chọn đơn vị <span class="text-danger"></span></label>
+                  <select id="department_id" class="form-select" name="department_id">
+                        <option value="">Chọn đơn vị</option>
+                         @foreach ($list_department as $d)
+                            <option value="{{ $d->id }}">{{ $d->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 
                 <div class="mb-3">
                   <label class="form-label d-block">Trạng thái tài khoản</label>
@@ -123,8 +125,6 @@
                 </div>
               </div>
               
-              <!-- Terms and Conditions -->
-
               <div class="d-flex justify-content-between mt-4">
                 <a href="{{ route('admin.user.index') }}" class="btn btn-outline-secondary">
                   <i class="bi bi-arrow-left me-1"></i> Quay lại
@@ -142,6 +142,7 @@
 </section>
 
 <script>
+  // Toggle password visibility
   document.getElementById('togglePassword').addEventListener('click', function() {
     const passwordInput = document.getElementById('password');
     const icon = this.querySelector('i');
@@ -157,6 +158,7 @@
     }
   });
   
+  // Password strength indicator
   document.getElementById('password').addEventListener('input', function() {
     const strength = this.value.length;
     const progressBar = document.getElementById('passwordStrength');
@@ -177,6 +179,78 @@
       progressBar.style.width = '100%';
       progressBar.className = 'progress-bar bg-success';
     }
+  });
+
+  // Show/hide class selection based on role
+  document.getElementById('role_id').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const classSelection = document.getElementById('class_selection');
+    const classSelect = document.getElementById('class_id');
+    
+    if (selectedOption && selectedOption.value) {
+      // Lấy tên vai trò từ data attribute hoặc text
+      const roleName = selectedOption.getAttribute('data-role-name') || selectedOption.text;
+      
+      // Kiểm tra xem có phải vai trò sinh viên không (có thể điều chỉnh điều kiện này)
+      // Bạn có thể thay đổi điều kiện này tùy theo cách đặt tên vai trò trong database
+      if (roleName.toLowerCase().includes('sinh viên') || 
+          roleName.toLowerCase().includes('student') ||
+          roleName.toLowerCase().includes('học sinh')) {
+        classSelection.style.display = 'block';
+        classSelect.setAttribute('required', 'required');
+      } else {
+        classSelection.style.display = 'none';
+        classSelect.removeAttribute('required');
+        classSelect.value = ''; // Reset giá trị
+      }
+    } else {
+      classSelection.style.display = 'none';
+      classSelect.removeAttribute('required');
+      classSelect.value = ''; // Reset giá trị
+    }
+  });
+
+  document.getElementById('role_id').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const classSelection = document.getElementById('class_selection');
+    const classSelect = document.getElementById('class_id');
+    const departmentSelection = document.getElementById('department_selection');
+    const departmentSelect = document.getElementById('department_id');
+    
+    // Reset tất cả về trạng thái ẩn
+    classSelection.style.display = 'none';
+    classSelect.removeAttribute('required');
+    classSelect.value = '';
+    
+    departmentSelection.style.display = 'none';
+    departmentSelect.removeAttribute('required');
+    departmentSelect.value = '';
+    
+    if (selectedOption && selectedOption.value) {
+      // Lấy tên vai trò từ data attribute hoặc text
+      const roleName = selectedOption.getAttribute('data-role-name') || selectedOption.text;
+      const roleNameLower = roleName.toLowerCase();
+      
+      // Kiểm tra vai trò sinh viên
+      if (roleNameLower.includes('sinh viên') || 
+          roleNameLower.includes('student') ||
+          roleNameLower.includes('học sinh')) {
+        classSelection.style.display = 'block';
+        classSelect.setAttribute('required', 'required');
+      }
+      // Kiểm tra vai trò giảng viên
+      else if (roleNameLower.includes('giảng viên') || 
+               roleNameLower.includes('teacher') ||
+               roleNameLower.includes('lecturer') ||
+               roleNameLower.includes('instructor')) {
+        departmentSelection.style.display = 'block';
+        departmentSelect.setAttribute('required', 'required');
+      }
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('role_id').dispatchEvent(new Event('change'));
   });
 </script>
 

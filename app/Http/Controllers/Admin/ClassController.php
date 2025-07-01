@@ -71,7 +71,6 @@ class ClassController extends Controller
         
         return view('admin.contact.class.create', compact('departments', 'teachers', 'academicYears', 'semesters'));
     }
-
     
     public function store(Request $request)
     {
@@ -105,18 +104,12 @@ class ClassController extends Controller
             ->with('success', 'Lớp học đã được tạo thành công!');
     }
 
-    /**
-     * Hiển thị thông tin chi tiết lớp học
-     */
     public function show($id)
     {
         $class = ClassRoom::with(['department', 'teacherWithUser'])->findOrFail($id);
         return view('admin.contact.class.detail', compact('class'));
     }
 
-    /**
-     * Hiển thị form chỉnh sửa thông tin lớp học
-     */
     public function edit($id)
     {
         $class = ClassRoom::findOrFail($id);
@@ -128,14 +121,10 @@ class ClassController extends Controller
         return view('admin.contact.class.edit', compact('class', 'departments', 'teachers', 'academicYears', 'semesters'));
     }
 
-    /**
-     * Cập nhật thông tin lớp học
-     */
     public function update(Request $request, $id)
     {
         $class = ClassRoom::findOrFail($id);
         
-        // Validate dữ liệu
         $validated = $request->validate([
             'class_code' => [
                 'required',
@@ -150,16 +139,13 @@ class ClassController extends Controller
             'teacher_id' => 'nullable|exists:teachers,id',
         ]);
 
-        // Cập nhật thông tin lớp học
         $class->update($validated);
 
         return redirect()->route('admin.class.index')
             ->with('success', 'Thông tin lớp học đã được cập nhật!');
     }
 
-    /**
-     * Xóa lớp học
-     */
+   
     public function destroy($id)
     {
         $class = ClassRoom::findOrFail($id);
@@ -180,7 +166,7 @@ class ClassController extends Controller
         // Tạo danh sách năm học từ năm hiện tại trở về 5 năm trước và 2 năm tới
         for ($i = -5; $i <= 2; $i++) {
             $startYear = $currentYear + $i;
-            $endYear = $startYear + 1;
+            $endYear = $startYear + 4;
             $years["$startYear-$endYear"] = "Năm học $startYear-$endYear";
         }
         
