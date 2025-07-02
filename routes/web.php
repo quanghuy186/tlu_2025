@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserHasPermissionController;
 use App\Http\Controllers\Admin\UserHasRoleController;
+use App\Http\Controllers\API\ApiDataController;
 use App\Http\Controllers\API\ApiRoleHasPermissionController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -227,7 +228,7 @@ Route::prefix('admin/forum')->name('admin.forum.')->middleware(['auth', 'manager
     });
 });
 
-Route::prefix('/contact')->name('contact.')->middleware(['auth', 'redirect_admin'])->group(function(){
+Route::prefix('/contact')->name('contact.')->middleware(['auth', 'redirect_admin', 'redirect_censor'])->group(function(){
     Route::get('/', [ContactController::class, 'index'])->name('index');
     Route::get('/student', [ContactController::class, 'student'])->name('student');
     Route::get('/student/search', [ContactController::class, 'search_student'])->name('student.search');
@@ -242,7 +243,7 @@ Route::prefix('/contact')->name('contact.')->middleware(['auth', 'redirect_admin
     Route::get('/department/sort', [ContactController::class, 'sort_department'])->name('department.sort');
 });
 
-Route::name('chat.')->middleware(['auth', 'redirect_admin'])->group(function(){
+Route::name('chat.')->middleware(['auth', 'redirect_admin', 'redirect_censor'])->group(function(){
     Route::get('/chat', [MessageController::class, 'index'])->name('index');
     Route::get('/messages/{user}', [MessageController::class, 'getMessages'])->name('messages');
     Route::post('/messages', [MessageController::class, 'sendMessage'])->name('send');
@@ -264,6 +265,9 @@ Route::middleware(['auth', 'redirect_admin'])->group(function () {
         Route::get('/api/posts/{id}', [ForumController::class, 'getPostData'])->name('post.data')->middleware('auth');
         Route::get('/post/{id}', [ForumController::class, 'showPost'])->name('post.show');
         Route::get('/category/{slug}', [ForumController::class, 'showCategory'])->name('category');
+        Route::delete('/post', [ForumController::class, 'deletePost'])->name('post.delete')->middleware('auth');
+
+
         Route::post('/comment', [ForumController::class, 'storeComment'])->name('comment.store')->middleware('auth');
         Route::post('/comment/reply', [ForumController::class, 'storeReply'])->name('comment.reply')->middleware('auth');
         Route::delete('/comment', [ForumController::class, 'deleteComment'])->name('comment.delete')->middleware('auth');
@@ -296,3 +300,5 @@ Route::get('/api/department', function () {
 
 Route::put('/home', [IndexController::class, 'update'])->name('profile.update')->middleware('auth');
 // Route::put('/profile/update', [App\Http\Controllers\Home\IndexController::class, 'update'])->name('profile.update');
+
+Route::get('/api/data', [ApiDataController::class, 'index']);

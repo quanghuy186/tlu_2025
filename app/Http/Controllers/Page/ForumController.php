@@ -425,6 +425,20 @@ class ForumController extends Controller
             ->with('success', 'Phản hồi của bạn đã được đăng thành công.');
     }
 
+    public function deletePost(Request $request){
+        $post = ForumPost::findOrFail($request->id);
+        if ($post->user_id != Auth::id()) {
+            return redirect()->back()
+                ->with('error', 'Bạn không có quyền xóa bài viết này.');
+        }
+        ForumPost::where('id', $post->id)->delete();
+        
+        $post->delete();
+        
+        return redirect()->back()
+            ->with('success', 'Bài viết đã được xóa thành công.');
+    }
+
     public function deleteComment(Request $request)
     {
         $validator = Validator::make($request->all(), [

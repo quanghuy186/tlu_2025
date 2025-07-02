@@ -700,6 +700,18 @@
                                         {{ timeAgo($p->created_at) ?? 'Chưa xác định' }}
                                 </span>
                             </div>
+
+                            @if($p->user_id == Auth::id())
+                                <form method="POST" action="{{ route('forum.post.delete') }}" class="delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="hidden" name="id" value="{{ $p->id }}">
+                                    <button type="submit" class="btn-delete" onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">
+                                        Xóa bài viết
+                                    </button>
+                                </form>
+                            @endif
+
                         </div>
                         <div class="post-body">
                             <h5 class="post-title">{{ $p->title }}</h5>
@@ -709,7 +721,7 @@
                         
                         <div class="post-footer">
                             <div class="post-actions">
-                                <a href="#"><i class="far fa-comment"></i> {{ $p->comments_count }} bình luận</a>
+                                <a href="{{ route('forum.post.show', $p->id) }}"><i class="far fa-comment"></i> {{ $p->comments_count }} bình luận</a>
                                 
                                 <a href="#" class="like-button {{ Auth::check() && $p->likedByUser(Auth::id()) ? 'liked' : '' }}" data-post-id="{{ $p->id }}">
                                     <i class="{{ Auth::check() && $p->likedByUser(Auth::id()) ? 'fas' : 'far' }} fa-heart"></i> 
@@ -722,11 +734,8 @@
                                 <span><i class="fas fa-folder me-1"></i>{{ $p->category->name ?? '' }}</span>
                             </div>
                         </div>
-
-
                     </div>
                 @endforeach
-                
             </div>
 
             @if ($latestPosts->hasPages())
@@ -796,7 +805,6 @@
                     </div>
                 </div>
 
-                <!-- Category Card -->
                 <div class="card">
                     <div class="card-header">
                         <i class="fas fa-folder me-2"></i> Chuyên mục
@@ -825,8 +833,6 @@
                         @endforelse
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -835,6 +841,16 @@
 <a href="#" class="new-topic-btn" data-bs-toggle="modal" data-bs-target="#createPostModal">
     <i class="fas fa-plus"></i>
 </a>
+
+{{-- <script>
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!confirm('Bạn có chắc muốn xóa bài viết này?')) {
+                e.preventDefault();
+            }
+        });
+    });
+</script> --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

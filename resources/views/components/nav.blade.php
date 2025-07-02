@@ -51,25 +51,33 @@
                             <a class="nav-link" href="{{ route('home.index') }}">Trang chủ</a>
                         </li>
                     @endif
-                   
-                    @if(request()->is('contact*'))
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('contact.index') }}">Danh bạ</a>
-                        </li>
-                    @else
-                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('contact.index') }}">Danh bạ</a>
-                        </li>
-                    @endif
 
-                    @if(request()->is('chat*'))
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('chat.index') }}">Tin nhắn</a>
-                        </li>
+                    @if(hasRole(4,Auth::user()))
+
                     @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('chat.index') }}">Tin nhắn</a>
-                        </li>
+                        @if(request()->is('contact*'))
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{{ route('contact.index') }}">Danh bạ</a>
+                            </li>
+                        @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('contact.index') }}">Danh bạ</a>
+                            </li>
+                        @endif
+                    @endif
+                   
+                    @if(hasRole(4, Auth::user()))
+                    
+                    @else
+                        @if(request()->is('chat*'))
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{{ route('chat.index') }}">Tin nhắn</a>
+                            </li>
+                        @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('chat.index') }}">Tin nhắn</a>
+                            </li>
+                        @endif
                     @endif
                     
                     @if (request()->is('forum*'))
