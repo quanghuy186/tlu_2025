@@ -675,63 +675,89 @@
                     @endif
                 </div>
             @endforeach
-
+            
             <div class="latest-posts">
                 @foreach ($latestPosts as $p)
                     <div class="post-card">
                         <div class="post-header">
-                            @if($p->author->avatar)
-                                <img src="{{ asset('storage/avatars/'.$p->author->avatar) }}" 
-                                alt="{{ $p->author->name }}" style="border-radius : 50%" 
-                                class="unit-logo">
-                            @else
-                                <img src="{{ asset('user_default.jpg') }}" 
-                                alt="" class="unit-logo" style="border-radius : 50%;">
-                            @endif
-                            <div>       
-                                @can('show-anonymously', $p)
-                                    <h6 class="post-author">{{ $p->author->name }}</h6>
-                                @else   
-                                    <h6 class="post-author">{{ $p->is_anonymous == 1 ? "Ẩn danh" : $p->author->name }}</h6>
-                                @endcan
-
-                                <span>
-                                    <i class="far fa-clock me-1"></i> 
+                            <div class="d-flex align-items-center flex-grow-1">
+                                @if($p->author->avatar)
+                                    <img src="{{ asset('storage/avatars/'.$p->author->avatar) }}"
+                                        alt="{{ $p->author->name }}" style="border-radius: 50%"
+                                        class="unit-logo">
+                                @else
+                                    <img src="{{ asset('user_default.jpg') }}"
+                                        alt="" class="unit-logo" style="border-radius: 50%;">
+                                @endif
+                                <div class="ms-2">
+                                    @can('show-anonymously', $p)
+                                        <h6 class="post-author mb-0">{{ $p->author->name }}</h6>
+                                    @else
+                                        <h6 class="post-author mb-0">{{ $p->is_anonymous == 1 ? "Ẩn danh" : $p->author->name }}</h6>
+                                    @endcan
+                                    <span class="text-muted small">
+                                        <i class="far fa-clock me-1"></i>
                                         {{ timeAgo($p->created_at) ?? 'Chưa xác định' }}
-                                </span>
+                                    </span>
+                                </div>
                             </div>
-
+                            
                             @if($p->user_id == Auth::id())
-                                <form method="POST" action="{{ route('forum.post.delete') }}" class="delete-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <input type="hidden" name="id" value="{{ $p->id }}">
-                                    <button type="submit" class="btn-delete" onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">
-                                        Xóa bài viết
+                                <div class="dropdown">
+                                    <button class="btn btn-link text-muted p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots-vertical"></i>
                                     </button>
-                                </form>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <button type="button" class="btn btn-sm edit-post-btn" data-post-id="{{ $p->id }}" title="Chỉnh sửa">
+                                                    <i class="bi bi-pencil me-2"></i> Chỉnh sửa bài viết
+                                                </button>
+                                            </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form method="POST" action="{{ route('forum.post.delete') }}" class="delete-form mb-0">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="hidden" name="id" value="{{ $p->id }}">
+                                                <button type="submit" class="dropdown-item text-danger" 
+                                                        onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">
+                                                    <i class="bi bi-trash me-2"></i>Xóa bài viết
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
                             @endif
-
                         </div>
+                        
                         <div class="post-body">
                             <h5 class="post-title">{{ $p->title }}</h5>
                             <p class="post-text">{{ $p->content }}</p>
-                            <a href="{{ route('forum.post.show', $p->id) }}" class="btn btn-sm btn-outline-primary">Đọc tiếp <i class="fas fa-arrow-right ms-1"></i></a>
+                            <a href="{{ route('forum.post.show', $p->id) }}" class="btn btn-sm btn-outline-primary">
+                                Đọc tiếp <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
                         </div>
                         
                         <div class="post-footer">
                             <div class="post-actions">
-                                <a href="{{ route('forum.post.show', $p->id) }}"><i class="far fa-comment"></i> {{ $p->comments_count }} bình luận</a>
+                                <a href="{{ route('forum.post.show', $p->id) }}" class="text-decoration-none text-muted me-3">
+                                    <i class="far fa-comment"></i> {{ $p->comments_count }} bình luận
+                                </a>
                                 
-                                <a href="#" class="like-button {{ Auth::check() && $p->likedByUser(Auth::id()) ? 'liked' : '' }}" data-post-id="{{ $p->id }}">
-                                    <i class="{{ Auth::check() && $p->likedByUser(Auth::id()) ? 'fas' : 'far' }} fa-heart"></i> 
+                                <a href="#" class="like-button text-decoration-none me-3 {{ Auth::check() && $p->likedByUser(Auth::id()) ? 'liked' : '' }}" 
+                                data-post-id="{{ $p->id }}">
+                                    <i class="{{ Auth::check() && $p->likedByUser(Auth::id()) ? 'fas' : 'far' }} fa-heart"></i>
                                     <span class="like-count">{{ $p->likes_count }}</span> thích
                                 </a>
                                 
-                                <a href="#"><i class="far fa-eye ms-2 me-1"></i> {{ $p->view_count }}</a>
+                                <a href="#" class="text-decoration-none text-muted">
+                                    <i class="far fa-eye me-1"></i> {{ $p->view_count }}
+                                </a>
                             </div>
                             <div class="post-meta">
-                                <span><i class="fas fa-folder me-1"></i>{{ $p->category->name ?? '' }}</span>
+                                <span class="badge bg-secondary">
+                                    <i class="fas fa-folder me-1"></i>{{ $p->category->name ?? '' }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -882,85 +908,92 @@
         });
         
         function openEditPostModal(postId) {
-            if (!postId) return;
-            document.getElementById('edit_post_id').value = postId;
-            var editModal = new bootstrap.Modal(document.getElementById('editPostModal'));
-            
-            fetch(`/forum/api/posts/${postId}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('edit_title').value = data.title;
-                    document.getElementById('edit_category_id').value = data.category_id;
-                    document.getElementById('edit_content').value = data.content;
-                    document.getElementById('edit_tags').value = data.tags;
-                    document.getElementById('edit_is_anonymous').checked = data.is_anonymous;
-                    document.getElementById('edit_notify_replies').checked = data.notify_replies;
-                    document.getElementById('edit_images').checked = data.images;
+    if (!postId) return;
+    document.getElementById('edit_post_id').value = postId;
+    var editModal = new bootstrap.Modal(document.getElementById('editPostModal'));
+
+    fetch(`/forum/api/posts/${postId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Cập nhật các trường trong form
+            document.getElementById('edit_title').value = data.title;
+            document.getElementById('edit_category_id').value = data.category_id;
+            document.getElementById('edit_content').value = data.content;
+            document.getElementById('edit_is_anonymous').checked = data.is_anonymous;
+
+            // Xóa các dòng code gây lỗi ở đây
+            // document.getElementById('edit_tags').value = data.tags; // Lỗi: Element không tồn tại
+            // document.getElementById('edit_notify_replies').checked = data.notify_replies; // Lỗi: Element không tồn tại
+            // document.getElementById('edit_images').checked = data.images; // Lỗi: Thao tác sai trên input file
+
+            // Lấy container chứa ảnh preview
+            var imageContainer = document.getElementById('image_preview_container');
+            imageContainer.innerHTML = ''; // Xóa ảnh cũ trước khi thêm ảnh mới
+
+            // Kiểm tra và hiển thị ảnh hiện tại của bài viết
+            if (data.images && Array.isArray(data.images) && data.images.length > 0) {
+                document.getElementById('current_images').style.display = 'block'; // Hiển thị khu vực ảnh
+                data.images.forEach(function(image, index) {
+                    // Tạo cột
+                    var col = document.createElement('div');
+                    col.className = 'col-md-3 col-sm-4 col-6 mb-2';
+
+                    // Tạo card cho ảnh
+                    var card = document.createElement('div');
+                    card.className = 'card h-100 position-relative';
+
+                    // Tạo ảnh
+                    var img = document.createElement('img');
+                    img.className = 'card-img-top';
+                    img.src = `/storage/${image}`; // Đảm bảo đường dẫn storage của bạn là chính xác
+                    img.alt = `Hình ảnh ${index + 1}`;
+                    img.style.objectFit = 'cover';
+                    img.style.height = '120px';
+
+                    // Tạo nút xóa
+                    var removeBtn = document.createElement('button');
+                    removeBtn.className = 'btn btn-sm btn-danger position-absolute top-0 end-0 m-1';
+                    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    removeBtn.type = 'button';
+                    removeBtn.title = 'Xóa ảnh này';
+
+                    removeBtn.onclick = function() {
+                        // Tạo một input ẩn để gửi thông tin ảnh cần xóa lên server
+                        var hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = 'removed_images[]';
+                        hiddenInput.value = image;
+                        document.getElementById('editPostForm').appendChild(hiddenInput);
+
+                        // Xóa card ảnh khỏi giao diện
+                        col.remove();
+                    };
                     
-                    
-                     var imageContainer = document.getElementById('image_preview_container');
-                    imageContainer.innerHTML = '';
-                    
-                    // First, check if we have images and it's an array
-                    if (data.images && Array.isArray(data.images) && data.images.length > 0) {
-                        data.images.forEach(function(image, index) {
-                            var col = document.createElement('div');
-                            col.className = 'col-md-3 mb-2';
-                            
-                            var card = document.createElement('div');
-                            card.className = 'card h-100';
-                            
-                            var imgWrapper = document.createElement('div');
-                            imgWrapper.className = 'image-wrapper';
-                            imgWrapper.style.height = '120px';
-                            imgWrapper.style.overflow = 'hidden';
-                            
-                            var img = document.createElement('img');
-                            img.className = 'card-img-top';
-                            img.src = `/storage/${image}`;
-                            img.alt = `Hình ảnh ${index + 1}`;
-                            img.style.objectFit = 'cover';
-                            img.style.height = '100%';
-                            img.style.width = '100%';
-                            
-                            var cardBody = document.createElement('div');
-                            cardBody.className = 'card-body p-2';
-                            
-                            var removeBtn = document.createElement('button');
-                            removeBtn.className = 'btn btn-sm btn-danger w-100';
-                            removeBtn.textContent = 'Xóa';
-                            removeBtn.type = 'button'; // Ensure it doesn't submit the form
-                            removeBtn.setAttribute('data-image-path', image);
-                            removeBtn.onclick = function() {
-                                // Add a hidden input to track removed images
-                                var hiddenInput = document.createElement('input');
-                                hiddenInput.type = 'hidden';
-                                hiddenInput.name = 'removed_images[]';
-                                hiddenInput.value = image;
-                                document.getElementById('editPostForm').appendChild(hiddenInput);
-                                
-                                // Remove the image card
-                                col.remove();
-                            };
-                            
-                            imgWrapper.appendChild(img);
-                            card.appendChild(imgWrapper);
-                            cardBody.appendChild(removeBtn);
-                            card.appendChild(cardBody);
-                            col.appendChild(card);
-                            imageContainer.appendChild(col);
-                        });
-                    } else {
-                        imageContainer.innerHTML = '<p class="text-muted">Không có hình ảnh</p>';
-                    }
-                    
-                    editModal.show();
-                })
-                .catch(error => {
-                    console.error('Error fetching post data:', error);
-                    editModal.show();
+                    // Gắn các element vào nhau
+                    card.appendChild(img);
+                    card.appendChild(removeBtn);
+                    col.appendChild(card);
+                    imageContainer.appendChild(col);
                 });
-        }
+            } else {
+                // Nếu không có ảnh, ẩn khu vực hiển thị ảnh
+                 document.getElementById('current_images').style.display = 'none';
+                 imageContainer.innerHTML = '<p class="text-muted">Không có hình ảnh</p>';
+            }
+
+            // Hiển thị modal
+            editModal.show();
+        })
+        .catch(error => {
+            console.error('Lỗi khi lấy dữ liệu bài viết:', error);
+            // Có thể hiển thị thông báo lỗi cho người dùng ở đây
+        });
+}
         
         // Xử lý cập nhật bài viết
         document.getElementById('updatePost').addEventListener('click', function() {
@@ -1029,17 +1062,18 @@ class ForumSearch {
                 element.addEventListener('change', () => this.performSearch());
             }
         });
-        
-        // Handle pagination links
         this.bindPaginationLinks();
         
-        // Add search button click handler
-        const searchButton = document.querySelector('button[type="submit"]');
-        if (searchButton) {
-            searchButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.performSearch();
-            });
+        
+        const searchForm = document.getElementById('searchFilterForm');
+        if (searchForm) {
+            const searchButton = searchForm.querySelector('button[type="submit"]');
+            if (searchButton) {
+                searchButton.addEventListener('click', (e) => {
+                    e.preventDefault(); 
+                    this.performSearch();
+                });
+            }
         }
     }
     
@@ -1340,55 +1374,126 @@ document.addEventListener('DOMContentLoaded', function() {
     new ForumSearch();
 });
 </script>
-
-
 @endsection
 
 <style>
-.loading {
-    background-image: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="20" fill="none" stroke="%230066cc" stroke-width="4"%3E%3Canimate attributeName="stroke-dasharray" values="0 126;126 126" dur="1.5s" repeatCount="indefinite"/%3E%3Canimate attributeName="stroke-dashoffset" values="0;-126" dur="1.5s" repeatCount="indefinite"/%3E%3C/circle%3E%3C/svg%3E');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 20px 20px;
-}
+    .loading {
+        background-image: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="20" fill="none" stroke="%230066cc" stroke-width="4"%3E%3Canimate attributeName="stroke-dasharray" values="0 126;126 126" dur="1.5s" repeatCount="indefinite"/%3E%3Canimate attributeName="stroke-dashoffset" values="0;-126" dur="1.5s" repeatCount="indefinite"/%3E%3C/circle%3E%3C/svg%3E');
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 20px 20px;
+    }
 
-.post-card {
-    transition: all 0.3s ease;
-}
+    .post-card {
+        transition: all 0.3s ease;
+    }
 
-.pagination a.disabled {
-    pointer-events: none;
-    opacity: 0.5;
-}
+    .pagination a.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
 
-.alert {
-    animation: fadeIn 0.3s ease;
-}
+    .alert {
+        animation: fadeIn 0.3s ease;
+    }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.card {
-    border: none;
-    border-radius: 10px;
-    background: #ffffff;
-}
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .card {
+        border: none;
+        border-radius: 10px;
+        background: #ffffff;
+    }
 
-.form-control:focus,
-.form-select:focus {
-    border-color: #0066cc;
-    box-shadow: 0 0 0 0.25rem rgba(0, 102, 204, 0.25);
-}
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #0066cc;
+        box-shadow: 0 0 0 0.25rem rgba(0, 102, 204, 0.25);
+    }
 
-.btn-primary {
-    background-color: #0066cc;
-    border-color: #0066cc;
-}
+    .btn-primary {
+        background-color: #0066cc;
+        border-color: #0066cc;
+    }
 
-.btn-primary:hover {
-    background-color: #0052a3;
-    border-color: #0052a3;
-}
+    .btn-primary:hover {
+        background-color: #0052a3;
+        border-color: #0052a3;
+    }
+    .post-card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+    }
+
+    .post-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+    }
+
+    .unit-logo {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+    }
+
+    .post-author {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .dropdown-toggle::after {
+        display: none;
+    }
+
+    .btn-link:focus {
+        box-shadow: none;
+    }
+
+    .post-body {
+        margin-bottom: 15px;
+    }
+
+    .post-title {
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .post-text {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .post-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+    }
+
+    .post-actions a {
+        color: #666;
+        transition: color 0.3s;
+    }
+
+    .post-actions a:hover {
+        color: #333;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .dropdown-item.text-danger:hover {
+        background-color: #fee;
+        color: #dc3545 !important;
+    }
 </style>
-

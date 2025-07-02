@@ -219,6 +219,8 @@ class ForumController extends Controller
             'category_id' => 'nullable|exists:forum_categories,id',
             'content' => 'required|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'removed_images' => 'nullable|array', // Thêm validation cho mảng ảnh xóa
+            'removed_images.*' => 'string'       // Mỗi phần tử là một chuỗi (đường dẫn)
         ]);
 
         if ($validator->fails()) {
@@ -234,27 +236,33 @@ class ForumController extends Controller
                 ->with('error', 'Bạn không có quyền chỉnh sửa bài viết này!');
         }
 
+        $currentImages = $post->images ? json_decode($post->images, true) : [];
+        if ($request->has('removed_images')) {
+            $imagesToRemove = $request->input('removed_images');
+            
+            foreach ($imagesToRemove as $imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+            
+            $currentImages = array_diff($currentImages, $imagesToRemove);
+        }
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('forum/posts', 'public');
+                $currentImages[] = $path;
+            }
+        }
+
+        $post->images = json_encode(array_values($currentImages)); // Dùng array_values để reset key của mảng
         $post->title = $request->title;
         $post->category_id = $request->category_id;
         $post->content = $request->content;
-        $post->is_anonymous = $request->has('is_anonymous') ? true : false;
+        $post->is_anonymous = $request->has('is_anonymous');
         $post->status = 'pending';
 
-        if ($request->hasFile('images')) {
-            $imagesPath = $post->images ? json_decode($post->images, true) : [];
-            
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('forum/posts', 'public');
-                $imagesPath[] = $path;
-            }
-            
-            $post->images = json_encode($imagesPath);
-        }
-
         $post->save();
-
-        return redirect()->route('forum.index')
-            ->with('success', 'Bài viết đã được cập nhật và đang chờ phê duyệt lại!');
+        return redirect()->route('forum.index')->with('success', 'Bài viết đã được cập nhật và đang chờ phê duyệt lại!');
+    
     }
 
     public function getPostData($id)
@@ -389,7 +397,6 @@ class ForumController extends Controller
         return redirect()->back()
             ->with('success', 'Bình luận của bạn đã được đăng thành công.');
     }
-
     
     public function storeReply(Request $request)
     {

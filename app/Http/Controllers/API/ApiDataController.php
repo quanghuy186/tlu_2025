@@ -4,7 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\ForumPost; 
+use App\Models\ForumPost;
+use App\Models\User;
 
 class ApiDataController extends Controller
 {
@@ -15,7 +16,7 @@ class ApiDataController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $documents = ForumPost::all();
+        $documents = User::where('name');
 
         $html = '';
         foreach ($documents as $doc) {

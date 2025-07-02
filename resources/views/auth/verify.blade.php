@@ -120,9 +120,7 @@
 
                 <p>Cảm ơn bạn đã đăng ký tài khoản trên Hệ thống tra cứu và trao đổi thông tin nội bộ của Trường Đại học Thủy Lợi.</p>
 
-                <p>Để hoàn tất quá trình đăng ký và kích hoạt tài khoản của bạn, vui lòng kiểm tra thông tin email để xác nhận:</p>
-
-                <p>Nếu bạn không thể nhấp vào nút trên, vui lòng sao chép và dán liên kết sau vào trình duyệt của bạn:</p>
+                <p>Để hoàn tất quá trình đăng ký và kích hoạt tài khoản của bạn, vui lòng kiểm tra email để xác nhận</p>
 
             </div>
 
