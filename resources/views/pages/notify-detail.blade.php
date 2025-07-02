@@ -29,13 +29,22 @@
 <section class="notification-detail-section">
     <div class="container">
         <div class="row">
-            <!-- Main Content -->
             <div class="col-lg-8 mb-4">
                 <article class="notification-detail">
-                    <!-- Header -->
                     <div class="notification-detail-header">
-                        <h1 class="notification-detail-title">{{ $notification->title }}</h1>
-                        
+                        <div class="d-flex">
+                            <h1 class="notification-detail-title">{{ $notification->title }}</h1>
+                            <form method="POST" action="{{ route('notification.delete') }}" class="delete-form mb-0 flex-end">
+                                    @csrf
+                                    @method('DELETE')
+                                        <input type="hidden" name="id" value="{{ $notification->id }}">
+                                        <button type="submit" class="dropdown-item text-danger" 
+                                                onclick="return confirm('Bạn có chắc muốn xóa thông báo này?')">
+                                            <i class="bi bi-trash me-2"></i>Xóa thông báo
+                                        </button>
+                            </form>
+                        </div>
+                       
                         <div class="notification-meta">
                             <div class="meta-item">
                                 <i class="far fa-calendar-alt"></i>
@@ -55,6 +64,8 @@
                             @endif
                         </div>
                     </div>
+
+                    
 
                     @if($notification->images)
                         <div class="notification-images">

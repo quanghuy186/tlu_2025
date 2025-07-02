@@ -226,4 +226,18 @@ class NotifycationController extends Controller
         return redirect()->route('notification.index')
             ->with('success', 'Thông báo đã được tạo thành công!');
     }
+
+    public function delete(Request $request){
+        $notify = Notification::findOrFail($request->id);
+        if ($notify->user_id != Auth::id()) {
+            return redirect()->back()
+                ->with('error', 'Bạn không có quyền xóa thông báo này.');
+        }
+        Notification::where('id', $notify->id)->delete();
+        
+        $notify->delete();
+        
+        return redirect()->route('notification.index')
+            ->with('success', 'Thông báo đã được xóa thành công.');
+    }
 }

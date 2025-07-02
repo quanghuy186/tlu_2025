@@ -285,7 +285,7 @@ Route::middleware(['auth', 'redirect_admin'])->group(function () {
         Route::get('/{id}', [NotifycationController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [NotifycationController::class, 'edit'])->name('edit');
         Route::put('/{id}', [NotifycationController::class, 'update'])->name('update');
-        Route::delete('/{id}', [NotifycationController::class, 'destroy'])->name('destroy');
+        Route::delete('/notification', [NotifycationController::class, 'delete'])->name('delete')->middleware('auth');
         Route::get('/category/{category_id}', [NotifycationController::class, 'notificationByCategory'])->name('category');
     });
 });
