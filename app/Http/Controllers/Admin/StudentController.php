@@ -24,7 +24,6 @@ class StudentController extends Controller
     {
         $query = Student::with(['user', 'class']);
         
-        // Tìm kiếm
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -36,17 +35,14 @@ class StudentController extends Controller
             });
         }
         
-        // Lọc theo lớp
         if ($request->has('class_id') && $request->class_id != '') {
             $query->where('class_id', $request->class_id);
         }
         
-        // Lọc theo năm nhập học
         if ($request->has('enrollment_year') && $request->enrollment_year != '') {
             $query->where('enrollment_year', $request->enrollment_year);
         }
         
-        // Sắp xếp
         $sortBy = $request->get('sort_by', 'created_at');
         $sortOrder = $request->get('sort_order', 'desc');
         
@@ -58,13 +54,10 @@ class StudentController extends Controller
             $query->orderBy($sortBy, $sortOrder);
         }
         
-        // Số lượng items mỗi trang
         $perPage = $request->get('per_page', 10);
         
-        // Phân trang với giữ lại query parameters
         $students = $query->paginate($perPage)->appends($request->query());
         
-        // Lấy dữ liệu cho dropdown filters
         $classes = ClassRoom::orderBy('class_name')->get();
         $enrollmentYears = Student::distinct()
                                    ->whereNotNull('enrollment_year')
@@ -102,9 +95,7 @@ class StudentController extends Controller
         return view('admin.contact.student.create', compact('classes', 'enrollmentYears'));
     }
 
-    /**
-     * Lưu sinh viên mới vào database
-     */
+  
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -132,7 +123,6 @@ class StudentController extends Controller
             'role' => 'student',
         ]);
 
-        // Upload avatar nếu có
         if ($request->hasFile('avatar')) {
             $avatarName = time() . '.' . $request->avatar->extension();
             $request->avatar->storeAs('avatars', $avatarName, 'public');
@@ -140,7 +130,6 @@ class StudentController extends Controller
             $user->save();
         }
 
-        // Tạo thông tin sinh viên
         $student = Student::create([
             'user_id' => $user->id,
             'class_id' => $validated['class_id'] ?? null,
@@ -154,33 +143,25 @@ class StudentController extends Controller
             ->with('success', 'Sinh viên đã được tạo thành công!');
     }
 
-    /**
-     * Hiển thị thông tin chi tiết sinh viên
-     */
     public function show($id)
     {
         $student = Student::with(['user', 'class'])->findOrFail($id);
         return view('admin.contact.student.detail', compact('student'));
     }
 
-    /**
-     * Hiển thị form chỉnh sửa thông tin sinh viên
-     */
+  
     public function edit($id)
     {
         $student = Student::with('user')->findOrFail($id);
         $classes = ClassRoom::all();
-        $programs = Student::getPrograms();
-        $graduationStatuses = Student::getGraduationStatuses();
+        // $programs = Student::getPrograms();
+        // $graduationStatuses = Student::getGraduationStatuses();
         $currentYear = date('Y');
         $enrollmentYears = range($currentYear - 10, $currentYear + 1);
         
-        return view('admin.contact.student.edit', compact('student', 'classes', 'programs', 'graduationStatuses', 'enrollmentYears'));
+        return view('admin.contact.student.edit', compact('student', 'classes', 'enrollmentYears'));
     }
 
-    /**
-     * Cập nhật thông tin sinh viên
-     */
     public function update(Request $request, $id)
     {
         $student = Student::findOrFail($id);

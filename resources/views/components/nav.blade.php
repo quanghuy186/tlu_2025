@@ -444,12 +444,10 @@
     </div>
 </div>
     
-    <!-- Script xử lý preview ảnh đại diện -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const avatarInput = document.getElementById('avatarInput');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const avatarInput = document.getElementById('avatarInput');
             const avatarPreview = document.getElementById('avatarPreview');
-            
             avatarInput.addEventListener('change', function() {
                 const file = this.files[0];
                 if (file) {
@@ -461,43 +459,34 @@
                 }
             });
         });
-    </script>
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Hàm để hiển thị form cho vai trò được chọn
         function showRoleForm(roleId) {
-            // Ẩn tất cả các form vai trò
             document.querySelectorAll('.role-form').forEach(form => {
                 form.style.display = 'none';
             });
             
-            // Hiển thị form cho vai trò được chọn
             const selectedForm = document.getElementById(`role-form-${roleId}`);
             if (selectedForm) {
                 selectedForm.style.display = 'block';
             }
         }
         
-        // Xử lý sự kiện khi người dùng thay đổi vai trò
         const roleSelector = document.getElementById('role_selector');
         if (roleSelector) {
-            // Hiển thị form ban đầu dựa trên vai trò được chọn
             showRoleForm(roleSelector.value);
-            
-            // Lắng nghe sự kiện thay đổi
             roleSelector.addEventListener('change', function() {
                 showRoleForm(this.value);
             });
         } else {
-            // Nếu không có selector (chỉ có một vai trò), hiển thị form cho vai trò đó
             const hiddenRoleInput = document.querySelector('input[name="role_id"]');
             if (hiddenRoleInput) {
                 showRoleForm(hiddenRoleInput.value);
             }
         }
         
-        // Xử lý xem trước avatar khi người dùng chọn file
         const avatarInput = document.getElementById('avatarInput');
         const avatarPreview = document.getElementById('avatarPreview');
         
@@ -540,11 +529,9 @@
 
         function loadClasses() {
             const classSelect = document.getElementById('class_room');
-            
             if (!classSelect) return;
             if (classSelect.options.length <= 1) {
                 const currentClassId = classSelect.getAttribute('data-current-class-id') || '';
-                
                 fetch('/api/classes') 
                     .then(response => {
                         if (!response.ok) {
@@ -575,7 +562,6 @@
                     });
             }
         }
-        
         if (document.getElementById('role-form-1') && 
             document.getElementById('role-form-1').style.display === 'block') {
             loadClasses();
@@ -590,8 +576,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (departmentDropdown) {
         const currentDepartmentId = departmentDropdown.getAttribute('data-current-department-id');
-        // console.log('Current department ID:', currentDepartmentId);
-        
         fetch('/api/department')
             .then(response => {
                 if (!response.ok) {
@@ -600,29 +584,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(departments => {
-                // Debug - log the departments from API
-                console.log('Departments from API:', departments);
-                
-                // Clear existing options
                 departmentDropdown.innerHTML = '';
-                
-                // Add a default option
-                const defaultOption = document.createElement('option');
                 defaultOption.value = "";
                 defaultOption.textContent = "Chọn đơn vị";
                 departmentDropdown.appendChild(defaultOption);
                 
-                // Add option for each department
                 departments.forEach(department => {
                     const option = document.createElement('option');
                     option.value = department.id; // Use ID as value, not name
                     option.textContent = department.name;
                     
-                    // Select the previously selected option based on IDF
-                    // if (department.id.toString() === currentDepartmentId) {
-                    //     option.selected = true;
-                    // }
-
                     if (currentDepartmentId && currentDepartmentId == department.id) {
                         option.selected = true;
                     }
@@ -630,14 +601,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     departmentDropdown.appendChild(option);
                 });
                 
-                // If no option was selected and we have options, select the first one
                 if (departmentDropdown.selectedIndex === 0 && departmentDropdown.options.length > 1) {
                     departmentDropdown.selectedIndex = 1;
                 }
             })
             .catch(error => {
-                console.error('Error fetching departments:', error);
-                // Add a fallback option in case of error
                 const option = document.createElement('option');
                 option.value = "";
                 option.textContent = "Không thể tải dữ liệu";
