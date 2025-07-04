@@ -163,22 +163,19 @@ $(document).ready(function() {
         sendAjaxRequest(searchUrl, requestData, function(response) {
             $('.teacher-list').html(response);
             
-            // Cuộn lên đầu danh sách
             $('html, body').animate({
                 scrollTop: $('#teacher-list-container').offset().top - 100
             }, 300);
         });
     });
     
-    // Xử lý sự kiện tìm kiếm
     $('#search-form').on('submit', function(e) {
         e.preventDefault();
         
-        // Cập nhật filters
         currentFilters.fullname = $('input[name="fullname"]').val() || '';
         
         var requestData = {
-            page: 1, // Reset về trang 1
+            page: 1, 
             fullname: currentFilters.fullname,
             department_id: currentFilters.department_id,
             academic_rank: currentFilters.academic_rank,
@@ -193,24 +190,21 @@ $(document).ready(function() {
         });
     });
     
-    // Xử lý sự kiện lọc theo department
     $('#departmentSelect').on('change', function() {
         currentFilters.department_id = $(this).val();
         triggerFilter();
     });
     
-    // Xử lý sự kiện lọc theo academic_rank
     $('#rankSelect').on('change', function() {
         currentFilters.academic_rank = $(this).val();
         triggerFilter();
     });
     
-    // Xử lý sự kiện sắp xếp
     $('#sortSelect').on('change', function() {
         currentFilters.sort = $(this).val();
         
         var requestData = {
-            page: 1, // Reset về trang 1
+            page: 1, 
             fullname: currentFilters.fullname,
             department_id: currentFilters.department_id,
             academic_rank: currentFilters.academic_rank,
@@ -225,10 +219,9 @@ $(document).ready(function() {
         });
     });
     
-    // Hàm trigger filter chung
     function triggerFilter() {
         var requestData = {
-            page: 1, // Reset về trang 1
+            page: 1, 
             fullname: currentFilters.fullname,
             department_id: currentFilters.department_id,
             academic_rank: currentFilters.academic_rank,
@@ -243,9 +236,7 @@ $(document).ready(function() {
         });
     }
     
-    // Cập nhật số lượng giáo viên hiển thị
     function updateTeacherCount() {
-        // Lấy thông tin từ phần pagination-info trong response
         var paginationInfo = $('.pagination-info').text();
         if (paginationInfo) {
             var matches = paginationInfo.match(/Hiển thị (\d+) - (\d+) của (\d+)/);
@@ -258,7 +249,6 @@ $(document).ready(function() {
         }
     }
     
-    // Hàm hiển thị loading
     function showLoading() {
         $('.loading-overlay').remove();
         
@@ -282,7 +272,6 @@ $(document).ready(function() {
         `);
     }
     
-    // Hàm ẩn loading
     function hideLoading() {
         $('.loading-overlay').remove();
     }

@@ -23,8 +23,6 @@
                         <span class="text-muted">Chưa phân loại</span>
                     </li>
                 @endif
-
-
                 {{-- <li class="breadcrumb-item"><a href="{{ route('forum.category', $post->category->slug) }}" class="text-decoration-none">{{ $post->category->name }}</a></li> --}}
                 <li class="breadcrumb-item active" aria-current="page">{{ Str::limit($post->title, 30) }}</li>
             </ol>
@@ -34,9 +32,7 @@
 
 <div class="container my-4">
     <div class="row">
-        <!-- Main Content - Post Details -->
         <div class="col-lg-8">
-            <!-- Post Card -->
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div>
@@ -48,7 +44,6 @@
                     @endif
                 </div>
                 <div class="card-body">
-                    <!-- Author Info -->
                     <div class="d-flex align-items-center mb-3">
                         @if($post->is_anonymous)
                             <span class="avatar bg-secondary text-white rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
@@ -56,7 +51,7 @@
                             </span>
                             <div>
                                 @can('show-anonymously', $post)
-                                    <div class="fw-bold">{{ $post->author->name }}</div>
+                                    <div class="fw-bold">{{ isset($post->author->managedDepartment) ? $post->author->managedDepartment->name : $post->author->name }}</div>
                                 @else
                                     <div class="fw-bold">Ẩn danh</div>
                                 @endcan
@@ -73,24 +68,19 @@
                                 </span>
                             @endif
                             <div>
-                                <div class="fw-bold">{{ $post->author->name }}</div>
+                                <div class="fw-bold">{{ isset($post->author->managedDepartment) ? $post->author->managedDepartment->name : $post->author->name }}</div>
                                 <small class="text-muted">Đăng {{ timeAgo($post->created_at) }}</small>
                             </div>
                         @endif
                     </div>
                     
-                    <!-- Post Content -->
                     <div class="post-content my-4">
                         {!! nl2br(e($post->content)) !!}
                     </div>
                     
-                    <!-- Post Images -->
                     @if($post->images)
                         @php
-                            // If images is stored as a JSON string, decode it
                             $imagesArray = is_string($post->images) ? json_decode($post->images, true) : [];
-                            
-                            // If json_decode returned null (invalid JSON) or false, try treating it as a comma-separated string
                             if (!$imagesArray) {
                                 $imagesArray = is_string($post->images) ? explode(',', $post->images) : [];
                             }
@@ -112,10 +102,7 @@
                         @endif
                     @endif
                     
-                    <!-- Post Statistics -->
                     <div class="post-stats mt-4 d-flex justify-content-between">
-                        
-
                         <div>
                             <i class="far fa-eye me-1"></i> {{ number_format($post->view_count) }} lượt xem
                             <a style="text-decoration: none;" href="#" class="mx-3 like-button {{ Auth::check() && $post->likedByUser(Auth::id()) ? 'liked' : '' }}" data-post-id="{{ $post->id }}">
@@ -124,16 +111,6 @@
                             </a>
                             <i class="far fa-comment ms-3 me-1"></i> {{ count($post->comments) }} bình luận
                         </div>
-                        {{-- <div>
-                            <button class="btn btn-sm btn-outline-primary" id="sharePostBtn">
-                                <i class="fas fa-share-alt me-1"></i> Chia sẻ
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger ms-2" id="reportPostBtn">
-                                <i class="fas fa-flag me-1"></i> Báo cáo
-                            </button>
-                        </div> --}}
-
-                        
                     </div>
 
                     <div class="share-section">
@@ -164,9 +141,7 @@
            
         </div>
         
-        <!-- Sidebar -->
         <div class="col-lg-4">
-            <!-- Related Posts -->
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-link me-2"></i> Bài viết liên quan
@@ -176,7 +151,6 @@
                         <a href="{{ route('forum.post.show', $relatedPost->id) }}" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
                                 <h6 class="mb-1">{{ Str::limit($relatedPost->title, 50) }}</h6>
-                                {{-- <small>{{ $relatedPost->created_at->diffForHumans() }}</small> --}}
                                 <small>{{ timeAgo($relatedPost->created_at) }}</small>
                             </div>
                             <small class="text-muted">
@@ -190,7 +164,6 @@
                 </div>
             </div>
             
-            <!-- Categories -->
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-folder me-2"></i> Chuyên mục
@@ -221,7 +194,6 @@
 @section('scripts')
 
 <script>
-    // Khai báo các biến cần thiết cho JavaScript
     const assetPath = "{{ asset('storage/') }}/";
     const csrfToken = "{{ csrf_token() }}";
     const postId = "{{ $post->id }}";
@@ -233,19 +205,16 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Handle Share Button
         document.getElementById('sharePostBtn').addEventListener('click', function() {
             var shareModal = new bootstrap.Modal(document.getElementById('sharePostModal'));
             shareModal.show();
         });
         
-        // Handle Copy URL Button
         document.getElementById('copyUrlBtn').addEventListener('click', function() {
             var urlInput = document.getElementById('postUrlInput');
             urlInput.select();
             document.execCommand('copy');
             
-            // Change button text temporarily
             var originalText = this.innerHTML;
             this.innerHTML = '<i class="fas fa-check"></i> Đã sao chép';
             
@@ -254,13 +223,11 @@
             }, 2000);
         });
         
-        // Handle Report Button
         document.getElementById('reportPostBtn').addEventListener('click', function() {
             var reportModal = new bootstrap.Modal(document.getElementById('reportPostModal'));
             reportModal.show();
         });
         
-        // Handle Submit Report
         document.getElementById('submitReport').addEventListener('click', function() {
             var form = document.getElementById('reportPostForm');
             if (form.checkValidity()) {
@@ -270,31 +237,25 @@
             }
         });
         
-        // Toggle Reply Forms
         document.querySelectorAll('.reply-btn').forEach(function(button) {
             button.addEventListener('click', function() {
                 var commentId = this.getAttribute('data-comment-id');
                 var replyForm = document.getElementById('replyForm' + commentId);
                 
-                // Hide all other reply forms
                 document.querySelectorAll('.reply-form').forEach(function(form) {
                     if (form !== replyForm) {
                         form.classList.add('d-none');
                     }
                 });
                 
-                // Toggle current reply form
                 replyForm.classList.toggle('d-none');
             });
         });
         
-        // Handle Delete Comment
         document.querySelectorAll('.delete-comment-btn').forEach(function(button) {
             button.addEventListener('click', function() {
                 if (confirm('Bạn có chắc chắn muốn xóa bình luận này?')) {
                     var commentId = this.getAttribute('data-comment-id');
-                    
-                    // Create form and submit
                     var form = document.createElement('form');
                     form.method = 'POST';
                     form.action = '';   

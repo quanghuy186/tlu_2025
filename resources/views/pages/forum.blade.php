@@ -214,7 +214,6 @@
                             @endif
                         </div>
                         
-                        <!-- Tab bài viết chờ duyệt -->
                         <div class="tab-pane fade" id="posts-pending" role="tabpanel" aria-labelledby="posts-pending-tab">
                             @if(isset($pendingPosts) && count($pendingPosts) > 0)
                                 <div class="table-responsive">
@@ -254,7 +253,6 @@
                             @endif
                         </div>
                         
-                        <!-- Tab bài viết đã duyệt -->
                         <div class="tab-pane fade" id="posts-approved" role="tabpanel" aria-labelledby="posts-approved-tab">
                             @if(isset($approvedPosts) && count($approvedPosts) > 0)
                                 <div class="table-responsive">
@@ -303,7 +301,6 @@
                             @endif
                         </div>
                         
-                        <!-- Tab bài viết bị từ chối -->
                         <div class="tab-pane fade" id="posts-rejected" role="tabpanel" aria-labelledby="posts-rejected-tab">
                             @if(isset($rejectedPosts) && count($rejectedPosts) > 0)
                                 <div class="table-responsive">
@@ -442,7 +439,6 @@
                             <div id="current_images" class="mt-3">
                                 <h6>Hình ảnh hiện tại:</h6>
                                 <div class="row" id="image_preview_container">
-                                    <!-- JS sẽ hiển thị hình ảnh hiện tại ở đây -->
                                 </div>
                             </div>
                         </div>
@@ -698,7 +694,9 @@
                                 @endif
                                 <div class="ms-2">
                                     @can('show-anonymously', $p)
-                                        <h6 class="post-author mb-0">{{ $p->author->name }}</h6>
+                                        <h6 class="post-author mb-0">
+                                            {{ isset($p->author->managedDepartment) ? $p->author->managedDepartment->name : $p->author->name }}
+                                        </h6>
                                     @else
                                         <h6 class="post-author mb-0">{{ $p->is_anonymous == 1 ? "Ẩn danh" : $p->author->name }}</h6>
                                     @endcan
@@ -874,16 +872,6 @@
 <a href="#" class="new-topic-btn" data-bs-toggle="modal" data-bs-target="#createPostModal">
     <i class="fas fa-plus"></i>
 </a>
-
-{{-- <script>
-    document.querySelectorAll('.delete-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            if (!confirm('Bạn có chắc muốn xóa bài viết này?')) {
-                e.preventDefault();
-            }
-        });
-    });
-</script> --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

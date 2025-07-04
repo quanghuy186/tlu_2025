@@ -59,7 +59,13 @@
                             <li>
                                 <i class="fas fa-graduation-cap"></i>
                                 <span class="detail-label">Lớp:</span>
-                                <span class="detail-value">{{ $student->class ? $student->class->name : 'Chưa cập nhật' }}</span>
+                                @if($student->class)
+                                    <span class="detail-value">{{ $student->class->class_name ?? 'Chưa cập nhật' }}</span>
+                                @else
+                                    <span>Chưa cập nhật</span>
+                                @endif
+                               
+                                {{-- <span class="detail-value">{{ $student->class ? $student->class->name : 'Chưa cập nhật' }}</span> --}}
                             </li>
                             <li>
                                 <i class="fas fa-user-graduate"></i>
