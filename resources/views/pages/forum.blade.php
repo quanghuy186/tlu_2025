@@ -599,7 +599,14 @@
                                         <div class="topic-info">
 
                                             @can('show-anonymously', $post)
-                                                <span><i class="fas fa-user me-1"></i> {{ $post->author->name }} </span>
+                                                <span>
+                                                    {{-- <i class="fas fa-user me-1"></i> {{ $post->author->name }} --}}
+                                                    @if($post->author->managedDepartment)
+                                                        {{ $post->author->managedDepartment->name }}
+                                                    @else
+                                                        {{ $$post->author->name }}
+                                                    @endif
+                                                </span>
                                             @else   
                                                 <span><i class="fas fa-user me-1"></i> {{ $post->is_anonymous == 1 ? "Ẩn danh" : $post->author->name }} </span>
                                             @endcan

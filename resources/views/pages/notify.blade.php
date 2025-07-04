@@ -155,8 +155,6 @@
                                             <div class="announcement-author">
                                                 <img src="{{ $notification->user && $notification->user->avatar ? asset('storage/avatars/'.$notification->user->avatar) : asset('user_default.jpg') }}" alt="Author">
                                                 <span>
-                                                    
-
                                                     @if($notification->user->managedDepartment)
                                                         {{ $notification->user->managedDepartment->name }}
                                                     @else

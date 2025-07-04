@@ -29,12 +29,12 @@
                 <div class="footer-links">
                     <h5 class="footer-title">Liên kết nhanh</h5>
                     <ul class="footer-links">
-                        <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Trang chủ</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Đơn vị</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Giảng viên</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Sinh viên</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Thông báo</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Liên hệ</a></li>
+                        <li><a href="{{ route('home.index') }}"><i class="fas fa-chevron-right me-2"></i> Trang chủ</a></li>
+                        <li><a href="{{ route('contact.department') }}"><i class="fas fa-chevron-right me-2"></i> Đơn vị</a></li>
+                        <li><a href="{{ route('contact.teacher') }}"><i class="fas fa-chevron-right me-2"></i> Giảng viên</a></li>
+                        <li><a href="{{ route('contact.student') }}"><i class="fas fa-chevron-right me-2"></i> Sinh viên</a></li>
+                        <li><a href="{{ route('notification.index') }}"><i class="fas fa-chevron-right me-2"></i> Thông báo</a></li>
+                        {{-- <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Liên hệ</a></li> --}}
                     </ul>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                     <h5 class="footer-title">Người dùng</h5>
                     <ul class="footer-links">
                         <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Tài khoản</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Đổi mật khẩu</a></li>
+                        <li><a href="{{ route('password.form') }}"><i class="fas fa-chevron-right me-2"></i> Đổi mật khẩu</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Quản lý thông tin</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Cập nhật liên hệ</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Trợ giúp</a></li>

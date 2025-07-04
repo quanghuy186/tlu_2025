@@ -8,10 +8,10 @@
             <h1>Hệ thống tra cứu và trao đổi thông tin nội bộ TLU</h1>
             <p>Kết nối thông tin - Chia sẻ tri thức - Xây dựng cộng đồng</p>
 
-            <div class="hero-actions">
+            {{-- <div class="hero-actions">
                 <a href="{{ route('contact.index') }}" class="btn bg-white" style="color:#005baa">Bắt đầu ngay</a>
                 <a href="#" class="btn btn-outline" style="color: #ffffff; border-color: #ffffff">Tìm hiểu thêm</a>
-            </div>
+            </div> --}}
         </div>
     </section>
 
@@ -19,8 +19,8 @@
     <section class="directory-section">
         <div class="container">
             <div class="section-title text-center">
-                <h2>Tính năng chính</h2>
-                <p>Tra cứu thông tin liên lạc của đơn vị, giảng viên, sinh viên và trao đổi thông tin một cách nhanh chóng và dễ dàng</p>
+                {{-- <h2>Tính năng chính</h2> --}}
+                <p style="font-size: 20px">Tra cứu thông tin liên lạc của đơn vị, giảng viên, sinh viên và trao đổi thông tin một cách nhanh chóng, dễ dàng</p>
             </div>
 
             <div class="row g-4">

@@ -279,7 +279,7 @@ Route::middleware(['auth', 'redirect_admin'])->group(function () {
 
 Route::middleware(['auth', 'redirect_admin'])->group(function () {
     Route::prefix('notification')->name('notification.')->group(function () {
-        Route::get('/', action: [NotifycationController::class, 'notification'])->name('index');
+        Route::get('/',  [NotifycationController::class, 'notification'])->name('index');
         Route::get('/create', [NotifycationController::class, 'create'])->name('create');
         Route::post('/', [NotifycationController::class, 'store'])->name('store');
         Route::get('/{id}', [NotifycationController::class, 'show'])->name('show');

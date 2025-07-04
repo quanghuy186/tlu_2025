@@ -116,7 +116,7 @@
     .hero-section {
         background: linear-gradient(rgba(0, 91, 170, 0.8), rgba(0, 91, 170, 0.9)), url('https://via.placeholder.com/1920x1080') center/cover no-repeat;
         color: white;
-        padding: 100px 0;
+        padding: 50px 0;
         text-align: center;
         margin-bottom: 50px;
     }
