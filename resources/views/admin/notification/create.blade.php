@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Thêm mới</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
@@ -101,7 +101,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize CKEditor
         ClassicEditor
             .create(document.querySelector('#editor'), {
                 toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo']
@@ -110,7 +109,6 @@
                 console.error(error);
             });
         
-        // Image preview functionality
         const imageInput = document.getElementById('images');
         const previewContainer = document.getElementById('imagePreviewContainer');
         const preview = document.getElementById('imagePreview');
@@ -175,8 +173,6 @@
             
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
-        
-        // Tự động cập nhật select danh mục khi thêm danh mục mới (cần thêm code AJAX nếu cần thiết)
     });
 </script>
 

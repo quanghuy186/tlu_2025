@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->string('title');
             $table->foreignId('user_id');
             $table->text('content');
             $table->string('images')->nullable();
             $table->boolean('is_pinned')->default(false);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignId('category_id')->nullable()->constrained('notification_categories')->onDelete('set null');
+            $table->foreign('category_id')->references('id')->on('notification_categories')->onDelete('set null');
             $table->timestamps();
         });
     }

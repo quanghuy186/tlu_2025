@@ -54,6 +54,10 @@
             
             <div class="col-md-9">
                 <div class="card">
+                    {{-- <div class="card-header d-flex align-items-center">
+                        <div id="chat-with">Chọn người dùng để bắt đầu trò chuyện</div>
+                    </div> --}}
+
                     <div class="card-header d-flex align-items-center">
                         <div id="chat-with">Chọn người dùng để bắt đầu trò chuyện</div>
                         <div class="ms-auto">

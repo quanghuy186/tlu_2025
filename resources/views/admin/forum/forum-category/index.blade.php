@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Danh mục diễn đàn</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
@@ -84,17 +84,14 @@
                                         <td>{{ $category->created_at->format('d/m/Y H:i') }}</td>
                                         <td>
                                             <div class="d-flex justify-content-center gap-2">
-                                                <!-- Edit Category -->
                                                 <a href="{{ route('admin.forum.categories.edit', $category->id) }}" data-bs-toggle="tooltip" data-bs-title="Chỉnh sửa" class="btn btn-sm btn-primary">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>
                                                 
-                                                <!-- View Category Info -->
                                                 <a href="{{ route('admin.forum.categories.show', $category->id) }}" data-bs-toggle="tooltip" data-bs-title="Xem thông tin" class="btn btn-sm btn-success">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
                                                 
-                                                <!-- Delete Category -->
                                                 <a href="#" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#deleteConfirmModal"

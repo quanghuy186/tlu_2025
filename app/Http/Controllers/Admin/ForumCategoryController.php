@@ -77,7 +77,6 @@ class ForumCategoryController extends Controller
     public function edit($id)
     {
         $category = ForumCategory::findOrFail($id);
-        // Lấy danh sách các danh mục để hiển thị trong dropdown parent_id (ngoại trừ chính nó và các con của nó)
         $parentCategories = ForumCategory::where('id', '!=', $id)
             ->where(function($query) use ($id) {
                 $query->whereNull('parent_id')
@@ -142,12 +141,11 @@ class ForumCategoryController extends Controller
     public function destroy($id)
     {
         $category = ForumCategory::findOrFail($id);
-        // Kiểm tra xem có danh mục con không
-        $childCategories = ForumCategory::where('parent_id', $id)->count();
-        if ($childCategories > 0) {
-            return redirect()->route('admin.forum.categories.index')
-                ->with('error', 'Không thể xóa danh mục này vì có ' . $childCategories . ' danh mục con!');
-        }
+        // $childCategories = ForumCategory::where('parent_id', $id)->count();
+        // if ($childCategories > 0) {
+        //     return redirect()->route('admin.forum.categories.index')
+        //         ->with('error', 'Không thể xóa danh mục này vì có ' . $childCategories . ' danh mục con!');
+        // }
         $category->delete();
         return redirect()->route('admin.forum.categories.index')
             ->with('success', 'Xóa danh mục thành công!');

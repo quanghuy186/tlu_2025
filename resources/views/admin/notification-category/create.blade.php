@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Thêm mới</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
@@ -59,7 +59,7 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <label for="icon" class="col-md-2 col-form-label">Icon</label>
                                 <div class="col-md-10">
                                     <div class="input-group">
@@ -72,7 +72,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="row mb-3">
                                 <label for="display_order" class="col-md-2 col-form-label">Thứ tự hiển thị</label>

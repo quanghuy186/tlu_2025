@@ -6,6 +6,7 @@ use App\Models\Message;
 use App\Models\User;
 use App\Events\MessageSent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
@@ -23,31 +24,6 @@ class MessageController extends Controller
         
         return view('chat.index', compact('users'));
     }
-    
-    // private function getUsersWithChatHistory()
-    // {
-    //     $currentUserId = Auth::id();
-        
-    //     // Lấy id của những người dùng đã từng nhắn tin với người dùng hiện tại
-    //     $userIds = Message::where(function($query) use ($currentUserId) {
-    //             $query->where('sender_user_id', $currentUserId)
-    //                   ->orWhere('recipient_user_id', $currentUserId);
-    //         })
-    //         ->where('is_deleted', false)
-    //         ->select('sender_user_id', 'recipient_user_id')
-    //         ->get()
-    //         ->flatMap(function($message) use ($currentUserId) {
-    //             // Chỉ lấy ID của người còn lại trong cuộc trò chuyện
-    //             return [$message->sender_user_id, $message->recipient_user_id];
-    //         })
-    //         ->unique()
-    //         ->reject(function($userId) use ($currentUserId) {
-    //             // Loại bỏ ID của người dùng hiện tại
-    //             return $userId == $currentUserId;
-    //         });
-        
-    //     return User::whereIn('id', $userIds)->get();
-    // }
 
     private function getUsersWithChatHistory()
     {
@@ -74,6 +50,7 @@ class MessageController extends Controller
         
         return User::whereIn('id', $userIds)->get();
     }
+
     public function startChat($userId)
     {
         $user = User::findOrFail($userId);
@@ -81,22 +58,6 @@ class MessageController extends Controller
         return redirect()->route('chat.index', ['new_user_id' => $userId]);
     }
 
-    // public function getMessages(User $user)
-    // {
-    //     $messages = Message::where(function($query) use ($user) {
-    //             $query->where('sender_user_id', Auth::id())
-    //                   ->where('recipient_user_id', $user->id);
-    //         })
-    //         ->orWhere(function($query) use ($user) {
-    //             $query->where('sender_user_id', $user->id)
-    //                   ->where('recipient_user_id', Auth::id());
-    //         })
-    //         ->where('is_deleted', false)
-    //         ->orderBy('sent_at', 'asc')
-    //         ->get();
-
-    //     return response()->json(['messages' => $messages]);
-    // }
 
     public function getMessages(User $user)
     {
@@ -121,8 +82,6 @@ class MessageController extends Controller
         return response()->json(['messages' => $filteredMessages->values()]);
     }
 
-    
-
     public function sendMessage(Request $request)
     {
         $request->validate([
@@ -136,7 +95,6 @@ class MessageController extends Controller
         $message->recipient_user_id = $request->recipient_id;
         $message->content = $request->content ?? '';
 
-        // Xử lý file nếu có
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $fileName = time() . '_' . $file->getClientOriginalName();

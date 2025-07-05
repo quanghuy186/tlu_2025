@@ -29,14 +29,28 @@ class Message extends Model
         'sent_at' => 'datetime',
     ];
 
+    // public function sender()
+    // {
+    //     return $this->belongsTo(User::class, 'sender_user_id');
+    // }
+
+    // public function recipient()
+    // {
+    //     return $this->belongsTo(User::class, 'recipient_user_id');
+    // }
+
     public function sender()
     {
-        return $this->belongsTo(User::class, 'sender_user_id');
+        return $this->belongsTo(User::class, 'sender_user_id')->withDefault([
+            'name' => 'Người dùng đã bị xóa'
+        ]);
     }
 
     public function recipient()
     {
-        return $this->belongsTo(User::class, 'recipient_user_id');
+        return $this->belongsTo(User::class, 'recipient_user_id')->withDefault([
+            'name' => 'Người dùng đã bị xóa'
+        ]);
     }
 
     public function isDeletedBy($userId = null)

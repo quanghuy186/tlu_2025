@@ -14,7 +14,7 @@
         <li class="breadcrumb-item active">Thêm danh mục</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">

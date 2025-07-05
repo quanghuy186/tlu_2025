@@ -199,8 +199,8 @@ Route::prefix('admin/forum')->name('admin.forum.')->middleware(['auth', 'manager
         Route::post('/store', [ForumCategoryController::class, 'store'])->name('store');
         Route::get('/{id}', [ForumCategoryController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [ForumCategoryController::class, 'edit'])->name('edit');
-        Route::post('/{id}/update', [ForumCategoryController::class, 'update'])->name('update');
-        Route::post('/{id}/destroy', [ForumCategoryController::class, 'destroy'])->name('destroy');
+        Route::put('/{id}/update', [ForumCategoryController::class, 'update'])->name('update');
+        Route::delete('/{id}/destroy', [ForumCategoryController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('posts')->name('posts.')->group(function () {
@@ -266,7 +266,6 @@ Route::middleware(['auth', 'redirect_admin'])->group(function () {
         Route::get('/post/{id}', [ForumController::class, 'showPost'])->name('post.show');
         Route::get('/category/{slug}', [ForumController::class, 'showCategory'])->name('category');
         Route::delete('/post', [ForumController::class, 'deletePost'])->name('post.delete')->middleware('auth');
-
 
         Route::post('/comment', [ForumController::class, 'storeComment'])->name('comment.store')->middleware('auth');
         Route::post('/comment/reply', [ForumController::class, 'storeReply'])->name('comment.reply')->middleware('auth');

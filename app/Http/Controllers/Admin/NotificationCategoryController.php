@@ -38,7 +38,7 @@ class NotificationCategoryController extends Controller
         $category->name = $request->name;
         $category->slug = $request->slug ?: Str::slug($request->name);
         $category->description = $request->description;
-        $category->icon = $request->icon;
+        // $category->icon = $request->icon;
         $category->display_order = $request->display_order ?: 0;
         $category->save();
 
