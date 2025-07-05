@@ -63,8 +63,6 @@ class StudentController extends Controller
                                    ->whereNotNull('enrollment_year')
                                    ->orderBy('enrollment_year', 'desc')
                                    ->pluck('enrollment_year');
-
-         // Thống kê
         $stats = [
             'total' => Student::count(),
             'student_k63' => Student::where('enrollment_year', 2021)->count(),
@@ -149,7 +147,6 @@ class StudentController extends Controller
         return view('admin.contact.student.detail', compact('student'));
     }
 
-  
     public function edit($id)
     {
         $student = Student::with('user')->findOrFail($id);
@@ -165,8 +162,6 @@ class StudentController extends Controller
     public function update(Request $request, $id)
     {
         $student = Student::findOrFail($id);
-        
-        // Validate dữ liệu
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => [
@@ -196,7 +191,6 @@ class StudentController extends Controller
             'avatar.max' => 'Ảnh đại diện không được vượt quá 2MB',
         ]);
 
-        // Cập nhật thông tin user
         $user = User::find($student->user_id);
         $user->name = $validated['name'];
         $user->email = $validated['email'];
@@ -205,9 +199,7 @@ class StudentController extends Controller
             $user->password = Hash::make($validated['password']);
         }
 
-        // Upload avatar mới nếu có
         if ($request->hasFile('avatar')) {
-            // Xóa avatar cũ nếu có
             if ($user->avatar) {
                 Storage::delete('public/avatars/' . $user->avatar);
             }
@@ -219,7 +211,6 @@ class StudentController extends Controller
         
         $user->save();
 
-        // Cập nhật thông tin sinh viên
         $student->update([
             'class_id' => $validated['class_id'] ?? null,
             'student_code' => $validated['student_code'] ?? null,
@@ -232,9 +223,6 @@ class StudentController extends Controller
             ->with('success', 'Thông tin sinh viên đã được cập nhật!');
     }
 
-    /**
-     * Xóa sinh viên
-     */
     public function destroy($id)
     {
         try {
@@ -243,24 +231,16 @@ class StudentController extends Controller
             $student = Student::findOrFail($id);
             $user = User::find($student->user_id);
             
-            // Xóa các quan hệ của user trước
             if ($user) {
-                // Xóa user_has_roles
                 DB::table('user_has_roles')->where('user_id', $user->id)->delete();
-                
-                // Xóa user_has_permissions
                 DB::table('user_has_permissions')->where('user_id', $user->id)->delete();
-                
-                // Xóa avatar nếu có
                 if ($user->avatar && Storage::exists('public/avatars/' . $user->avatar)) {
                     Storage::delete('public/avatars/' . $user->avatar);
                 }
             }
             
-            // Xóa student
             $student->delete();
             
-            // Xóa user
             if ($user) {
                 $user->delete();
             }
@@ -281,12 +261,10 @@ class StudentController extends Controller
     public function bulkDestroy(Request $request)     
     {         
         try {             
-            // Validate input             
             $request->validate([                 
                 'student_ids' => 'required|string'             
             ]);                          
             
-            // Chuyển đổi string thành array và làm sạch             
             $studentIds = explode(',', $request->student_ids);             
             $studentIds = array_filter(array_map('trim', $studentIds));             
             $studentIds = array_map('intval', $studentIds);             
@@ -299,7 +277,6 @@ class StudentController extends Controller
             
             DB::beginTransaction();                          
             
-            // Lấy thông tin students và user_ids trước khi xóa             
             $students = Student::whereIn('id', $studentIds)->get();             
             
             if ($students->isEmpty()) {                 
@@ -313,36 +290,28 @@ class StudentController extends Controller
             $avatarsToDelete = [];                          
             
             foreach ($students as $student) {                 
-                // Lấy tên sinh viên                 
                 $studentInfo = $student->student_code ?                      
                     $student->student_code . ' - ' . $student->user->name :                      
                     $student->user->name;                 
                 $studentNames[] = $studentInfo;                                  
                 
-                // Lấy user_id để xóa user                 
                 $userIds[] = $student->user_id;                                  
-                
-                // Lưu avatar để xóa file                 
                 if ($student->user && $student->user->avatar) {                     
                     $avatarsToDelete[] = $student->user->avatar;                 
                 }             
             }                          
             
-            // Xóa các quan hệ liên quan             
             if (!empty($userIds)) {
                 DB::table('user_has_roles')->whereIn('user_id', $userIds)->delete();             
                 DB::table('user_has_permissions')->whereIn('user_id', $userIds)->delete();
             }                          
             
-            // Xóa students              
             Student::whereIn('id', $studentIds)->delete();                          
             
-            // xóa users             
             if (!empty($userIds)) {
                 User::whereIn('id', $userIds)->delete();             
             }
             
-            // Xóa files avatar             
             foreach ($avatarsToDelete as $avatar) {                 
                 $avatarPath = 'public/avatars/' . $avatar;
                 if (Storage::exists($avatarPath)) {                     
@@ -355,7 +324,6 @@ class StudentController extends Controller
             $count = count($studentNames);             
             $message = "Đã xóa thành công {$count} sinh viên";                          
             
-            // Nếu ít hơn 5 sinh viên, liệt kê tên             
             if ($count <= 5 && $count > 0) {                 
                 $message .= ": " . implode(', ', $studentNames);             
             }                          
@@ -378,15 +346,12 @@ class StudentController extends Controller
         return view('admin.contact.student.import', compact('classes'));
     }
 
-    /**
-     * Tải file Excel mẫu
-     */
+
     public function downloadTemplate()
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        // Set headers
         $headers = [
             'A1' => 'Mã sinh viên (*)',
             'B1' => 'Họ và tên (*)',
@@ -402,7 +367,6 @@ class StudentController extends Controller
             $sheet->setCellValue($cell, $value);
         }
 
-        // Style headers
         $sheet->getStyle('A1:H1')->applyFromArray([
             'font' => ['bold' => true],
             'fill' => [
@@ -411,12 +375,10 @@ class StudentController extends Controller
             ]
         ]);
 
-        // Auto size columns
         foreach (range('A', 'H') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
-        // Add sample data
         $sheet->setCellValue('A2', 'SV001');
         $sheet->setCellValue('B2', 'Nguyễn Văn A');
         $sheet->setCellValue('C2', 'nguyenvana@example.com');
@@ -426,14 +388,12 @@ class StudentController extends Controller
         $sheet->setCellValue('G2', 'Công nghệ thông tin');
         $sheet->setCellValue('H2', 'studying');
 
-        // Add instructions
         $sheet->setCellValue('A4', 'Hướng dẫn:');
         $sheet->setCellValue('A5', '- Các cột có dấu (*) là bắt buộc');
         $sheet->setCellValue('A6', '- Mã lớp phải tồn tại trong hệ thống');
         $sheet->setCellValue('A7', '- Email phải duy nhất');
         $sheet->setCellValue('A8', '- Mật khẩu tối thiểu 8 ký tự');
 
-        // Create file
         $writer = new Xlsx($spreadsheet);
         $fileName = 'student_import_template.xlsx';
         $temp_file = tempnam(sys_get_temp_dir(), $fileName);
@@ -442,9 +402,6 @@ class StudentController extends Controller
         return response()->download($temp_file, $fileName)->deleteFileAfterSend(true);
     }
 
-    /**
-     * Import sinh viên từ file Excel
-     */
     public function import(Request $request)
     {
         $request->validate([
@@ -461,32 +418,25 @@ class StudentController extends Controller
             $worksheet = $spreadsheet->getActiveSheet();
             $rows = $worksheet->toArray();
 
-            // Skip header row
             $header = array_shift($rows);
-
             $imported = 0;
             $skipped = 0;
             $errors = [];
 
-            // Get all classes for mapping
             $classes = ClassRoom::pluck('id', 'class_code')->toArray();
 
             foreach ($rows as $index => $row) {
-                $rowNumber = $index + 2; // +2 because we start from row 2 in Excel
+                $rowNumber = $index + 2; 
 
-                // Skip empty rows
                 if (empty(array_filter($row))) {
                     continue;
                 }
-
                 try {
-                    // Validate required fields
                     if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3])) {
                         $errors[] = "Dòng {$rowNumber}: Thiếu thông tin bắt buộc";
                         $skipped++;
                         continue;
                     }
-
                     $studentCode = trim($row[0]);
                     $name = trim($row[1]);
                     $email = trim($row[2]);
@@ -494,21 +444,18 @@ class StudentController extends Controller
                     $class_code = !empty($row[4]) ? trim($row[4]) : null;
                     $enrollmentYear = !empty($row[5]) ? intval($row[5]) : $request->default_enrollment_year;
 
-                    // Check if email already exists
                     if (User::where('email', $email)->exists()) {
                         $errors[] = "Dòng {$rowNumber}: Email '{$email}' đã tồn tại";
                         $skipped++;
                         continue;
                     }
 
-                    // Check if student code already exists
                     if (Student::where('student_code', $studentCode)->exists()) {
                         $errors[] = "Dòng {$rowNumber}: Mã sinh viên '{$studentCode}' đã tồn tại";
                         $skipped++;
                         continue;
                     }
 
-                    // Get class ID
                     $classId = null;
                     if ($class_code && isset($classes[$class_code])) {
                         $classId = $classes[$class_code];
@@ -520,14 +467,12 @@ class StudentController extends Controller
                         $classId = $request->default_class_id;
                     }
 
-                    // Validate password length
                     if (strlen($password) < 8) {
                         $errors[] = "Dòng {$rowNumber}: Mật khẩu phải có ít nhất 8 ký tự";
                         $skipped++;
                         continue;
                     }
 
-                    // Create user
                     $user = User::create([
                         'name' => $name,
                         'email' => $email,
@@ -539,7 +484,6 @@ class StudentController extends Controller
                         'role_id' => 1,
                     ]);
 
-                    // Create student
                     Student::create([
                         'user_id' => $user->id,
                         'student_code' => $studentCode,
@@ -558,7 +502,6 @@ class StudentController extends Controller
 
             DB::commit();
 
-            // Prepare result message
             $message = "Import hoàn tất: {$imported} sinh viên được thêm thành công";
             if ($skipped > 0) {
                 $message .= ", {$skipped} dòng bị bỏ qua";

@@ -15,13 +15,12 @@
         <li class="breadcrumb-item active">Quản lý người dùng</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
   <section class="section py-4">
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12">
-          <!-- Form tìm kiếm và lọc -->
           <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-light">
               <h5 class="card-title m-0 fw-bold text-secondary">Tìm kiếm & Lọc</h5>
@@ -29,7 +28,6 @@
             <div class="card-body mt-3">
               <form method="GET" action="{{ route('admin.user.index') }}" id="filterForm">
                 <div class="row g-3">
-                  <!-- Tìm kiếm -->
                   <div class="col-md-4">
                     <label for="search" class="form-label">Tìm kiếm</label>
                     <input type="text" class="form-control" id="search" name="search" 
@@ -37,7 +35,6 @@
                            placeholder="Nhập tên hoặc email...">
                   </div>
                   
-                  <!-- Lọc theo trạng thái kích hoạt -->
                   <div class="col-md-2">
                     <label for="email_verified" class="form-label">Trạng thái kích hoạt</label>
                     <select class="form-select" id="email_verified" name="email_verified">
@@ -46,8 +43,6 @@
                       <option value="0" {{ request('email_verified') == '0' ? 'selected' : '' }}>Chưa kích hoạt</option>
                     </select>
                   </div>
-                  
-                  <!-- Lọc theo trạng thái tài khoản -->
                   <div class="col-md-2">
                     <label for="is_active" class="form-label">Trạng thái tài khoản</label>
                     <select class="form-select" id="is_active" name="is_active">
@@ -57,7 +52,6 @@
                     </select>
                   </div>
                   
-                  <!-- Lọc theo vai trò -->
                   <div class="col-md-2">
                     <label for="role_id" class="form-label">Vai trò</label>
                     <select class="form-select" id="role_id" name="role_id">
@@ -70,7 +64,6 @@
                     </select>
                   </div>
                   
-                  <!-- Số lượng hiển thị -->
                   <div class="col-md-2">
                     <label for="per_page" class="form-label">Hiển thị</label>
                     <select class="form-select" id="per_page" name="per_page">
@@ -210,7 +203,6 @@
               </div>
             </div>
             <div class="card-footer bg-white py-3">
-              <!-- Phân trang Bootstrap 5 -->
               @if ($users->hasPages())
                 <div class="d-flex justify-content-between align-items-center">
                   <div>
@@ -220,21 +212,17 @@
                   
                   <nav aria-label="Pagination">
                     <ul class="pagination mb-0">
-                      {{-- Previous Page Link --}}
                       @if ($users->onFirstPage())
                         <li class="page-item disabled"><span class="page-link">‹</span></li>
                       @else
                         <li class="page-item"><a class="page-link" href="{{ $users->previousPageUrl() }}">‹</a></li>
                       @endif
 
-                      {{-- Pagination Elements --}}
                       @foreach ($users->links()->elements as $element)
-                        {{-- "Three Dots" Separator --}}
                         @if (is_string($element))
                           <li class="page-item disabled"><span class="page-link">{{ $element }}</span></li>
                         @endif
 
-                        {{-- Array Of Links --}}
                         @if (is_array($element))
                           @foreach ($element as $page => $url)
                             @if ($page == $users->currentPage())
@@ -246,7 +234,6 @@
                         @endif
                       @endforeach
 
-                      {{-- Next Page Link --}}
                       @if ($users->hasMorePages())
                         <li class="page-item"><a class="page-link" href="{{ $users->nextPageUrl() }}">›</a></li>
                       @else
@@ -263,7 +250,6 @@
     </div>
   </section>
 
-  <!-- Modal Xác nhận xóa tài khoản -->
   <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -287,7 +273,6 @@
     </div>
   </div>  
 
-  <!-- Modal Xác nhận xóa nhiều tài khoản -->
   <div class="modal fade" id="bulkDeleteModal" tabindex="-1" aria-labelledby="bulkDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -315,13 +300,11 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Khởi tạo tooltips
       var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
       var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
       });
       
-      // Xử lý modal xóa
       const deleteModal = document.getElementById('deleteConfirmModal');
       if (deleteModal) {
         deleteModal.addEventListener('show.bs.modal', function(event) {
@@ -342,7 +325,6 @@
         });
       }
 
-      // Auto submit form khi thay đổi select box
       const selectElements = document.querySelectorAll('#filterForm select');
       selectElements.forEach(function(select) {
         select.addEventListener('change', function() {
@@ -350,7 +332,6 @@
         });
       });
 
-      // Thêm sự kiện Enter cho ô tìm kiếm
       const searchInput = document.getElementById('search');
       if (searchInput) {
         searchInput.addEventListener('keypress', function(e) {
@@ -361,7 +342,6 @@
         });
       }
 
-      // Xử lý chọn nhiều người dùng
       const selectAllCheckbox = document.getElementById('selectAll');
       const userCheckboxes = document.querySelectorAll('.user-checkbox:not([disabled])');
       const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
@@ -370,7 +350,6 @@
       const selectedUsersList = document.getElementById('selectedUsersList');
       const userIdsInput = document.getElementById('userIdsInput');
 
-      // Cập nhật trạng thái nút xóa nhiều
       function updateBulkDeleteButton() {
         const checkedBoxes = document.querySelectorAll('.user-checkbox:checked');
         const count = checkedBoxes.length;
@@ -380,7 +359,6 @@
           selectedCountSpan.textContent = count;
           bulkDeleteCountSpan.textContent = count;
           
-          // Cập nhật danh sách người dùng được chọn
           let usersList = '<ul class="mb-0">';
           const userIds = [];
           checkedBoxes.forEach(function(checkbox) {
@@ -396,7 +374,6 @@
         }
       }
 
-      // Chọn/bỏ chọn tất cả
       selectAllCheckbox.addEventListener('change', function() {
         userCheckboxes.forEach(function(checkbox) {
           checkbox.checked = selectAllCheckbox.checked;
@@ -404,10 +381,8 @@
         updateBulkDeleteButton();
       });
 
-      // Xử lý khi chọn/bỏ chọn từng checkbox
       userCheckboxes.forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
-          // Cập nhật trạng thái của checkbox "select all"
           const allChecked = Array.from(userCheckboxes).every(cb => cb.checked);
           const someChecked = Array.from(userCheckboxes).some(cb => cb.checked);
           

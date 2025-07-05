@@ -15,7 +15,6 @@
             toastr.warning("{{ session('warning') }}");
         @endif
     </script>
-    <!-- Top Bar -->
     <div class="top-bar">
         <div class="container">
             <div class="row">
@@ -31,7 +30,6 @@
         </div>
     </div>
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -159,10 +157,8 @@
                             <input type="file" id="avatarInput" name="avatar" class="d-none" accept="image/*">
                         </div>
                         
-                        <!-- Hiển thị tên người dùng -->
                         <h4 class="mt-2">{{ Auth::user()->name }}</h4>
                         
-                        <!-- Hiển thị các badge cho mỗi vai trò -->
                         <div class="mb-3">
                             @php
                                 $roles = [];
@@ -179,7 +175,6 @@
                             @endforeach
                         </div>
                         
-                        <!-- Hiển thị selector cho vai trò khi người dùng có nhiều vai trò -->
                         @if(count($roles) > 1)
                             <div class="form-group mb-4">
                                 <label for="role_selector" class="fw-bold">Chọn vai trò để cập nhật:</label>
@@ -194,7 +189,6 @@
                         @endif
                     </div>
                     
-                    <!-- Form cho Sinh viên (Role 1) -->
                     <div id="role-form-1" class="role-form">
                         <div class="role-header mb-3">
                             <h5 class="text-primary">Thông tin Sinh viên</h5>
@@ -263,7 +257,6 @@
                         </div>
                     </div>
                     
-                    <!-- Form cho Giảng viên (Role 2) -->
                     <div id="role-form-2" class="role-form">
                         <div class="role-header mb-3">
                             <h5 class="text-info">Thông tin Giảng viên</h5>
@@ -331,7 +324,6 @@
                         </div>
                     </div>
                     
-                    <!-- Form cho Đơn vị (Role 3) -->
                     <div id="role-form-3" class="role-form">
                         <div class="role-header mb-3">
                             <h5 class="text-success">Thông tin Đơn vị</h5>
@@ -387,7 +379,6 @@
                         </div>
                     </div>
                     
-                    <!-- Form cho Kiểm duyệt viên (Role 4) -->
                     <div id="role-form-4" class="role-form">
                         <div class="role-header mb-3">
                             <h5 class="text-warning">Thông tin Kiểm duyệt viên</h5>
@@ -625,10 +616,6 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', function(event) {
             console.log('Form đang được submit');
             
-            // Chỉ sử dụng cho mục đích debug
-            // event.preventDefault();
-            
-            // Hiển thị dữ liệu form
             const formData = new FormData(this);
             for (let pair of formData.entries()) {
                 console.log(pair[0] + ': ' + pair[1]);

@@ -27,7 +27,6 @@ class NotificationCategoryController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:notification_categories,slug',
             'description' => 'nullable|string',
-            'icon' => 'nullable|string|max:50',
             'display_order' => 'nullable|integer',
         ],[
             'name.required' => 'Tên thông báo khồn được  để  trống',
@@ -61,7 +60,6 @@ class NotificationCategoryController extends Controller
             'name' => 'required|max:255',
             'slug' => 'nullable|string|max:255|unique:notification_categories,slug,' . $id,
             'description' => 'nullable',
-            'icon' => 'nullable|string|max:50',
             'display_order' => 'nullable|integer',
         ],[
             'name.required' => 'Tên thông báo khồn được  để  trống',
@@ -71,7 +69,6 @@ class NotificationCategoryController extends Controller
         $category->name = $request->name;
         $category->slug = $request->slug ?: Str::slug($request->name);
         $category->description = $request->description;
-        $category->icon = $request->icon;
         $category->display_order = $request->display_order ?: 0;
         $category->save();
 
@@ -83,7 +80,6 @@ class NotificationCategoryController extends Controller
     {
         $category = NotificationCategory::findOrFail($id);
         
-        // Check if category has notifications
         $notificationsCount = $category->notifications()->count();
         if ($notificationsCount > 0) {
             return redirect()->route('admin.notification-category.index')

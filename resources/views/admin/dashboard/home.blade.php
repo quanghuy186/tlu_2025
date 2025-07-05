@@ -17,10 +17,8 @@
 
 <section class="section dashboard">
   <div class="row">
-    <!-- Card Statistics -->
     <div class="col-lg-12">
       <div class="row">
-        <!-- Approved Articles Card -->
         <div class="col-xxl-4 col-md-6">
           <div class="card info-card sales-card" style="border-left: 5px solid #2eca6a;">
             <div class="card-body">
@@ -38,7 +36,6 @@
           </div>
         </div>
         
-        <!-- Pending Articles Card -->
         <div class="col-xxl-4 col-md-6">
           <div class="card info-card revenue-card" style="border-left: 5px solid #ffb848;">
             <div class="card-body">
@@ -56,7 +53,6 @@
           </div>
         </div>
 
-        <!-- Rejected Articles Card -->
         <div class="col-xxl-4 col-xl-12">
           <div class="card info-card customers-card" style="border-left: 5px solid #ff5a5a;">
             <div class="card-body">
@@ -74,7 +70,6 @@
           </div>
         </div>
 
-        <!-- Forum Posts Reports Chart -->
         <div class="col-12">
           <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center p-3">
@@ -100,7 +95,6 @@
       </div>
     </div>
 
-    <!-- User Account Statistics Cards -->
     <div class="col-lg-12">
       <div class="row">
         <div class="col-xxl-6 col-md-6">
@@ -136,7 +130,6 @@
           </div>
         </div>
 
-        <!-- User Accounts Reports Chart -->
         <div class="col-12">
           <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center p-3">
@@ -182,13 +175,11 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    // Parse JSON data
     const dailyData = JSON.parse('{!! $dailyDataJson !!}');
     const monthlyData = JSON.parse('{!! $monthlyDataJson !!}');
     const userDailyData = JSON.parse('{!! $userDailyDataJson !!}');
     const userMonthlyData = JSON.parse('{!! $userMonthlyDataJson !!}');
     
-    // Tạo mảng nhãn cho các ngày trong tháng
     const daysInMonth = {{ $data['daysInMonth'] }};
     const currentMonth = {{ $data['currentMonth'] }};
     const currentYear = {{ $data['currentYear'] }};
@@ -203,7 +194,6 @@
       'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
     ];
 
-    //thống kê diễn đàn
     const forumChart = new ApexCharts(document.querySelector("#forumReportsChart"), {
       series: [{
         name: 'Đã duyệt',
@@ -293,7 +283,6 @@
       }
     });
     
-    // Initialize User Accounts Chart
     const userChart = new ApexCharts(document.querySelector("#userReportsChart"), {
       series: [{
         name: 'Tài khoản hợp lệ',
@@ -392,7 +381,6 @@
         const chartType = this.getAttribute('data-chart');
         const period = this.getAttribute('data-period');
         
-        // Remove active class from all buttons in the same group
         const buttonGroup = this.closest('.view-selector');
         buttonGroup.querySelectorAll('.btn[data-period]').forEach(el => {
           el.classList.remove('active');
@@ -400,13 +388,11 @@
           el.classList.add('btn-outline-primary');
         });
         
-        // Add active class to clicked button
         this.classList.add('active');
         this.classList.add('btn-primary');
         this.classList.remove('btn-outline-primary');
         
         if (chartType === 'forum') {
-          // Update forum chart
           if (period === 'daily') {
             document.getElementById('forum-chart-period-text').textContent = `/ Tháng ${currentMonth} năm ${currentYear}`;
             
@@ -439,7 +425,6 @@
             ]);
           }
         } else if (chartType === 'user') {
-          // Update user chart
           if (period === 'daily') {
             document.getElementById('user-chart-period-text').textContent = `/ Tháng ${currentMonth} năm ${currentYear}`;
             

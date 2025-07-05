@@ -89,7 +89,6 @@ class NotificationController extends Controller
             }
         }
 
-        // Create new notification
         $notification = new Notification();
         $notification->title = $request->title;
         $notification->content = $request->content;
@@ -132,7 +131,6 @@ class NotificationController extends Controller
             'remove_images' => 'nullable|array',
         ]);
 
-        // Handle removing selected images
         $existingImages = $notification->images_array;
         $imagesToRemove = $request->input('remove_images', []);
         $remainingImages = [];
@@ -141,12 +139,10 @@ class NotificationController extends Controller
             if (!in_array($image, $imagesToRemove)) {
                 $remainingImages[] = $image;
             } else {
-                // Delete the image file
                 Storage::disk('public')->delete($image);
             }
         }
 
-        // Handle new image uploads
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
@@ -172,14 +168,12 @@ class NotificationController extends Controller
     {
         $notification = Notification::findOrFail($id);
         
-        // Delete attached images
         $images = $notification->images_array;
         foreach ($images as $image) {
             Storage::disk('public')->delete($image);
         }
         
         $notification->delete();
-        
         return redirect()->route('admin.notification.index')
             ->with('success', 'Thông báo đã được xóa thành công.');
     }
@@ -202,23 +196,19 @@ class NotificationController extends Controller
     {
         $request->validate([
             'selected_ids' => 'required|array',
-            // 'selected_ids.*' => 'exists:notifications,id',
         ]);
         
         $selectedIds = $request->input('selected_ids');
         
-        // Lấy tất cả hình ảnh của các thông báo được chọn để xóa
         $notifications = Notification::whereIn('id', $selectedIds)->get();
         
         foreach ($notifications as $notification) {
-            // Xóa hình ảnh
             $images = $notification->images_array;
             foreach ($images as $image) {
                 Storage::disk('public')->delete($image);
             }
         }
         
-        // Xóa các thông báo
         Notification::whereIn('id', $selectedIds)->delete();
         
         return redirect()->route('admin.notification.index')

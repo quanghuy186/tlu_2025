@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Chi tiết tài khoản</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
   <div class="container-fluid">
@@ -35,7 +35,6 @@
           </div>
           <div class="card-body">
             <div class="row">
-              <!-- User Profile Information -->
               <div class="col-md-6">
                 <div class="card mb-4">
                   <div class="card-header bg-light">
@@ -70,7 +69,6 @@
                 </div>
               </div>
               
-              <!-- Account Status Information -->
               <div class="col-md-6">
                 <div class="card mb-4">
                   <div class="card-header bg-light">
@@ -113,7 +111,6 @@
                 </div>
               </div>
               
-              <!-- User Roles -->
               <div class="col-md-6">
                 <div class="card mb-4">
                   <div class="card-header bg-light d-flex justify-content-between align-items-center">
@@ -139,7 +136,6 @@
                 </div>
               </div>
               
-              <!-- User Permissions -->
               <div class="col-md-6">
                 <div class="card mb-4">
                   <div class="card-header bg-light d-flex justify-content-between align-items-center">
@@ -175,23 +171,13 @@
                 </div>
               </div>
               
-              <!-- Activity Log (Optional - if you track user activities) -->
               <div class="col-md-12">
                 <div class="card">
                   <div class="card-header bg-light">
                     <h5 class="mb-0"><i class="bi bi-activity me-2"></i>Lịch sử hoạt động gần đây</h5>
                   </div>
                   <div class="card-body">
-                    <!-- This section requires you to have activity logging in your application -->
-                    <!-- If not implemented yet, you can remove this section or show a placeholder -->
                     <p class="text-muted text-center py-3">Chưa có dữ liệu hoạt động</p>
-                    
-                    <!-- Sample activity log implementation if you have it -->
-                    <!--
-                    <div class="table-responsive">
-                      
-                    </div>
-                    -->
                   </div>
                 </div>
               </div>

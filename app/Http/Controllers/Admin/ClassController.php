@@ -163,7 +163,6 @@ class ClassController extends Controller
         $currentYear = date('Y');
         $years = [];
         
-        // Tạo danh sách năm học từ năm hiện tại trở về 5 năm trước và 2 năm tới
         for ($i = -5; $i <= 2; $i++) {
             $startYear = $currentYear + $i;
             $endYear = $startYear + 4;
@@ -173,9 +172,6 @@ class ClassController extends Controller
         return $years;
     }
     
-    /**
-     * Lấy danh sách học kỳ
-     */
     private function getSemesters()
     {
         return [
@@ -195,19 +191,13 @@ class ClassController extends Controller
         ]);
         
         $classIds = $request->input('class_ids');
-        
-        // Cập nhật tham chiếu trước khi xóa
         ClassRoom::whereIn('id', $classIds)->update(['teacher_id' => null]);
-        
-        // Cập nhật sinh viên liên quan
         foreach ($classIds as $classId) {
             $class = ClassRoom::find($classId);
             if ($class) {
                 $class->students()->update(['class_id' => null]);
             }
         }
-        
-        // Xóa các lớp học
         ClassRoom::whereIn('id', $classIds)->delete();
         
         return redirect()->route('admin.class.index')

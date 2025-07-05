@@ -1,7 +1,6 @@
 @if ($paginator->hasPages())
     <nav>
         <ul class="pagination justify-content-center">
-            {{-- Previous Page Link --}}
             @if ($paginator->onFirstPage())
                 <li class="page-item disabled" aria-disabled="true">
                     <span class="page-link"><i class="fas fa-angle-double-left"></i></span>
@@ -14,16 +13,13 @@
                 </li>
             @endif
 
-            {{-- Pagination Elements --}}
             @foreach ($elements as $element)
-                {{-- "Three Dots" Separator --}}
                 @if (is_string($element))
                     <li class="page-item disabled" aria-disabled="true">
                         <span class="page-link">{{ $element }}</span>
                     </li>
                 @endif
 
-                {{-- Array Of Links --}}
                 @if (is_array($element))
                     @foreach ($element as $page => $url)
                         @if ($page == $paginator->currentPage())
@@ -39,7 +35,6 @@
                 @endif
             @endforeach
 
-            {{-- Next Page Link --}}
             @if ($paginator->hasMorePages())
                 <li class="page-item">
                     <a class="page-link" href="{{ $paginator->nextPageUrl() }}" rel="next">
@@ -54,7 +49,6 @@
         </ul>
     </nav>
 
-    {{-- Results Info --}}
     <div class="pagination-info text-center mt-3">
         <p class="text-muted small">
             Hiển thị {{ $paginator->firstItem() ?? 0 }} đến {{ $paginator->lastItem() ?? 0 }} 

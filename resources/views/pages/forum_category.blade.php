@@ -6,7 +6,6 @@
 @endsection
 
 @section('content')
-<!-- Breadcrumb -->
 <div class="breadcrumb-container">
     <div class="container">
         <nav aria-label="breadcrumb">
@@ -28,7 +27,6 @@
 
 <div class="container my-4">
     <div class="row">
-        <!-- Main Content - Posts List -->
         <div class="col-lg-8">
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -38,14 +36,8 @@
                             <p class="text-muted mb-0 mt-1">{{ $category->description }}</p>
                         @endif
                     </div>
-                    {{-- <div>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPostModal">
-                            <i class="fas fa-plus-circle me-1"></i> Tạo bài viết mới
-                        </button>
-                    </div> --}}
                 </div>
                 
-                <!-- Subcategories Display (if any) -->
                 @if($category->childCategories && $category->childCategories->count() > 0)
                     <div class="card-body pb-0">
                         <h5 class="mb-3">Chuyên mục con</h5>
@@ -78,14 +70,9 @@
                     </div>
                 @endif
                 
-                <!-- Posts List -->
                 <div class="card-body">
-                    
-                    <!-- Posts Filter & Sorting -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="mb-3">Bài viết</h5>
-                        
-                        
                         <div class="dropdown">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-sort me-1"></i> Sắp xếp
@@ -105,7 +92,6 @@
                             @foreach($posts as $post)
                                 <div class="post-preview mt-5">
                                     <div class="d-flex">
-                                        <!-- Author Avatar -->
                                         <div class="me-3">
                                             @if($post->is_anonymous)
                                                 <span class="avatar avatar-sm bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center">
@@ -121,13 +107,11 @@
                                                         <img src="{{ asset('user_default.jpg') }}" 
                                                         alt="" class="rounded-circle" 
                                                         style="width: 40px; height: 40px; object-fit: cover;">
-                                                        {{-- {{ strtoupper(substr($post->author->name, 0, 1)) }} --}}
                                                     </span>
                                                 @endif
                                             @endif
                                         </div>
                                         
-                                        <!-- Post Content Preview -->
                                         <div class="flex-grow-1">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <h5 class="fw-bold mb-0">
@@ -154,7 +138,6 @@
                                             
                                             <p class="post-text mb-2">{{ Str::limit($post->content, 150) }}</p>
                                             
-                                            <!-- Post Tags -->
                                             @if($post->tags && count($post->tags) > 0)
                                                 <div class="post-tags mb-2">
                                                     @foreach($post->tags as $tag)
@@ -181,7 +164,6 @@
                             @endforeach
                         </div>
                         
-                        <!-- Pagination -->
                         <div class="d-flex justify-content-center mt-4">
                             {{ $posts->links() }}
                         </div>
@@ -197,9 +179,7 @@
             </div>
         </div>
         
-        <!-- Sidebar -->
         <div class="col-lg-4">
-            <!-- Category Info -->
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-info-circle me-2"></i> Thông tin chuyên mục
@@ -247,7 +227,6 @@
                 </div>
             </div>
             
-            <!-- Popular Tags -->
             @if(isset($popularTags) && count($popularTags) > 0)
                 <div class="card mb-4">
                     <div class="card-header">
@@ -265,7 +244,6 @@
                 </div>
             @endif
             
-            <!-- Other Categories -->
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-folder me-2"></i> Chuyên mục khác
@@ -296,7 +274,6 @@
     </div>      
 </div>
 
-<!-- Modal: Create Post -->
 @include('partials.create_post_modal')
 
 @endsection
@@ -321,25 +298,14 @@
             });
         });
         
-        // Handle sorting dropdown
         document.querySelectorAll('#sortDropdown + .dropdown-menu .dropdown-item').forEach(item => {
             item.addEventListener('click', function(e) {
                 e.preventDefault();
-                
-                // Remove active class from all items
                 document.querySelectorAll('#sortDropdown + .dropdown-menu .dropdown-item').forEach(el => {
                     el.classList.remove('active');
                 });
-                
-                // Add active class to clicked item
                 this.classList.add('active');
-                
-                // Update dropdown button text
                 document.querySelector('#sortDropdown').innerHTML = `<i class="fas fa-sort me-1"></i> ${this.textContent}`;
-                
-                // Here you would add logic to sort the posts based on the selected option
-                // For example, you could reload the page with a sort parameter
-                // window.location.href = `{{ route('forum.category', $category->slug) }}?sort=${sortOption}`;
             });
         });
     });
@@ -348,7 +314,6 @@
 
 @section('styles')
 <style>
-/* Grid view for posts */
 .posts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

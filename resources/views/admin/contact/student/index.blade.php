@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Sinh viên</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
@@ -114,12 +114,10 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <!-- Card Tìm kiếm và Lọc -->
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body mt-3">
                         <form method="GET" action="{{ route('admin.student.index') }}" id="filterForm">
                             <div class="row g-3">
-                                <!-- Tìm kiếm -->
                                 <div class="col-md-4">
                                     <label for="search" class="form-label">Tìm kiếm</label>
                                     <div class="input-group">
@@ -135,7 +133,6 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Lọc theo lớp -->
                                 <div class="col-md-2">
                                     <label for="class_id" class="form-label">Lớp</label>
                                     <select class="form-select" id="class_id" name="class_id" onchange="this.form.submit()">
@@ -148,7 +145,6 @@
                                     </select>
                                 </div>
                                 
-                                <!-- Lọc theo năm nhập học -->
                                 <div class="col-md-2">
                                     <label for="enrollment_year" class="form-label">Năm nhập học</label>
                                     <select class="form-select" id="enrollment_year" name="enrollment_year" onchange="this.form.submit()">
@@ -161,7 +157,6 @@
                                     </select>
                                 </div>
                                 
-                                <!-- Nút reset -->
                                 <div class="col-md-12">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
@@ -173,7 +168,6 @@
                                             </span>
                                         </div>
                                         <div class="d-flex gap-2">
-                                            <!-- Số items mỗi trang -->
                                             <select class="form-select form-select-sm" name="per_page" onchange="this.form.submit()" style="width: auto;">
                                                 <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
                                                 <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
@@ -189,7 +183,6 @@
                     </div>
                 </div>
 
-                <!-- Card Danh sách sinh viên -->
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                         <h5 class="card-title m-0 fw-bold text-primary">Danh sách sinh viên</h5>
@@ -204,7 +197,6 @@
                                 <i class="bi bi-person-badge me-2"></i>QL giảng viên
                             </a>
 
-                             <!-- Dropdown cho Import/Export -->
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
                                     <i class="bi bi-file-earmark-excel me-2"></i>Thêm từ file Excel
@@ -322,17 +314,14 @@
                                         <td>{{ $student->enrollment_year ?? 'Chưa cập nhật' }}</td>
                                         <td>
                                             <div class="d-flex justify-content-center gap-2">
-                                                <!-- Edit Student -->
                                                 <a href="{{ route('admin.student.edit', $student->id) }}" data-bs-toggle="tooltip" data-bs-title="Chỉnh sửa" class="btn btn-sm btn-primary">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>
                                                 
-                                                <!-- View Student Info -->
                                                 <a href="{{ route('admin.student.show', $student->id) }}" data-bs-toggle="tooltip" data-bs-title="Xem thông tin" class="btn btn-sm btn-success">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
                                                 
-                                                <!-- Delete Student -->
                                                 <a href="#" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#deleteConfirmModal"
@@ -357,7 +346,6 @@
                             </table>
                         </div>
                         
-                        <!-- Custom Pagination -->
                         @if ($students->hasPages())
                             <div class="d-flex justify-content-between align-items-center px-3 py-3">
                                 <div class="text-muted">
@@ -365,7 +353,6 @@
                                 </div>
                                 <nav>
                                     <ul class="pagination mb-0">
-                                        {{-- Previous Page Link --}}
                                         @if ($students->onFirstPage())
                                             <li class="page-item disabled"><span class="page-link">‹</span></li>
                                         @else
@@ -374,7 +361,6 @@
                                             </li>
                                         @endif
 
-                                        {{-- Pagination Elements --}}
                                         @foreach ($students->getUrlRange(
                                             max($students->currentPage() - 2, 1),
                                             min($students->currentPage() + 2, $students->lastPage())
@@ -405,7 +391,6 @@
     </div>
 </section>
 
-<!-- Modal Xác nhận xóa sinh viên -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -429,7 +414,6 @@
     </div>
 </div>
 
-<!-- Modal Xác nhận xóa nhiều sinh viên -->
 <div class="modal fade" id="bulkDeleteModal" tabindex="-1" aria-labelledby="bulkDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -440,7 +424,6 @@
             <div class="modal-body">
                 <p>Bạn có chắc chắn muốn xóa <strong id="bulkDeleteCount">0</strong> sinh viên đã chọn?</p>
                 <div id="selectedStudentsList" class="mb-3 table-responsive">
-                    <!-- Danh sách sinh viên được chọn sẽ được hiển thị ở đây -->
                 </div>
                 <p class="text-danger">
                     <i class="bi bi-exclamation-triangle me-1"></i>
@@ -450,13 +433,13 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                 <form id="bulkDeleteForm" action="{{ route('admin.student.bulk-delete') }}" method="POST" class="d-inline">
-    @csrf
-    @method('DELETE')
-    <input type="hidden" name="student_ids" id="studentIdsInput">
-    <button type="submit" class="btn btn-danger">
-        <i class="bi bi-trash me-1"></i>Xóa sinh viên
-    </button>
-</form>
+                    @csrf
+                    @method('DELETE')
+                    <input type="hidden" name="student_ids" id="studentIdsInput">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i>Xóa sinh viên
+                    </button>
+                </form>
             </div>
         </div>
     </div>
@@ -465,202 +448,187 @@
 @endsection
 
 @section('custom-js')
-<script>
-    // Add this to your JavaScript
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-    
-    // Delete modal
-    const deleteModal = document.getElementById('deleteConfirmModal');
-    if (deleteModal) {
-        deleteModal.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget;
-            const studentId = button.getAttribute('data-student-id');
-            const studentName = button.getAttribute('data-student-name');
-            const deleteUrl = button.getAttribute('data-delete-url');
-            
-            const studentNameElement = deleteModal.querySelector('#deleteStudentName');
-            if (studentNameElement) {
-                studentNameElement.textContent = studentName;
-            }
-            
-            const deleteForm = deleteModal.querySelector('#deleteStudentForm');
-            if (deleteForm) {
-                deleteForm.action = deleteUrl;
-            }
-        });
-    }
-
-    // Xử lý chọn nhiều sinh viên
-    const selectAllCheckbox = document.getElementById('selectAll');
-    const studentCheckboxes = document.querySelectorAll('.student-checkbox');
-    const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
-    const selectedCountSpan = document.getElementById('selectedCount');
-    const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
-    const selectedStudentsList = document.getElementById('selectedStudentsList');
-    const studentIdsInput = document.getElementById('studentIdsInput');
-
-    // Cập nhật trạng thái nút xóa nhiều
-    function updateBulkDeleteButton() {
-        const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
-        const count = checkedBoxes.length;
-        
-        if (count > 0) {
-            bulkDeleteBtn.classList.remove('d-none');
-            selectedCountSpan.textContent = count;
-            bulkDeleteCountSpan.textContent = count;
-            
-            // Define studentIds array first
-            const studentIds = [];
-            
-            // Cập nhật danh sách sinh viên được chọn
-            let studentsList = '<table class="table table-sm mb-0"><thead><tr><th>Mã SV</th><th>Họ tên</th></tr></thead><tbody>';
-            
-            checkedBoxes.forEach(function(checkbox) {
-                const studentName = checkbox.getAttribute('data-student-name');
-                const studentCode = checkbox.getAttribute('data-student-code');
-                studentsList += `<tr><td>${studentCode}</td><td>${studentName}</td></tr>`;
-                studentIds.push(checkbox.value);
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
             });
             
-            studentsList += '</tbody></table>';
-            selectedStudentsList.innerHTML = studentsList;
-            
-            // Set the input value
-            studentIdsInput.value = studentIds.join(',');
-        } else {
-            bulkDeleteBtn.classList.add('d-none');
-        }
-    }
+            const deleteModal = document.getElementById('deleteConfirmModal');
+            if (deleteModal) {
+                deleteModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const studentId = button.getAttribute('data-student-id');
+                    const studentName = button.getAttribute('data-student-name');
+                    const deleteUrl = button.getAttribute('data-delete-url');
+                    
+                    const studentNameElement = deleteModal.querySelector('#deleteStudentName');
+                    if (studentNameElement) {
+                        studentNameElement.textContent = studentName;
+                    }
+                    
+                    const deleteForm = deleteModal.querySelector('#deleteStudentForm');
+                    if (deleteForm) {
+                        deleteForm.action = deleteUrl;
+                    }
+                });
+            }
 
-    // Chọn/bỏ chọn tất cả
-    if (selectAllCheckbox) {
-        selectAllCheckbox.addEventListener('change', function() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const studentCheckboxes = document.querySelectorAll('.student-checkbox');
+            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+            const selectedCountSpan = document.getElementById('selectedCount');
+            const bulkDeleteCountSpan = document.getElementById('bulkDeleteCount');
+            const selectedStudentsList = document.getElementById('selectedStudentsList');
+            const studentIdsInput = document.getElementById('studentIdsInput');
+
+            function updateBulkDeleteButton() {
+                const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
+                const count = checkedBoxes.length;
+                
+                if (count > 0) {
+                    bulkDeleteBtn.classList.remove('d-none');
+                    selectedCountSpan.textContent = count;
+                    bulkDeleteCountSpan.textContent = count;
+                    
+                    const studentIds = [];
+                    
+                    let studentsList = '<table class="table table-sm mb-0"><thead><tr><th>Mã SV</th><th>Họ tên</th></tr></thead><tbody>';
+                    
+                    checkedBoxes.forEach(function(checkbox) {
+                        const studentName = checkbox.getAttribute('data-student-name');
+                        const studentCode = checkbox.getAttribute('data-student-code');
+                        studentsList += `<tr><td>${studentCode}</td><td>${studentName}</td></tr>`;
+                        studentIds.push(checkbox.value);
+                    });
+                    
+                    studentsList += '</tbody></table>';
+                    selectedStudentsList.innerHTML = studentsList;
+                    
+                    studentIdsInput.value = studentIds.join(',');
+                } else {
+                    bulkDeleteBtn.classList.add('d-none');
+                }
+            }
+
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function() {
+                    studentCheckboxes.forEach(function(checkbox) {
+                        checkbox.checked = selectAllCheckbox.checked;
+                    });
+                    updateBulkDeleteButton();
+                });
+            }
+
             studentCheckboxes.forEach(function(checkbox) {
-                checkbox.checked = selectAllCheckbox.checked;
+                checkbox.addEventListener('change', function() {
+                    const allChecked = Array.from(studentCheckboxes).every(cb => cb.checked);
+                    const someChecked = Array.from(studentCheckboxes).some(cb => cb.checked);
+                    
+                    selectAllCheckbox.checked = allChecked;
+                    selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                    
+                    updateBulkDeleteButton();
+                });
             });
-            updateBulkDeleteButton();
-        });
-    }
-
-    // Xử lý khi chọn/bỏ chọn từng checkbox
-    studentCheckboxes.forEach(function(checkbox) {
-        checkbox.addEventListener('change', function() {
-            // Cập nhật trạng thái của checkbox "select all"
-            const allChecked = Array.from(studentCheckboxes).every(cb => cb.checked);
-            const someChecked = Array.from(studentCheckboxes).some(cb => cb.checked);
             
-            selectAllCheckbox.checked = allChecked;
-            selectAllCheckbox.indeterminate = someChecked && !allChecked;
-            
-            updateBulkDeleteButton();
+            const bulkDeleteForm = document.getElementById('bulkDeleteForm');
+            if (bulkDeleteForm) {
+                bulkDeleteForm.addEventListener('submit', function() {
+                    const submitButton = this.querySelector('button[type="submit"]');
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Đang xử lý...';
+                });
+            }
         });
-    });
-    
-    // Add form submission handler
-    const bulkDeleteForm = document.getElementById('bulkDeleteForm');
-    if (bulkDeleteForm) {
-        bulkDeleteForm.addEventListener('submit', function() {
-            const submitButton = this.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Đang xử lý...';
-        });
-    }
-});
 
-    // Auto-submit form on Enter key in search field
-    document.getElementById('search').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            document.getElementById('filterForm').submit();
+        document.getElementById('search').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('filterForm').submit();
+            }
+        });
+    </script>
+
+    <style>
+        .form-select:focus,
+        .form-control:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
         }
-    });
-</script>
+        
+        .table th a {
+            transition: all 0.3s ease;
+        }
+        
+        .table th a:hover {
+            color: #0d6efd !important;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        
+        .avatar {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .table-responsive table {
+                font-size: 0.875rem;
+            }
+            
+            .btn-sm {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+        }
 
-<style>
-    /* Custom styles cho search và filter */
-    .form-select:focus,
-    .form-control:focus {
-        border-color: #86b7fe;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    }
-    
-    .table th a {
-        transition: all 0.3s ease;
-    }
-    
-    .table th a:hover {
-        color: #0d6efd !important;
-    }
-    
-    .pagination .page-item.active .page-link {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-    }
-    
-    .avatar {
-        font-weight: 600;
-        font-size: 14px;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .table-responsive table {
+        .info-card .card-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(90deg, #4154f1 0%, #2c7be5 100%);
+            color: white;
+            font-size: 28px;
+        }
+
+        .info-card.revenue-card .card-icon {
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+        }
+
+        .info-card.customers-card .card-icon {
+            background: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
+        }
+
+        .input-group-text {
+            background-color: #f8f9fa;
+            border-color: #ced4da;
+        }
+
+        .form-select:focus,
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(65, 84, 241, 0.25);
+            border-color: #4154f1;
+        }
+
+        .form-check-input {
+            cursor: pointer;
+        }
+
+        #selectAll {
+            margin-top: 0;
+        }
+
+        #selectedStudentsList table {
             font-size: 0.875rem;
         }
-        
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
+
+        #bulkDeleteModal .modal-body {
+            max-height: 500px;
+            overflow-y: auto;
         }
-    }
-
-    .info-card .card-icon {
-        width: 64px;
-        height: 64px;
-        background: linear-gradient(90deg, #4154f1 0%, #2c7be5 100%);
-        color: white;
-        font-size: 28px;
-    }
-
-    .info-card.revenue-card .card-icon {
-        background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
-    }
-
-    .info-card.customers-card .card-icon {
-        background: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
-    }
-
-    .input-group-text {
-        background-color: #f8f9fa;
-        border-color: #ced4da;
-    }
-
-    .form-select:focus,
-    .form-control:focus {
-        box-shadow: 0 0 0 0.2rem rgba(65, 84, 241, 0.25);
-        border-color: #4154f1;
-    }
-
-    .form-check-input {
-        cursor: pointer;
-    }
-
-    #selectAll {
-        margin-top: 0;
-    }
-
-    #selectedStudentsList table {
-        font-size: 0.875rem;
-    }
-
-    #bulkDeleteModal .modal-body {
-        max-height: 500px;
-        overflow-y: auto;
-    }
-</style>
+    </style>
 @endsection

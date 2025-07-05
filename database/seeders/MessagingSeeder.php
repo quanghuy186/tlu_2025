@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\Hash;
 
 class MessagingSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $users = [
@@ -47,17 +44,14 @@ class MessagingSeeder extends Seeder
             User::create($userData);
         }
 
-        // Tạo user chính (người đang đăng nhập)
         $mainUser = User::create([
             'name' => 'Nguyễn Văn A',
             'email' => 'a.nv@tlu.edu.vn',
             'password' => Hash::make('password'),
         ]);
 
-        // Tạo tin nhắn mẫu
         $user1 = User::where('email', 'b.tt123456@tlu.edu.vn')->first();
         
-        // Cuộc trò chuyện với Trần Thị B
         $messages = [
             [
                 'sender_user_id' => $user1->id,
@@ -107,7 +101,6 @@ class MessagingSeeder extends Seeder
             Message::create($messageData);
         }
 
-        // Tạo tin nhắn với các user khác
         $user2 = User::where('email', 'phongdaotao@tlu.edu.vn')->first();
         Message::create([
             'sender_user_id' => $user2->id,

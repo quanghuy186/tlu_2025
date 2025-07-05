@@ -24,16 +24,14 @@
     </div>
 </section>
 
-    <!-- Search and Filter Section -->
-    <div class="search-filter-container">
-        
-        <div class="filter-group">
+<div class="search-filter-container">
+    <div class="filter-group">
             <span class="filter-label">Sắp xếp theo:</span>
             <select class="filter-select" id="sortSelect" name="sort">
                 <option value="name">Tên (A-Z)</option>
                 <option value="name-desc">Tên (Z-A)</option>
             </select>
-        </div>
+    </div>
 
         <form id="searchForm" action="{{ route('contact.department.search') }}" method="GET">
             <div class="search-box mt-5">
@@ -42,10 +40,9 @@
                 <button type="submit"><i class="fas fa-arrow-right"></i></button>
             </div>
         </form> 
-    </div>
+</div>
     
-    <!-- Unit List -->
-    <div class="unit-list-container">
+<div class="unit-list-container">
         <div class="unit-list-header">
             <div class="unit-count">
                 Hiển thị <span class="text-primary">{{ $departments->firstItem() ?? 0 }}-{{ $departments->lastItem() ?? 0 }}</span> 
@@ -57,7 +54,6 @@
             </div>
         </div>
 
-        <!-- Unit List Items -->
         <div class="unit-list">
             @include('partials.department_list', ['departments' => $departments])
             
@@ -65,7 +61,6 @@
     </div>
 </div>
 
-<!-- Unit Detail Modal 1 -->
 
 @endsection
 
@@ -73,10 +68,8 @@
 @section('custom-js')
 <script>
     $(document).ready(function(){
-        // Biến để lưu trữ các tham số tìm kiếm hiện tại
         var currentSearch = "{{ $fullname ?? '' }}";
         function loadData(options) {
-            // Cập nhật các biến nếu có tham số tương ứng
             if (options.fullname !== undefined) {
                 currentSearch = options.fullname;
             }
@@ -84,25 +77,20 @@
                 ? "{{ route('contact.department.sort') }}" 
                 : "{{ route('contact.department.search') }}";
             
-            // Chuẩn bị dữ liệu gửi đi
             var data = {
                 fullname: currentSearch,
             };
             
-            // Thêm tham số sort nếu có
             if (options.sort) {
                 data.sort = options.sort;
             }
             
-            // Thêm tham số page nếu có
             if (options.page) {
                 data.page = options.page;
             }
             
-            // Hiển thị loading indicator (tùy chọn)
             $(".unit-list").addClass("loading");
             
-            // Gửi yêu cầu Ajax
             $.ajax({
                 url: url,
                 type: "GET",

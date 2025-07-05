@@ -11,7 +11,6 @@ class DepartmentSeeder extends Seeder
     public function run()
     {
         $departments = [
-            // Level 0 - Trường Đại học
             [
                 'id' => 1,
                 'name' => 'Trường Đại học Thủy lợi',
@@ -26,7 +25,6 @@ class DepartmentSeeder extends Seeder
                 'department_type' => 'administrative' // Đơn vị hành chính
             ],
 
-            // Level 1 - Các Khoa (Đơn vị đào tạo)
             [
                 'id' => 2,
                 'name' => 'Khoa Công trình',
@@ -212,7 +210,6 @@ class DepartmentSeeder extends Seeder
                 'department_type' => 'academic'
             ],
 
-            // Level 2 - Bộ môn thuộc Khoa Kỹ thuật tài nguyên nước
             [
                 'id' => 45,
                 'name' => 'Bộ môn Thủy văn',
@@ -307,7 +304,6 @@ class DepartmentSeeder extends Seeder
                 'department_type' => 'academic'
             ],
 
-            // Level 2 - Bộ môn thuộc Khoa Điện - Điện tử
             [
                 'id' => 52,
                 'name' => 'Bộ môn Kỹ thuật điện',
@@ -361,7 +357,6 @@ class DepartmentSeeder extends Seeder
                 'department_type' => 'academic'
             ],
 
-            // Level 2 - Bộ môn thuộc Khoa Công nghệ thông tin
             [
                 'id' => 56,
                 'name' => 'Bộ môn Công nghệ phần mềm',
@@ -415,7 +410,6 @@ class DepartmentSeeder extends Seeder
                 'department_type' => 'academic'
             ],
 
-            // Level 2 - Bộ môn thuộc Khoa Luật và Lý luận chính trị
             [
                 'id' => 60,
                 'name' => 'Bộ môn Luật',
@@ -456,7 +450,6 @@ class DepartmentSeeder extends Seeder
                 'department_type' => 'academic'
             ],
 
-            // Level 2 - Bộ môn thuộc Khoa Kinh tế và quản lý (đã có từ trước)
             [
                 'id' => 12,
                 'name' => 'Bộ môn Thương mại điện tử',
@@ -562,7 +555,6 @@ class DepartmentSeeder extends Seeder
                 'department_type' => 'academic'
             ],
 
-            // Level 2 - Bộ môn thuộc Khoa Hóa và Môi trường
             [
                 'id' => 20,
                 'name' => 'Bộ môn Kỹ thuật và Quản lý Môi trường',
@@ -603,7 +595,6 @@ class DepartmentSeeder extends Seeder
                 'department_type' => 'academic'
             ],
 
-            // Level 2 - Bộ môn thuộc Trung tâm Đào tạo quốc tế
             [
                 'id' => 23,
                 'name' => 'Bộ môn ngôn ngữ Anh',
@@ -631,7 +622,6 @@ class DepartmentSeeder extends Seeder
                 'department_type' => 'academic'
             ],
 
-            // Level 2 - Bộ môn thuộc Khoa Kế toán và Kinh doanh
             [
                 'id' => 25,
                 'name' => 'Bộ môn kế toán',
@@ -685,7 +675,6 @@ class DepartmentSeeder extends Seeder
                 'department_type' => 'academic'
             ],
 
-            // Level 1 - Các Phòng ban hành chính (Đơn vị hành chính)
             [
                 'id' => 29,
                 'name' => 'Phòng Hành chính - Tổng hợp',

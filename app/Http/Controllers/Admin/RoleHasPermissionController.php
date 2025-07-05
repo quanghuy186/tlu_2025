@@ -12,7 +12,6 @@ class RoleHasPermissionController extends Controller
 {
     public function index()
     {
-        //eager loadding
         $list_role_has_permission = RoleHasPermission::with('role')->with('permission')->get();
         $grouped_role_has_permission = $list_role_has_permission->groupBy('role.description');
         return view('admin.role_has_permission.index')

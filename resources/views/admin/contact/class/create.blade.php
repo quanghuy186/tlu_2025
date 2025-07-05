@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Thêm mới</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
@@ -131,7 +131,6 @@
 @section('custom-js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Lắng nghe sự kiện thay đổi khoa/bộ môn để lọc danh sách giảng viên (nếu cần)
         const departmentSelect = document.getElementById('department_id');
         const teacherSelect = document.getElementById('teacher_id');
         
@@ -139,7 +138,6 @@
             departmentSelect.addEventListener('change', function() {
                 const departmentId = this.value;
                 if (!departmentId) {
-                    // Nếu không chọn khoa, hiển thị tất cả giảng viên
                     document.querySelectorAll('#teacher_id option').forEach(option => {
                         if (option.value !== '') {
                             option.style.display = 'block';
@@ -148,8 +146,6 @@
                     return;
                 }
                 
-                // Logic để lọc giảng viên theo khoa (có thể triển khai sau bằng AJAX)
-                // Hiện tại chỉ là ví dụ, cần xây dựng thêm hàm lấy giảng viên theo khoa
             });
         }
     });

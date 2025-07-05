@@ -15,11 +15,10 @@
         <li class="breadcrumb-item active">Danh sách</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
   <section class="section py-4">
     <div class="container-fluid">
-      <!-- Filter & Search Section -->
       <div class="row mb-4">
         <div class="col-lg-12">
           <div class="card shadow-sm border-0">
@@ -108,7 +107,6 @@
           </div>
         </div>
       </div>
-      <!-- End Filter & Search Section -->
 
       <div class="row">
         <div class="col-lg-12">
@@ -129,7 +127,6 @@
                 @csrf
                 @method('DELETE')
 
-                <!-- Bulk Actions Toolbar -->
                 <div class="bg-light p-2 d-flex justify-content-between align-items-center">
                   <div class="d-flex align-items-center">
                     <div class="form-check ms-2">
@@ -246,7 +243,6 @@
               </form>
             </div>
             <div class="card-footer bg-white py-3">
-              <!-- Phân trang -->
               {{ $notifications->links('pagination::bootstrap-5') }}
             </div>
           </div>
@@ -255,7 +251,6 @@
     </div>
   </section>
 
-  <!-- Modal Xác nhận xóa thông báo -->
   <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -279,7 +274,6 @@
     </div>
   </div>
   
-  <!-- Modal Xác nhận xóa nhiều thông báo -->
   <div class="modal fade" id="bulkDeleteConfirmModal" tabindex="-1" aria-labelledby="bulkDeleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -301,13 +295,11 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Tooltip initialization
       var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
       var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
       });
       
-      // Single delete modal handling
       const deleteModal = document.getElementById('deleteConfirmModal');
       if (deleteModal) {
         deleteModal.addEventListener('show.bs.modal', function(event) {
@@ -328,7 +320,6 @@
         });
       }
       
-      // Select all checkboxes
       const selectAllCheckbox = document.getElementById('selectAll');
       const notificationCheckboxes = document.querySelectorAll('.notification-checkbox');
       const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
@@ -345,12 +336,10 @@
         });
       }
       
-      // Individual checkbox change handler
       notificationCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
           updateBulkDeleteButton();
           
-          // Update "select all" checkbox state
           const allChecked = Array.from(notificationCheckboxes).every(cb => cb.checked);
           const someChecked = Array.from(notificationCheckboxes).some(cb => cb.checked);
           
@@ -361,7 +350,6 @@
         });
       });
       
-      // Update bulk delete button state
       function updateBulkDeleteButton() {
         const checkedCount = document.querySelectorAll('.notification-checkbox:checked').length;
         
@@ -373,13 +361,11 @@
         }
       }
       
-      // Bulk delete button click handler
       if (bulkDeleteBtn) {
         bulkDeleteBtn.addEventListener('click', function() {
           const checkedCount = document.querySelectorAll('.notification-checkbox:checked').length;
           
           if (checkedCount > 0) {
-            // Show bulk delete confirmation modal
             const bulkDeleteModal = new bootstrap.Modal(document.getElementById('bulkDeleteConfirmModal'));
             document.getElementById('selectedCount').textContent = checkedCount;
             bulkDeleteModal.show();
@@ -387,23 +373,19 @@
         });
       }
       
-      // Confirm bulk delete
       const confirmBulkDeleteBtn = document.getElementById('confirmBulkDelete');
       if (confirmBulkDeleteBtn) {
         confirmBulkDeleteBtn.addEventListener('click', function() {
-          // Kiểm tra xem có thông báo nào được chọn không
           const checkedCount = document.querySelectorAll('.notification-checkbox:checked').length;
           if (checkedCount === 0) {
             alert('Vui lòng chọn ít nhất một thông báo để xóa.');
             return;
           }
           
-          // Submit form
           document.getElementById('bulkDeleteForm').submit();
         });
       }
       
-      // Initialize datepicker if available
       if (typeof flatpickr !== 'undefined') {
         flatpickr('.datepicker', {
           dateFormat: 'd/m/Y',
@@ -411,7 +393,6 @@
         });
       }
       
-      // Debug form submit
       const bulkDeleteForm = document.getElementById('bulkDeleteForm');
       if (bulkDeleteForm) {
         bulkDeleteForm.addEventListener('submit', function(e) {
@@ -421,7 +402,6 @@
             alert('Vui lòng chọn ít nhất một thông báo để xóa.');
             return false;
           }
-          // Form sẽ submit bình thường nếu có checkbox được chọn
         });
       }
     });

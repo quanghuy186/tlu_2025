@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Vai trò</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
   <section class="section py-4">
     <div class="container-fluid">
@@ -72,14 +72,12 @@
               @if ($roles->hasPages())
                 <div class="pagination-container">
                     <ul class="pagination">
-                        {{-- Liên kết trang trước --}}
                         @if ($roles->onFirstPage())
                             <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
                         @else
                             <li><a href="{{ $roles->previousPageUrl() }}"><i class="fas fa-angle-double-left"></i></a></li>
                         @endif
 
-                        {{-- Các phần tử phân trang --}}
                         @foreach ($roles->getUrlRange(1, $roles->lastPage()) as $page => $url)
                             @if ($page == $roles->currentPage())
                                 <li><a href="#" class="active">{{ $page }}</a></li>
@@ -88,7 +86,6 @@
                             @endif
                         @endforeach
 
-                        {{-- Liên kết trang tiếp theo --}}
                         @if ($roles->hasMorePages())
                             <li><a href="{{ $roles->nextPageUrl() }}"><i class="fas fa-angle-double-right"></i></a></li>
                         @else
@@ -104,7 +101,6 @@
     </div>
   </section>
 
-  <!-- Modal Xác nhận xóa vai trò -->
   <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">

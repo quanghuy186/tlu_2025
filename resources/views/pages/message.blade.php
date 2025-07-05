@@ -36,7 +36,6 @@
     </div>
 </div>
 
-<!-- Main Content -->
 <div class="container">
     <div class="messages-container">
         <!-- Contacts List -->
@@ -49,10 +48,8 @@
             </div>
         </div> --}}
 
-        <!-- Chat Area -->
         <div class="chat-area">
             <div class="chat-header">
-                <!-- Will be dynamically updated when a contact is selected -->
                 <div class="chat-user">
                     <div class="select-contact-prompt">
                         <h5>Chọn một cuộc trò chuyện hoặc bắt đầu một cuộc trò chuyện mới</h5>
@@ -61,7 +58,6 @@
             </div>
 
             <div class="chat-messages">
-                <!-- Messages will be loaded here -->
             </div>
 
             <div class="chat-input disabled">
@@ -78,7 +74,6 @@
         </div>
     </div>
 
-    <!-- Empty State (Initially Hidden) -->
     <div class="empty-state d-none">
         <i class="far fa-comment-dots"></i>
         <h4>Chưa có cuộc trò chuyện nào</h4>
@@ -89,18 +84,12 @@
     </div>
 </div>
 
-<!-- New Message Button -->
 <a href="#" class="new-message-btn">
     <i class="fas fa-pen"></i>
 </a>
 @endsection
 
 @push('scripts')
-{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> --}}
-
-<!-- Load một file JS nhỏ để khởi tạo Echo trước -->
     <script src="{{ asset('js/app.js') }}"></script>
-    <!-- Load file message.js mới của chúng ta -->
     <script src="{{ asset('js/message.js') }}"></script>
 @endpush

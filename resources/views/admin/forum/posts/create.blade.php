@@ -16,7 +16,7 @@
         <li class="breadcrumb-item active">Thêm bài viết</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
@@ -115,9 +115,6 @@
 @section('custom-js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize editor if you have a WYSIWYG editor
-        // For example, if using CKEditor:
-        // CKEDITOR.replace('content');
     });
 </script>
 @endsection

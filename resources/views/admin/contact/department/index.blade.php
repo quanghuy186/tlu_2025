@@ -19,7 +19,6 @@
 
 <section class="section py-4">
     <div class="container-fluid">
-        <!-- Thống kê tổng quan -->
         <div class="row mb-4">
             <div class="col-xxl-3 col-md-6">
                 <div class="card info-card revenue-card">
@@ -109,11 +108,9 @@
                         </div>
                     </div>
 
-                    <!-- Bộ lọc và tìm kiếm -->
                     <div class="card-body border-bottom mt-3">
                         <form method="GET" action="{{ route('admin.department.index') }}" id="filterForm">
                             <div class="row g-3">
-                                <!-- Tìm kiếm -->
                                 <div class="col-md-4">
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-search"></i></span>
@@ -125,7 +122,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Lọc theo đơn vị cha -->
                                 <div class="col-md-2">
                                     <select name="parent_filter" class="form-select">
                                         <option value="all" {{ request('parent_filter') == 'all' ? 'selected' : '' }}>Tất cả cấp độ</option>
@@ -138,7 +134,6 @@
                                     </select>
                                 </div>
 
-                                <!-- Lọc theo cấp độ -->
                                 <div class="col-md-2">
                                     <select name="level_filter" class="form-select">
                                         <option value="all" {{ request('level_filter') == 'all' ? 'selected' : '' }}>Tất cả level</option>
@@ -150,7 +145,6 @@
                                     </select>
                                 </div>
 
-                                <!-- Lọc theo người quản lý -->
                                 <div class="col-md-2">
                                     <select name="manager_filter" class="form-select">
                                         <option value="all" {{ request('manager_filter') == 'all' ? 'selected' : '' }}>Tất cả</option>
@@ -159,7 +153,6 @@
                                     </select>
                                 </div>
 
-                                <!-- Nút tác vụ -->
                                 <div class="col-md-2">
                                     <div class="d-flex gap-2">
                                         <button type="submit" class="btn btn-primary btn-sm">
@@ -172,7 +165,6 @@
                                 </div>
                             </div>
 
-                            <!-- Sắp xếp và số lượng hiển thị -->
                             <div class="row g-3 mt-2">
                                 <div class="col-md-3">
                                     <div class="d-flex align-items-center">
@@ -349,7 +341,6 @@
                                                 </td>
                                                 <td>
                                                     <div class="d-flex justify-content-center gap-1">
-                                                        <!-- Edit Department -->
                                                         <a href="{{ route('admin.department.edit', $department->id) }}" 
                                                            data-bs-toggle="tooltip" 
                                                            data-bs-title="Chỉnh sửa" 
@@ -357,7 +348,6 @@
                                                             <i class="bi bi-pencil-square"></i>
                                                         </a>
                                                         
-                                                        <!-- View Department Info -->
                                                         <a href="{{ route('admin.department.detail', $department->id) }}" 
                                                            data-bs-toggle="tooltip" 
                                                            data-bs-title="Xem chi tiết" 
@@ -365,7 +355,6 @@
                                                             <i class="bi bi-eye"></i>
                                                         </a>
                                                         
-                                                        <!-- Delete Department -->
                                                         <button type="button"
                                                                 data-bs-toggle="modal" 
                                                                 data-bs-target="#deleteConfirmModal"
@@ -385,7 +374,6 @@
                                 </table>
                             </div>
 
-                            <!-- Phân trang -->
                             @if ($departments->hasPages())
                                 <div class="d-flex justify-content-between align-items-center p-3">
                                     <div class="text-muted small">
@@ -395,7 +383,6 @@
                                     
                                     <nav aria-label="Department pagination">
                                         <ul class="pagination pagination-sm mb-0">
-                                            {{-- Nút Previous --}}
                                             @if ($departments->onFirstPage())
                                                 <li class="page-item disabled">
                                                     <span class="page-link"><i class="bi bi-chevron-left"></i></span>
@@ -408,7 +395,6 @@
                                                 </li>
                                             @endif
 
-                                            {{-- Các số trang --}}
                                             @foreach ($departments->getUrlRange(max(1, $departments->currentPage() - 2), min($departments->lastPage(), $departments->currentPage() + 2)) as $page => $url)
                                                 @if ($page == $departments->currentPage())
                                                     <li class="page-item active">
@@ -421,7 +407,6 @@
                                                 @endif
                                             @endforeach
 
-                                            {{-- Nút Next --}}
                                             @if ($departments->hasMorePages())
                                                 <li class="page-item">
                                                     <a class="page-link" href="{{ $departments->nextPageUrl() }}">
@@ -468,7 +453,6 @@
     </div>
 </section>
 
-<!-- Modal Xác nhận xóa đơn vị -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -512,13 +496,11 @@
 @section('custom-js')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Khởi tạo tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
     
-    // Xử lý modal xóa đơn vị
     const deleteModal = document.getElementById('deleteConfirmModal');
     if (deleteModal) {
         deleteModal.addEventListener('show.bs.modal', function(event) {
@@ -539,7 +521,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Auto-submit form khi thay đổi số lượng hiển thị
     const perPageSelect = document.querySelector('select[name="per_page"]');
     if (perPageSelect) {
         perPageSelect.addEventListener('change', function() {
@@ -547,7 +528,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Xử lý form lọc - auto submit khi thay đổi filter
     const filterSelects = document.querySelectorAll('#filterForm select:not([name="per_page"]):not([name="sort_by"]):not([name="sort_order"])');
     filterSelects.forEach(function(select) {
         select.addEventListener('change', function() {
@@ -555,7 +535,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Xử lý tìm kiếm với debounce
     const searchInput = document.querySelector('input[name="search"]');
     if (searchInput) {
         let searchTimeout;
@@ -565,22 +544,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (this.value.length >= 2 || this.value.length === 0) {
                     document.getElementById('filterForm').submit();
                 }
-            }, 5000); // Debounce 5 giây
+            }, 5000);
         });
     }
 
-    // Highlight search term trong kết quả
    const searchTerm = '{{ request("search") }}';
 
     if (searchTerm) {
-        // Tạo biểu thức chính quy để tìm từ khóa, với escape các ký tự đặc biệt
         const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const regex = new RegExp('(' + escapedTerm + ')', 'gi');
-
-        // Chọn tất cả các ô trong bảng (tbody)
         const textNodes = document.querySelectorAll('tbody td');
 
-        // Duyệt qua từng ô và đánh dấu từ khóa nếu tìm thấy
         textNodes.forEach(function(node) {
             if (node.textContent.toLowerCase().includes(searchTerm.toLowerCase())) {
                 node.innerHTML = node.innerHTML.replace(regex, '<mark class="bg-warning">$1</mark>');
@@ -592,7 +566,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const paginationLinks = document.querySelectorAll('.pagination a');
     paginationLinks.forEach(function(link) {
         link.addEventListener('click', function(e) {
-            // Scroll to top of table
             document.querySelector('.table-responsive').scrollIntoView({ 
                 behavior: 'smooth',
                 block: 'start'
@@ -601,14 +574,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Function để reset form lọc
 function resetFilters() {
     window.location.href = '{{ route("admin.department.index") }}';
 }
 
-// Function để export data (có thể mở rộng sau)
 function exportData() {
-    // Implement export functionality
     console.log('Export data functionality');
 }
 </script>
@@ -633,18 +603,15 @@ function exportData() {
     border-color: #e9ecef;
 }
 
-/* Badge styles */
 .badge {
     font-size: 0.75em;
 }
 
-/* Avatar styles */
 .avatar {
     font-size: 0.875rem;
     font-weight: 600;
 }
 
-/* Highlight search results */
 mark {
     padding: 0.125rem 0.25rem;
     border-radius: 0.25rem;

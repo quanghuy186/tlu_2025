@@ -18,7 +18,6 @@
     </nav>
 </div>
 
-<!-- Statistics Cards -->
 <div class="row mb-4">
     <div class="col-xxl-3 col-md-6">
         <div class="card info-card sales-card">
@@ -118,13 +117,11 @@
                                         </ul>
                                     </div>
                                     
-                                    <!-- Department Management -->
                                     <a href="{{ route('admin.department.index') }}" 
                                        class="btn btn-info btn-sm d-flex align-items-center">
                                         <i class="bi bi-building me-2"></i>QL đơn vị
                                     </a>
                                     
-                                    <!-- Add New Teacher -->
                                     <a href="{{ route('admin.teacher.create') }}" 
                                        class="btn btn-success btn-sm d-flex align-items-center">
                                         <i class="bi bi-plus-circle me-2"></i>Thêm giảng viên
@@ -133,10 +130,8 @@
                             </div>
                         </div>
                         
-                        <!-- Advanced Search and Filter Section -->
                         <form method="GET" action="{{ route('admin.teacher.index') }}" class="mt-4" id="filterForm">
                             <div class="row g-3">
-                                <!-- Search Input -->
                                 <div class="col-md-4">
                                     <label class="form-label small text-muted">Tìm kiếm</label>
                                     <div class="input-group">
@@ -149,7 +144,6 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Department Filter -->
                                 <div class="col-md-3">
                                     <label class="form-label small text-muted">Khoa/Bộ môn</label>
                                     <select class="form-select" name="department_id">
@@ -163,7 +157,6 @@
                                     </select>
                                 </div>
                                 
-                                <!-- Academic Rank Filter -->
                                 <div class="col-md-2">
                                     <label class="form-label small text-muted">Học hàm/Học vị</label>
                                     <select class="form-select" name="academic_rank">
@@ -177,7 +170,6 @@
                                     </select>
                                 </div>
                                 
-                                <!-- Status Filter -->
                                 <div class="col-md-2">
                                     <label class="form-label small text-muted">Trạng thái</label>
                                     <select class="form-select" name="status">
@@ -187,7 +179,6 @@
                                     </select>
                                 </div>
                                 
-                                <!-- Per Page -->
                                 <div class="col-md-1">
                                     <label class="form-label small text-muted">Hiển thị</label>
                                     <select class="form-select" name="per_page" onchange="this.form.submit()">
@@ -199,16 +190,7 @@
                                 </div>
                             </div>
                             
-                            <!-- Date Range Filter -->
                             <div class="row g-3 mt-2">
-                                {{-- <div class="col-md-2">
-                                    <label class="form-label small text-muted">Từ ngày</label>
-                                    <input type="date" class="form-control" name="date_from" value="{{ request('date_from') }}">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label small text-muted">Đến ngày</label>
-                                    <input type="date" class="form-control" name="date_to" value="{{ request('date_to') }}">
-                                </div> --}}
                                 <div class="col-md-8 d-flex align-items-end">
                                     <div class="d-flex gap-2">
                                         <button type="submit" class="btn btn-primary">
@@ -217,9 +199,6 @@
                                         <a href="{{ route('admin.teacher.index') }}" class="btn btn-secondary">
                                             <i class="bi bi-arrow-clockwise"></i> Làm mới
                                         </a>
-                                        {{-- <button type="button" class="btn btn-info" onclick="toggleAdvancedFilters()">
-                                            <i class="bi bi-funnel"></i> Bộ lọc nâng cao
-                                        </button> --}}
                                     </div>
                                 </div>
                             </div>
@@ -243,7 +222,6 @@
                             </div>
                         @endif
                         
-                        <!-- Results Info and Bulk Actions -->
                         <div class="px-3 py-3 bg-light border-bottom">
                             <div class="row align-items-center">
                                 <div class="col-md-6">
@@ -258,7 +236,6 @@
                                 </div>
                                 
                                 <div class="col-md-6 text-end">
-                                    <!-- Bulk Actions -->
                                     <div class="d-flex justify-content-end align-items-center gap-2">
                                         <input type="checkbox" id="selectAll" class="form-check-input">
                                         <label for="selectAll" class="form-check-label small">Chọn tất cả</label>
@@ -444,7 +421,6 @@
                             </table>
                         </div>
                         
-                        <!-- Pagination -->
                         <nav aria-label="Pagination" class="my-5">
                             <ul class="pagination mb-0">
                                 @if ($teachers->onFirstPage())
@@ -483,7 +459,6 @@
     </div>
 </section>
 
-<!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -511,7 +486,6 @@
     </div>
 </div>
 
-<!-- Bulk Assign Department Modal -->
 <div class="modal fade" id="bulkAssignModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -547,13 +521,11 @@
 @section('custom-js')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
     
-    // Delete modal functionality
     const deleteModal = document.getElementById('deleteConfirmModal');
     if (deleteModal) {
         deleteModal.addEventListener('show.bs.modal', function(event) {
@@ -574,14 +546,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Checkbox functionality
     const selectAllCheckbox = document.getElementById('selectAll');
     const selectAllTableCheckbox = document.getElementById('selectAllTable');
     const teacherCheckboxes = document.querySelectorAll('.teacher-checkbox');
     const bulkActionBtn = document.getElementById('bulkActionBtn');
     const selectedCountSpan = document.getElementById('selectedCount');
     
-    // Select all functionality
     if (selectAllCheckbox && selectAllTableCheckbox) {
         [selectAllCheckbox, selectAllTableCheckbox].forEach(checkbox => {
             checkbox.addEventListener('change', function() {
@@ -589,14 +559,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 teacherCheckboxes.forEach(cb => cb.checked = isChecked);
                 updateBulkActionButton();
                 
-                // Sync both select all checkboxes
                 selectAllCheckbox.checked = isChecked;
                 selectAllTableCheckbox.checked = isChecked;
             });
         });
     }
     
-    // Individual checkbox change
     teacherCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             updateBulkActionButton();
@@ -624,7 +592,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (selectAllTableCheckbox) selectAllTableCheckbox.checked = allChecked;
     }
     
-    // Live search functionality
     const searchInput = document.querySelector('input[name="search"]');
     if (searchInput) {
         let searchTimeout;
@@ -636,7 +603,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Auto-submit when filters change
     const filterSelects = document.querySelectorAll('select[name="department_id"], select[name="academic_rank"], select[name="status"]');
     filterSelects.forEach(select => {
         select.addEventListener('change', function() {
@@ -645,82 +611,74 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Bulk actions
-function bulkAction(action) {
-    const checkedIds = Array.from(document.querySelectorAll('.teacher-checkbox:checked'))
-                           .map(cb => cb.value);
-    
-    if (checkedIds.length === 0) {
-        alert('Vui lòng chọn ít nhất một giảng viên');
-        return;
-    }
-    
-    if (action === 'delete') {
-        if (confirm(`Bạn có chắc chắn muốn xóa ${checkedIds.length} giảng viên đã chọn?`)) {
-            submitBulkAction('delete', checkedIds);
+    function bulkAction(action) {
+        const checkedIds = Array.from(document.querySelectorAll('.teacher-checkbox:checked'))
+                            .map(cb => cb.value);
+        
+        if (checkedIds.length === 0) {
+            alert('Vui lòng chọn ít nhất một giảng viên');
+            return;
         }
-    } else if (action === 'export') {
-        submitBulkAction('export', checkedIds);
+        
+        if (action === 'delete') {
+            if (confirm(`Bạn có chắc chắn muốn xóa ${checkedIds.length} giảng viên đã chọn?`)) {
+                submitBulkAction('delete', checkedIds);
+            }
+        } else if (action === 'export') {
+            submitBulkAction('export', checkedIds);
+        }
     }
-}
 
-function submitBulkAction(action, teacherIds) {
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '{{ route("admin.teacher.bulk-action") }}';
-    
-    // CSRF token
-    const csrfInput = document.createElement('input');
-    csrfInput.type = 'hidden';
-    csrfInput.name = '_token';
-    csrfInput.value = '{{ csrf_token() }}';
-    form.appendChild(csrfInput);
-    
-    // Action
-    const actionInput = document.createElement('input');
-    actionInput.type = 'hidden';
-    actionInput.name = 'action';
-    actionInput.value = action;
-    form.appendChild(actionInput);
-    
-    // Teacher IDs
-    teacherIds.forEach(id => {
-        const idInput = document.createElement('input');
-        idInput.type = 'hidden';
-        idInput.name = 'teacher_ids[]';
-        idInput.value = id;
-        form.appendChild(idInput);
-    });
-    
-    document.body.appendChild(form);
-    form.submit();
-}
-
-// Bulk assign form submission
-document.getElementById('bulkAssignForm')?.addEventListener('submit', function(e) {
-    const checkedIds = Array.from(document.querySelectorAll('.teacher-checkbox:checked'))
-                           .map(cb => cb.value);
-    
-    if (checkedIds.length === 0) {
-        e.preventDefault();
-        alert('Vui lòng chọn ít nhất một giảng viên');
-        return;
+    function submitBulkAction(action, teacherIds) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("admin.teacher.bulk-action") }}';
+        
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        form.appendChild(csrfInput);
+        
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = action;
+        form.appendChild(actionInput);
+        
+        teacherIds.forEach(id => {
+            const idInput = document.createElement('input');
+            idInput.type = 'hidden';
+            idInput.name = 'teacher_ids[]';
+            idInput.value = id;
+            form.appendChild(idInput);
+        });
+        
+        document.body.appendChild(form);
+        form.submit();
     }
-    
-    // Add checked IDs to form
-    checkedIds.forEach(id => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'teacher_ids[]';
-        input.value = id;
-        this.appendChild(input);
-    });
-});
 
-// Advanced filters toggle
-function toggleAdvancedFilters() {
-    // Implementation for showing/hiding advanced filters
-    console.log('Toggle advanced filters');
-}
+    document.getElementById('bulkAssignForm')?.addEventListener('submit', function(e) {
+        const checkedIds = Array.from(document.querySelectorAll('.teacher-checkbox:checked'))
+                            .map(cb => cb.value);
+        
+        if (checkedIds.length === 0) {
+            e.preventDefault();
+            alert('Vui lòng chọn ít nhất một giảng viên');
+            return;
+        }
+        
+        checkedIds.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'teacher_ids[]';
+            input.value = id;
+            this.appendChild(input);
+        });
+    });
+
+    function toggleAdvancedFilters() {
+        console.log('Toggle advanced filters');
+    }
 </script>
 @endsection

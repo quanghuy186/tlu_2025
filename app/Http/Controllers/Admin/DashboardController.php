@@ -13,7 +13,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        //thống kê bài viết diễn đàn
         $count_approved_posts = ForumPost::where('status', '=', 'approved')->count();
         $count_pending_posts = ForumPost::where('status', '=', 'pending')->count();
         $count_reject_reason_posts = ForumPost::where('status', '=', 'rejected')->count();

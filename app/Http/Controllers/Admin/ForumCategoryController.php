@@ -18,7 +18,6 @@ class ForumCategoryController extends Controller
 
     public function create()
     {
-        // Lấy danh sách các danh mục để hiển thị trong dropdown parent_id
         $parentCategories = ForumCategory::where('parent_id', null)->get();
         return view('admin.forum.forum-category.create', compact('parentCategories'));
     }

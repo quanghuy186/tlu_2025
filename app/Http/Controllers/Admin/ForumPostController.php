@@ -18,17 +18,12 @@ class ForumPostController extends Controller
     public function index(Request $request)
     {
         $query = ForumPost::with(['category', 'author']);
-        
-        // Lọc theo danh mục
         if ($request->has('category_id') && $request->category_id != '') {
             $query->where('category_id', $request->category_id);
         }
-        
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
         }
-        
-        // Tìm kiếm theo tiêu đề
         if ($request->has('search') && $request->search != '') {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
@@ -185,8 +180,6 @@ class ForumPostController extends Controller
     public function destroy($id)
     {
         $post = ForumPost::findOrFail($id);
-        // $post_comment = ForumComment::findOrFail()
-        // Xóa ảnh
         if ($post->images) {
             $images = json_decode($post->images, true);
             foreach ($images as $image) {
@@ -315,9 +308,6 @@ class ForumPostController extends Controller
         }
     }
 
-    /**
-     * Cập nhật trạng thái nhiều bài viết
-     */
     public function bulkUpdateStatus(Request $request)
     {
         $validator = Validator::make($request->all(), [

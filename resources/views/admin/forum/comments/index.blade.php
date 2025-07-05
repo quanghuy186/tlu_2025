@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Bình luận diễn đàn</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
@@ -145,17 +145,14 @@
                                                 </a>
                                                 @endif
                                                 
-                                                <!-- View Comment Detail -->
                                                 <a href="{{ route('admin.forum.comments.show', $comment->id) }}" data-bs-toggle="tooltip" data-bs-title="Xem chi tiết" class="btn btn-sm btn-primary">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
                                                 
-                                                <!-- Edit Comment (Only admin) -->
                                                 <a href="{{ route('admin.forum.comments.edit', $comment->id) }}" data-bs-toggle="tooltip" data-bs-title="Chỉnh sửa" class="btn btn-sm btn-warning">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>
                                                 
-                                                <!-- Delete Comment -->
                                                 <a href="#" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#deleteConfirmModal"
@@ -186,7 +183,6 @@
     </div>
 </section>
 
-<!-- Modal Xác nhận xóa bình luận -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

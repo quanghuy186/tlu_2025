@@ -41,7 +41,6 @@ class RoleController extends Controller
             return redirect()
                 ->route('admin.role.index')
                 ->with('success', 'Vai trò đã được tạo thành công.');
-        
     }   
 
     public function edit($id)
@@ -54,13 +53,11 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         $role = Role::findOrFail($id);
-
         try {
             $role->update([
                 'role_name' => $request->input('role_name'),
                 'description' => $request->input('description'),
             ]);
-
             return redirect()
                 ->route('admin.role.index')
                 ->with('success', 'Vai trò đã được cập nhật thành công.');

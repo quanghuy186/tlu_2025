@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Chỉnh sửa</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">

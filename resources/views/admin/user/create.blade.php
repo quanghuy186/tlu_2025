@@ -142,7 +142,6 @@
 </section>
 
 <script>
-  // Toggle password visibility
   document.getElementById('togglePassword').addEventListener('click', function() {
     const passwordInput = document.getElementById('password');
     const icon = this.querySelector('i');
@@ -158,7 +157,6 @@
     }
   });
   
-  // Password strength indicator
   document.getElementById('password').addEventListener('input', function() {
     const strength = this.value.length;
     const progressBar = document.getElementById('passwordStrength');
@@ -181,18 +179,14 @@
     }
   });
 
-  // Show/hide class selection based on role
   document.getElementById('role_id').addEventListener('change', function() {
     const selectedOption = this.options[this.selectedIndex];
     const classSelection = document.getElementById('class_selection');
     const classSelect = document.getElementById('class_id');
     
     if (selectedOption && selectedOption.value) {
-      // Lấy tên vai trò từ data attribute hoặc text
       const roleName = selectedOption.getAttribute('data-role-name') || selectedOption.text;
       
-      // Kiểm tra xem có phải vai trò sinh viên không (có thể điều chỉnh điều kiện này)
-      // Bạn có thể thay đổi điều kiện này tùy theo cách đặt tên vai trò trong database
       if (roleName.toLowerCase().includes('sinh viên') || 
           roleName.toLowerCase().includes('student') ||
           roleName.toLowerCase().includes('học sinh')) {
@@ -201,12 +195,12 @@
       } else {
         classSelection.style.display = 'none';
         classSelect.removeAttribute('required');
-        classSelect.value = ''; // Reset giá trị
+        classSelect.value = ''; 
       }
     } else {
       classSelection.style.display = 'none';
       classSelect.removeAttribute('required');
-      classSelect.value = ''; // Reset giá trị
+      classSelect.value = ''; 
     }
   });
 
@@ -217,7 +211,6 @@
     const departmentSelection = document.getElementById('department_selection');
     const departmentSelect = document.getElementById('department_id');
     
-    // Reset tất cả về trạng thái ẩn
     classSelection.style.display = 'none';
     classSelect.removeAttribute('required');
     classSelect.value = '';
@@ -227,18 +220,15 @@
     departmentSelect.value = '';
     
     if (selectedOption && selectedOption.value) {
-      // Lấy tên vai trò từ data attribute hoặc text
       const roleName = selectedOption.getAttribute('data-role-name') || selectedOption.text;
       const roleNameLower = roleName.toLowerCase();
       
-      // Kiểm tra vai trò sinh viên
       if (roleNameLower.includes('sinh viên') || 
           roleNameLower.includes('student') ||
           roleNameLower.includes('học sinh')) {
         classSelection.style.display = 'block';
         classSelect.setAttribute('required', 'required');
       }
-      // Kiểm tra vai trò giảng viên
       else if (roleNameLower.includes('giảng viên') || 
                roleNameLower.includes('teacher') ||
                roleNameLower.includes('lecturer') ||

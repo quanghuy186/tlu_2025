@@ -41,7 +41,6 @@ class TeacherSeeder extends Seeder
             'Trinh', 'Thanh', 'Thư', 'Châu', 'Diễm', 'Mỹ', 'Lệ', 'Duyên', 'Khánh', 'Minh'
         ];
         
-        // Danh sách các bộ môn (level 2) - chỉ lấy các đơn vị đào tạo
         $departments = [
             // Bộ môn thuộc Khoa Kinh tế và quản lý
             12, 13, 14, 15, 16, 17, 18, 19,
@@ -66,7 +65,6 @@ class TeacherSeeder extends Seeder
         ];
         
         $departmentSpecializations = [
-            // Khoa Kinh tế và quản lý
             12 => ['Thương mại điện tử', 'Marketing số', 'Kinh doanh trực tuyến'],
             13 => ['Quản trị du lịch', 'Dịch vụ lữ hành', 'Du lịch sinh thái'],
             14 => ['Kinh tế học', 'Kinh tế vĩ mô', 'Kinh tế vi mô'],
@@ -76,61 +74,51 @@ class TeacherSeeder extends Seeder
             18 => ['Logistics', 'Quản lý chuỗi cung ứng', 'Vận tải đa phương thức'],
             19 => ['Nghiên cứu kinh tế', 'Ứng dụng quản lý', 'Phân tích kinh tế'],
             
-            // Khoa Hóa và Môi trường
             20 => ['Kỹ thuật môi trường', 'Quản lý môi trường', 'Xử lý nước thải'],
             21 => ['Kỹ thuật hóa học', 'Công nghệ hóa học', 'Hóa công nghiệp'],
             22 => ['Công nghệ sinh học', 'Sinh học phân tử', 'Công nghệ gen'],
             
-            // Trung tâm Đào tạo quốc tế
             23 => ['Ngôn ngữ Anh', 'Văn học Anh', 'Phương pháp giảng dạy tiếng Anh'],
             24 => ['Ngôn ngữ Trung Quốc', 'Văn hóa Trung Quốc', 'Hán ngữ hiện đại'],
             
-            // Khoa Kế toán và Kinh doanh
             25 => ['Kế toán tài chính', 'Kế toán quản trị', 'Kế toán thuế'],
             26 => ['Kiểm toán', 'Kiểm toán nội bộ', 'Kiểm toán báo cáo tài chính'],
             27 => ['Tài chính ngân hàng', 'Đầu tư tài chính', 'Quản lý rủi ro'],
             28 => ['Quản trị kinh doanh', 'Chiến lược kinh doanh', 'Marketing'],
             
-            // Khoa Công trình
             41 => ['Kỹ thuật xây dựng công trình thủy', 'Thủy lực công trình', 'Thiết kế đập'],
             42 => ['Xây dựng dân dụng', 'Kết cấu công trình', 'Công nghệ xây dựng'],
             43 => ['Xây dựng cầu đường', 'Thiết kế cầu', 'Kỹ thuật giao thông'],
             44 => ['Vật liệu xây dựng', 'Công nghệ bê tông', 'Vật liệu mới'],
             
-            // Khoa Kỹ thuật tài nguyên nước
             45 => ['Thủy văn học', 'Dự báo thủy văn', 'Mô hình thủy văn'],
             46 => ['Cấp thoát nước', 'Xử lý nước cấp', 'Mạng lưới cấp thoát nước'],
             47 => ['Kỹ thuật tài nguyên nước', 'Quản lý tài nguyên nước', 'Quy hoạch thủy lợi'],
             
-            // Khoa Cơ khí
             48 => ['Kỹ thuật cơ khí', 'Thiết kế máy', 'Cơ học ứng dụng'],
             49 => ['Công nghệ chế tạo máy', 'Gia công cơ khí', 'CAD/CAM'],
             50 => ['Kỹ thuật ô tô', 'Động cơ đốt trong', 'Công nghệ ô tô hiện đại'],
             51 => ['Cơ điện tử', 'Điều khiển tự động', 'Robot công nghiệp'],
             
-            // Khoa Điện - Điện tử
             52 => ['Kỹ thuật điện', 'Hệ thống điện', 'Máy điện'],
             53 => ['Điện tử viễn thông', 'Xử lý tín hiệu số', 'Thông tin vô tuyến'],
             54 => ['Tự động hóa', 'Điều khiển quá trình', 'PLC và SCADA'],
             55 => ['Robot và AI', 'Học máy', 'Thị giác máy tính'],
             
-            // Khoa Công nghệ thông tin
             56 => ['Công nghệ phần mềm', 'Kiến trúc phần mềm', 'Phát triển ứng dụng'],
             57 => ['Hệ thống thông tin', 'Cơ sở dữ liệu', 'Phân tích hệ thống'],
             58 => ['An toàn thông tin', 'Bảo mật mạng', 'Mã hóa dữ liệu'],
             59 => ['Khoa học máy tính', 'Thuật toán', 'Trí tuệ nhân tạo'],
             
-            // Khoa Luật và Lý luận chính trị
             60 => ['Luật hiến pháp', 'Luật hành chính', 'Luật dân sự'],
             61 => ['Luật kinh tế', 'Luật thương mại', 'Luật doanh nghiệp'],
             62 => ['Lý luận chính trị', 'Triết học', 'Kinh tế chính trị']
         ];
         
-        $roleId = 2; // Role giảng viên
-        $academicRanks = ['ThS', 'ThS', 'ThS', 'TS', 'TS', 'PGS.TS', 'GS.TS']; // Tỷ lệ thực tế
+        $roleId = 2; 
+        $academicRanks = ['ThS', 'ThS', 'ThS', 'TS', 'TS', 'PGS.TS', 'GS.TS']; 
         $positions = ['Giảng viên', 'Giảng viên', 'Giảng viên chính', 'Giảng viên cao cấp'];
         
-        // Bắt đầu user_id từ 1000 để tránh trùng với các user đã tạo
         $startUserId = 1000;
         
         for ($i = 1; $i <= 400; $i++) {
@@ -138,17 +126,14 @@ class TeacherSeeder extends Seeder
             $specializations = $departmentSpecializations[$departmentId] ?? ['Chuyên ngành khác'];
             $specialization = $faker->randomElement($specializations);
             
-            // Xác định giới tính ngẫu nhiên (60% nam, 40% nữ)
             $isMale = $faker->boolean(60);
             
-            // Tạo tên giáo viên dựa vào giới tính
             $lastName = $faker->randomElement($lastNames);
             $middleName = $isMale ? $faker->randomElement($middleNamesMale) : $faker->randomElement($middleNamesFemale);
             $firstName = $isMale ? $faker->randomElement($firstNamesMale) : $faker->randomElement($firstNamesFemale);
             
             $fullName = $lastName . ' ' . $middleName . ' ' . $firstName;
             
-            // Tạo user
             $userId = DB::table('users')->insertGetId([
                 'id' => $startUserId + $i,
                 'name' => $fullName,
@@ -161,13 +146,11 @@ class TeacherSeeder extends Seeder
                 'updated_at' => now(),
             ]);
             
-            // Gán role
             DB::table('user_has_roles')->insert([
                 'user_id' => $userId,
                 'role_id' => $roleId,
             ]);
             
-            // Xác định tòa nhà dựa vào khoa
             $building = $this->getBuildingByDepartment($departmentId);
             
             // Tạo teacher
@@ -192,32 +175,20 @@ class TeacherSeeder extends Seeder
         echo "Hoàn thành! Đã tạo 400 giảng viên.\n";
     }
     
-    /**
-     * Xác định tòa nhà dựa vào bộ môn
-     */
+  
     private function getBuildingByDepartment($departmentId)
     {
         $buildingMap = [
-            // Khoa Công trình
             41 => 'Tòa nhà A2', 42 => 'Tòa nhà A2', 43 => 'Tòa nhà A2', 44 => 'Tòa nhà A2',
-            // Khoa Kỹ thuật tài nguyên nước
             45 => 'Tòa nhà A3', 46 => 'Tòa nhà A3', 47 => 'Tòa nhà A3',
-            // Khoa Cơ khí
             48 => 'Tòa nhà B1', 49 => 'Tòa nhà B1', 50 => 'Tòa nhà B1', 51 => 'Tòa nhà B1',
-            // Khoa Điện - Điện tử
             52 => 'Tòa nhà B2', 53 => 'Tòa nhà B2', 54 => 'Tòa nhà B2', 55 => 'Tòa nhà B2',
-            // Khoa Kinh tế và quản lý
             12 => 'Tòa nhà A5', 13 => 'Tòa nhà A5', 14 => 'Tòa nhà A5', 15 => 'Tòa nhà A5',
             16 => 'Tòa nhà A5', 17 => 'Tòa nhà A5', 18 => 'Tòa nhà A5', 19 => 'Tòa nhà A5',
-            // Khoa Công nghệ thông tin
             56 => 'Tòa nhà C5', 57 => 'Tòa nhà C5', 58 => 'Tòa nhà C5', 59 => 'Tòa nhà C5',
-            // Khoa Hóa và Môi trường
             20 => 'Tòa nhà D1', 21 => 'Tòa nhà D1', 22 => 'Tòa nhà D1',
-            // Khoa Luật và Lý luận chính trị
             60 => 'Tòa nhà A1', 61 => 'Tòa nhà A1', 62 => 'Tòa nhà A1',
-            // Trung tâm Đào tạo quốc tế
             23 => 'Tòa nhà A6', 24 => 'Tòa nhà A6',
-            // Khoa Kế toán và Kinh doanh
             25 => 'Tòa nhà A7', 26 => 'Tòa nhà A7', 27 => 'Tòa nhà A7', 28 => 'Tòa nhà A7',
         ];
         

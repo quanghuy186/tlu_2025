@@ -16,7 +16,7 @@
         <li class="breadcrumb-item active">Chi tiết bài viết</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
@@ -119,7 +119,6 @@
                         
                         <div class="row">
                             <div class="col-md-8">
-                                <!-- Nội dung bài viết -->
                                 <div class="post-content mb-4">
                                     <div class="card">
                                         <div class="card-header bg-light">
@@ -150,7 +149,6 @@
                             </div>
                             
                             <div class="col-md-4">
-                                <!-- Thông tin bài viết -->
                                 <div class="card mb-4">
                                     <div class="card-header bg-light">
                                         <h6 class="mb-0">Thông tin bài viết</h6>
@@ -229,7 +227,6 @@
     </div>
 </section>
 
-<!-- Modal Xác nhận từ chối bài viết -->
 <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -260,11 +257,6 @@
 @section('custom-js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Lightbox for images (if you use lightbox)
-        // lightbox.option({
-        //     'resizeDuration': 200,
-        //     'wrapAround': true
-        // });
     });
 </script>
 @endsection

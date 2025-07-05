@@ -39,17 +39,14 @@ class TeacherController extends Controller
             });
         }
 
-        // Filter by department
         if ($request->filled('department_id') && $request->department_id !== '') {
             $query->where('department_id', $request->department_id);
         }
 
-        // Filter by academic rank
         if ($request->filled('academic_rank') && $request->academic_rank !== '') {
             $query->where('academic_rank', $request->academic_rank);
         }
 
-        // Filter by status (active/inactive users)
         if ($request->filled('status')) {
             $query->whereHas('user', function ($userQuery) use ($request) {
                 if ($request->status === 'active') {
@@ -60,7 +57,6 @@ class TeacherController extends Controller
             });
         }
 
-        // Date range filter
         if ($request->filled('date_from')) {
             $query->whereDate('created_at', '>=', $request->date_from);
         }
@@ -68,7 +64,6 @@ class TeacherController extends Controller
             $query->whereDate('created_at', '<=', $request->date_to);
         }
 
-        // Sorting functionality
         $sortField = $request->get('sort', 'created_at');
         $sortDirection = $request->get('direction', 'desc');
         
@@ -101,10 +96,8 @@ class TeacherController extends Controller
                 $query->orderBy('teachers.created_at', $sortDirection);
         }
 
-        // Pagination with custom per page
         $perPage = $request->get('per_page', 10);
         
-        // Validate per_page value
         $allowedPerPage = [10, 25, 50, 100];
         if (!in_array($perPage, $allowedPerPage)) {
             $perPage = 10;
@@ -112,10 +105,8 @@ class TeacherController extends Controller
 
         $teachers = $query->paginate($perPage);
 
-        // Preserve query parameters in pagination links
         $teachers->appends($request->all());
 
-        // Get data for filter dropdowns
         $departments = Department::orderBy('name')->get();
         $academicRanks = Teacher::whereNotNull('academic_rank')
                                 ->distinct()
@@ -123,7 +114,6 @@ class TeacherController extends Controller
                                 ->sort()
                                 ->values();
 
-        // Statistics for dashboard
         $stats = [
             'total' => Teacher::count(),
             'with_department' => Teacher::whereNotNull('department_id')->count(),
@@ -138,74 +128,6 @@ class TeacherController extends Controller
             'stats'
         ));
     }
-
-    
-    // public function export(Request $request)
-    // {
-    //     $query = Teacher::with(['user', 'department']);
-
-    //     if ($request->filled('search')) {
-    //         $search = trim($request->search);
-    //         $query->where(function ($q) use ($search) {
-    //             $q->where('teacher_code', 'like', "%{$search}%")
-    //               ->orWhere('specialization', 'like', "%{$search}%")
-    //               ->orWhereHas('user', function ($userQuery) use ($search) {
-    //                   $userQuery->where('name', 'like', "%{$search}%")
-    //                             ->orWhere('email', 'like', "%{$search}%");
-    //               });
-    //         });
-    //     }
-
-    //     if ($request->filled('department_id') && $request->department_id !== '') {
-    //         $query->where('department_id', $request->department_id);
-    //     }
-
-    //     if ($request->filled('academic_rank') && $request->academic_rank !== '') {
-    //         $query->where('academic_rank', $request->academic_rank);
-    //     }
-
-    //     $teachers = $query->get();
-
-    //     // Return Excel file or CSV
-    //     return response()->streamDownload(function () use ($teachers) {
-    //         $handle = fopen('php://output', 'w');
-            
-    //         // CSV headers
-    //         fputcsv($handle, [
-    //             'Mã GV',
-    //             'Họ tên',
-    //             'Email',
-    //             'Điện thoại',
-    //             'Khoa/Bộ môn',
-    //             'Học hàm/Học vị',
-    //             'Chuyên ngành',
-    //             'Chức vụ',
-    //             'Phòng làm việc',
-    //             'Ngày tạo'
-    //         ]);
-
-    //         // Data rows
-    //         foreach ($teachers as $teacher) {
-    //             fputcsv($handle, [
-    //                 $teacher->teacher_code ?? '',
-    //                 $teacher->user->name ?? '',
-    //                 $teacher->user->email ?? '',
-    //                 $teacher->user->phone ?? '',
-    //                 $teacher->department->name ?? '',
-    //                 $teacher->academic_rank ?? '',
-    //                 $teacher->specialization ?? '',
-    //                 $teacher->position ?? '',
-    //                 $teacher->office_location ?? '',
-    //                 $teacher->created_at->format('d/m/Y H:i')
-    //             ]);
-    //         }
-
-    //         fclose($handle);
-    //     }, 'danh-sach-giang-vien-' . date('Y-m-d') . '.csv', [
-    //         'Content-Type' => 'text/csv',
-    //         'Content-Disposition' => 'attachment; filename="danh-sach-giang-vien-' . date('Y-m-d') . '.csv"',
-    //     ]);
-    // }
 
     public function getData(Request $request)
     {
@@ -308,9 +230,6 @@ class TeacherController extends Controller
         return view('admin.contact.teacher.detail', compact('teacher'));
     }
 
-    /**
-     * Show the form for editing the specified teacher
-     */
     public function edit($id)
     {
         $teacher = Teacher::with('user')->findOrFail($id);
@@ -318,9 +237,6 @@ class TeacherController extends Controller
         return view('admin.contact.teacher.edit', compact('teacher', 'departments'));
     }
 
-    /**
-     * Update the specified teacher
-     */
     public function update(Request $request, $id)
     {
         $teacher = Teacher::findOrFail($id);
@@ -386,9 +302,6 @@ class TeacherController extends Controller
             ->with('success', 'Thông tin giảng viên đã được cập nhật!');
     }
 
-    /**
-     * Remove the specified teacher
-     */
     public function destroy($id)
     {
         $teacher = Teacher::findOrFail($id);
@@ -431,18 +344,13 @@ class TeacherController extends Controller
         switch ($request->action) {
             case 'delete':
                 $count = $teachers->count();
-                
-                // Use transaction to ensure data consistency
                 DB::transaction(function () use ($teachers) {
                     foreach ($teachers->get() as $teacher) {
                         $user = User::find($teacher->user_id);
                         
                         if ($user) {
-                            // Delete user's roles and permissions
                             DB::table('user_has_roles')->where('user_id', $user->id)->delete();
                             DB::table('user_has_permissions')->where('user_id', $user->id)->delete();
-                            
-                            // Delete avatar if exists
                             if ($user->avatar) {
                                 if (Storage::disk('public')->exists('avatars/' . $user->avatar)) {
                                     Storage::disk('public')->delete('avatars/' . $user->avatar);
@@ -450,10 +358,7 @@ class TeacherController extends Controller
                             }
                         }
                         
-                        // Delete teacher first (to avoid foreign key constraint)
                         $teacher->delete();
-                        
-                        // Then delete user
                         if ($user) {
                             $user->delete();
                         }
@@ -467,8 +372,6 @@ class TeacherController extends Controller
                 
                 return response()->streamDownload(function () use ($teachersList) {
                     $handle = fopen('php://output', 'w');
-                    
-                    // Add BOM for Excel UTF-8 compatibility
                     fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
                     
                     fputcsv($handle, ['Mã GV', 'Họ tên', 'Email', 'Khoa/Bộ môn', 'Học hàm/Học vị']);
@@ -518,7 +421,6 @@ class TeacherController extends Controller
             $sheet->setCellValue($cell, $value);
         }
 
-        // Style headers
         $sheet->getStyle('A1:K1')->applyFromArray([
             'font' => [
                 'bold' => true,
@@ -535,12 +437,10 @@ class TeacherController extends Controller
             ]
         ]);
 
-        // Auto size columns
         foreach (range('A', 'K') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
-        // Add sample data
         $sampleData = [
             ['GV001', 'Nguyễn Văn A', 'nguyenvana@example.com', 'password123', '0901234567', 'CNTT', 'Tiến sĩ', 'Khoa học máy tính', 'Giảng viên chính', 'A5-301', 'Thứ 2-6: 8h-17h'],
             ['GV002', 'Trần Thị B', 'tranthib@example.com', 'password123', '0902345678', 'KTPM', 'Thạc sĩ', 'Kỹ thuật phần mềm', 'Giảng viên', 'A5-302', 'Thứ 2-6: 8h-17h'],
@@ -556,7 +456,6 @@ class TeacherController extends Controller
             $row++;
         }
 
-        // Add border to sample data
         $sheet->getStyle('A2:K3')->applyFromArray([
             'borders' => [
                 'allBorders' => [
@@ -565,7 +464,6 @@ class TeacherController extends Controller
             ]
         ]);
 
-        // Add instructions
         $sheet->setCellValue('A5', 'HƯỚNG DẪN:');
         $sheet->getStyle('A5')->getFont()->setBold(true);
         
@@ -582,7 +480,6 @@ class TeacherController extends Controller
             $sheet->setCellValue($cell, $instruction);
         }
 
-        // Add list of departments
         $sheet->setCellValue('M1', 'DANH SÁCH KHOA/BỘ MÔN:');
         $sheet->getStyle('M1')->getFont()->setBold(true);
         
@@ -593,7 +490,6 @@ class TeacherController extends Controller
             $row++;
         }
 
-        // Add list of academic ranks
         $sheet->setCellValue('P1', 'HỌC HÀM/HỌC VỊ:');
         $sheet->getStyle('P1')->getFont()->setBold(true);
         
@@ -604,7 +500,6 @@ class TeacherController extends Controller
             $row++;
         }
 
-        // Create file
         $writer = new Xlsx($spreadsheet);
         $fileName = 'mau_import_giang_vien.xlsx';
         $temp_file = tempnam(sys_get_temp_dir(), $fileName);
@@ -634,13 +529,10 @@ class TeacherController extends Controller
             $skipped = 0;
             $errors = [];
 
-            // Get departments mapping by code
             $departments = Department::pluck('id', 'code')->toArray();
             
-            // Bắt đầu từ dòng 2 (bỏ qua header)
             for ($row = 2; $row <= $highestRow; $row++) {
                 try {
-                    // Đọc dữ liệu từng cell
                     $teacherCode = $worksheet->getCell('A' . $row)->getValue();
                     $name = $worksheet->getCell('B' . $row)->getValue();
                     $email = $worksheet->getCell('C' . $row)->getValue();
@@ -652,13 +544,10 @@ class TeacherController extends Controller
                     $position = $worksheet->getCell('I' . $row)->getValue();
                     $officeLocation = $worksheet->getCell('J' . $row)->getValue();
                     $officeHours = $worksheet->getCell('K' . $row)->getValue();
-
-                    // Skip empty rows
                     if (empty($name) && empty($email)) {
                         continue;
                     }
 
-                    // Trim values
                     $teacherCode = $teacherCode ? trim(strval($teacherCode)) : null;
                     $name = $name ? trim(strval($name)) : '';
                     $email = $email ? trim(strval($email)) : '';
@@ -671,7 +560,6 @@ class TeacherController extends Controller
                     $officeLocation = $officeLocation ? trim(strval($officeLocation)) : null;
                     $officeHours = $officeHours ? trim(strval($officeHours)) : null;
 
-                    // Validate required fields
                     if (empty($name)) {
                         $errors[] = "Dòng {$row}: Thiếu họ tên";
                         $skipped++;
@@ -690,35 +578,29 @@ class TeacherController extends Controller
                         continue;
                     }
 
-                    // Validate email format
                     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                         $errors[] = "Dòng {$row}: Email không hợp lệ: '{$email}'";
                         $skipped++;
                         continue;
                     }
 
-                    // Check if email already exists
                     if (User::where('email', $email)->exists()) {
                         $errors[] = "Dòng {$row}: Email '{$email}' đã tồn tại";
                         $skipped++;
                         continue;
                     }
 
-                    // Check if teacher code already exists
                     if ($teacherCode && Teacher::where('teacher_code', $teacherCode)->exists()) {
                         $errors[] = "Dòng {$row}: Mã giảng viên '{$teacherCode}' đã tồn tại";
                         $skipped++;
                         continue;
                     }
 
-                    // Find department ID by code
                     $departmentId = null;
                     if ($departmentCode) {
-                        // Check if department code exists in our mapping
                         if (isset($departments[$departmentCode])) {
                             $departmentId = $departments[$departmentCode];
                         } else {
-                            // Try to find by code directly in case of case sensitivity issues
                             $foundDept = Department::where('code', $departmentCode)->first();
                             
                             if ($foundDept) {
@@ -730,18 +612,15 @@ class TeacherController extends Controller
                             }
                         }
                     } else {
-                        // Use default department if no department code provided
                         $departmentId = $request->default_department_id;
                     }
 
-                    // Validate password length
                     if (strlen($password) < 8) {
                         $errors[] = "Dòng {$row}: Mật khẩu phải có ít nhất 8 ký tự";
                         $skipped++;
                         continue;
                     }
 
-                    // Create user
                     $user = User::create([
                         'name' => $name,
                         'email' => $email,
@@ -750,17 +629,15 @@ class TeacherController extends Controller
                         'role' => 'teacher',
                     ]);
 
-                    // Assign role if using role tables
                     if (Schema::hasTable('user_has_roles')) {
                         DB::table('user_has_roles')->insert([
                             'user_id' => $user->id,
-                            'role_id' => 2, // Assuming 2 is teacher role
+                            'role_id' => 2, 
                             'created_at' => now(),
                             'updated_at' => now()
                         ]);
                     }
 
-                    // Create teacher
                     Teacher::create([
                         'user_id' => $user->id,
                         'teacher_code' => $teacherCode,
@@ -782,13 +659,11 @@ class TeacherController extends Controller
 
             DB::commit();
 
-            // Prepare result message
             $message = "Import hoàn tất: {$imported} giảng viên được thêm thành công";
             if ($skipped > 0) {
                 $message .= ", {$skipped} dòng bị bỏ qua";
             }
 
-            // Limit errors display
             $displayErrors = array_slice($errors, 0, 10);
             if (count($errors) > 10) {
                 $displayErrors[] = "... và " . (count($errors) - 10) . " lỗi khác";

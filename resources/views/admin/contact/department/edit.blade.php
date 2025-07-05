@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Chỉnh sửa đơn vị</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
@@ -192,7 +192,6 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Xem trước ảnh đại diện
         const avatarInput = document.getElementById('manager_avatar');
         const avatarPreview = document.getElementById('avatar-preview');
         const previewContainer = document.getElementById('avatar-preview-container');

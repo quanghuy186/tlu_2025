@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Thêm đơn vị</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
@@ -162,13 +162,11 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Tự động tạo mã đơn vị từ tên
         const nameInput = document.getElementById('name');
         const codeInput = document.getElementById('code');
         
         nameInput.addEventListener('blur', function() {
             if (codeInput.value === '') {
-                // Tạo mã từ tên bằng cách lấy chữ cái đầu tiên của mỗi từ
                 const nameParts = nameInput.value.trim().split(' ');
                 let code = '';
                 
@@ -178,7 +176,6 @@
                     }
                 });
                 
-                // Thêm số ngẫu nhiên để tránh trùng lặp
                 const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
                 code += randomNum;
                 
@@ -186,7 +183,6 @@
             }
         });
         
-        // Xem trước ảnh đại diện
         const avatarInput = document.getElementById('manager_avatar');
         const avatarPreview = document.getElementById('avatar-preview');
         const previewContainer = document.getElementById('avatar-preview-container');

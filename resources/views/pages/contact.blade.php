@@ -138,7 +138,6 @@
         </div>
     </section>
 
-    <!-- Statistics Section -->
     <section class="stats-section">
         <div class="container">
             <div class="row">
@@ -185,6 +184,4 @@
         </div>
     </section>
 @endsection
-    <!-- Latest Announcements -->
-
-    <!-- Footer -->
+ 

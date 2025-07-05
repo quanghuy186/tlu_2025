@@ -1,6 +1,5 @@
 {{-- Tạo file mới tại resources/views/pages/partials/forum_comments.blade.php --}}
 
-<!-- Phần bình luận -->
 <div class="card mb-4">
     <div class="card-header">
         <h5 class="mb-0">
@@ -9,7 +8,6 @@
         </h5>
     </div>
     <div class="card-body">
-        <!-- Form thêm bình luận -->
             <form action="{{ route('forum.comment.store') }}" method="POST" class="mb-4">
                 @csrf
                 <input type="hidden" name="post_id" value="{{ $post->id }}">
@@ -37,12 +35,10 @@
                 </div>
             </form>
       
-        <!-- Danh sách bình luận -->
         <div class="comments-list">
             @forelse($post->parentComments()->with('replies.author', 'author')->orderBy('created_at', 'desc')->get() as $comment)
                 <div class="comment-item" id="comment-{{ $comment->id }}">
                     <div class="d-flex">
-                        <!-- Ảnh đại diện/Avatar -->
                         <div class="me-3">
                             @if($comment->is_anonymous)
                                 <div class="avatar-circle bg-secondary">
@@ -60,7 +56,6 @@
                             @endif
                         </div>
                         
-                        <!-- Nội dung bình luận -->
                         <div class="flex-grow-1">
                             <div class="d-flex justify-content-between align-items-center">
                                 @can('show-anonymously-comment', $comment)
@@ -80,7 +75,6 @@
                                 {{ $comment->content }}
                             </div>
                             
-                            <!-- Actions -->
                             <div class="comment-actions">
                                 <button type="button" class="btn btn-sm btn-link ps-0 reply-btn" 
                                         data-comment-id="{{ $comment->id }}">
@@ -100,9 +94,7 @@
                                 @endif
                             </div>
                             
-                            <!-- Form phản hồi (ẩn mặc định) -->
                             <div class="reply-form mt-3 d-none" id="reply-form-{{ $comment->id }}">
-                                {{-- @auth --}}
                                     <form action="{{ route('forum.comment.reply') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="post_id" value="{{ $post->id }}">
@@ -117,7 +109,6 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="reply_is_anonymous_{{ $comment->id }}" name="is_anonymous" {{ old('is_anonymous') ? 'checked' : '' }}>
-                                                {{-- <input class="form-check-input" type="checkbox" id="is_anonymous" name="is_anonymous" {{ old('is_anonymous') ? 'checked' : '' }}> --}}
 
                                                 <label class="form-check-label" for="reply_is_anonymous_{{ $comment->id }}">
                                                     Phản hồi ẩn danh
@@ -130,13 +121,11 @@
                                     </form>
                             </div>
                             
-                            <!-- Các phản hồi -->
                             @if($comment->replies->count() > 0)
                                 <div class="replies-list mt-3 ps-3">
                                     @foreach($comment->replies as $reply)
                                         <div class="reply-item mb-2" id="comment-{{ $reply->id }}">
                                             <div class="d-flex">
-                                                <!-- Ảnh đại diện/Avatar (nhỏ hơn) -->
                                                 <div class="me-2">
                                                     @if($reply->is_anonymous)
                                                         <div class="avatar-circle avatar-circle-sm bg-secondary">
@@ -154,7 +143,6 @@
                                                     @endif
                                                 </div>
                                                 
-                                                <!-- Nội dung phản hồi -->
                                                 <div class="flex-grow-1">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         @can('show-anonymously-comment', $reply)
@@ -166,9 +154,6 @@
                                                                 {{ $reply->is_anonymous ? 'Ẩn danh' : ($reply->author ? $reply->author->name : 'Người dùng') }}
                                                             </h6>
                                                         @endcan 
-
-
-                                                        
                                                         <small class="text-muted">{{ timeAgo($reply->created_at) }}</small>
                                                     </div>
                                                     
@@ -176,7 +161,6 @@
                                                         {{ $reply->content }}
                                                     </div>
                                                     
-                                                    <!-- Actions -->
                                                     @if(Auth::check() && (Auth::id() == $reply->user_id || (Auth::user()->isAdmin && Auth::user()->isAdmin())))
                                                         <div class="reply-actions">
                                                             <form action="{{ route('forum.comment.delete') }}" method="POST" 
@@ -200,7 +184,6 @@
                     </div>
                 </div>
                 
-                <!-- Divider giữa các bình luận -->
                 @if(!$loop->last)
                     <hr class="my-3">
                 @endif
@@ -212,7 +195,6 @@
             @endforelse
         </div>
         
-        <!-- Nút tải thêm bình luận (nếu cần) -->
         @if($post->comments->count() > 10)
             <div class="text-center mt-4">
                 <button id="loadMoreComments" 

@@ -1,6 +1,5 @@
 <!-- resources/views/forum/partials/create_post_modal.blade.php -->
 
-<!-- Modal Tạo Bài Viết -->
 <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -70,7 +69,6 @@
                             <small class="text-muted">Có thể chọn nhiều hình ảnh (JPG, PNG, GIF - Tối đa 2MB/ảnh)</small>
                             
                             <div id="image_previews" class="row mt-3 d-none">
-                                <!-- Image previews will be displayed here -->
                             </div>
                         </div>
                     </div>
@@ -111,13 +109,11 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Image preview when files are selected
     const imageInput = document.getElementById('images');
     const imagePreviewsContainer = document.getElementById('image_previews');
     
     if (imageInput) {
         imageInput.addEventListener('change', function() {
-            // Clear previous previews
             imagePreviewsContainer.innerHTML = '';
             
             if (this.files.length > 0) {
@@ -126,7 +122,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 for (let i = 0; i < this.files.length; i++) {
                     const file = this.files[i];
                     
-                    // Only process image files
                     if (!file.type.match('image.*')) {
                         continue;
                     }
@@ -158,18 +153,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Form submission
     const submitButton = document.getElementById('submitPost');
     const postForm = document.getElementById('newPostForm');
     
     if (submitButton && postForm) {
         submitButton.addEventListener('click', function() {
             if (postForm.checkValidity()) {
-                // Show loading state
                 submitButton.disabled = true;
                 submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Đang đăng...';
                 
-                // Submit the form
                 postForm.submit();
             } else {
                 postForm.reportValidity();

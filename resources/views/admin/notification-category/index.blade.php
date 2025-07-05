@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Danh sách</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
   <section class="section py-4">
     <div class="container-fluid">
@@ -89,7 +89,6 @@
               </div>
             </div>
             <div class="card-footer bg-white py-3">
-              <!-- Phân trang -->
               {{ $categories->links('pagination::bootstrap-5') }}
             </div>
           </div>
@@ -98,7 +97,6 @@
     </div>
   </section>
 
-  <!-- Modal Xác nhận xóa danh mục -->
   <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">

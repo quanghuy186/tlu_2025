@@ -64,8 +64,6 @@
                                 @else
                                     <span>Chưa cập nhật</span>
                                 @endif
-                               
-                                {{-- <span class="detail-value">{{ $student->class ? $student->class->name : 'Chưa cập nhật' }}</span> --}}
                             </li>
                             <li>
                                 <i class="fas fa-user-graduate"></i>
@@ -128,19 +126,15 @@
 @endforeach
 
 
-{{-- Bao gồm điều khiển phân trang ở đây --}}
-
 @if ($students->hasPages())
 <div class="pagination-container">
     <ul class="pagination">
-        {{-- Nút First --}}
         @if ($students->currentPage() > 1)
             <li><a href="#" class="page-link" data-page="1">
                 <i class="fas fa-angle-double-left"></i>
             </a></li>
         @endif
 
-        {{-- Nút Previous --}}
         @if ($students->onFirstPage())
             <li class="disabled"><span><i class="fas fa-angle-left"></i></span></li>
         @else
@@ -149,14 +143,12 @@
             </a></li>
         @endif
 
-        {{-- Logic hiển thị số trang thông minh --}}
         @php
             $currentPage = $students->currentPage();
             $lastPage = $students->lastPage();
             $start = max(1, $currentPage - 2);
             $end = min($lastPage, $currentPage + 2);
             
-            // Điều chỉnh để luôn hiển thị 5 trang nếu có thể
             if ($end - $start < 4) {
                 if ($start == 1) {
                     $end = min($lastPage, $start + 4);
@@ -166,7 +158,6 @@
             }
         @endphp
 
-        {{-- Hiển thị trang đầu và dấu ... nếu cần --}}
         @if ($start > 1)
             <li><a href="#" class="page-link" data-page="1">1</a></li>
             @if ($start > 2)
@@ -174,7 +165,6 @@
             @endif
         @endif
 
-        {{-- Hiển thị các trang trong khoảng --}}
         @for ($page = $start; $page <= $end; $page++)
             @if ($page == $currentPage)
                 <li><a href="#" class="active">{{ $page }}</a></li>
@@ -183,7 +173,6 @@
             @endif
         @endfor
 
-        {{-- Hiển thị dấu ... và trang cuối nếu cần --}}
         @if ($end < $lastPage)
             @if ($end < $lastPage - 1)
                 <li class="disabled"><span>...</span></li>
@@ -191,7 +180,6 @@
             <li><a href="#" class="page-link" data-page="{{ $lastPage }}">{{ $lastPage }}</a></li>
         @endif
 
-        {{-- Nút Next --}}
         @if ($students->hasMorePages())
             <li><a href="#" class="page-link" data-page="{{ $students->currentPage() + 1 }}">
                 <i class="fas fa-angle-right"></i>
@@ -200,7 +188,6 @@
             <li class="disabled"><span><i class="fas fa-angle-right"></i></span></li>
         @endif
 
-        {{-- Nút Last --}}
         @if ($students->currentPage() < $students->lastPage())
             <li><a href="#" class="page-link" data-page="{{ $students->lastPage() }}">
                 <i class="fas fa-angle-double-right"></i>
@@ -208,7 +195,6 @@
         @endif
     </ul>
     
-    {{-- Hiển thị thông tin trang --}}
     <div class="pagination-info">
         Hiển thị {{ $students->firstItem() }} - {{ $students->lastItem() }} 
         của {{ $students->total() }} kết quả

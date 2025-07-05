@@ -21,7 +21,6 @@ class PermissionController extends Controller
   
     public function store(Request $request)
     {
-            // Validate đầu vào
             $validated = $request->validate([
                 'permission_name' => 'required|unique:permissions,permission_name|max:255',
                 'description' => 'required|max:1000',
@@ -70,7 +69,6 @@ class PermissionController extends Controller
                 ->withInput();
         }
     }
-
 
     public function destroy($id)
     {

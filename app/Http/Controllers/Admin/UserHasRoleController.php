@@ -56,15 +56,10 @@ class UserHasRoleController extends Controller
     public function create_with_user($id)
     {
         $user = User::find($id);
-        
         $allRoles = Role::all();
-        
         $list_user_has_roles = UserHasRole::where('user_id', $user->id)->pluck('role_id')->toArray();
-        
         $specialRoles = [1, 2, 3];
-        
         $hasSpecialRole = !empty(array_intersect($list_user_has_roles, $specialRoles));
-        
         $userSpecialRoles = array_intersect($list_user_has_roles, $specialRoles);
         
         if ($hasSpecialRole) {

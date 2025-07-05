@@ -15,17 +15,14 @@ class ForumCommentController extends Controller
         $query = ForumComment::with(['post', 'user'])
             ->orderBy('created_at', 'desc');
 
-        // Nội dung 
         if ($request->has('search') && !empty($request->search)) {
             $query->where('content', 'like', '%' . $request->search . '%');
         }
 
-        // Bài viết
         if ($request->has('post_id') && !empty($request->post_id)) {
             $query->where('post_id', $request->post_id);
         }
 
-        // Lọc theo loại bình luận 
         if ($request->has('parent_id')) {
             if ($request->parent_id === 'parent') {
                 $query->whereNull('parent_id');
@@ -33,7 +30,6 @@ class ForumCommentController extends Controller
                 $query->whereNotNull('parent_id');
             }
         }
-        //ẩn danh
         if ($request->has('is_anonymous') && $request->is_anonymous !== '') {
             $query->where('is_anonymous', $request->is_anonymous);
         }
@@ -48,7 +44,6 @@ class ForumCommentController extends Controller
     {
         $comment->load(['post', 'user']);
         
-        // Nếu là bình luận gốc, lấy các phản hồi
         $replies = collect([]);
         if (!$comment->parent_id) {
             $replies = $comment->replies()->with(['user'])->get();
@@ -89,8 +84,6 @@ class ForumCommentController extends Controller
     {
         try {
             DB::beginTransaction();
-            
-            // Nếu là bình luận gốc, xóa tất cả phản hồi trước
             if (!$comment->parent_id) {
                 $comment->replies()->delete();
             }

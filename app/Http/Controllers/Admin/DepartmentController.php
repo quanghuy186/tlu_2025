@@ -330,7 +330,6 @@ class DepartmentController extends Controller
 
             if ($department->manager) {
                 $department->manager->name = $request->manager_name;
-                // Nếu email thay đổi, cập nhật email và tạo mật khẩu mới
                 if ($request->manager_email != $department->manager->email) {
                     $department->manager->email = $request->manager_email;
                     $newPassword = Str::random(10);
@@ -413,7 +412,6 @@ class DepartmentController extends Controller
             DB::beginTransaction();
             
             $department = Department::with('manager')->findOrFail($id);
-            // Kiểm tra xem đơn vị có đơn vị con không
             if ($department->children()->count() > 0) {
                 return redirect()->back()
                     ->with('error', 'Không thể xóa đơn vị này vì nó có các đơn vị con.');
@@ -459,12 +457,10 @@ class DepartmentController extends Controller
             $child->level = $child->level + $levelDifference;
             $child->save();
             
-            // Đệ quy cập nhật cấp độ cho các đơn vị con
             $this->updateDescendantLevels($child->id, $levelDifference);
         }
     }
 
-    // API endpoint để lấy đơn vị con
     public function getSubDepartments(Request $request)
     {
         $parentId = $request->get('parent_id');

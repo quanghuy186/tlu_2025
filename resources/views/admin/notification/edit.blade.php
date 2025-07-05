@@ -126,14 +126,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize CKEditor
         ClassicEditor
             .create(document.querySelector('#editor'))
             .catch(error => {
                 console.error(error);
             });
         
-        // Image preview functionality
         const imageInput = document.getElementById('images');
         const previewContainer = document.getElementById('imagePreviewContainer');
         const preview = document.getElementById('imagePreview');

@@ -15,13 +15,12 @@
         <li class="breadcrumb-item active">Lớp học</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <!-- Search and Filter Card -->
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-header bg-white py-3">
                         <h5 class="card-title m-0 fw-bold text-primary">Tìm kiếm & Lọc</h5>
@@ -94,7 +93,6 @@
                     </div>
                 </div>
                 
-                <!-- Classes List Card -->
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                         <h5 class="card-title m-0 fw-bold text-primary">Danh sách lớp học</h5>
@@ -186,17 +184,14 @@
                                             <td><span class="badge bg-info text-white">{{ $class->academic_year }}</span></td>
                                             <td>
                                                 <div class="d-flex justify-content-center gap-2">
-                                                    <!-- Edit Class -->
                                                     <a href="{{ route('admin.class.edit', $class->id) }}" data-bs-toggle="tooltip" data-bs-title="Chỉnh sửa" class="btn btn-sm btn-primary">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </a>
                                                     
-                                                    <!-- View Class Info -->
                                                     <a href="{{ route('admin.class.show', $class->id) }}" data-bs-toggle="tooltip" data-bs-title="Xem thông tin" class="btn btn-sm btn-success">
                                                         <i class="bi bi-eye"></i>
                                                     </a>
                                                     
-                                                    <!-- Delete Class -->
                                                     <a href="#" 
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#deleteConfirmModal"
@@ -257,7 +252,6 @@
     </div>
 </section>
 
-<!-- Modal Xác nhận xóa lớp học -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -281,7 +275,6 @@
     </div>
 </div>
 
-<!-- Modal Xác nhận xóa nhiều lớp học -->
 <div class="modal fade" id="bulkDeleteModal" tabindex="-1" aria-labelledby="bulkDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -306,13 +299,11 @@
 @section('custom-js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Tooltips
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
         
-        // Xóa đơn lẻ
         const deleteModal = document.getElementById('deleteConfirmModal');
         if (deleteModal) {
             deleteModal.addEventListener('show.bs.modal', function(event) {
@@ -333,7 +324,6 @@
             });
         }
         
-        // Xử lý checkbox và xóa hàng loạt
         const selectAll = document.getElementById('select-all');
         const classCheckboxes = document.querySelectorAll('.class-checkbox');
         const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
@@ -342,7 +332,6 @@
         const confirmBulkDeleteBtn = document.getElementById('confirm-bulk-delete');
         const selectedClassCountElement = document.getElementById('selectedClassCount');
         
-        // Chọn tất cả
         if (selectAll) {
             selectAll.addEventListener('change', function() {
                 const isChecked = this.checked;
@@ -355,7 +344,6 @@
             });
         }
         
-        // Cập nhật trạng thái của nút xóa hàng loạt
         function updateBulkDeleteButton() {
             const checkedCount = document.querySelectorAll('.class-checkbox:checked').length;
             
@@ -365,12 +353,10 @@
             }
         }
         
-        // Bắt sự kiện thay đổi của các checkbox đơn lẻ
         classCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 updateBulkDeleteButton();
                 
-                // Cập nhật trạng thái của checkbox "Chọn tất cả"
                 if (selectAll) {
                     const allChecked = document.querySelectorAll('.class-checkbox:checked').length === classCheckboxes.length;
                     selectAll.checked = allChecked;
@@ -378,29 +364,24 @@
             });
         });
         
-        // Hiển thị modal xác nhận xóa hàng loạt
         if (bulkDeleteBtn) {
             bulkDeleteBtn.addEventListener('click', function() {
                 const checkedCount = document.querySelectorAll('.class-checkbox:checked').length;
                 
                 if (checkedCount > 0 && selectedClassCountElement) {
                     selectedClassCountElement.textContent = checkedCount;
-                    
-                    // Hiển thị modal xác nhận
                     const modal = new bootstrap.Modal(bulkDeleteModal);
                     modal.show();
                 }
             });
         }
         
-        // Xác nhận xóa hàng loạt
         if (confirmBulkDeleteBtn && bulkDeleteForm) {
             confirmBulkDeleteBtn.addEventListener('click', function() {
                 bulkDeleteForm.submit();
             });
         }
         
-        // Khởi tạo ban đầu
         updateBulkDeleteButton();
     });
 </script>

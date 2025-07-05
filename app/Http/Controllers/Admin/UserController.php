@@ -221,16 +221,11 @@ class UserController extends Controller
             $request->validate([
                 'user_ids' => 'required|string'
             ]);
-            
-            // Chuyển đổi string thành array
             $userIds = explode(',', $request->user_ids);
-            
-            // Loại bỏ ID của user hiện tại để tránh tự xóa chính mình
             $currentUserId = Auth::user()->id;
             $userIds = array_filter($userIds, function($id) use ($currentUserId) {
                 return $id != $currentUserId;
             });
-            
             if (empty($userIds)) {
                 return redirect()->route('admin.user.index')
                     ->with('error', 'Không có tài khoản nào được chọn để xóa.');
@@ -245,16 +240,11 @@ class UserController extends Controller
             DB::table('user_has_permissions')->whereIn('user_id', $userIds)->delete();
             DB::table('students')->whereIn('user_id', $userIds)->delete();
             DB::table('teachers')->whereIn('user_id', $userIds)->delete();
-            
-            // Xóa users
             User::whereIn('id', $userIds)->delete();
-            
             DB::commit();
-            
             $count = count($userNames);
             $message = "Đã xóa thành công {$count} tài khoản";
             
-            // Nếu ít hơn 5 tài khoản, liệt kê tên
             if ($count <= 5) {
                 $message .= ": " . implode(', ', $userNames);
             }
