@@ -27,9 +27,9 @@ return new class extends Migration
             $table->boolean('is_pinned')->default(false);
             $table->boolean('is_locked')->default(false);
             $table->timestamp('last_comment_at')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('category_id')->nullable()->references('id')->on('forum_categories');
-            $table->foreign('approved_by')->references('id')->on('users');
+            $table->foreign('approved_by')->references('id')->on('users')->onDelete('cascade');
 
             $table->timestamps();
         });

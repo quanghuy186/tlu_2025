@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('level');
             $table->string('department_type', 200)->nullable();
             $table->foreign('parent_id')->references('id')->on('departments');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->timestamps();
         });

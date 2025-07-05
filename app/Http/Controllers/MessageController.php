@@ -53,7 +53,6 @@ class MessageController extends Controller
     {
         $currentUserId = Auth::id();
         
-        // Lấy tin nhắn chưa bị xóa bởi người dùng hiện tại
         $messages = Message::where(function($query) use ($currentUserId) {
                 $query->where('sender_user_id', $currentUserId)
                     ->orWhere('recipient_user_id', $currentUserId);
@@ -61,19 +60,15 @@ class MessageController extends Controller
             ->where('is_deleted', false)
             ->get();
         
-        // Lọc ra những tin nhắn chưa bị người dùng hiện tại xóa
         $filteredMessages = $messages->reject(function($message) use ($currentUserId) {
             return $message->isDeletedBy($currentUserId);
         });
         
-        // Lấy id của những người dùng đã từng nhắn tin với người dùng hiện tại và tin nhắn chưa bị xóa
         $userIds = $filteredMessages->flatMap(function($message) use ($currentUserId) {
-            // Chỉ lấy ID của người còn lại trong cuộc trò chuyện
             return [$message->sender_user_id, $message->recipient_user_id];
         })
         ->unique()
         ->reject(function($userId) use ($currentUserId) {
-            // Loại bỏ ID của người dùng hiện tại
             return $userId == $currentUserId;
         });
         
@@ -107,7 +102,6 @@ class MessageController extends Controller
     {
         $currentUserId = Auth::id();
         
-        // Lấy tin nhắn giữa người dùng hiện tại và người dùng đã chọn
         $messages = Message::where(function($query) use ($user, $currentUserId) {
                 $query->where('sender_user_id', $currentUserId)
                     ->where('recipient_user_id', $user->id);
@@ -116,11 +110,10 @@ class MessageController extends Controller
                 $query->where('sender_user_id', $user->id)
                     ->where('recipient_user_id', $currentUserId);
             })
-            ->where('is_deleted', false) // Không lấy tin nhắn đã bị xóa hoàn toàn
+            ->where('is_deleted', false) 
             ->orderBy('sent_at', 'asc')
             ->get();
         
-        // Lọc ra những tin nhắn chưa bị người dùng hiện tại xóa
         $filteredMessages = $messages->reject(function($message) use ($currentUserId) {
             return $message->isDeletedBy($currentUserId);
         });
@@ -135,7 +128,7 @@ class MessageController extends Controller
         $request->validate([
             'recipient_id' => 'required|exists:users,id',
             'content' => 'required_without:file',
-            'file' => 'nullable|file|max:5120', // 5MB max
+            'file' => 'nullable|file|max:5120',
         ]);
 
         $message = new Message();
@@ -162,7 +155,6 @@ class MessageController extends Controller
 
     public function markAsRead(Message $message)
     {
-        // Chỉ người nhận mới có thể đánh dấu đã đọc
         if ($message->recipient_user_id == Auth::id()) {
             $message->is_read = true;
             $message->save();
@@ -173,7 +165,6 @@ class MessageController extends Controller
 
     public function deleteMessage(Message $message)
     {
-        // Chỉ người gửi hoặc người nhận mới có thể xóa
         if ($message->sender_user_id == Auth::id() || $message->recipient_user_id == Auth::id()) {
             $message->is_deleted = true;
             $message->save();
@@ -187,7 +178,6 @@ class MessageController extends Controller
     {
         $currentUserId = Auth::id();
         
-        // Lấy tất cả tin nhắn trong cuộc trò chuyện
         $messages = Message::where(function($query) use ($user, $currentUserId) {
                 $query->where('sender_user_id', $currentUserId)
                     ->where('recipient_user_id', $user->id);
@@ -198,7 +188,6 @@ class MessageController extends Controller
             })
             ->get();
         
-        // Đánh dấu từng tin nhắn là đã xóa bởi người dùng hiện tại
         foreach ($messages as $message) {
             $message->markAsDeletedBy($currentUserId);
         }

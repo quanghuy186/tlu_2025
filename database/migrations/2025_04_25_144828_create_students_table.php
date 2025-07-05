@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('student_code', 20)->nullable();
             $table->integer('enrollment_year')->nullable();
             $table->foreign('class_id')->references('id')->on('classes');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

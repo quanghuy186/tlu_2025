@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('position', 100)->nullable();
             $table->string('office_location', 100)->nullable();
             $table->text('office_hours')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('department_id')->references('id')->on('departments');
 
             $table->timestamps();

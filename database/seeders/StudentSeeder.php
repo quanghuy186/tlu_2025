@@ -13,62 +13,42 @@ class StudentSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create('vi_VN');
-        
         $classes = DB::table('classes')->get();
-        
         $users = [];
         $students = [];
         $userHasRoles = [];
-        
-        // Bắt đầu từ user_id = 1500 (sau teachers)
         $userId = 1500;
         $studentId = 1;
-        
-        // Tạo danh sách mã sinh viên duy nhất
         $usedStudentCodes = [];
         
         $lastNames = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Vũ', 'Võ', 'Đặng', 'Bùi', 'Đỗ', 'Hồ', 'Ngô', 'Dương', 'Lý'];
         $maleFirstNames = ['Anh', 'Bảo', 'Cường', 'Dũng', 'Đức', 'Hải', 'Hoàng', 'Hùng', 'Khang', 'Long', 'Minh', 'Nam', 'Phúc', 'Quang', 'Sơn', 'Thành', 'Tuấn', 'Việt'];
         $femaleFirstNames = ['An', 'Anh', 'Chi', 'Dung', 'Giang', 'Hà', 'Hạnh', 'Hương', 'Lan', 'Linh', 'Mai', 'My', 'Nga', 'Phương', 'Thảo', 'Thu', 'Trang', 'Vy'];
         $middleNames = ['Văn', 'Thị', 'Đức', 'Minh', 'Hoàng', 'Thanh', 'Thành', 'Quốc', 'Xuân', 'Thu', 'Hữu', 'Công', 'Bảo', 'Ngọc'];
-        
         $totalStudents = 0;
         
         foreach ($classes as $class) {
-            // Số lượng sinh viên theo loại lớp và năm học
             $numberOfStudents = $this->getStudentCountByClass($class);
-            
-            // Lấy năm nhập học từ academic_year (ví dụ: "2021-2025" -> 2021)
             $enrollmentYear = (int) substr($class->academic_year, 0, 4);
-            
-            // Lấy mã khóa từ class_code (ví dụ: "63IT01" -> 63)
             $courseCode = substr($class->class_code, 0, 2);
             
             for ($i = 1; $i <= $numberOfStudents; $i++) {
-                // Random giới tính
                 $isMale = $faker->boolean(55); // 55% nam
-                
-                // Tạo tên Việt Nam
                 $lastName = $faker->randomElement($lastNames);
                 $middleName = $isMale ? $faker->randomElement(['Văn', 'Đức', 'Minh', 'Quốc', 'Hoàng', 'Thanh', 'Hữu', 'Công']) 
                                       : $faker->randomElement(['Thị', 'Thu', 'Ngọc', 'Minh', 'Hoàng', 'Thanh', 'Bảo']);
                 $firstName = $isMale ? $faker->randomElement($maleFirstNames) : $faker->randomElement($femaleFirstNames);
-                
                 $fullName = $lastName . ' ' . $middleName . ' ' . $firstName;
                 
-                // Tạo mã sinh viên duy nhất theo khóa và ngành
                 do {
                     $studentCode = $this->generateStudentCode($courseCode, $class->department_id, count($usedStudentCodes) + 1);
                 } while (in_array($studentCode, $usedStudentCodes));
                 
                 $usedStudentCodes[] = $studentCode;
                 $email = strtolower($studentCode) . '@e.tlu.edu.vn';
-                
-                // Tạo số điện thoại Việt Nam hợp lệ
                 $phonePrefix = $faker->randomElement(['03', '05', '07', '08', '09']);
                 $phone = $phonePrefix . $faker->numerify('#######');
                 
-                // Tạo user
                 $users[] = [
                     'id' => $userId,
                     'name' => $fullName,
@@ -146,24 +126,23 @@ class StudentSeeder extends Seeder
     {
         $classCode = $class->class_code;
         
-        // Các ngành hot có nhiều sinh viên hơn
         $popularMajors = ['IT', 'BA', 'CIVENG', 'ELECENG', 'ACC', 'FINBAN', 'SE', 'ECOM'];
         $mediumMajors = ['MECHENG', 'ENVENG', 'LAW', 'HYDROENG', 'WATRENG', 'AUTOENG'];
         
         foreach ($popularMajors as $major) {
             if (strpos($classCode, $major) !== false) {
-                return rand(35, 45); // 35-45 sinh viên
+                return rand(5, 10); // 35-45 
             }
         }
         
         foreach ($mediumMajors as $major) {
             if (strpos($classCode, $major) !== false) {
-                return rand(25, 35); // 25-35 sinh viên
+                return rand(5, 10); // 25-35 sinh viên
             }
         }
         
         // Các ngành khác
-        return rand(20, 30); // 20-30 sinh viên
+        return rand(4, 10); // 20-30 sinh viên
     }
     
     private function generateStudentCode($courseCode, $departmentId, $sequence)
@@ -192,10 +171,8 @@ class StudentSeeder extends Seeder
         $currentYear = 2024;
         $yearsStudied = $currentYear - $enrollmentYear;
         
-        // Sinh viên năm 4 có 95% active (một số đã tốt nghiệp sớm)
         if ($yearsStudied >= 4) return rand(1, 100) <= 95;
         
-        // Sinh viên các năm khác 98% active
         return rand(1, 100) <= 98;
     }
 }

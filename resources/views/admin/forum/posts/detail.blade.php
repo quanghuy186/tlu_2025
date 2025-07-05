@@ -40,13 +40,9 @@
                     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                         <h5 class="card-title m-0 fw-bold text-primary">Chi tiết bài viết</h5>
                         <div class="d-flex gap-2">
-                            {{-- @if(auth()->id() == $post->user_id || auth()->user()->hasRole('admin')) --}}
                                 <a href="{{ route('admin.forum.posts.edit', $post->id) }}" class="btn btn-primary btn-sm">
                                     <i class="bi bi-pencil-square me-1"></i> Chỉnh sửa
                                 </a>
-                            {{-- @endif --}}
-                            
-                            {{-- @if(auth()->user()->hasRole('admin')) --}}
                                 @if($post->isPending())
                                     <a href="{{ route('admin.forum.posts.approve', $post->id) }}" 
                                         class="btn btn-success btn-sm"
@@ -70,7 +66,6 @@
                                     <i class="bi bi-lock{{ $post->is_locked ? '-fill' : '' }} me-1"></i> 
                                     {{ $post->is_locked ? 'Mở khóa' : 'Khóa' }}
                                 </button>
-                            {{-- @endif --}}
                             
                             <a href="{{ route('admin.forum.posts.index') }}" class="btn btn-outline-secondary btn-sm">
                                 <i class="bi bi-arrow-left me-1"></i> Quay lại
@@ -102,12 +97,10 @@
                                         </span>
                                     @endif
                                     
-                                    {{-- @if($post->is_anonymous && !auth()->user()->hasRole('admin')) --}}
                                         <span class="badge bg-dark me-2" title="Ẩn danh">
 
-                                            <i class="bi bi-incognito"></i>{{ $post->is_anonymous ? ' Đăng ẩn danh bởi : ' . $post->author->name : $post->author->name}}
+                                            <i class="bi"></i>{{ $post->is_anonymous ? ' Đăng ẩn danh bởi : ' . $post->author->name : $post->author->name}}
                                         </span>
-                                    {{-- @endif --}}
                                 </div>
                                 
                                 <div class="text-muted small">
