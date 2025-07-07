@@ -600,7 +600,7 @@
                                                     @if($post->author->managedDepartment)
                                                         {{ $post->author->managedDepartment->name }}
                                                     @else
-                                                        {{ $$post->author->name }}
+                                                        {{ $post->author->name }}
                                                     @endif
                                                 </span>
                                             @else   
