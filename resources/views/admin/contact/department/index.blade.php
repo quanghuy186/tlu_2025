@@ -617,7 +617,6 @@ mark {
     border-radius: 0.25rem;
 }
 
-/* Responsive table */
 @media (max-width: 768px) {
     .table-responsive {
         font-size: 0.875rem;
@@ -628,17 +627,14 @@ mark {
     }
 }
 
-/* Loading state */
 .btn:disabled {
     cursor: not-allowed;
 }
 
-/* Custom pagination */
 .pagination-sm .page-link {
     padding: 0.375rem 0.75rem;
 }
 
-/* Stats cards */
 .info-card .card-icon {
     width: 64px;
     height: 64px;

@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Quản lý quyền</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
   <section class="section py-4">
     <div class="container-fluid">
@@ -84,18 +84,15 @@
               </div>
             </div>
             <div class="card-footer bg-white py-3">
-              <!-- Phân trang thủ công -->
               @if ($permissions->hasPages())
                 <div class="pagination-container">
                     <ul class="pagination">
-                        {{-- Liên kết trang trước --}}
                         @if ($permissions->onFirstPage())
                             <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
                         @else
                             <li><a href="{{ $permissions->previousPageUrl() }}"><i class="fas fa-angle-double-left"></i></a></li>
                         @endif
 
-                        {{-- Các phần tử phân trang --}}
                         @foreach ($permissions->getUrlRange(1, $permissions->lastPage()) as $page => $url)
                             @if ($page == $permissions->currentPage())
                                 <li><a href="#" class="active">{{ $page }}</a></li>
@@ -104,7 +101,6 @@
                             @endif
                         @endforeach
 
-                        {{-- Liên kết trang tiếp theo --}}
                         @if ($permissions->hasMorePages())
                             <li><a href="{{ $permissions->nextPageUrl() }}"><i class="fas fa-angle-double-right"></i></a></li>
                         @else
@@ -120,7 +116,6 @@
     </div>
   </section>
 
-  <!-- Modal Xác nhận xóa quyền -->
   <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">

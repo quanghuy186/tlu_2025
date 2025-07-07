@@ -134,7 +134,6 @@
                             </div>
                         </div>
 
-                        <!-- Nội dung bình luận -->
                         <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="card border">
@@ -150,7 +149,6 @@
                             </div>
                         </div>
 
-                        <!-- Danh sách các phản hồi cho bình luận này (nếu là bình luận gốc) -->
                         @if(!$comment->parent_id)
                         <div class="row">
                             <div class="col-md-12">

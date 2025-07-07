@@ -56,7 +56,6 @@
                         </div>
                         @endif
                         
-                        <!-- Thông tin bài viết và người bình luận -->
                         <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="card border">
@@ -122,7 +121,6 @@
                             </div>
                         </div>
                         
-                        <!-- Form chỉnh sửa bình luận -->
                         <form action="{{ route('admin.forum.comments.update', $comment->id) }}" method="POST">
                             @csrf
                             @method('PUT')

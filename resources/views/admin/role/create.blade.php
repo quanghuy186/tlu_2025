@@ -61,7 +61,6 @@
                 @endif
               </div>
 
-              <!-- Phần quyền có thể thêm ở đây nếu cần -->
               
               <div class="d-flex mt-4">
                 <button type="submit" class="btn btn-primary me-2">

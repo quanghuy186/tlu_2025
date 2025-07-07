@@ -1004,7 +1004,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-submit form when changing filters (giữ lại cho dropdown)
     const filterElements = ['#category', '#sort', '#per_page'];
     
     filterElements.forEach(selector => {
@@ -1013,7 +1012,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Chỉ search khi nhấn Enter trong ô tìm kiếm
     const searchInput = document.getElementById('search');
     if (searchInput) {
         searchInput.addEventListener('keypress', function(e) {
@@ -1040,8 +1038,6 @@ class ForumSearch {
     }
     
     init() {
-        // Bind events
-        // BỎ auto search khi nhập - chỉ search khi nhấn nút hoặc Enter
         if (this.searchInput) {
             this.searchInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -1051,7 +1047,6 @@ class ForumSearch {
             });
         }
         
-        // Auto submit on filter change (giữ lại cho dropdown)
         [this.categorySelect, this.sortSelect, this.perPageSelect].forEach(element => {
             if (element) {
                 element.addEventListener('change', () => this.performSearch());
@@ -1078,7 +1073,6 @@ class ForumSearch {
         this.isLoading = true;
         const formData = new FormData();
         
-        // Collect all form data
         formData.append('q', this.searchInput ? this.searchInput.value : '');
         formData.append('category', this.categorySelect ? this.categorySelect.value : '');
         formData.append('sort', this.sortSelect ? this.sortSelect.value : 'latest');
@@ -1114,7 +1108,6 @@ class ForumSearch {
     updateResults(posts, pagination) {
         if (!this.resultsContainer) return;
         
-        // Clear current results
         this.resultsContainer.innerHTML = '';
         
         if (posts.length === 0) {
@@ -1127,15 +1120,11 @@ class ForumSearch {
             return;
         }
         
-        // Render posts
         posts.forEach(post => {
             this.resultsContainer.innerHTML += this.renderPost(post);
         });
-        
-        // Update pagination
         this.updatePagination(pagination);
         
-        // Re-bind like buttons
         this.bindLikeButtons();
     }
     
@@ -1187,7 +1176,6 @@ class ForumSearch {
         
         let paginationHtml = '<ul class="pagination">';
         
-        // Previous button
         if (pagination.current_page > 1) {
             paginationHtml += `
                 <li><a href="#" data-page="${pagination.current_page - 1}">
@@ -1198,7 +1186,6 @@ class ForumSearch {
             paginationHtml += '<li><a href="#" class="disabled"><i class="fas fa-angle-double-left"></i></a></li>';
         }
         
-        // Page numbers
         for (let i = 1; i <= pagination.last_page; i++) {
             if (i === pagination.current_page) {
                 paginationHtml += `<li><a href="#" class="active">${i}</a></li>`;
@@ -1207,7 +1194,6 @@ class ForumSearch {
             }
         }
         
-        // Next button
         if (pagination.has_more_pages) {
             paginationHtml += `
                 <li><a href="#" data-page="${pagination.current_page + 1}">
@@ -1221,7 +1207,6 @@ class ForumSearch {
         paginationHtml += '</ul>';
         paginationContainer.innerHTML = paginationHtml;
         
-        // Bind pagination clicks
         this.bindPaginationLinks();
     }
     
@@ -1284,7 +1269,6 @@ class ForumSearch {
             searchInput.classList.add('loading');
         }
         
-        // Add loading overlay to results
         if (this.resultsContainer) {
             this.resultsContainer.style.opacity = '0.5';
         }
@@ -1315,7 +1299,6 @@ class ForumSearch {
     updateUrl(formData) {
         const url = new URL(window.location);
         
-        // Update URL parameters
         for (const [key, value] of formData.entries()) {
             if (value) {
                 url.searchParams.set(key, value);
@@ -1324,7 +1307,6 @@ class ForumSearch {
             }
         }
         
-        // Update browser history without reload
         window.history.pushState({}, '', url);
     }
     
@@ -1364,7 +1346,6 @@ class ForumSearch {
     }
 }
 
-// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     new ForumSearch();
 });

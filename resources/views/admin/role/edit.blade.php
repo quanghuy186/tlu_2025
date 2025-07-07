@@ -16,7 +16,7 @@
         <li class="breadcrumb-item active">Chỉnh sửa</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
   <div class="container-fluid">
@@ -65,8 +65,6 @@
                 @enderror
               </div>
 
-              <!-- Phần quyền có thể thêm ở đây nếu cần -->
-              
               <div class="d-flex mt-4">
                 <button type="submit" class="btn btn-primary me-2">
                   <i class="bi bi-save me-1"></i> Cập nhật vai trò

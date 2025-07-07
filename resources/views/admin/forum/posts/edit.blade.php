@@ -16,11 +16,10 @@
         <li class="breadcrumb-item active">Chỉnh sửa bài viết</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
-        <!-- Status message -->
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="bi bi-check-circle me-1"></i>
@@ -43,7 +42,6 @@
                     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                         <h5 class="card-title m-0 fw-bold text-primary">Chỉnh sửa bài viết</h5>
                         
-                        <!-- Status badges -->
                         <div>
                             @if($post->status == 'published')
                                 <span class="badge bg-success">Đã xuất bản</span>
@@ -63,16 +61,10 @@
                             @csrf
                             @method('PUT')
                             
-                            <!-- Store existing images data -->
                             <input type="hidden" id="existing_images" value="{{ $post->images }}">
-                            
-                            <!-- This will be updated by JavaScript -->
                             <input type="hidden" id="remove_images_json" name="remove_images_json" value="[]">
                             
                             <div id="forum-post-edit-container">
-                                <!-- The React component will be rendered here -->
-                                
-                                <!-- Fallback non-JS form elements -->
                                 <div class="row mb-3">
                                     <label for="title" class="col-sm-2 col-form-label">Tiêu đề <span class="text-danger">*</span></label>
                                     <div class="col-sm-10">
@@ -110,7 +102,6 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Existing Images (Non-JS version) -->
                                 @if($post->images)
                                     <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label">Ảnh hiện tại</label>

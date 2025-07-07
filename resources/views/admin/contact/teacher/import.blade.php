@@ -20,7 +20,6 @@
 <section class="section">
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <!-- Import Form Card -->
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Thêm danh sách giảng viên</h5>
@@ -32,7 +31,6 @@
                         </div>
                     @endif
 
-                    <!-- Instructions -->
                     <div class="alert alert-info">
                         <h6 class="alert-heading">Hướng dẫn:</h6>
                         <ol class="mb-0">
@@ -43,14 +41,12 @@
                         </ol>
                     </div>
 
-                    <!-- Download Template -->
                     <div class="mb-4">
                         <a href="{{ route('admin.teacher.download-template') }}" class="btn btn-primary">
                             <i class="bi bi-download me-2"></i>Tải file Excel mẫu
                         </a>
                     </div>
 
-                    <!-- Import Form -->
                     <form action="{{ route('admin.teacher.import') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         

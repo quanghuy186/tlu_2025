@@ -131,7 +131,6 @@
                     </div>
                 </article>
 
-                <!-- Related Notifications -->
                 @if($related_notifications->count() > 0)
                     <div class="related-section">
                         <h3 class="related-title">Thông báo liên quan</h3>
@@ -185,9 +184,7 @@
                 @endif
             </div>
 
-            <!-- Sidebar -->
             <div class="col-lg-4">
-                <!-- Action Buttons -->
                 <div class="sidebar-card">
                     <h3 class="sidebar-title">Hành động</h3>
                     <div class="action-buttons">

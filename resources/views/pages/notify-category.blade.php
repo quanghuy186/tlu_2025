@@ -24,10 +24,8 @@
     </div>
 </section>
 
-<!-- Announcement Section -->
 <section class="announcement-section">
     <div class="container">
-        <!-- Search and Filter -->
         <div class="search-filter-container">
             <div class="filter-options">
                 <div class="filter-group">
@@ -43,7 +41,6 @@
         </div>
 
         <div class="row">
-            <!-- Main Content -->
             <div class="col-lg-8 mb-4">
                 <div class="category-header mb-4">
                     <h2 class="category-title">
@@ -53,8 +50,6 @@
                         Hiển thị {{ $notifications->count() }} trong tổng số {{ $notifications->total() }} thông báo
                     </p>
                 </div>
-
-                <!-- Announcements Grid -->
                 <div class="row">
                     @forelse ($notifications as $notification)
                         <div class="col-md-6 mb-4">
@@ -103,7 +98,6 @@
                     @endforelse
                 </div>
 
-                <!-- Pagination -->
                 @if($notifications->hasPages())
                     <div class="pagination-container">
                         {{ $notifications->links('pagination::bootstrap-4') }}
@@ -111,9 +105,7 @@
                 @endif
             </div>
 
-            <!-- Sidebar -->
             <div class="col-lg-4">
-                <!-- Categories -->
                 <div class="sidebar-card">
                     <h3 class="sidebar-title">Danh mục thông báo</h3>
                     <ul class="categories-list">
@@ -131,7 +123,6 @@
                     </ul>
                 </div>
 
-                <!-- Recent Announcements -->
                 <div class="sidebar-card">
                     <h3 class="sidebar-title">Thông báo gần đây</h3>
                     <ul class="recent-posts">

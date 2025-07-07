@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">Thêm mới</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
 <section class="section py-4">
     <div class="container-fluid">
@@ -161,7 +161,6 @@
 @section('custom-js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Preview ảnh khi upload
         document.getElementById('avatar').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {

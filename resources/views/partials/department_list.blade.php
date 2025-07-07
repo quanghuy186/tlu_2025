@@ -51,7 +51,6 @@
                     <i class="fas fa-message"></i>
                 </a>
             @else
-                <!-- Handle case when no manager exists -->
                 <span class="action-btn disabled" title="No manager assigned">
                     <i class="fas fa-message"></i>
                 </span>
@@ -76,7 +75,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="unit-detail">
-                        <!-- Unit Header -->
                         <div class="unit-detail-header">
                             <img src="https://via.placeholder.com/150x150?text=CNTT" alt="{{ $department->name }}" class="unit-detail-logo">
                             <div class="unit-detail-title">
@@ -99,7 +97,6 @@
                             </div>
                         </div>
 
-                        <!-- Unit Description -->
                         <div class="unit-detail-section">
                             <div class="unit-detail-section-title">Giới thiệu</div>
                             <div class="unit-detail-description">
@@ -153,7 +150,6 @@
                             
                         </div>
 
-                        <!-- Contact Information -->
                         <div class="unit-detail-section">
                             <div class="unit-detail-section-title">Thông tin liên hệ</div>
                             <ul class="contact-info-list">
@@ -196,11 +192,9 @@
 @endforeach
 
             
-{{-- Phân trang --}}
 @if ($departments->hasPages())
     <div class="pagination-container">
         <ul class="pagination">
-            {{-- Liên kết trang trước --}}
             @if ($departments->onFirstPage())
                 <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
             @else
@@ -209,7 +203,6 @@
                 </a></li>
             @endif
 
-            {{-- Các phần tử phân trang --}}
             @foreach ($departments->getUrlRange(1, $departments->lastPage()) as $page => $url)
                 @if ($page == $departments->currentPage())
                     <li><a href="#" class="active">{{ $page }}</a></li>
@@ -218,7 +211,6 @@
                 @endif
             @endforeach
 
-            {{-- Liên kết trang tiếp theo --}}
             @if ($departments->hasMorePages())
                 <li><a href="#" class="page-link" data-page="{{ $departments->currentPage() + 1 }}">
                     <i class="fas fa-angle-double-right"></i>

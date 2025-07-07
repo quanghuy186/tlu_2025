@@ -123,7 +123,6 @@
     </div>
 </section>
 
-<!-- Modal Xác nhận xóa danh mục -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

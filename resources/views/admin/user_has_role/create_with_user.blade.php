@@ -107,7 +107,7 @@
               
               if (specialRoles.includes(roleId) && roleId !== selectedRoleId) {
                   roleContainer.style.display = 'none';
-                  checkbox.checked = false; // Bỏ chọn vai trò
+                  checkbox.checked = false; 
               }
           });
       }

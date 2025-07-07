@@ -15,7 +15,7 @@
         <li class="breadcrumb-item active">General</li>
       </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
 
   <section class="section py-4">
     <div class="container-fluid">
@@ -67,7 +67,6 @@
               </div>
             </div>
             <div class="card-footer bg-white py-3">
-              <!-- Có thể thêm phân trang ở đây -->
               <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-end mb-0">
                   <li class="page-item disabled">
