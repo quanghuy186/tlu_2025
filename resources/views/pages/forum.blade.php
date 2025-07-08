@@ -355,7 +355,7 @@
     </div>
 </div>
 
-<!-- Modal xem lý do từ chối -->
+
 <div class="modal fade" id="rejectionReasonModal" tabindex="-1" aria-labelledby="rejectionReasonModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -378,7 +378,7 @@
     </div>
 </div>
 
-<!-- Modal chỉnh sửa bài viết -->
+
 <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -483,7 +483,7 @@
                                        value="{{ request('search') }}">
                             </div>
                             
-                            <!-- Category Filter -->
+                   
                             <div class="col-md-3 mb-3">
                                 <label for="category" class="form-label">
                                     <i class="fas fa-folder me-1"></i> Chuyên mục
@@ -507,7 +507,7 @@
                                 </select>
                             </div>
                             
-                            <!-- Sort Filter -->
+                       
                             <div class="col-md-3 mb-3">
                                 <label for="sort" class="form-label">
                                     <i class="fas fa-sort me-1"></i> Sắp xếp
@@ -528,7 +528,6 @@
                                 </select>
                             </div>
                             
-                            <!-- Items per page -->
                             <div class="col-md-2 mb-3">
                                 <label for="per_page" class="form-label">
                                     <i class="fas fa-list-ol me-1"></i> Hiển thị
@@ -759,10 +758,13 @@
                                     <i class="far fa-eye me-1"></i> {{ $p->view_count }}
                                 </a>
                             </div>
-                            <div class="post-meta">
-                                <span class="badge bg-secondary">
-                                    <i class="fas fa-folder me-1"></i>{{ $p->category->name ?? '' }}
-                                </span>
+                            <div class="post-meta d-flex align-items-center justify-content-between">
+                               
+                                <div class="post-category">
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="bi bi-folder me-1"></i>{{ $p->category->name ?? 'Chưa phân loại' }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1454,4 +1456,5 @@ document.addEventListener('DOMContentLoaded', function() {
         background-color: #fee;
         color: #dc3545 !important;
     }
+
 </style>

@@ -72,12 +72,6 @@ class PermissionSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'permission_name' => 'manager-contact',
-                'description' => 'Quản lý danh bạ người dùng',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
                 'permission_name' => 'access-admin-dashboard',
                 'description' => 'Xem báo cáo và thống kê',
                 'created_at' => now(),

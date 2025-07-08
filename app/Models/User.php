@@ -106,9 +106,20 @@ class User extends Authenticatable
     public function teacher(){
         return $this->hasOne(Teacher::class);
     }
+    
     public function isOnline()
     {
         return $this->last_seen_at && $this->last_seen_at->diffInMinutes(now()) < 5;
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
+
+    public function resolvedReports()
+    {
+        return $this->hasMany(Report::class, 'resolved_by');
     }
 
 }

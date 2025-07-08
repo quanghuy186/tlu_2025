@@ -359,5 +359,6 @@ class ForumPostController extends Controller
             ], 500);
         }
     }
+    
 
 }

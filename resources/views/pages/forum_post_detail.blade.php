@@ -111,6 +111,44 @@
                             </a>
                             <i class="far fa-comment ms-3 me-1"></i> {{ count($post->comments) }} bình luận
                         </div>
+
+                        <div class="post-actions">
+                                <a href="#" class="text-decoration-none me-3">
+                                    <i class="bi bi-bookmark text-primary"></i>
+                                    <span class="ms-1 text-muted">Lưu</span>
+                                </a>
+
+                                <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#reportModal">
+                                    <i class="bi bi-flag text-warning"></i>
+                                    <span class="ms-1 text-muted">Báo cáo</span>
+                                </a>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="reportModalLabel">Báo cáo bài viết</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="{{ route('forum.posts.report', $post->id) }}" method="POST">
+                                    @csrf
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="report_reason" class="form-label">Lý do báo cáo <span class="text-danger">*</span></label>
+                                            <textarea class="form-control" id="report_reason" name="report_reason" rows="4" required></textarea>
+                                            <small class="text-muted">Mô tả chi tiết lý do báo cáo để admin xem xét</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                        <button type="submit" class="btn btn-warning">Gửi báo cáo</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="share-section">

@@ -297,6 +297,11 @@
                   <i class="bi bi-circle"></i><span>Bình luận</span>
                 </a>
               </li>
+              <li>
+                <a href="{{ route('admin.reports.index') }}">
+                  <i class="bi bi-circle"></i><span>Danh sách báo cáo</span>
+                </a>
+              </li>
             </ul>
           </li>
         @endif

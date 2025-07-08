@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ForumCategory;
 use App\Models\ForumComment;
 use App\Models\ForumPost;
+use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -603,4 +604,29 @@ class ForumController extends Controller
             'userLiked' => $userLiked
         ]);
     }
+
+    public function reportPost(Request $request, ForumPost $post){
+        $request->validate([
+            'report_reason' => 'required|string|max:1000'
+        ]);
+        
+        $existingReport = Report::where('post_id', $post->id)
+            ->where('user_id', auth()->id())
+            ->where('status', 'pending')
+            ->first();
+            
+        if ($existingReport) {
+            return redirect()->back()->with('error', 'Bạn đã báo cáo bài viết này rồi và báo cáo đang được xử lý!');
+        }
+        
+        Report::create([
+            'post_id' => $post->id,
+            'user_id' => auth()->id(),
+            'reason' => $request->report_reason,
+            'status' => 'pending'
+        ]);
+        
+        return redirect()->back()->with('success', 'Báo cáo đã được gửi thành công!');
+    }
+
 }

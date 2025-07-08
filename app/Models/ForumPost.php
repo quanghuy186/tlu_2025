@@ -96,4 +96,19 @@ class ForumPost extends Model
         }
         return json_decode($this->images, true);
     }
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
+
+    public function hasReports()
+    {
+        return $this->reports()->where('status', 'pending')->exists();
+    }
+
+    public function getPendingReportsCountAttribute()
+    {
+        return $this->reports()->where('status', 'pending')->count();
+    }
 }

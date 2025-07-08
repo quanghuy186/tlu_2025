@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ForumPostController;
 use App\Http\Controllers\Admin\NotificationCategoryController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RoleHasPermissionController;
 use App\Http\Controllers\Admin\StudentController;
@@ -272,6 +273,7 @@ Route::middleware(['auth', 'redirect_admin'])->group(function () {
         Route::get('/post/{id}/comments', [ForumController::class, 'getComments'])->name('comments.get');
         Route::post('/post/{id}/like', [ForumController::class, 'toggleLike'])->name('post.like')->middleware('auth');
         Route::get('/post/{id}/like-info', [ForumController::class, 'getLikeInfo'])->name('post.like.info');
+        Route::post('/posts/{post}/report', [ForumController::class, 'reportPost'])->name('posts.report');
     });
 });
 
@@ -286,6 +288,15 @@ Route::middleware(['auth', 'redirect_admin'])->group(function () {
         Route::delete('/notification', [NotifycationController::class, 'delete'])->name('delete')->middleware('auth');
         Route::get('/category/{category_id}', [NotifycationController::class, 'notificationByCategory'])->name('category');
     });
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/reports', [ReportController::class, 'index'])
+        ->name('reports.index');
+    Route::get('/reports/{report}', [ReportController::class, 'show'])
+        ->name('reports.show');
+    Route::post('/reports/{report}/resolve', [ReportController::class, 'resolve'])
+        ->name('reports.resolve');
 });
 
 Route::get('/api/classes', function () {
