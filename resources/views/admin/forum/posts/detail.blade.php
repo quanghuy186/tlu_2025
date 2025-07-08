@@ -239,7 +239,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="reject_reason" class="form-label">Lý do từ chối <span class="text-danger">*</span></label>
-                        <textarea class="form-control" id="reject_reason" name="reject_reason" rows="4" required></textarea>
+                        <textarea class="form-control" id="reject_reason" name="reject_reason" rows="4"></textarea>
                         <small class="text-muted">Lý do từ chối sẽ được hiển thị cho tác giả bài viết</small>
                     </div>
                 </div>

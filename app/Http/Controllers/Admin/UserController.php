@@ -255,7 +255,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('admin.user.index')
-                ->with('error', "Không thể xóa tài khoản. Lỗi: " . $e->getMessage());
+                ->with('error', "Không thể xóa tài khoản");
         }
     }
 }

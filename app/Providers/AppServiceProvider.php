@@ -11,6 +11,7 @@ use App\Policies\StudentPolicy;
 use App\Policies\TeacherPolicy;
 use App\Policies\UserHasRolePolicy;
 use App\Policies\NotiticationPolicy;
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Gate;
@@ -19,20 +20,18 @@ use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
-        //
+
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        Carbon::setLocale('vi');
+
         ResetPassword::createUrlUsing(function ($user, string $token) {
             return URL::route('password.reset', [
                 'token' => $token,
@@ -46,6 +45,5 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('create-notification', [NotiticationPolicy::class, 'create']);
         Gate::define('show-anonymously', [ForumPostPolicy::class, 'view']);
         Gate::define('show-anonymously-comment', [ForumCommentPolicy::class, 'view']);
-
     }
 }

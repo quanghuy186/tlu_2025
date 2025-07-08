@@ -219,8 +219,8 @@ class ForumController extends Controller
             'category_id' => 'nullable|exists:forum_categories,id',
             'content' => 'required|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'removed_images' => 'nullable|array', // Thêm validation cho mảng ảnh xóa
-            'removed_images.*' => 'string'       // Mỗi phần tử là một chuỗi (đường dẫn)
+            'removed_images' => 'nullable|array', 
+            'removed_images.*' => 'string'       
         ]);
 
         if ($validator->fails()) {

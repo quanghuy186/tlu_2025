@@ -231,6 +231,9 @@ class ForumPostController extends Controller
             'approved_at' => now(),
             'reject_reason' => $request->reject_reason,
         ]);
+
+        $author = $post->author;
+        Mail::to($author->email)->send(new PostApprovedMail($post));
         
         return redirect()->route('admin.forum.posts.show', $post->id)
             ->with('success', 'Bài viết đã bị từ chối!');

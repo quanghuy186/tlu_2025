@@ -702,7 +702,7 @@
                                     @endcan
                                     <span class="text-muted small">
                                         <i class="far fa-clock me-1"></i>
-                                        {{ timeAgo($p->created_at) ?? 'Chưa xác định' }}
+                                        {{ timeAgo($p->approved_at) ?? 'Chưa xác định' }}
                                     </span>
                                 </div>
                             </div>
@@ -915,42 +915,30 @@
             return response.json();
         })
         .then(data => {
-            // Cập nhật các trường trong form
             document.getElementById('edit_title').value = data.title;
             document.getElementById('edit_category_id').value = data.category_id;
             document.getElementById('edit_content').value = data.content;
             document.getElementById('edit_is_anonymous').checked = data.is_anonymous;
 
-            // Xóa các dòng code gây lỗi ở đây
-            // document.getElementById('edit_tags').value = data.tags; // Lỗi: Element không tồn tại
-            // document.getElementById('edit_notify_replies').checked = data.notify_replies; // Lỗi: Element không tồn tại
-            // document.getElementById('edit_images').checked = data.images; // Lỗi: Thao tác sai trên input file
-
-            // Lấy container chứa ảnh preview
             var imageContainer = document.getElementById('image_preview_container');
-            imageContainer.innerHTML = ''; // Xóa ảnh cũ trước khi thêm ảnh mới
+            imageContainer.innerHTML = ''; 
 
-            // Kiểm tra và hiển thị ảnh hiện tại của bài viết
             if (data.images && Array.isArray(data.images) && data.images.length > 0) {
-                document.getElementById('current_images').style.display = 'block'; // Hiển thị khu vực ảnh
+                document.getElementById('current_images').style.display = 'block'; 
                 data.images.forEach(function(image, index) {
-                    // Tạo cột
                     var col = document.createElement('div');
                     col.className = 'col-md-3 col-sm-4 col-6 mb-2';
 
-                    // Tạo card cho ảnh
                     var card = document.createElement('div');
                     card.className = 'card h-100 position-relative';
 
-                    // Tạo ảnh
                     var img = document.createElement('img');
                     img.className = 'card-img-top';
-                    img.src = `/storage/${image}`; // Đảm bảo đường dẫn storage của bạn là chính xác
+                    img.src = `/storage/${image}`; 
                     img.alt = `Hình ảnh ${index + 1}`;
                     img.style.objectFit = 'cover';
                     img.style.height = '120px';
 
-                    // Tạo nút xóa
                     var removeBtn = document.createElement('button');
                     removeBtn.className = 'btn btn-sm btn-danger position-absolute top-0 end-0 m-1';
                     removeBtn.innerHTML = '<i class="fas fa-times"></i>';
@@ -958,25 +946,21 @@
                     removeBtn.title = 'Xóa ảnh này';
 
                     removeBtn.onclick = function() {
-                        // Tạo một input ẩn để gửi thông tin ảnh cần xóa lên server
                         var hiddenInput = document.createElement('input');
                         hiddenInput.type = 'hidden';
                         hiddenInput.name = 'removed_images[]';
                         hiddenInput.value = image;
                         document.getElementById('editPostForm').appendChild(hiddenInput);
 
-                        // Xóa card ảnh khỏi giao diện
                         col.remove();
                     };
                     
-                    // Gắn các element vào nhau
                     card.appendChild(img);
                     card.appendChild(removeBtn);
                     col.appendChild(card);
                     imageContainer.appendChild(col);
                 });
             } else {
-                // Nếu không có ảnh, ẩn khu vực hiển thị ảnh
                  document.getElementById('current_images').style.display = 'none';
                  imageContainer.innerHTML = '<p class="text-muted">Không có hình ảnh</p>';
             }
@@ -986,11 +970,9 @@
         })
         .catch(error => {
             console.error('Lỗi khi lấy dữ liệu bài viết:', error);
-            // Có thể hiển thị thông báo lỗi cho người dùng ở đây
         });
 }
         
-        // Xử lý cập nhật bài viết
         document.getElementById('updatePost').addEventListener('click', function() {
             var form = document.getElementById('editPostForm');
             if (form.checkValidity()) {
