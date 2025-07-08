@@ -27,6 +27,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'manager_admin' => \App\Http\Middleware\ManagerAdminMiddleware::class,
             'redirect_admin' => \App\Http\Middleware\RedirectAdmin::class,
             'redirect_censor' => \App\Http\Middleware\RedirectCensorMiddleware::class,
+            'access_admin_dashboard' => \App\Http\Middleware\AdminDashboardMiddleware::class,
+            'manager_user' => \App\Http\Middleware\ManagerUsserMiddleware::class,
+            'manager_notify' => \App\Http\Middleware\ManagerNotifyMiddleware::class,
+            'manager_forum' => \App\Http\Middleware\ManagerForumMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

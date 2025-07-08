@@ -67,7 +67,6 @@
         transform: translateY(-2px);
     }
 
-    /* Custom Pagination */
     .pagination-container {
         display: flex;
         justify-content: center;
@@ -193,16 +192,12 @@
 
           </ul>
         </li>
-
       </ul>
     </nav>
-
   </header>
 
   <aside id="sidebar" class="sidebar">
-
     <ul class="sidebar-nav" id="sidebar-nav">
-
       <li class="nav-item">
         <a class="nav-link" href="{{ route('admin.dashboard') }}">
           <i class="bi bi-grid"></i>
@@ -210,116 +205,122 @@
         </a>
       </li>
 
-      @if(hasRole(999, Auth()->user()))
+      @if(hasRole(999, Auth()->user()) || tluHasPermission(Auth()->user(), 'manager-user'))
         <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-person"></i><span>Người dùng</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="{{ route('admin.user.index') }}">
-              <i class="bi bi-circle"></i><span>Quản lý người dùng</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{ route('admin.role.index') }}">
-              <i class="bi bi-circle"></i><span>Quản lý danh sách vai trò</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{ route('admin.permission.index') }}">
-              <i class="bi bi-circle"></i><span>Quản lý danh sách quyền</span>
-            </a>
-          </li>
-          <!-- <li>
-            <a href="{{ route('admin.user_has_role') }}">
-              <i class="bi bi-circle"></i><span>Phân vai trò người dùng</span>
-            </a>
-          </li> -->
-          <li>
-            <a href="{{ route('admin.role_has_permission') }}">
-              <i class="bi bi-circle"></i><span>Phân quyền cho vai trò</span>
-            </a>
-          </li>
-          <!-- <li>
-            <a href="{{ route('admin.role_has_permission') }}">
-              <i class="bi bi-circle"></i><span>Phân quyền cho người dùng</span>
-            </a>
-          </li> -->
-        </ul>
-      </li>
-      
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-journal-text"></i><span>Quản lý danh bạ</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="{{ route('admin.department.index') }}">
-              <i class="bi bi-circle"></i><span>Đơn vị</span>
-            </a>
-          </li>
-          <li>
-            <a href=" {{route('admin.class.index')}}">
-              <i class="bi bi-circle"></i><span>Lớp học</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{route('admin.teacher.index')}}">
-              <i class="bi bi-circle"></i><span>Cán bộ giảng viên</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{route('admin.student.index')}}">
-              <i class="bi bi-circle"></i><span>Sinh viên</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-
+          <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-person"></i><span>Người dùng</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="{{ route('admin.user.index') }}">
+                <i class="bi bi-circle"></i><span>Quản lý người dùng</span>
+              </a>
+            </li>
+            <li>
+              <a href="{{ route('admin.role.index') }}">
+                <i class="bi bi-circle"></i><span>Quản lý danh sách vai trò</span>
+              </a>
+            </li>
+            <li>
+              <a href="{{ route('admin.permission.index') }}">
+                <i class="bi bi-circle"></i><span>Quản lý danh sách quyền</span>
+              </a>
+            </li>
+            <!-- <li>
+              <a href="{{ route('admin.user_has_role') }}">
+                <i class="bi bi-circle"></i><span>Phân vai trò người dùng</span>
+              </a>
+            </li> -->
+            <li>
+              <a href="{{ route('admin.role_has_permission') }}">
+                <i class="bi bi-circle"></i><span>Phân quyền cho vai trò</span>
+              </a>
+            </li>
+            <!-- <li>
+              <a href="{{ route('admin.role_has_permission') }}">
+                <i class="bi bi-circle"></i><span>Phân quyền cho người dùng</span>
+              </a>
+            </li> -->
+          </ul>
+        </li>
       @endif
-      {{-- manager forum --}}
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-bar-chart"></i><span>Quản lý diễn đàn</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="{{route('admin.forum.categories.index')}}">
-              <i class="bi bi-circle"></i><span>Danh mục</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{route('admin.forum.posts.index')}}">
-              <i class="bi bi-circle"></i><span>Bài viết</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{ route('admin.forum.comments.index') }}">
-              <i class="bi bi-circle"></i><span>Bình luận</span>
-            </a>
-          </li>
-        </ul>
-      </li>
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-gem"></i><span>Quản lý thông báo</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="{{ route('admin.notification.index') }}">
-              <i class="bi bi-circle"></i><span>Quản lý thông báo</span>
-            </a>
-          </li>
+      @if(hasRole(999, Auth()->user()))
+      
+        <li class="nav-item">
+          <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-journal-text"></i><span>Quản lý danh bạ</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="{{ route('admin.department.index') }}">
+                <i class="bi bi-circle"></i><span>Đơn vị</span>
+              </a>
+            </li>
+            <li>
+              <a href=" {{route('admin.class.index')}}">
+                <i class="bi bi-circle"></i><span>Lớp học</span>
+              </a>
+            </li>
+            <li>
+              <a href="{{route('admin.teacher.index')}}">
+                <i class="bi bi-circle"></i><span>Cán bộ giảng viên</span>
+              </a>
+            </li>
+            <li>
+              <a href="{{route('admin.student.index')}}">
+                <i class="bi bi-circle"></i><span>Sinh viên</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        @endif
 
-          <li>
-            <a href="{{ route('admin.notification-category.index') }}">
-              <i class="bi bi-circle"></i><span>Quản lý danh mục</span>
+        @if(hasRole(999, Auth()->user()) || tluHasPermission(Auth()->user(), 'manager-forum'))
+          <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+              <i class="bi bi-bar-chart"></i><span>Quản lý diễn đàn</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
+            <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+              <li>
+                <a href="{{route('admin.forum.categories.index')}}">
+                  <i class="bi bi-circle"></i><span>Danh mục</span>
+                </a>
+              </li>
+              <li>
+                <a href="{{route('admin.forum.posts.index')}}">
+                  <i class="bi bi-circle"></i><span>Bài viết</span>
+                </a>
+              </li>
+              <li>
+                <a href="{{ route('admin.forum.comments.index') }}">
+                  <i class="bi bi-circle"></i><span>Bình luận</span>
+                </a>
+              </li>
+            </ul>
           </li>
-        </ul>
-      </li>
+        @endif
+
+        @if(hasRole(999, Auth()->user()) || tluHasPermission(Auth()->user(), 'manager-notify'))
+          <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+              <i class="bi bi-gem"></i><span>Quản lý thông báo</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+              <li>
+                <a href="{{ route('admin.notification.index') }}">
+                  <i class="bi bi-circle"></i><span>Quản lý thông báo</span>
+                </a>
+              </li>
+
+              <li>
+                <a href="{{ route('admin.notification-category.index') }}">
+                  <i class="bi bi-circle"></i><span>Quản lý danh mục</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        @endif
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="#">

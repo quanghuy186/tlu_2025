@@ -13,6 +13,7 @@ use App\Models\Role;
 use App\Models\Teacher;
 use App\Models\UserHasPermission;
 use App\Models\UserHasRole;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Illuminate\Validation\Rule;

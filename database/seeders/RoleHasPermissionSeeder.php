@@ -17,7 +17,12 @@ class RoleHasPermissionSeeder extends Seeder
             'view-detail-department',
             'create-notification',
             'show-anonymously',
-            'show-anonymously-comment'
+            'show-anonymously-comment',
+            'manager-user',
+            'manager-forum',
+            'manager-notify',
+            'manager-contact',
+            'access-admin-dashboard'
         ];
         
         $permissions = DB::table('permissions')

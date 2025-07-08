@@ -8,6 +8,14 @@
     s1.setAttribute('crossorigin','*');
     s0.parentNode.insertBefore(s1,s0);
     })();
+
+    window.Tawk_API = window.Tawk_API || {};
+    window.Tawk_API.onLoad = function(){
+        console.log('Tawk.to loaded');
+        if (window.innerWidth <= 768) {
+            window.Tawk_API.showWidget();
+        }
+    };
 </script>
 <footer>
     <div class="container">

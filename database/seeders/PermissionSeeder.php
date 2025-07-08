@@ -47,6 +47,42 @@ class PermissionSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'permission_name' => 'manager-user',
+                'description' => 'Quản lý thông tin người dùng',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'permission_name' => 'manager-forum',
+                'description' => 'Quản lý diễn đàn',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'permission_name' => 'manager-notify',
+                'description' => 'Quản lý thông báo',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'permission_name' => 'manager-contact',
+                'description' => 'Quản lý danh bạ người dùng',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'permission_name' => 'manager-contact',
+                'description' => 'Quản lý danh bạ người dùng',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'permission_name' => 'access-admin-dashboard',
+                'description' => 'Xem báo cáo và thống kê',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
 
         DB::table('permissions')->insert($permissions);

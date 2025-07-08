@@ -4,11 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
-
-class AdminMiddleware
+class AdminDashboardMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
@@ -22,14 +21,16 @@ class AdminMiddleware
             $query->where('role_name', 'admin');
         })->exists();
 
-        // $censor = $user->roles()->whereHas('role', function($query) {
-        //     $query->where('role_name', 'kiem_duyet_vien');
-        // })->exists();
+        $censor = $user->roles()->whereHas('role', function($query) {
+            $query->where('role_name', 'kiem_duyet_vien');
+        })->exists();
 
-        if (!$isAdmin){
+        $permission_access_admin_dashboard = tluHasPermission($user, 'access-admin-dashboard');
+
+        if (!$isAdmin && !$censor && !$permission_access_admin_dashboard ){
             return redirect()->route('home.index')->with('error', 'Bạn không có quyền truy cập trang này.');
         }
 
         return $next($request);
-    }                                             
+    }
 }

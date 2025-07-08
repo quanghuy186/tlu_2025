@@ -78,7 +78,7 @@ Route::get('/change-password', [ChangePasswordController::class, 'show_form'])
 Route::post('/change-password', [ChangePasswordController::class, 'changePassword'])
         ->name('password.change')->middleware('auth');
 
-Route::prefix('/admin')->name('admin.')->middleware(['auth', 'admin'])->group(function(){
+Route::prefix('/admin')->name('admin.')->middleware(['auth', 'manager-contact'])->group(function(){
     Route::get('/departments', [DepartmentController::class, 'index'])->name('department.index');
     Route::get('/departments/create', [DepartmentController::class, 'create'])->name('department.create');
     Route::post('/departments', [DepartmentController::class, 'store'])->name('department.store');
@@ -124,11 +124,11 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth', 'admin'])->group(fu
     Route::get('students/template/download', [StudentController::class, 'downloadTemplate'])->name('student.download-template');
 });  
     
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'manager_admin'])->group(function(){
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'access_admin_dashboard'])->group(function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 });
 
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function(){
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'manager_user'])->group(function(){
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/user/create', [UserController::class, 'store'])->name('user.create');
@@ -171,7 +171,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/api/role_has_permission/getByRoleId/{role_id?}', [ApiRoleHasPermissionController::class, 'getByRoleId'])->name('api.role_has_permission.getRoleId');
 });
 
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'manager_admin'])->group(function(){
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'manager_notify'])->group(function(){
     Route::get('/notification-categories', [NotificationCategoryController::class, 'index'])->name('notification-category.index');
     Route::get('/notification-categories/create', [NotificationCategoryController::class, 'create'])->name('notification-category.create');
     Route::post('/notification-categories', [NotificationCategoryController::class, 'store'])->name('notification-category.store');
@@ -192,7 +192,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'manager_admin'])->g
     ->name('notification.bulk-destroy');
 });
 
-Route::prefix('admin/forum')->name('admin.forum.')->middleware(['auth', 'manager_admin'])->group(function () {
+Route::prefix('admin/forum')->name('admin.forum.')->middleware(['auth', 'manager_forum'])->group(function () {
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [ForumCategoryController::class, 'index'])->name('index');
         Route::get('/create', [ForumCategoryController::class, 'create'])->name('create');
@@ -251,7 +251,6 @@ Route::name('chat.')->middleware(['auth', 'redirect_admin', 'redirect_censor'])-
     Route::delete('/messages/{message}', [MessageController::class, 'deleteMessage'])->name('delete');
     // Route::get('/contacts', [MessageController::class, 'contacts'])->name('contacts');
     Route::get('/chat/start/{userId}', [MessageController::class, 'startChat'])->name('start');
-
     Route::delete('/conversations/{user}', [MessageController::class, 'deleteConversation'])->name('conversation.delete');
 });
 Broadcast::routes(['middleware' => ['auth:web']]);

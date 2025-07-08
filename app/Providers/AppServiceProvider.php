@@ -11,6 +11,7 @@ use App\Policies\StudentPolicy;
 use App\Policies\TeacherPolicy;
 use App\Policies\UserHasRolePolicy;
 use App\Policies\NotiticationPolicy;
+use App\Policies\UserPolicy;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -45,5 +46,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('create-notification', [NotiticationPolicy::class, 'create']);
         Gate::define('show-anonymously', [ForumPostPolicy::class, 'view']);
         Gate::define('show-anonymously-comment', [ForumCommentPolicy::class, 'view']);
+        Gate::define('manager-user', [UserPolicy::class, 'manager_user']);
     }
 }

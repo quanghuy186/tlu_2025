@@ -20,16 +20,14 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-
-        // return tluHasPermission($user, 'view-detail-student');
-
-
         return tluHasPermission($user,"view-user");
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
+    public function manager_user(User $user, User $model): bool
+    {
+        return tluHasPermission($user,"manager-user");
+    }
+
     public function create(User $user): bool
     {
         return false;
