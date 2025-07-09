@@ -131,18 +131,18 @@ class StudentSeeder extends Seeder
         
         foreach ($popularMajors as $major) {
             if (strpos($classCode, $major) !== false) {
-                return rand(5, 10); // 35-45 
+                return rand(35, 40); // 35-45 
             }
         }
         
         foreach ($mediumMajors as $major) {
             if (strpos($classCode, $major) !== false) {
-                return rand(5, 10); // 25-35 sinh viên
+                return rand(30, 35); // 25-35 sinh viên
             }
         }
         
         // Các ngành khác
-        return rand(4, 10); // 20-30 sinh viên
+        return rand(20, 30); // 20-30 sinh viên
     }
     
     private function generateStudentCode($courseCode, $departmentId, $sequence)
