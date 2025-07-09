@@ -30,7 +30,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'access_admin_dashboard' => \App\Http\Middleware\AdminDashboardMiddleware::class,
             'manager_user' => \App\Http\Middleware\ManagerUsserMiddleware::class,
             'manager_notify' => \App\Http\Middleware\ManagerNotifyMiddleware::class,
-            'manager_forum' => \App\Http\Middleware\ManagerForumMiddleware::class
+            'manager_forum' => \App\Http\Middleware\ManagerForumMiddleware::class,
+            'manager-contact' => \App\Http\Middleware\ManagerContactMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

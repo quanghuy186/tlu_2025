@@ -19,6 +19,7 @@ class Department extends Model
         'email',
         'address',
         'level',
+        'website'
     ];
     protected $casts = [
         'level' => 'integer',

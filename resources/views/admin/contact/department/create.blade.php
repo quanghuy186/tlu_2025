@@ -98,6 +98,12 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
+                            <div class="mb-3">
+                                <label for="website" class="form-label">Trang web của đơn vị</label>
+                                <input class="form-control is-invalid" 
+                                    id="website" name="website" rows="3">{{ old('website') }}</input>
+                            </div>
                             
                             <div class="mb-4 mt-5">
                                 <h6 class="fw-bold text-primary border-bottom pb-2">Thông tin tài khoản quản lý đơn vị</h6>

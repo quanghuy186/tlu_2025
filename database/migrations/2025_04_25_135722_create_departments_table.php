@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone', 20)->nullable();
             $table->string('email', 200)->nullable();
             $table->text('address')->nullable();
+            $table->text('website')->nullable();
             $table->integer('level');
             $table->string('department_type', 200)->nullable();
             $table->foreign('parent_id')->references('id')->on('departments');
