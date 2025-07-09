@@ -120,6 +120,7 @@ class DepartmentController extends Controller
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:100',
             'address' => 'nullable|string',
+            'website' => 'nullable',
             'manager_name' => 'required|string|max:255',
             'manager_email' => 'required|email|max:255|unique:users,email',
             'manager_avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -201,6 +202,7 @@ class DepartmentController extends Controller
             $department->description = $request->description;
             $department->phone = $request->phone;
             $department->email = $request->email;
+            $department->website = $request->website;
             $department->address = $request->address;
             $department->level = $level;
             $department->save();
@@ -284,6 +286,7 @@ class DepartmentController extends Controller
             'address' => 'nullable|string',
             'manager_name' => 'required|string|max:255',
             'manager_avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'website' => 'nullable'
         ];
 
         if ($department->manager && $request->manager_email != $department->manager->email) {
@@ -381,6 +384,7 @@ class DepartmentController extends Controller
             $department->email = $request->email;
             $department->address = $request->address;
             $department->level = $newLevel;
+            $department->website = $request->website;
             $department->save();
 
             if ($levelDifference != 0) {

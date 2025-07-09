@@ -101,7 +101,7 @@
 
                             <div class="mb-3">
                                 <label for="website" class="form-label">Trang web của đơn vị</label>
-                                <input class="form-control is-invalid" 
+                                <input class="form-control" 
                                     id="website" name="website" rows="3">{{ old('website') }}</input>
                             </div>
                             

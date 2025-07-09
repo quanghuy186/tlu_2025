@@ -159,6 +159,10 @@
                                                 <span class="fw-bold">Địa chỉ:</span>
                                                 <span>{{ $department->address ?: 'Chưa cập nhật' }}</span>
                                             </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                                <span class="fw-bold">Địa chỉ trang web:</span>
+                                                <span>{{ $department->website ?: 'Chưa cập nhật' }}</span>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>

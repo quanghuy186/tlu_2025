@@ -171,12 +171,12 @@
                                 <li class="contact-info-item">
                                     <i class="fas fa-globe"></i>
                                     <span class="contact-label">Website:</span>
-                                    <span class="contact-value"><a href="#" target="_blank">cse.tlu.edu.vn</a></span>
+                                    <span class="contact-value"><a href="#" target="_blank">{{ $department->website }}</a></span>
                                 </li>
                                 <li class="contact-info-item">
                                     <i class="fab fa-facebook"></i>
                                     <span class="contact-label">Facebook:</span>
-                                    <span class="contact-value"><a href="#" target="_blank">facebook.com/cse.tlu</a></span>
+                                    <span class="contact-value"><a href="https://www.facebook.com/daihocthuyloi1959" target="_blank">https://www.facebook.com/daihocthuyloi1959</a></span>
                                 </li>
                             </ul>
                         </div>

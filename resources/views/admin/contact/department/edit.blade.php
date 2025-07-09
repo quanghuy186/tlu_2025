@@ -101,6 +101,12 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
+                            <div class="mb-3">
+                                <label for="website" class="form-label">Địa chỉ trang web của đơn vị</label>
+                                <input class="form-control" 
+                                    id="website" name="website" rows="3">{{ old('website', $department->website) }}</textarea>
+                            </div>
                             
                             <div class="mb-4 mt-5">
                                 <h6 class="fw-bold text-primary border-bottom pb-2">Thông tin tài khoản quản lý đơn vị</h6>
