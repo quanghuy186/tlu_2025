@@ -26,13 +26,10 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $user = Auth::user();
-
             if ($user->email_verified == 0 || $user->is_active == 0) {
                 Auth::logout();
 
-                return back()
-                ->with('error', 'Email chưa được xác thực. Vui lòng xác thực email trước khi đăng nhập.')
-                ->withInput($request->only('email'));
+                return back()->with('error', 'Email chưa được xác thực. Vui lòng xác thực email trước khi đăng nhập.')->withInput($request->only('email'));
             }
             $request->session()->regenerate();
 
@@ -44,7 +41,8 @@ class LoginController extends Controller
             if ($isAdmin) {
                 return redirect()->route('admin.dashboard')->with('success', 'Đăng nhập thành công!');
             }
-
+            $user->last_login = now();
+            $user->save();
             return redirect()->route('home.index')->with('success', 'Đăng nhập thành công!');;
         }
 
@@ -56,7 +54,6 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

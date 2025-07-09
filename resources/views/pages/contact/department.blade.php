@@ -26,20 +26,20 @@
 
 <div class="search-filter-container">
     <div class="filter-group">
-            <span class="filter-label">Sắp xếp theo:</span>
-            <select class="filter-select" id="sortSelect" name="sort">
-                <option value="name">Tên (A-Z)</option>
-                <option value="name-desc">Tên (Z-A)</option>
-            </select>
+        <span class="filter-label">Sắp xếp theo:</span>
+        <select class="filter-select" id="sortSelect" name="sort">
+            <option value="name">Tên (A-Z)</option>
+            <option value="name-desc">Tên (Z-A)</option>
+        </select>
     </div>
 
-        <form id="searchForm" action="{{ route('contact.department.search') }}" method="GET">
-            <div class="search-box mt-5">
-                <i class="fas fa-search me-2"></i>
-                <input name="fullname" value="{{ $fullname ?? '' }}" type="text" placeholder="Tìm kiếm tên đơn vị...">
-                <button type="submit"><i class="fas fa-arrow-right"></i></button>
-            </div>
-        </form> 
+    <form id="searchForm" action="{{ route('contact.department.search') }}" method="GET">
+        <div class="search-box mt-5">
+            <i class="fas fa-search me-2"></i>
+            <input name="fullname" value="{{ $fullname ?? '' }}" type="text" placeholder="Tìm kiếm tên đơn vị...">
+            <button type="submit"><i class="fas fa-arrow-right"></i></button>
+        </div>
+    </form> 
 </div>
     
 <div class="unit-list-container">
@@ -56,15 +56,12 @@
 
         <div class="unit-list">
             @include('partials.department_list', ['departments' => $departments])
-            
         </div>
     </div>
 </div>
 
 
 @endsection
-
-
 @section('custom-js')
 <script>
     $(document).ready(function(){
@@ -99,7 +96,6 @@
                     $(".unit-list").html(response).removeClass("loading");
                 },
                 error: function(xhr) {
-                    console.error("Lỗi khi tải dữ liệu:", xhr.responseText);
                     $(".unit-list").removeClass("loading");
                 }
             });
@@ -121,9 +117,7 @@
         
         $(document).on('click', '.page-link', function(e) {
             e.preventDefault();
-            
             var page = $(this).data('page');
-            
             loadData({
                 page: page
             });

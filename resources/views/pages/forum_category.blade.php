@@ -281,7 +281,6 @@
 @section('custom-js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Handle view switching (list/grid)
         const viewButtons = document.querySelectorAll('.btn-group .btn');
         const postsContainer = document.querySelector('.posts-container');
         
@@ -310,52 +309,4 @@
         });
     });
 </script>
-@endsection
-
-@section('styles')
-<style>
-.posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
-}
-
-.posts-grid .post-preview {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.posts-grid .post-preview .flex-grow-1 {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-}
-
-/* Subcategory cards */
-.subcategory-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.subcategory-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-}
-
-/* Popular tags */
-.popular-tags .badge {
-    display: inline-block;
-    font-size: 0.85rem;
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 50px;
-    transition: all 0.2s ease;
-}
-
-.popular-tags .badge:hover {
-    background-color: #e9ecef;
-}
-</style>
 @endsection

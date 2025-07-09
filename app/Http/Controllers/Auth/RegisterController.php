@@ -58,7 +58,6 @@ class RegisterController extends Controller
 
             // Gửi lại email xác thực
             Mail::to($existingUser->email)->send(new VerificationEmail($existingUser));
-
             return redirect()->route('verification.notice')
                 ->with('success', 'Tài khoản của bạn đã tồn tại nhưng chưa được xác thực. Vui lòng kiểm tra email để xác thực tài khoản!');
         }

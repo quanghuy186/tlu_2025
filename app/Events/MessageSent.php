@@ -39,7 +39,6 @@ class MessageSent implements ShouldBroadcast
     
     public function broadcastWith()
     {
-        // Đảm bảo message có thông tin người gửi
         $this->message->load('sender');
         
         return [

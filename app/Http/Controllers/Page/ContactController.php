@@ -34,7 +34,6 @@ class ContactController extends Controller
             ->select('departments.*')
             ->with('manager');
         
-        // Add search conditions with null handling
         if (!empty($fullname)) {
             $query->where(function($q) use ($fullname) {
                 $q->where('users.name', 'LIKE', "%{$fullname}%")
@@ -45,7 +44,6 @@ class ContactController extends Controller
         
         $departments = $query->paginate(10);
         
-        // Check if it's an Ajax request
         if ($request->ajax()) {
             return view('partials.department_list', compact('departments'));
         }
@@ -87,8 +85,6 @@ class ContactController extends Controller
         }
         
         $departments = $query->paginate(10);
-        
-        // Return partial view for Ajax
         return view('partials.department_list', compact('departments'));
     }
 

@@ -759,7 +759,6 @@
                                 </a>
                             </div>
                             <div class="post-meta d-flex align-items-center justify-content-between">
-                               
                                 <div class="post-category">
                                     <span class="badge bg-light text-dark border">
                                         <i class="bi bi-folder me-1"></i>{{ $p->category->name ?? 'Chưa phân loại' }}
@@ -1081,7 +1080,6 @@ class ForumSearch {
                 this.updateUrl(formData);
             }
         } catch (error) {
-            console.error('Search error:', error);
             this.showErrorMessage('Có lỗi xảy ra khi tìm kiếm. Vui lòng thử lại.');
         } finally {
             this.isLoading = false;

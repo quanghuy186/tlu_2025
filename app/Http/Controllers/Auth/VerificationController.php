@@ -117,7 +117,6 @@ class VerificationController extends Controller
             ->with('status', 'Tài khoản của bạn đã được xác thực thành công! Vui lòng đăng nhập.');
     }
 
-    // Hàm gửi email xác thực
     private function sendVerificationEmail(User $user)
     {
         Mail::to($user->email)->send(new VerificationEmail($user));

@@ -1,4 +1,3 @@
-{{-- resources/views/partials/student_list.blade.php --}}
 @foreach ($students as $student)
     <div class="student-item">
         <img src="{{ $student->user && $student->user->avatar ? asset('storage/avatars/'.$student->user->avatar) :  asset('user_default.jpg') }}" 
@@ -108,11 +107,11 @@
                                 <span class="detail-label">Ngày sinh:</span>
                                 <span class="detail-value">{{ $student->user->birthday ? date('d/m/Y', strtotime($student->birthday)) : 'Chưa cập nhật' }}</span>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <i class="fas fa-id-card"></i>
                                 <span class="detail-label">CCCD:</span>
                                 <span class="detail-value">{{ $student->user->id_card ?? 'Chưa cập nhật' }}</span>
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
                 </div>

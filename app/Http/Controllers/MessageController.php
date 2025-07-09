@@ -32,9 +32,7 @@ class MessageController extends Controller
         $messages = Message::where(function($query) use ($currentUserId) {
                 $query->where('sender_user_id', $currentUserId)
                     ->orWhere('recipient_user_id', $currentUserId);
-            })
-            ->where('is_deleted', false)
-            ->get();
+            })->where('is_deleted', false)->get();
         
         $filteredMessages = $messages->reject(function($message) use ($currentUserId) {
             return $message->isDeletedBy($currentUserId);
@@ -42,9 +40,7 @@ class MessageController extends Controller
         
         $userIds = $filteredMessages->flatMap(function($message) use ($currentUserId) {
             return [$message->sender_user_id, $message->recipient_user_id];
-        })
-        ->unique()
-        ->reject(function($userId) use ($currentUserId) {
+        })->unique()->reject(function($userId) use ($currentUserId) {
             return $userId == $currentUserId;
         });
         
@@ -66,14 +62,10 @@ class MessageController extends Controller
         $messages = Message::where(function($query) use ($user, $currentUserId) {
                 $query->where('sender_user_id', $currentUserId)
                     ->where('recipient_user_id', $user->id);
-            })
-            ->orWhere(function($query) use ($user, $currentUserId) {
+            })->orWhere(function($query) use ($user, $currentUserId) {
                 $query->where('sender_user_id', $user->id)
                     ->where('recipient_user_id', $currentUserId);
-            })
-            ->where('is_deleted', false) 
-            ->orderBy('sent_at', 'asc')
-            ->get();
+            })->where('is_deleted', false) ->orderBy('sent_at', 'asc')->get();
         
         $filteredMessages = $messages->reject(function($message) use ($currentUserId) {
             return $message->isDeletedBy($currentUserId);
@@ -107,7 +99,6 @@ class MessageController extends Controller
         $message->save();
 
         broadcast(new MessageSent($message))->toOthers();
-
         return response()->json(['message' => $message]);
     }
 

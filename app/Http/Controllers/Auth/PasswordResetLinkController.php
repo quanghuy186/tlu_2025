@@ -21,13 +21,10 @@ class PasswordResetLinkController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        // Gửi liên kết đặt lại mật khẩu đến địa chỉ email 
         $status = Password::sendResetLink(
             $request->only('email')
         );
 
-        return $status === Password::RESET_LINK_SENT
-                    ? back()->with('status', __($status))
-                    : back()->withErrors(['email' => __($status)]);
+        return $status === Password::RESET_LINK_SENT ? back()->with('status', __($status)) : back()->withErrors(['email' => __($status)]);
     }
 }

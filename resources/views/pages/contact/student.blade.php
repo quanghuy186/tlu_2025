@@ -134,7 +134,6 @@
                     $(".student-list").html(response).removeClass("loading");
                 },
                 error: function(xhr) {
-                    console.error("Lỗi khi tải dữ liệu:", xhr.responseText);
                     $(".student-list").removeClass("loading");
                 }
             });

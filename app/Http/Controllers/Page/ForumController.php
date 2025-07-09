@@ -21,8 +21,8 @@ class ForumController extends Controller
         $search = $request->get('search');
         $categoryId = $request->get('category');
         $status = $request->get('status');
-        $sortBy = $request->get('sort', 'latest'); // Default: latest
-        $perPage = $request->get('per_page', 10); // Default: 10 items per page
+        $sortBy = $request->get('sort', 'latest'); 
+        $perPage = $request->get('per_page', 10); 
 
         $categories = ForumCategory::where('is_active', true)
             ->with(['posts' => function($query) {

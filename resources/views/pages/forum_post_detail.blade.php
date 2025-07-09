@@ -118,10 +118,14 @@
                                     <span class="ms-1 text-muted">Lưu</span>
                                 </a>
 
-                                <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#reportModal">
-                                    <i class="bi bi-flag text-warning"></i>
-                                    <span class="ms-1 text-muted">Báo cáo</span>
-                                </a>
+                                @if($post->author->id == Auth()->user()->id)
+                                    
+                                @else
+                                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#reportModal">
+                                        <i class="bi bi-flag text-warning"></i>
+                                        <span class="ms-1 text-muted">Báo cáo</span>
+                                    </a>
+                                @endif
                         </div>
                     </div>
 
@@ -171,14 +175,12 @@
                                 </button>
                             </div>
                     </div>
-
                 </div>
             </div>
             
             @include('partials.forum_comments')
-           
+            
         </div>
-        
         <div class="col-lg-4">
             <div class="card mb-4">
                 <div class="card-header">

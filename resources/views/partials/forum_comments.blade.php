@@ -1,5 +1,3 @@
-{{-- Tạo file mới tại resources/views/pages/partials/forum_comments.blade.php --}}
-
 <div class="card mb-4">
     <div class="card-header">
         <h5 class="mb-0">

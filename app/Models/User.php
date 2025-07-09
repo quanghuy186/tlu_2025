@@ -24,6 +24,7 @@ class User extends Authenticatable
         'avatar',
         'address',
         'is_active',
+        'last_login',
         'verification_token',
         'verification_token_expiry',
         'email_verified',
@@ -109,7 +110,7 @@ class User extends Authenticatable
     
     public function isOnline()
     {
-        return $this->last_seen_at && $this->last_seen_at->diffInMinutes(now()) < 5;
+        return $this->last_login && $this->last_login->diffInMinutes(now()) < 5;
     }
 
     public function reports()

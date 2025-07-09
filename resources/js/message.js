@@ -4,7 +4,6 @@ import './bootstrap';
 $(document).ready(function() {
     console.log("Document ready!");
     
-    // Check if Echo exists and initialize Pusher connection monitoring
     if (window.Echo && window.Echo.connector && window.Echo.connector.pusher) {
         console.log("Pusher exists, setting up connection monitoring");
         
@@ -27,7 +26,6 @@ $(document).ready(function() {
         console.error('Echo hoặc Pusher chưa được khởi tạo đúng cách');
     }
 
-    // Safely get userId and csrfToken
     const userIdMeta = $('meta[name="user-id"]');
     const csrfTokenMeta = $('meta[name="csrf-token"]');
     
@@ -40,15 +38,13 @@ $(document).ready(function() {
     const csrfToken = csrfTokenMeta.attr('content');
     let currentRecipientId = null;
 
-    // Check userId
     if (!userId) {
         console.error('User ID không tìm thấy hoặc không hợp lệ');
-        return; // Dừng xử lý nếu không tìm thấy userId
+        return;
     }
     
     console.log('Listening for messages on channel:', `messages.${userId}`);
     
-    // Set up CSRF token for all AJAX requests
     if (csrfToken) {
         $.ajaxSetup({
             headers: {
@@ -60,7 +56,6 @@ $(document).ready(function() {
         return;
     }
     
-    // Create default avatar image in public folder if not exists
     const defaultAvatar = 'https://via.placeholder.com/50';
     
     // Fix references to images
@@ -69,11 +64,9 @@ $(document).ready(function() {
         return avatarPath;
     }
     
-    // Initialize event handlers with safe checks
     function initializeEventHandlers() {
         console.log("Initializing event handlers");
         
-        // Send message when clicking send button
         const sendBtn = $('.send-btn');
         if (sendBtn.length) {
             sendBtn.on('click', function() {
@@ -84,7 +77,6 @@ $(document).ready(function() {
             console.error("Send button not found");
         }
         
-        // Send message when pressing Enter (but Shift+Enter for new line)
         const chatTextarea = $('.chat-input textarea');
         if (chatTextarea.length) {
             chatTextarea.on('keydown', function(e) {
@@ -146,7 +138,6 @@ $(document).ready(function() {
             console.error("New conversation buttons not found");
         }
         
-        // Search contacts
         const searchInput = $('.search-contact input');
         if (searchInput.length) {
             searchInput.on('keyup', function() {
@@ -162,7 +153,6 @@ $(document).ready(function() {
             console.error("Search input not found");
         }
         
-        // Setup typing indicator
         const typingInput = $('.chat-input textarea');
         if (typingInput.length) {
             typingInput.on('keydown', function() {
@@ -171,7 +161,6 @@ $(document).ready(function() {
                 
                 clearTimeout(typingTimer);
                 
-                // Send typing notification
                 $.ajax({
                     url: '/typing-status',
                     type: 'POST',
@@ -182,7 +171,6 @@ $(document).ready(function() {
                 });
                 
                 typingTimer = setTimeout(() => {
-                    // Send stopped typing notification
                     $.ajax({
                         url: '/typing-status',
                         type: 'POST',
@@ -199,23 +187,19 @@ $(document).ready(function() {
         }
     }
     
-    // Safely subscribe to private channel for this user
     let userChannel;
     try {
         if (window.Echo) {
             userChannel = window.Echo.private(`messages.${userId}`);
             
-            // Listen for new messages
             userChannel.listen('.new.message', (data) => {
                 console.log('New message received:', data);
                 
                 const message = data.message;
                 
-                // If message is from the current chat, append it
                 if (message.sender_user_id == currentRecipientId) {
                     appendMessage(message, false);
                     
-                    // Mark message as read
                     $.ajax({
                         url: '/mark-as-read',
                         type: 'POST',
@@ -225,14 +209,12 @@ $(document).ready(function() {
                     });
                 }
                 
-                // Refresh contacts list
                 loadContacts();
             })
             .error((error) => {
                 console.error('Echo error:', error);
             });
             
-            // Listen for typing status
             userChannel.listen('.user.typing', (data) => {
                 console.log('Typing status update:', data);
                 
@@ -253,7 +235,6 @@ $(document).ready(function() {
         console.error("Error subscribing to private channel:", error);
     }
     
-    // Show typing indicator
     function showTypingIndicator() {
         const chatMessages = $('.chat-messages');
         if (!chatMessages.length) {
@@ -269,20 +250,16 @@ $(document).ready(function() {
             </div>
         `);
         
-        // Remove existing indicator if any
         $('.typing-indicator').remove();
         
-        // Add to the chat area
         chatMessages.append(typingIndicator);
         chatMessages.scrollTop(chatMessages[0].scrollHeight);
     }
     
-    // Hide typing indicator
     function hideTypingIndicator() {
         $('.typing-indicator').remove();
     }
     
-    // Function to load contacts
     function loadContacts() {
         console.log("Loading contacts...");
         
@@ -299,7 +276,6 @@ $(document).ready(function() {
         });
     }
     
-    // Function to render contacts
     function renderContacts(contacts) {
         const contactsList = $('.contacts-list');
         if (!contactsList.length) {
@@ -371,7 +347,6 @@ $(document).ready(function() {
         }
     }
     
-    // Function to load messages for a selected contact
     function loadMessages(contactId) {
         console.log(`Loading messages for contact ${contactId}...`);
         
@@ -388,7 +363,6 @@ $(document).ready(function() {
         });
     }
     
-    // Function to render messages
     function renderMessages(messages, recipient) {
         const chatMessages = $('.chat-messages');
         if (!chatMessages.length) {
@@ -398,7 +372,6 @@ $(document).ready(function() {
         
         chatMessages.empty();
         
-        // Update chat header
         const chatUser = $('.chat-header .chat-user');
         if (chatUser.length) {
             chatUser.html(`
@@ -414,15 +387,12 @@ $(document).ready(function() {
             console.error("Chat user header not found");
         }
         
-        // Add messages
         messages.forEach(message => {
             appendMessage(message, true);
         });
         
-        // Scroll to bottom
         chatMessages.scrollTop(chatMessages[0].scrollHeight);
         
-        // Enable the chat input
         const chatInput = $('.chat-input');
         if (chatInput.length) {
             chatInput.removeClass('disabled');
@@ -437,11 +407,9 @@ $(document).ready(function() {
             console.error("Chat input container not found");
         }
         
-        // Set current recipient ID
         currentRecipientId = recipient.id;
     }
     
-    // Function to append a message to the chat
     function appendMessage(message, initialLoad = false) {
         const chatMessages = $('.chat-messages');
         if (!chatMessages.length) {
@@ -495,13 +463,11 @@ $(document).ready(function() {
         
         chatMessages.append(messageHtml);
         
-        // Only scroll to bottom if not initial load or if scrolled near bottom
         if (!initialLoad || isNearBottom()) {
             chatMessages.scrollTop(chatMessages[0].scrollHeight);
         }
     }
     
-    // Check if scrolled near bottom
     function isNearBottom() {
         const chatMessages = $('.chat-messages');
         if (!chatMessages.length) return true;
@@ -513,7 +479,6 @@ $(document).ready(function() {
         return scrollTop + clientHeight >= scrollHeight - 150;
     }
     
-    // Function to send a message
     function sendMessage() {
         const textarea = $('.chat-input textarea');
         if (!textarea.length) {
@@ -532,10 +497,8 @@ $(document).ready(function() {
             return;
         }
         
-        // Clear typing indicator
         clearTimeout(typingTimer);
         
-        // Send stopped typing notification
         $.ajax({
             url: '/typing-status',
             type: 'POST',
@@ -573,10 +536,7 @@ $(document).ready(function() {
                     fileInput[0].value = '';
                 }
                 
-                // Append the new message to the chat
                 appendMessage(message);
-                
-                // Refresh the contacts list to update last message
                 loadContacts();
             },
             error: function(error) {
@@ -586,10 +546,8 @@ $(document).ready(function() {
         });
     }
     
-    // Function to search users
     function searchUsers(query) {
         console.log(`Searching users with query: "${query}"`);
-        
         $.ajax({
             url: '/search-users',
             type: 'GET',
@@ -604,7 +562,6 @@ $(document).ready(function() {
         });
     }
     
-    // Function to render search results
     function renderSearchResults(users) {
         const contactsList = $('.contacts-list');
         if (!contactsList.length) {
@@ -630,7 +587,6 @@ $(document).ready(function() {
             contactsList.append(contactItem);
         });
         
-        // Add click handler for search results
         const searchResults = $('.search-result');
         if (searchResults.length) {
             searchResults.on('click', function() {
@@ -638,7 +594,6 @@ $(document).ready(function() {
                 currentRecipientId = contactId;
                 loadMessages(contactId);
                 
-                // Update UI
                 $('.contact-item').removeClass('active');
                 $(this).addClass('active');
             });
@@ -648,12 +603,9 @@ $(document).ready(function() {
         }
     }
     
-    // Function to show new conversation modal
     function showNewConversationModal() {
         console.log("Showing new conversation modal");
         
-        // You can implement a modal to search and select users
-        // This is a simplified version
         if (!$('#new-conversation-modal').length) {
             const modal = `
                 <div class="modal fade" id="new-conversation-modal" tabindex="-1">
@@ -677,14 +629,12 @@ $(document).ready(function() {
             
             $('body').append(modal);
             
-            // Initialize Bootstrap modal
             try {
                 const modalElement = document.getElementById('new-conversation-modal');
                 if (modalElement) {
                     const bsModal = new bootstrap.Modal(modalElement);
                     bsModal.show();
                     
-                    // Handle search in modal
                     const searchUser = $('#search-user');
                     if (searchUser.length) {
                         searchUser.on('keyup', function() {
@@ -763,11 +713,9 @@ $(document).ready(function() {
         }
     }
     
-    // Setup typing indicator timeout
     const typingTimeout = 3000;
     let typingTimer = null;
     
-    // Helper function to format time
     function formatTime(dateString) {
         try {
             const date = new Date(dateString);
@@ -775,20 +723,16 @@ $(document).ready(function() {
             const yesterday = new Date(now);
             yesterday.setDate(yesterday.getDate() - 1);
             
-            // Today
             if (date.toDateString() === now.toDateString()) {
                 return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             }
-            // Yesterday
             else if (date.toDateString() === yesterday.toDateString()) {
                 return 'Hôm qua';
             }
-            // This week
             else if (now - date < 7 * 24 * 60 * 60 * 1000) {
                 const days = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
                 return days[date.getDay()];
             }
-            // Older
             else {
                 return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
             }

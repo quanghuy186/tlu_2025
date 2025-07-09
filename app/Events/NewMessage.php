@@ -17,19 +17,11 @@ class NewMessage implements ShouldBroadcast
 
     public $message;
 
-    /**
-     * Create a new event instance.
-     */
     public function __construct(Message $message)
     {
         $this->message = $message;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
     public function broadcastOn(): array
     {
         return [
@@ -42,11 +34,6 @@ class NewMessage implements ShouldBroadcast
         return 'new.message';
     }
 
-    /**
-     * Get the data to broadcast.
-     *
-     * @return array<string, mixed>
-     */
     public function broadcastWith(): array
     {
         $this->message->load('sender');

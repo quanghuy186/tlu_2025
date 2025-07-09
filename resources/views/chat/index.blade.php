@@ -30,11 +30,10 @@
                                                 @endif
                                             @endforeach
 
-
                                             @if($user->isOnline())
                                                 Trực tuyến
-                                            @elseif($user->last_seen_at)
-                                                Hoạt động {{ $user->last_seen_at->diffInMinutes(now()) }} phút trước
+                                            @elseif($user->last_login)
+                                                Hoạt động {{ $user->last_login->diffInMinutes(now()) }} phút trước
                                             @else
                                                 Không hoạt động
                                             @endif
@@ -131,14 +130,10 @@
             currentRecipientId = userId;
             
             $('#chat-with').text(`Đang trò chuyện với ${userName}`);
-            
             $('#message-form').removeClass('d-none');
             $('#recipient-id').val(userId);
-            
             $('#messages-container').html('<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
-            
             loadMessages(userId);
-            
             $('.user-item').removeClass('active');
             $(this).addClass('active');
             
@@ -240,7 +235,6 @@
         
         $('#message-form').on('submit', function(e) {
             e.preventDefault();
-            
             const form = $(this);
             const formData = new FormData(form[0]);
             
@@ -381,64 +375,64 @@
                         }
                     });
             }
-    });
+        });
 
-    function showChatActions() {
-        $('#chat-actions').show();
-    }
-
-    function hideChatActions() {
-        $('#chat-actions').hide();
-    }
-
-    $('#delete-conversation').on('click', function(e) {
-        e.preventDefault();
-        
-        if (!currentRecipientId) return;
-        
-        if (confirm('Bạn có chắc chắn muốn xóa toàn bộ cuộc trò chuyện này không? Hành động này không thể hoàn tác.')) {
-            $.ajax({
-                url: `/conversations/${currentRecipientId}`,
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    $('#messages-container').html('<div class="text-center py-5 text-muted"><p>Cuộc trò chuyện đã được xóa</p></div>');
-                    
-                    $('#chat-with').text('Chọn người dùng để bắt đầu trò chuyện');
-                    $('#message-form').addClass('d-none');
-                    hideChatActions();
-                    currentRecipientId = null;
-                    
-                    alert('Cuộc trò chuyện đã được xóa thành công.');
-                },
-                error: function() {
-                    alert('Đã xảy ra lỗi khi xóa cuộc trò chuyện. Vui lòng thử lại sau.');
-                }
-            });
+        function showChatActions() {
+            $('#chat-actions').show();
         }
-    });
 
-    $('.user-item').on('click', function() {
-        const userId = $(this).data('id');
-        const userName = $(this).find('h6').text();
-        currentRecipientId = userId;
-        
-        $('#chat-with').text(`Đang trò chuyện với ${userName}`);
-        $('#message-form').removeClass('d-none');
-        $('#recipient-id').val(userId);
-        
-        $('#messages-container').html('<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
-        loadMessages(userId);
-        $('.user-item').removeClass('active');
-        $(this).addClass('active');
-        $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
-    });
+        function hideChatActions() {
+            $('#chat-actions').hide();
+        }
 
-    $('.user-item').on('click', function() {
-        $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
-        showChatActions();
-    });
+        $('#delete-conversation').on('click', function(e) {
+            e.preventDefault();
+            
+            if (!currentRecipientId) return;
+            
+            if (confirm('Bạn có chắc chắn muốn xóa toàn bộ cuộc trò chuyện này không? Hành động này không thể hoàn tác.')) {
+                $.ajax({
+                    url: `/conversations/${currentRecipientId}`,
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        $('#messages-container').html('<div class="text-center py-5 text-muted"><p>Cuộc trò chuyện đã được xóa</p></div>');
+                        
+                        $('#chat-with').text('Chọn người dùng để bắt đầu trò chuyện');
+                        $('#message-form').addClass('d-none');
+                        hideChatActions();
+                        currentRecipientId = null;
+                        
+                        alert('Cuộc trò chuyện đã được xóa thành công.');
+                    },
+                    error: function() {
+                        alert('Đã xảy ra lỗi khi xóa cuộc trò chuyện. Vui lòng thử lại sau.');
+                    }
+                });
+            }
+        });
+
+        $('.user-item').on('click', function() {
+            const userId = $(this).data('id');
+            const userName = $(this).find('h6').text();
+            currentRecipientId = userId;
+            
+            $('#chat-with').text(`Đang trò chuyện với ${userName}`);
+            $('#message-form').removeClass('d-none');
+            $('#recipient-id').val(userId);
+            
+            $('#messages-container').html('<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+            loadMessages(userId);
+            $('.user-item').removeClass('active');
+            $(this).addClass('active');
+            $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
+        });
+
+        $('.user-item').on('click', function() {
+            $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
+            showChatActions();
+        });
     </script>
 @endsection
