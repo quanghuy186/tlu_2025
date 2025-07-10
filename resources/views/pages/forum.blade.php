@@ -697,7 +697,9 @@
                                             {{ isset($p->author->managedDepartment) ? $p->author->managedDepartment->name : $p->author->name }}
                                         </h6>
                                     @else
-                                        <h6 class="post-author mb-0">{{ $p->is_anonymous == 1 ? "Ẩn danh" : $p->author->name }}</h6>
+                                        <h6 class="post-author mb-0">
+                                            {{ $p->is_anonymous == 1 ? 'Ẩn danh' : (isset($p->author->managedDepartment) ? $p->author->managedDepartment->name : $p->author->name) }}
+                                        </h6>
                                     @endcan
                                     <span class="text-muted small">
                                         <i class="far fa-clock me-1"></i>
