@@ -698,6 +698,7 @@
                                         </h6>
                                     @else
                                         <h6 class="post-author mb-0">
+                                            {{ isset($p->author->teacher->academic_rank) ? $p->author->teacher->academic_rank : '' }}
                                             {{ $p->is_anonymous == 1 ? 'Ẩn danh' : (isset($p->author->managedDepartment) ? $p->author->managedDepartment->name : $p->author->name) }}
                                         </h6>
                                     @endcan

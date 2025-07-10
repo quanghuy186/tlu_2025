@@ -76,7 +76,8 @@
                 <div class="modal-body">
                     <div class="unit-detail">
                         <div class="unit-detail-header">
-                            <img src="https://via.placeholder.com/150x150?text=CNTT" alt="{{ $department->name }}" class="unit-detail-logo">
+                            <img src="{{ asset('storage/avatars/'.$department->manager->avatar) }}" 
+                            alt="{{ $department->manager->name }}" style="border-radius : 50%" class="unit-logo">
                             <div class="unit-detail-title">
                                 <div class="unit-detail-name">{{ $department->name }}</div>
                                 <div class="unit-detail-type">{{ $department->department_type == 'administrative' ? 'Đơn vị hành chính' : 'Đơn vị đào tạo' }}</div>
@@ -111,7 +112,7 @@
                                     <div class="staff-list">
                                         @foreach ($department->children as $child)
                                                 <div class="staff-item">
-                                                    <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
+                                                    <img src="{{ asset('storage/avatars/'.$child->manager->avatar) }}" alt="{{ $child->manager->name }}" style="border-radius : 50%" class="unit-logo">
                                                     <div class="staff-info">
                                                         <div class="staff-name">{{ $child->name }}</div>
                                                         <div class="staff-position">Trưởng BM: {{ $child->manager->name ?? 'Chưa phân công' }}</div>
@@ -125,7 +126,7 @@
                                 <div class="staff-list">
                                     @foreach ($department->children as $child)
                                         <div class="staff-item">
-                                            <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
+                                            <img src="{{ asset('storage/avatars/'.$child->manager->avatar) }}" alt="{{ $child->manager->name }}" style="border-radius : 50%" class="unit-logo">
                                             <div class="staff-info">
                                                 <div class="staff-name">{{ $child->name }}</div>
                                                 <div class="staff-position">Trưởng ngành: {{ $child->manager->name ?? 'Chưa phân công' }}</div>
@@ -138,7 +139,8 @@
                                 <div class="staff-list">
                                     @foreach ($department->children as $child)
                                         <div class="staff-item">
-                                            <img src="https://via.placeholder.com/150x150?text=BM1" alt="Bộ môn" class="staff-avatar">
+                                            <img src="{{ asset('storage/avatars/'.$child->manager->avatar) }}" alt="{{ $child->manager->name }}" style="border-radius : 50%" class="unit-logo">
+
                                             <div class="staff-info">
                                                 <div class="staff-name">{{ $child->name }}</div>
                                                 <div class="staff-position">Trưởng đơn vị: {{ $child->manager->name ?? 'Chưa phân công' }}</div>
