@@ -173,7 +173,7 @@
                                 <li class="contact-info-item">
                                     <i class="fas fa-globe"></i>
                                     <span class="contact-label">Website:</span>
-                                    <span class="contact-value"><a href="#" target="_blank">{{ $department->website }}</a></span>
+                                    <span class="contact-value"><a href="{{ $department->website }}" target="_blank">{{ $department->website }}</a></span>
                                 </li>
                                 <li class="contact-info-item">
                                     <i class="fab fa-facebook"></i>
@@ -186,7 +186,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <a href="#" class="btn btn-primary">Xem trang {{ $department->name }}</a>
+                    <a href="{{ $department->website }}" class="btn btn-primary">Xem trang {{ $department->name }}</a>
                 </div>
             </div>
         </div>
