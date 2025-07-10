@@ -266,8 +266,12 @@
                             </table>
                         </div>
                         
-                        <div class="d-flex justify-content-center mt-4">
+                        {{-- <div class="d-flex justify-content-center mt-4">
                             {{ $posts->appends(request()->query())->links() }}
+                        </div> --}}
+
+                        <div class="d-flex justify-content-center mt-4">
+                            {{ $posts->withQueryString()->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>

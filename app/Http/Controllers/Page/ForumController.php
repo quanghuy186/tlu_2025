@@ -29,16 +29,14 @@ class ForumController extends Controller
                 $query->where('status', 'approved')
                     ->orderBy('created_at', 'desc')
                     ->take(3);
-            }])
-            ->get();
+            }])->get();
         
         if (Auth::check()) {
             $userId = Auth::id();
             
             $userPosts = ForumPost::where('user_id', $userId)
                 ->with('category')
-                ->orderBy('created_at', 'desc')
-                ->get();
+                ->orderBy('created_at', 'desc')->get();
             
             $pendingPosts = $userPosts->where('status', 'pending');
             $approvedPosts = $userPosts->where('status', 'approved');

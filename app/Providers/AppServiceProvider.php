@@ -15,6 +15,7 @@ use App\Policies\UserPolicy;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Schema;
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+        Paginator::useBootstrap();
 
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         Carbon::setLocale('vi');

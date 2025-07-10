@@ -123,7 +123,22 @@
         });
 
         let currentRecipientId = null;
-        
+        // $('.user-item').on('click', function() {
+        //     const userId = $(this).data('id');
+        //     const userName = $(this).find('h6').text();
+        //     currentRecipientId = userId;
+            
+        //     $('#chat-with').text(`Đang trò chuyện với ${userName}`);
+        //     $('#message-form').removeClass('d-none');
+        //     $('#recipient-id').val(userId);
+        //     $('#messages-container').html('<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+        //     loadMessages(userId);
+        //     $('.user-item').removeClass('active');
+        //     $(this).addClass('active');
+            
+        //     $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
+        // });
+
         $('.user-item').on('click', function() {
             const userId = $(this).data('id');
             const userName = $(this).find('h6').text();
@@ -132,12 +147,17 @@
             $('#chat-with').text(`Đang trò chuyện với ${userName}`);
             $('#message-form').removeClass('d-none');
             $('#recipient-id').val(userId);
+            
             $('#messages-container').html('<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
             loadMessages(userId);
             $('.user-item').removeClass('active');
             $(this).addClass('active');
-            
             $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
+        });
+
+        $('.user-item').on('click', function() {
+            $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
+            showChatActions();
         });
         
         function loadMessages(userId) {
@@ -414,25 +434,6 @@
             }
         });
 
-        $('.user-item').on('click', function() {
-            const userId = $(this).data('id');
-            const userName = $(this).find('h6').text();
-            currentRecipientId = userId;
-            
-            $('#chat-with').text(`Đang trò chuyện với ${userName}`);
-            $('#message-form').removeClass('d-none');
-            $('#recipient-id').val(userId);
-            
-            $('#messages-container').html('<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
-            loadMessages(userId);
-            $('.user-item').removeClass('active');
-            $(this).addClass('active');
-            $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
-        });
-
-        $('.user-item').on('click', function() {
-            $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
-            showChatActions();
-        });
+        
     </script>
 @endsection

@@ -50,7 +50,6 @@ class MessageController extends Controller
     public function startChat($userId)
     {
         $user = User::findOrFail($userId);
-        
         return redirect()->route('chat.index', ['new_user_id' => $userId]);
     }
 
@@ -60,8 +59,7 @@ class MessageController extends Controller
         $currentUserId = Auth::id();
         
         $messages = Message::where(function($query) use ($user, $currentUserId) {
-                $query->where('sender_user_id', $currentUserId)
-                    ->where('recipient_user_id', $user->id);
+                $query->where('sender_user_id', $currentUserId)->where('recipient_user_id', $user->id);
             })->orWhere(function($query) use ($user, $currentUserId) {
                 $query->where('sender_user_id', $user->id)
                     ->where('recipient_user_id', $currentUserId);

@@ -25,10 +25,10 @@ class MessageSent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        Log::info('Broadcasting message', [
-            'channel' => 'chat.' . $this->message->recipient_user_id,
-            'message_id' => $this->message->id
-        ]);
+        // Log::info('Broadcasting message', [
+        //     'channel' => 'chat.' . $this->message->recipient_user_id,
+        //     'message_id' => $this->message->id
+        // ]);
         return new PrivateChannel('chat.' . $this->message->recipient_user_id);
     }
     

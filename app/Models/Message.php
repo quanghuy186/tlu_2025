@@ -58,7 +58,7 @@ class Message extends Model
         $userId = $userId ?? Auth::id();
         
         if ($this->is_deleted) {
-            return true; // Nếu tin nhắn đã bị xóa hoàn toàn
+            return true; 
         }
         
         if (empty($this->deleted_by_users)) {
@@ -68,7 +68,6 @@ class Message extends Model
         return in_array($userId, $this->deleted_by_users);
     }
 
-    // Phương thức để đánh dấu tin nhắn đã bị xóa bởi người dùng cụ thể
     public function markAsDeletedBy($userId = null)
     {
         $userId = $userId ?? Auth::id();
