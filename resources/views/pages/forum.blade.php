@@ -739,7 +739,7 @@
                         
                         <div class="post-body">
                             <h5 class="post-title">{{ $p->title }}</h5>
-                            <p class="post-text">{{ $p->content }}</p>
+                            <p class="post-text">{{ Str::limit($p->content, 1000) }}</p>
                             <a href="{{ route('forum.post.show', $p->id) }}" class="btn btn-sm btn-outline-primary">
                                 Đọc tiếp <i class="fas fa-arrow-right ms-1"></i>
                             </a>

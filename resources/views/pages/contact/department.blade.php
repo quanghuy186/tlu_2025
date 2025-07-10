@@ -59,9 +59,8 @@
         </div>
     </div>
 </div>
-
-
 @endsection
+
 @section('custom-js')
 <script>
     $(document).ready(function(){
@@ -109,7 +108,6 @@
         
         $("#searchForm").submit(function(e) {
             e.preventDefault();
-            
             loadData({
                 fullname: $("input[name='fullname']").val()
             });

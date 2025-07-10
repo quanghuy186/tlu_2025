@@ -157,10 +157,7 @@ class ContactController extends Controller
         }
         
         $teachers = $query->paginate(10);
-        
         $teachers->appends($request->all());
-        
-        // nếu là Ajax
         if ($request->ajax()) {
             return view('partials.teacher_list', compact('teachers'))->render();
         }
@@ -212,7 +209,7 @@ class ContactController extends Controller
             case 'department':
                 $query->leftJoin('departments', 'teachers.department_id', '=', 'departments.id')
                     ->orderBy('departments.name', 'asc')
-                    ->select('teachers.*'); // Đảm bảo chỉ select teachers
+                    ->select('teachers.*'); 
                 break;
             case 'position':
                 $query->orderBy('teachers.position', 'asc');

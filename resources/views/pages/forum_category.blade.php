@@ -279,34 +279,34 @@
 @endsection
 
 @section('custom-js')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const viewButtons = document.querySelectorAll('.btn-group .btn');
-        const postsContainer = document.querySelector('.posts-container');
-        
-        viewButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                viewButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                
-                if (this.querySelector('.fa-th-large')) {
-                    postsContainer.classList.add('posts-grid');
-                } else {
-                    postsContainer.classList.remove('posts-grid');
-                }
-            });
-        });
-        
-        document.querySelectorAll('#sortDropdown + .dropdown-menu .dropdown-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('#sortDropdown + .dropdown-menu .dropdown-item').forEach(el => {
-                    el.classList.remove('active');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewButtons = document.querySelectorAll('.btn-group .btn');
+            const postsContainer = document.querySelector('.posts-container');
+            
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    viewButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (this.querySelector('.fa-th-large')) {
+                        postsContainer.classList.add('posts-grid');
+                    } else {
+                        postsContainer.classList.remove('posts-grid');
+                    }
                 });
-                this.classList.add('active');
-                document.querySelector('#sortDropdown').innerHTML = `<i class="fas fa-sort me-1"></i> ${this.textContent}`;
+            });
+            
+            document.querySelectorAll('#sortDropdown + .dropdown-menu .dropdown-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('#sortDropdown + .dropdown-menu .dropdown-item').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    document.querySelector('#sortDropdown').innerHTML = `<i class="fas fa-sort me-1"></i> ${this.textContent}`;
+                });
             });
         });
-    });
-</script>
+    </script>
 @endsection

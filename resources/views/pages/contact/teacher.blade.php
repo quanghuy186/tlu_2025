@@ -102,179 +102,165 @@
 
 @section('custom-js')
 <script>
-$(document).ready(function() {
-    let currentFilters = {
-        fullname: '{{ $fullname ?? '' }}',
-        department_id: '{{ $department_id ?? 'all' }}',
-        academic_rank: '{{ $selected_rank ?? 'all' }}',
-        sort: '{{ $sort ?? 'name' }}'
-    };
-    
-    function sendAjaxRequest(url, data, successCallback) {
-        showLoading();
-        
-        $.ajax({
-            url: url,
-            type: 'GET',
-            data: data,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            success: function(response) {
-                if (successCallback) {
-                    successCallback(response);
-                }
-                hideLoading();
-            },
-            error: function(xhr, status, error) {
-                console.error('Ajax Error:', error);
-                console.error('Response:', xhr.responseText);
-                hideLoading();
-                
-                let errorMsg = 'Có lỗi xảy ra khi tải dữ liệu.';
-                if (xhr.status === 404) {
-                    errorMsg = 'Không tìm thấy trang yêu cầu.';
-                } else if (xhr.status === 500) {
-                    errorMsg = 'Lỗi server. Vui lòng thử lại sau.';
-                }
-                alert(errorMsg);
-            }
-        });
-    }
-    
-    $(document).on('click', '.page-link', function(e) {
-        e.preventDefault();
-        
-        var page = $(this).data('page');
-        if (!page || $(this).parent().hasClass('disabled')) {
-            return;
-        }
-        
-        var requestData = {
-            page: page,
-            fullname: currentFilters.fullname,
-            department_id: currentFilters.department_id,
-            academic_rank: currentFilters.academic_rank,
-            sort: currentFilters.sort
+    $(document).ready(function() {
+        let currentFilters = {
+            fullname: '{{ $fullname ?? '' }}',
+            department_id: '{{ $department_id ?? 'all' }}',
+            academic_rank: '{{ $selected_rank ?? 'all' }}',
+            sort: '{{ $sort ?? 'name' }}'
         };
         
-        var searchUrl = '{{ route("contact.teacher.search") }}';
+        function sendAjaxRequest(url, data, successCallback) {
+            showLoading();
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: data,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    if (successCallback) {
+                        successCallback(response);
+                    }
+                    hideLoading();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Ajax Error:', error);
+                    console.error('Response:', xhr.responseText);
+                    hideLoading();
+                }
+            });
+        }
         
-        sendAjaxRequest(searchUrl, requestData, function(response) {
-            $('.teacher-list').html(response);
+        $(document).on('click', '.page-link', function(e) {
+            e.preventDefault();
             
-            $('html, body').animate({
-                scrollTop: $('#teacher-list-container').offset().top - 100
-            }, 300);
+            var page = $(this).data('page');
+            if (!page || $(this).parent().hasClass('disabled')) {
+                return;
+            }
+            
+            var requestData = {
+                page: page,
+                fullname: currentFilters.fullname,
+                department_id: currentFilters.department_id,
+                academic_rank: currentFilters.academic_rank,
+                sort: currentFilters.sort
+            };
+            
+            var searchUrl = '{{ route("contact.teacher.search") }}';
+            
+            sendAjaxRequest(searchUrl, requestData, function(response) {
+                $('.teacher-list').html(response);
+                
+                $('html, body').animate({
+                    scrollTop: $('#teacher-list-container').offset().top - 100
+                }, 300);
+            });
         });
-    });
-    
-    $('#search-form').on('submit', function(e) {
-        e.preventDefault();
         
-        currentFilters.fullname = $('input[name="fullname"]').val() || '';
-        
-        var requestData = {
-            page: 1, 
-            fullname: currentFilters.fullname,
-            department_id: currentFilters.department_id,
-            academic_rank: currentFilters.academic_rank,
-            sort: currentFilters.sort
-        };
-        
-        var searchUrl = $(this).attr('action');
-        
-        sendAjaxRequest(searchUrl, requestData, function(response) {
-            $('.teacher-list').html(response);
-            updateTeacherCount();
+        $('#search-form').on('submit', function(e) {
+            e.preventDefault();
+            
+            currentFilters.fullname = $('input[name="fullname"]').val() || '';
+            
+            var requestData = {
+                page: 1, 
+                fullname: currentFilters.fullname,
+                department_id: currentFilters.department_id,
+                academic_rank: currentFilters.academic_rank,
+                sort: currentFilters.sort
+            };
+            
+            var searchUrl = $(this).attr('action');
+            
+            sendAjaxRequest(searchUrl, requestData, function(response) {
+                $('.teacher-list').html(response);
+                updateTeacherCount();
+            });
         });
-    });
-    
-    $('#departmentSelect').on('change', function() {
-        currentFilters.department_id = $(this).val();
-        triggerFilter();
-    });
-    
-    $('#rankSelect').on('change', function() {
-        currentFilters.academic_rank = $(this).val();
-        triggerFilter();
-    });
-    
-    $('#sortSelect').on('change', function() {
-        currentFilters.sort = $(this).val();
         
-        var requestData = {
-            page: 1, 
-            fullname: currentFilters.fullname,
-            department_id: currentFilters.department_id,
-            academic_rank: currentFilters.academic_rank,
-            sort: currentFilters.sort
-        };
-        
-        var sortUrl = '{{ route("contact.teacher.sort") }}';
-        
-        sendAjaxRequest(sortUrl, requestData, function(response) {
-            $('.teacher-list').html(response);
-            updateTeacherCount();
+        $('#departmentSelect').on('change', function() {
+            currentFilters.department_id = $(this).val();
+            triggerFilter();
         });
-    });
-    
-    function triggerFilter() {
-        var requestData = {
-            page: 1, 
-            fullname: currentFilters.fullname,
-            department_id: currentFilters.department_id,
-            academic_rank: currentFilters.academic_rank,
-            sort: currentFilters.sort
-        };
         
-        var searchUrl = '{{ route("contact.teacher.search") }}';
-        
-        sendAjaxRequest(searchUrl, requestData, function(response) {
-            $('.teacher-list').html(response);
-            updateTeacherCount();
+        $('#rankSelect').on('change', function() {
+            currentFilters.academic_rank = $(this).val();
+            triggerFilter();
         });
-    }
-    
-    function updateTeacherCount() {
-        var paginationInfo = $('.pagination-info').text();
-        if (paginationInfo) {
-            var matches = paginationInfo.match(/Hiển thị (\d+) - (\d+) của (\d+)/);
-            if (matches) {
-                $('.teacher-count').html(
-                    'Hiển thị <span class="text-primary">' + matches[1] + '-' + matches[2] + '</span> ' +
-                    'trong tổng số <span class="text-primary">' + matches[3] + '</span> Cán bộ Giảng viên'
-                );
+        
+        $('#sortSelect').on('change', function() {
+            currentFilters.sort = $(this).val();
+            var requestData = {
+                page: 1, 
+                fullname: currentFilters.fullname,
+                department_id: currentFilters.department_id,
+                academic_rank: currentFilters.academic_rank,
+                sort: currentFilters.sort
+            };
+            var sortUrl = '{{ route("contact.teacher.sort") }}';
+            sendAjaxRequest(sortUrl, requestData, function(response) {
+                $('.teacher-list').html(response);
+                updateTeacherCount();
+            });
+        });
+        
+        function triggerFilter() {
+            var requestData = {
+                page: 1, 
+                fullname: currentFilters.fullname,
+                department_id: currentFilters.department_id,
+                academic_rank: currentFilters.academic_rank,
+                sort: currentFilters.sort
+            };
+            
+            var searchUrl = '{{ route("contact.teacher.search") }}';
+            sendAjaxRequest(searchUrl, requestData, function(response) {
+                $('.teacher-list').html(response);
+                updateTeacherCount();
+            });
+        }
+        
+        function updateTeacherCount() {
+            var paginationInfo = $('.pagination-info').text();
+            if (paginationInfo) {
+                var matches = paginationInfo.match(/Hiển thị (\d+) - (\d+) của (\d+)/);
+                if (matches) {
+                    $('.teacher-count').html(
+                        'Hiển thị <span class="text-primary">' + matches[1] + '-' + matches[2] + '</span> ' +
+                        'trong tổng số <span class="text-primary">' + matches[3] + '</span> Cán bộ Giảng viên'
+                    );
+                }
             }
         }
-    }
-    
-    function showLoading() {
-        $('.loading-overlay').remove();
         
-        $('body').append(`
-            <div class="loading-overlay" style="
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-            ">
-                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
-                    <span class="visually-hidden">Loading...</span>
+        function showLoading() {
+            $('.loading-overlay').remove();
+            $('body').append(`
+                <div class="loading-overlay" style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.5);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 9999;
+                ">
+                    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                 </div>
-            </div>
-        `);
-    }
-    
-    function hideLoading() {
-        $('.loading-overlay').remove();
-    }
-});
+            `);
+        }
+        
+        function hideLoading() {
+            $('.loading-overlay').remove();
+        }
+    });
 </script>
 @endsection

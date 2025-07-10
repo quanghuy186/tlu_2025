@@ -89,114 +89,111 @@
 @endsection
 
 @section('custom-js')
-<script>
-    $(document).ready(function(){
-        var currentSearch = "{{ $fullname ?? '' }}";
-        var currentClass = "{{ $class_id ?? 'all' }}";
-        var currentYear = "{{ $enrollment_year ?? 'all' }}";
-        
-        function loadData(options) {
-            if (options.fullname !== undefined) {
-                currentSearch = options.fullname;
-            }
-            if (options.class_id !== undefined) {
-                currentClass = options.class_id;
-            }
-            if (options.enrollment_year !== undefined) {
-                currentYear = options.enrollment_year;
-            }
+    <script>
+        $(document).ready(function(){
+            var currentSearch = "{{ $fullname ?? '' }}";
+            var currentClass = "{{ $class_id ?? 'all' }}";
+            var currentYear = "{{ $enrollment_year ?? 'all' }}";
             
-            var url = options.sort 
-                ? "{{ route('contact.student.sort') }}" 
-                : "{{ route('contact.student.search') }}";
-            
-            var data = {
-                fullname: currentSearch,
-                class_id: currentClass,
-                enrollment_year: currentYear
-            };
-            
-            if (options.sort) {
-                data.sort = options.sort;
-            }
-            
-            if (options.page) {
-                data.page = options.page;
-            }
-            
-            $(".student-list").addClass("loading");
-            
-            $.ajax({
-                url: url,
-                type: "GET",
-                data: data,
-                success: function(response) {
-                    $(".student-list").html(response).removeClass("loading");
-                },
-                error: function(xhr) {
-                    $(".student-list").removeClass("loading");
+            function loadData(options) { 
+                if (options.fullname !== undefined) {
+                    currentSearch = options.fullname;
                 }
-            });
-        }
-        
-        $("#sortSelect").change(function() {
-            loadData({
-                sort: $(this).val()
-            });
-        });
-        
-        $("#classSelect").change(function() {
-            loadData({
-                class_id: $(this).val()
-            });
-        });
-        
-        $("#yearSelect").change(function() {
-            loadData({
-                enrollment_year: $(this).val()
-            });
-        });
-        
-        $("#searchForm").submit(function(e) {
-            e.preventDefault(); 
-            
-            loadData({
-                fullname: $("input[name='fullname']").val()
-            });
-        });
-        
-        $(document).on('click', '.page-link', function(e) {
-            e.preventDefault();
-            
-            var page = $(this).data('page');
-            
-            loadData({
-                page: page
-            });
-            
-            $('html, body').animate({
-                scrollTop: $(".student-list-container").offset().top - 100
-            }, 200);
-        });
-        
-        $("<style>")
-            .prop("type", "text/css")
-            .html(`
-                .student-list.loading {
-                    position: relative;
-                    min-height: 200px;
+                if (options.class_id !== undefined) {
+                    currentClass = options.class_id;
                 }
-                .student-list.loading:after {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(255, 255, 255, 0.7) url('/images/spinner.gif') no-repeat center center;
-                    z-index: 5;
+                if (options.enrollment_year !== undefined) {
+                    currentYear = options.enrollment_year;
                 }
-        `).appendTo("head");
-    });
-</script>
+                
+                var url = options.sort 
+                    ? "{{ route('contact.student.sort') }}" 
+                    : "{{ route('contact.student.search') }}";
+                
+                var data = {
+                    fullname: currentSearch,
+                    class_id: currentClass,
+                    enrollment_year: currentYear
+                };
+                
+                if (options.sort) {
+                    data.sort = options.sort;
+                }
+                
+                if (options.page) {
+                    data.page = options.page;
+                }
+                
+                $(".student-list").addClass("loading");
+                
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    data: data,
+                    success: function(response) {
+                        $(".student-list").html(response).removeClass("loading");
+                    },
+                    error: function(xhr) {
+                        $(".student-list").removeClass("loading");
+                    }
+                });
+            }
+            
+            $("#sortSelect").change(function() {
+                loadData({
+                    sort: $(this).val()
+                });
+            });
+            
+            $("#classSelect").change(function() {
+                loadData({
+                    class_id: $(this).val()
+                });
+            });
+            
+            $("#yearSelect").change(function() {
+                loadData({
+                    enrollment_year: $(this).val()
+                });
+            });
+            
+            $("#searchForm").submit(function(e) {
+                e.preventDefault(); 
+                
+                loadData({
+                    fullname: $("input[name='fullname']").val()
+                });
+            });
+            
+            $(document).on('click', '.page-link', function(e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                loadData({
+                    page: page
+                });
+                $('html, body').animate({
+                    scrollTop: $(".student-list-container").offset().top - 100
+                }, 200);
+            });
+            
+            $("<style>")
+                .prop("type", "text/css")
+                .html(`
+                    .student-list.loading {
+                        position: relative;
+                        min-height: 200px;
+                    }
+                    .student-list.loading:after {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(255, 255, 255, 0.7) url('/images/spinner.gif') no-repeat center center;
+                        z-index: 5;
+                    }
+            `).appendTo("head");
+        });
+    </script>
 @endsection

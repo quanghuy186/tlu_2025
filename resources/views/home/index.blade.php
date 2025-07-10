@@ -94,7 +94,7 @@
                                         <div class="month">{{ strtoupper(date('M', strtotime($item->created_at ?? now()))) }}</div>
                                     </div>
                                     <h5>{{ $item->title ?? '' }}</h5>
-                                    <p>{{ $item->content ?? '' }}</p>
+                                    <p>{{ Str::limit($item->content ?? '', 1000) }}</p>
                                     <div class="meta">
                                         <i class="fas fa-user me-1"></i> {{ $item->user->managedDepartment->name ?? 'Chưa cập nhật'}} 
                                     </div>
