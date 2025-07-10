@@ -4,6 +4,9 @@
     <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để tiếp tục.</p>
 @endif
 
+{{-- <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head> --}}
 
 <body>
     <script>
@@ -562,12 +565,20 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const departmentDropdown = document.getElementById('department');
-    
-    if (departmentDropdown) {
-        const currentDepartmentId = departmentDropdown.getAttribute('data-current-department-id');
-        fetch('/api/department')
+    document.addEventListener('DOMContentLoaded', function() {
+        const departmentDropdown = document.getElementById('department');
+        if (departmentDropdown) {
+            const currentDepartmentId = departmentDropdown.getAttribute('data-current-department-id');
+            // Lấy CSRF token từ thẻ meta
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch('/api/department', {
+                method: 'GET', 
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken 
+                }
+            })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -576,13 +587,15 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(departments => {
                 departmentDropdown.innerHTML = '';
+                
+                const defaultOption = document.createElement('option');
                 defaultOption.value = "";
                 defaultOption.textContent = "Chọn đơn vị";
                 departmentDropdown.appendChild(defaultOption);
                 
                 departments.forEach(department => {
                     const option = document.createElement('option');
-                    option.value = department.id; // Use ID as value, not name
+                    option.value = department.id;
                     option.textContent = department.name;
                     
                     if (currentDepartmentId && currentDepartmentId == department.id) {
@@ -591,19 +604,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     departmentDropdown.appendChild(option);
                 });
-                
-                if (departmentDropdown.selectedIndex === 0 && departmentDropdown.options.length > 1) {
-                    departmentDropdown.selectedIndex = 1;
-                }
             })
             .catch(error => {
                 const option = document.createElement('option');
                 option.value = "";
                 option.textContent = "Không thể tải dữ liệu";
+                departmentDropdown.innerHTML = ''; 
                 departmentDropdown.appendChild(option);
             });
-    }
-});
+        }
+    });
 </script>
 
 <script>

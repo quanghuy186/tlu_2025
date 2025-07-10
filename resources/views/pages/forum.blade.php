@@ -621,7 +621,7 @@
                                             <div class="stat-label">Trả lời</div>
                                         </div>
                                         <div class="stat-item">
-                                            <div class="stat-count">{{ $post->views_count ?? 0 }}</div>
+                                            <div class="stat-count">{{ $post->view_count ?? 0 }}</div>
                                             <div class="stat-label">Lượt xem</div>
                                         </div>
                                     </div>

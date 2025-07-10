@@ -44,7 +44,7 @@
                                 </div>
                             @else
                                 @if($comment->author && $comment->author->avatar)
-                                    <img src="{{ asset('storage/' . $comment->author->avatar) }}" 
+                                    <img src="{{ asset('storage/avatars/' . $comment->author->avatar) }}" 
                                         alt="{{ $comment->author->name }}" class="avatar-img">
                                 @else
                                     <div class="avatar-circle bg-primary">

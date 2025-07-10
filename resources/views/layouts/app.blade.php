@@ -21,7 +21,6 @@
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
     
-    // Kiểm tra phần tử tồn tại trước khi thêm event listener
     const openProfileButton = document.getElementById('openProfileModal');
     if (openProfileButton) {
         openProfileButton.addEventListener('click', function(e) {

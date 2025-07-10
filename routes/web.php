@@ -301,13 +301,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 Route::get('/api/classes', function () {
     return ClassRoom::all();
-})->name('api.classes');
+})->name('api.classes')->middleware('auth');
 
 Route::get('/api/department', function () {
     return Department::all();
-})->name('api.department')->middleware('auth');
+})->name('api.department');
 
 Route::put('/home', [IndexController::class, 'update'])->name('profile.update')->middleware('auth');
 // Route::put('/profile/update', [App\Http\Controllers\Home\IndexController::class, 'update'])->name('profile.update');
 
-Route::get('/api/data', [ApiDataController::class, 'index']);
+// Route::get('/api/data', [ApiDataController::class, 'index']);
