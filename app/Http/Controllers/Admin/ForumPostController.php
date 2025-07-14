@@ -158,7 +158,7 @@ class ForumPostController extends Controller
                     unset($imagesPath[$index]);
                 }
             }
-            $imagesPath = array_values($imagesPath); // Reindex array
+            $imagesPath = array_values($imagesPath);
         }
 
         $post->update([
@@ -166,7 +166,7 @@ class ForumPostController extends Controller
             'category_id' => $request->category_id,
             'content' => $request->content,
             'images' => !empty($imagesPath) ? json_encode($imagesPath) : null,
-            'status' => 'pending', // Cập nhật bài viết sẽ cần duyệt lại
+            'status' => 'pending', 
             'is_anonymous' => $request->has('is_anonymous') ? true : false,
             'approved_by' => null,
             'approved_at' => null,
@@ -198,7 +198,6 @@ class ForumPostController extends Controller
     public function approve($id)
     {
         $post = ForumPost::findOrFail($id);
-        
         $post->update([
             'status' => 'approved',
             'approved_by' => Auth::id(),
@@ -214,7 +213,6 @@ class ForumPostController extends Controller
     public function reject(Request $request, $id)
     {
         $post = ForumPost::findOrFail($id);
-        
         $validator = Validator::make($request->all(), [
             'reject_reason' => 'required|string'
         ]);
@@ -234,7 +232,6 @@ class ForumPostController extends Controller
 
         $author = $post->author;
         Mail::to($author->email)->send(new PostApprovedMail($post));
-        
         return redirect()->route('admin.forum.posts.show', $post->id)
             ->with('success', 'Bài viết đã bị từ chối!');
     }
@@ -242,13 +239,10 @@ class ForumPostController extends Controller
     public function togglePin($id)
     {
         $post = ForumPost::findOrFail($id);
-        
         $post->update([
             'is_pinned' => !$post->is_pinned
         ]);
-        
         $message = $post->is_pinned ? 'Bài viết đã được ghim!' : 'Bài viết đã được bỏ ghim!';
-        
         return redirect()->route('admin.forum.posts.show', $post->id)
             ->with('success', $message);
     }
@@ -256,13 +250,10 @@ class ForumPostController extends Controller
     public function toggleLock($id)
     {
         $post = ForumPost::findOrFail($id);
-        
         $post->update([
             'is_locked' => !$post->is_locked
         ]);
-        
         $message = $post->is_locked ? 'Bài viết đã bị khóa!' : 'Bài viết đã được mở khóa!';
-        
         return redirect()->route('admin.forum.posts.show', $post->id)
             ->with('success', $message);
     }
@@ -273,18 +264,15 @@ class ForumPostController extends Controller
             'post_ids' => 'required|array',
             'post_ids.*' => 'required|exists:forum_posts,id'
         ]);
-
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Dữ liệu không hợp lệ'
             ], 422);
         }
-
         try {
             $posts = ForumPost::whereIn('id', $request->post_ids)->get();
             $deletedCount = 0;
-
             foreach ($posts as $post) {
                     if ($post->images) {
                         $images = json_decode($post->images, true);
@@ -292,7 +280,6 @@ class ForumPostController extends Controller
                             Storage::disk('public')->delete($image);
                         }
                     }
-                    
                     $post->delete();
                     $deletedCount++;
             }
@@ -319,33 +306,28 @@ class ForumPostController extends Controller
             'status' => 'required|in:approved,rejected',
             'reject_reason' => 'required_if:status,rejected|string'
         ]);
-
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Dữ liệu không hợp lệ'
             ], 422);
         }
-
         try {
             $updateData = [
                 'status' => $request->status,
                 'approved_by' => Auth::id(),
                 'approved_at' => now()
             ];
-
             if ($request->status === 'rejected') {
                 $updateData['reject_reason'] = $request->reject_reason;
             } else {
                 $updateData['reject_reason'] = null;
             }
-
             $updatedCount = ForumPost::whereIn('id', $request->post_ids)
                 ->where('status', 'pending')
                 ->update($updateData);
 
             $statusText = $request->status === 'approved' ? 'phê duyệt' : 'từ chối';
-
             return response()->json([
                 'success' => true,
                 'message' => "Đã {$statusText} thành công {$updatedCount} bài viết",
@@ -359,6 +341,4 @@ class ForumPostController extends Controller
             ], 500);
         }
     }
-    
-
 }

@@ -223,7 +223,6 @@ class DepartmentController extends Controller
     public function edit($id)
     {
         $department = Department::with('manager')->findOrFail($id);
-        
         // Lấy tất cả đơn vị ngoại trừ chính nó và các đơn vị con cháu
         $excludedIds = $this->getAllDescendantIds($department->id);
         $excludedIds[] = $department->id;

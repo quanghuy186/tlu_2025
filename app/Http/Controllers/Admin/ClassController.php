@@ -32,11 +32,7 @@ class ClassController extends Controller
         if ($request->filled('academic_year')) {
             $query->where('academic_year', $request->input('academic_year'));
         }
-        
-        if ($request->filled('semester')) {
-            $query->where('semester', $request->input('semester'));
-        }
-        
+
         if ($request->filled('department_id')) {
             $query->where('department_id', $request->input('department_id'));
         }
@@ -50,14 +46,12 @@ class ClassController extends Controller
         $departments = Department::all();
         $teachers = Teacher::with('user')->get();
         $academicYears = $this->getAcademicYears();
-        $semesters = $this->getSemesters();
         
         return view('admin.contact.class.index', compact(
             'classes', 
             'departments', 
             'teachers', 
             'academicYears', 
-            'semesters'
         ));
     }
 
@@ -67,7 +61,6 @@ class ClassController extends Controller
         $departments = Department::all();
         $teachers = Teacher::with('user')->get();
         $academicYears = $this->getAcademicYears();
-        $semesters = $this->getSemesters();
         
         return view('admin.contact.class.create', compact('departments', 'teachers', 'academicYears', 'semesters'));
     }
@@ -79,25 +72,21 @@ class ClassController extends Controller
             'class_name' => 'required|string|max:100',
             'department_id' => 'nullable|exists:departments,id',
             'academic_year' => 'required|string|max:20',
-            'semester' => 'nullable|string|max:20',
             'teacher_id' => 'nullable|exists:teachers,id',
         ],[
-                'class_code.required' => 'Vui lòng nhập mã lớp học',
-                'class_code.string' => 'Mã lớp học phải là chuỗi ký tự',
-                'class_code.max' => 'Mã lớp học không được vượt quá 20 ký tự',
-                'class_code.unique' => 'Mã lớp học đã tồn tại, vui lòng chọn mã khác',
-                'class_name.required' => 'Vui lòng nhập tên lớp học',
-                'class_name.string' => 'Tên lớp học phải là chuỗi ký tự',
-                'class_name.max' => 'Tên lớp học không được vượt quá 100 ký tự',
-                'department_id.exists' => 'Khoa/Phòng ban được chọn không tồn tại',
-                'academic_year.required' => 'Vui lòng nhập năm học',
-                'academic_year.string' => 'Năm học phải là chuỗi ký tự',
-                'academic_year.max' => 'Năm học không được vượt quá 20 ký tự',
-                'semester.string' => 'Học kỳ phải là chuỗi ký tự',
-                'semester.max' => 'Học kỳ không được vượt quá 20 ký tự',
+            'class_code.required' => 'Vui lòng nhập mã lớp học',
+            'class_code.string' => 'Mã lớp học phải là chuỗi ký tự',
+            'class_code.max' => 'Mã lớp học không được vượt quá 20 ký tự',
+            'class_code.unique' => 'Mã lớp học đã tồn tại, vui lòng chọn mã khác',
+            'class_name.required' => 'Vui lòng nhập tên lớp học',
+            'class_name.string' => 'Tên lớp học phải là chuỗi ký tự',
+            'class_name.max' => 'Tên lớp học không được vượt quá 100 ký tự',
+            'department_id.exists' => 'Khoa/Phòng ban được chọn không tồn tại',
+            'academic_year.required' => 'Vui lòng nhập năm học',
+            'academic_year.string' => 'Năm học phải là chuỗi ký tự',
+            'academic_year.max' => 'Năm học không được vượt quá 20 ký tự',
         ]);
 
-        // Tạo lớp học mới
         $class = ClassRoom::create($validated);
 
         return redirect()->route('admin.class.index')
@@ -116,7 +105,6 @@ class ClassController extends Controller
         $departments = Department::all();
         $teachers = Teacher::with('user')->get();
         $academicYears = $this->getAcademicYears();
-        $semesters = $this->getSemesters();
         
         return view('admin.contact.class.edit', compact('class', 'departments', 'teachers', 'academicYears', 'semesters'));
     }
@@ -135,7 +123,6 @@ class ClassController extends Controller
             'class_name' => 'required|string|max:100',
             'department_id' => 'nullable|exists:departments,id',
             'academic_year' => 'required|string|max:20',
-            'semester' => 'nullable|string|max:20',
             'teacher_id' => 'nullable|exists:teachers,id',
         ]);
 
@@ -172,16 +159,16 @@ class ClassController extends Controller
         return $years;
     }
     
-    private function getSemesters()
-    {
-        return [
-            'Học kỳ 1' => 'Học kỳ 1',
-            'Học kỳ 2' => 'Học kỳ 2',
-            'Học kỳ 3' => 'Học kỳ 3',
-            'Học kỳ hè' => 'Học kỳ hè',
-            'Cả năm' => 'Cả năm',
-        ];
-    }
+    // private function getSemesters()
+    // {
+    //     return [
+    //         'Học kỳ 1' => 'Học kỳ 1',
+    //         'Học kỳ 2' => 'Học kỳ 2',
+    //         'Học kỳ 3' => 'Học kỳ 3',
+    //         'Học kỳ hè' => 'Học kỳ hè',
+    //         'Cả năm' => 'Cả năm',
+    //     ];
+    // }
 
     public function bulkDestroy(Request $request)
     {
