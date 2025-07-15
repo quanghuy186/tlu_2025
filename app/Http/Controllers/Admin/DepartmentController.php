@@ -20,8 +20,6 @@ class DepartmentController extends Controller
     public function index(Request $request)
     {
         $query = Department::with('manager', 'parent', 'children');
-
-        //search
         if ($request->filled('search')) {
             $searchTerm = $request->search;
             $query->where(function($q) use ($searchTerm) {
@@ -37,7 +35,6 @@ class DepartmentController extends Controller
             });
         }
 
-        // filter
         if ($request->filled('parent_filter') && $request->parent_filter !== 'all') {
             if ($request->parent_filter === 'root') {
                 $query->whereNull('parent_id');
@@ -60,7 +57,6 @@ class DepartmentController extends Controller
 
         $sortBy = $request->get('sort_by', 'level');
         $sortOrder = $request->get('sort_order', 'asc');
-        
         if ($sortBy === 'name') {
             $query->orderBy('name', $sortOrder);
         } elseif ($sortBy === 'code') {
@@ -70,12 +66,9 @@ class DepartmentController extends Controller
         } else {
             $query->orderBy('level', 'asc')->orderBy('name', 'asc');
         }
-
         $perPage = $request->get('per_page', 10);
         $perPage = in_array($perPage, [5, 10, 15, 25, 50]) ? $perPage : 10;
-
         $departments = $query->paginate($perPage)->appends($request->all());
-
         $parentDepartments = Department::whereNull('parent_id')
             ->orderBy('name')
             ->get();
@@ -128,46 +121,34 @@ class DepartmentController extends Controller
             'name.required' => 'Tên đơn vị không được để trống',
             'name.string' => 'Tên đơn vị phải là chuỗi ký tự',
             'name.max' => 'Tên đơn vị không được vượt quá 100 ký tự',
-
             'code.required' => 'Mã đơn vị không được để trống',
             'code.string' => 'Mã đơn vị phải là chuỗi ký tự',
             'code.max' => 'Mã đơn vị không được vượt quá 20 ký tự',
             'code.unique' => 'Mã đơn vị đã tồn tại trong hệ thống',
-
             'parent_id.exists' => 'Đơn vị cha không hợp lệ',
-
             'description.string' => 'Mô tả phải là chuỗi ký tự',
-
             'phone.string' => 'Số điện thoại phải là chuỗi ký tự',
             'phone.max' => 'Số điện thoại không được vượt quá 20 ký tự',
-
             'email.email' => 'Email không đúng định dạng',
             'email.max' => 'Email không được vượt quá 100 ký tự',
-
             'address.string' => 'Địa chỉ phải là chuỗi ký tự',
-
             'manager_name.required' => 'Tên người quản lý không được để trống',
             'manager_name.string' => 'Tên người quản lý phải là chuỗi ký tự',
             'manager_name.max' => 'Tên người quản lý không được vượt quá 255 ký tự',
-
             'manager_email.required' => 'Email người quản lý không được để trống',
             'manager_email.email' => 'Email người quản lý không đúng định dạng',
             'manager_email.max' => 'Email người quản lý không được vượt quá 255 ký tự',
             'manager_email.unique' => 'Email người quản lý đã tồn tại trong hệ thống',
-
             'manager_avatar.image' => 'Ảnh đại diện phải là tệp hình ảnh',
             'manager_avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif',
             'manager_avatar.max' => 'Ảnh đại diện không được vượt quá 2MB',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         DB::beginTransaction();
-
         try {
             $level = 0;
             if ($request->parent_id) {
@@ -176,7 +157,6 @@ class DepartmentController extends Controller
                     $level = $parentDepartment->level + 1;
                 }
             }
-
             $randomPassword = Str::random(10);
             $manager = new User();
             $manager->name = $request->manager_name;
@@ -191,9 +171,7 @@ class DepartmentController extends Controller
                 $avatar->storeAs('avatars', $filename, 'public');
                 $manager->avatar = $filename;
             }
-
             $manager->save();
-
             $department = new Department();
             $department->name = $request->name;
             $department->code = $request->code;
@@ -206,9 +184,7 @@ class DepartmentController extends Controller
             $department->address = $request->address;
             $department->level = $level;
             $department->save();
-
             DB::commit();
-
             return redirect()->route('admin.department.index')
                 ->with('success', 'Đơn vị đã được tạo thành công. Tài khoản quản lý: ' . $manager->email . ' - Mật khẩu tạm thời: ' . $randomPassword);
         } catch (\Exception $e) {
@@ -223,7 +199,7 @@ class DepartmentController extends Controller
     public function edit($id)
     {
         $department = Department::with('manager')->findOrFail($id);
-        // Lấy tất cả đơn vị ngoại trừ chính nó và các đơn vị con cháu
+        // Lấy tất cả đơn vị ngoại trừ chính nó và các đơn vị con
         $excludedIds = $this->getAllDescendantIds($department->id);
         $excludedIds[] = $department->id;
         
@@ -256,16 +232,13 @@ class DepartmentController extends Controller
 
     public function detail($id)
     {
-        $department = Department::with(['manager', 'parent', 'children.manager'])
-            ->findOrFail($id);
-            
+        $department = Department::with(['manager', 'parent', 'children.manager'])->findOrFail($id);
         return view('admin.contact.department.detail', compact('department'));
     }
 
     public function update(Request $request, $id)
     {
         $department = Department::with('manager')->findOrFail($id);
-        
         $rules = [
             'name' => 'required|string|max:100',
             'code' => [
@@ -287,15 +260,12 @@ class DepartmentController extends Controller
             'manager_avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'website' => 'nullable'
         ];
-
         if ($department->manager && $request->manager_email != $department->manager->email) {
             $rules['manager_email'] = 'required|email|max:255|unique:users,email';
         } else {
             $rules['manager_email'] = 'required|email|max:255';
         }
-
         $validator = Validator::make($request->all(), $rules);
-
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
@@ -303,7 +273,6 @@ class DepartmentController extends Controller
         }
 
         DB::beginTransaction();
-
         try {
             if ($request->parent_id) {
                 $descendantIds = $this->getAllDescendantIds($department->id);
@@ -323,9 +292,7 @@ class DepartmentController extends Controller
                     $newLevel = $parentDepartment->level + 1;
                 }
             }
-            
             $levelDifference = $newLevel - $oldLevel;
-
             $resetPassword = false;
             $newPassword = '';
             $managerId = null;
@@ -338,18 +305,15 @@ class DepartmentController extends Controller
                     $department->manager->password = Hash::make($newPassword);
                     $resetPassword = true;
                 }
-                
                 if ($request->hasFile('manager_avatar')) {
                     if ($department->manager->avatar) {
                         Storage::disk('public')->delete('avatars/' . $department->manager->avatar);
                     }
-                    
                     $avatar = $request->file('manager_avatar');
                     $filename = time() . '_' . Str::slug(pathinfo($avatar->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $avatar->getClientOriginalExtension();
                     $avatar->storeAs('avatars', $filename, 'public');
                     $department->manager->avatar = $filename;
                 }
-                
                 $department->manager->save();
                 $managerId = $department->manager->id;
             } else {
@@ -369,7 +333,6 @@ class DepartmentController extends Controller
                 }
                 
                 $manager->save();
-                
                 $managerId = $manager->id;
                 $resetPassword = true;
             }
@@ -391,12 +354,10 @@ class DepartmentController extends Controller
             }
 
             DB::commit();
-
             $successMessage = 'Đơn vị đã được cập nhật thành công.';
             if ($resetPassword) {
                 $successMessage .= ' Mật khẩu mới cho tài khoản ' . $request->manager_email . ': ' . $newPassword;
             }
-
             return redirect()->route('admin.department.index')
                 ->with('success', $successMessage);
                 
@@ -413,19 +374,16 @@ class DepartmentController extends Controller
     {
         try {
             DB::beginTransaction();
-            
             $department = Department::with('manager')->findOrFail($id);
             if ($department->children()->count() > 0) {
                 return redirect()->back()
                     ->with('error', 'Không thể xóa đơn vị này vì nó có các đơn vị con.');
             }
-            
             $userId = $department->user_id;
             $department->user_id = null;
             ClassRoom::where('department_id', $department->id)->update(['department_id' => null]);
             Teacher::where('department_id', $department->id)->update(['department_id' => null]);
             $department->save();
-            
             $department->delete();
             
             if ($userId) {
@@ -440,7 +398,6 @@ class DepartmentController extends Controller
             }
             
             DB::commit();
-            
             return redirect()->route('admin.department.index')
                 ->with('success', 'Đơn vị và tài khoản quản lý đã được xóa thành công.');
                 
@@ -455,7 +412,6 @@ class DepartmentController extends Controller
     private function updateDescendantLevels($departmentId, $levelDifference)
     {
         $children = Department::where('parent_id', $departmentId)->get();
-        
         foreach ($children as $child) {
             $child->level = $child->level + $levelDifference;
             $child->save();

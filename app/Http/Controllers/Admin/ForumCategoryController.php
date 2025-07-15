@@ -39,9 +39,7 @@ class ForumCategoryController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         }
         $slug = Str::slug($request->name);
         $count = ForumCategory::where('slug', $slug)->count();
@@ -57,19 +55,16 @@ class ForumCategoryController extends Controller
             'is_active' => $request->has('is_active') ? 1 : 0,
         ]);
 
-        return redirect()->route('admin.forum.categories.index')
-            ->with('success', 'Tạo danh mục thành công!');
+        return redirect()->route('admin.forum.categories.index')->with('success', 'Tạo danh mục thành công!');
     }
 
     public function show($id)
     {
         $category = ForumCategory::findOrFail($id);
         $parentCategory = null;
-        
         if ($category->parent_id) {
             $parentCategory = ForumCategory::find($category->parent_id);
         }
-        
         return view('admin.forum.forum-category.detail', compact('category', 'parentCategory'));
     }
 
@@ -78,10 +73,8 @@ class ForumCategoryController extends Controller
         $category = ForumCategory::findOrFail($id);
         $parentCategories = ForumCategory::where('id', '!=', $id)
             ->where(function($query) use ($id) {
-                $query->whereNull('parent_id')
-                    ->orWhere('parent_id', '!=', $id);
-            })
-            ->get();
+                $query->whereNull('parent_id')->orWhere('parent_id', '!=', $id);
+            })->get();
             
         return view('admin.forum.forum-category.edit', compact('category', 'parentCategories'));
     }
@@ -102,9 +95,7 @@ class ForumCategoryController extends Controller
             'parent_id.exists' => 'Danh mục cha không hợp lệ',
         ]);
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         }
         $category = ForumCategory::findOrFail($id);
         if ($category->name != $request->name) {

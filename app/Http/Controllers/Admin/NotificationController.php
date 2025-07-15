@@ -104,25 +104,19 @@ class NotificationController extends Controller
     public function detail($id)
     {
         $notification = Notification::with(['user', 'category'])->findOrFail($id);
-        
         return view('admin.notification.detail', compact('notification'));
     }
 
     public function edit($id)
     {
         $notification = Notification::findOrFail($id);
-        
-        $categories = NotificationCategory::orderBy('display_order')
-            ->orderBy('name')
-            ->pluck('name', 'id');
-        
+        $categories = NotificationCategory::orderBy('display_order')->orderBy('name')->pluck('name', 'id');
         return view('admin.notification.edit', compact('notification', 'categories'));
     }
 
     public function update(Request $request, $id)
     {
         $notification = Notification::findOrFail($id);
-        
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
@@ -130,11 +124,9 @@ class NotificationController extends Controller
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'remove_images' => 'nullable|array',
         ]);
-
         $existingImages = $notification->images_array;
         $imagesToRemove = $request->input('remove_images', []);
         $remainingImages = [];
-
         foreach ($existingImages as $image) {
             if (!in_array($image, $imagesToRemove)) {
                 $remainingImages[] = $image;
@@ -152,7 +144,6 @@ class NotificationController extends Controller
                 $remainingImages[] = $path;
             }
         }
-
         // Update notification
         $notification->title = $request->title;
         $notification->content = $request->content;
@@ -167,29 +158,22 @@ class NotificationController extends Controller
     public function destroy($id)
     {
         $notification = Notification::findOrFail($id);
-        
         $images = $notification->images_array;
         foreach ($images as $image) {
             Storage::disk('public')->delete($image);
         }
-        
         $notification->delete();
-        return redirect()->route('admin.notification.index')
-            ->with('success', 'Thông báo đã được xóa thành công.');
+        return redirect()->route('admin.notification.index')->with('success', 'Thông báo đã được xóa thành công.');
     }
 
     public function togglePin($id)
     {
         $notify = Notification::findOrFail($id);
-        
         $notify->update([
             'is_pinned' => !$notify->is_pinned
         ]);
-        
         $message = $notify->is_pinned ? 'Thông báo đã được ghim!' : 'Thông báo đã được bỏ ghim!';
-        
-        return redirect()->route('admin.notification.detail', $notify->id)
-            ->with('success', $message);
+        return redirect()->route('admin.notification.detail', $notify->id)->with('success', $message);
     }
     
     public function bulkDestroy(Request $request)
@@ -199,9 +183,7 @@ class NotificationController extends Controller
         ]);
         
         $selectedIds = $request->input('selected_ids');
-        
         $notifications = Notification::whereIn('id', $selectedIds)->get();
-        
         foreach ($notifications as $notification) {
             $images = $notification->images_array;
             foreach ($images as $image) {
@@ -210,8 +192,6 @@ class NotificationController extends Controller
         }
         
         Notification::whereIn('id', $selectedIds)->delete();
-        
-        return redirect()->route('admin.notification.index')
-            ->with('success', 'Đã xóa ' . count($selectedIds) . ' thông báo thành công.');
+        return redirect()->route('admin.notification.index')->with('success', 'Đã xóa ' . count($selectedIds) . ' thông báo thành công.');
     }
 }

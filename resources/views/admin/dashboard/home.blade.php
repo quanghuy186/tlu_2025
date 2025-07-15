@@ -369,11 +369,9 @@
       }
     });
     
-    // Render both charts
     forumChart.render();
     userChart.render();
 
-    // Add event listeners for period toggle buttons
     document.querySelectorAll('.btn[data-period]').forEach(btn => {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -395,7 +393,6 @@
         if (chartType === 'forum') {
           if (period === 'daily') {
             document.getElementById('forum-chart-period-text').textContent = `/ Tháng ${currentMonth} năm ${currentYear}`;
-            
             forumChart.updateOptions({
               xaxis: {
                 categories: dayLabels,

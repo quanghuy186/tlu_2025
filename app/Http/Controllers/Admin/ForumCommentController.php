@@ -12,8 +12,7 @@ class ForumCommentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = ForumComment::with(['post', 'user'])
-            ->orderBy('created_at', 'desc');
+        $query = ForumComment::with(['post', 'user'])->orderBy('created_at', 'desc');
 
         if ($request->has('search') && !empty($request->search)) {
             $query->where('content', 'like', '%' . $request->search . '%');
@@ -36,14 +35,12 @@ class ForumCommentController extends Controller
 
         $comments = $query->paginate(15);
         $posts = ForumPost::select('id', 'title')->orderBy('title')->get();
-
         return view('admin.forum.comments.index', compact('comments', 'posts'));
     }
 
     public function show(ForumComment $comment)
     {
         $comment->load(['post', 'user']);
-        
         $replies = collect([]);
         if (!$comment->parent_id) {
             $replies = $comment->replies()->with(['user'])->get();
@@ -87,11 +84,8 @@ class ForumCommentController extends Controller
             if (!$comment->parent_id) {
                 $comment->replies()->delete();
             }
-            
             $comment->delete();
-            
             DB::commit();
-            
             return redirect()->route('admin.forum.comments.index')
                 ->with('success', 'Bình luận đã được xóa thành công');
         } catch (\Exception $e) {
@@ -105,33 +99,19 @@ class ForumCommentController extends Controller
         $request->validate([
             'post_ids' => 'required|json',
         ]);
-
         try {
             $postIds = json_decode($request->post_ids, true);
-            
             if (empty($postIds) || !is_array($postIds)) {
-                return redirect()->route('admin.forum.posts.index')
-                    ->with('error', 'Không có bài viết nào được chọn để xóa.');
+                return redirect()->route('admin.forum.posts.index')->with('error', 'Không có bài viết nào được chọn để xóa.');
             }
-
             DB::beginTransaction();
-
-            DB::table('forum_comments')
-                ->whereIn('post_id', $postIds)
-                ->delete();
-
+            DB::table('forum_comments')->whereIn('post_id', $postIds)->delete();
             $deletedCount = ForumPost::whereIn('id', $postIds)->delete();
-
             DB::commit();
-
-            return redirect()->route('admin.forum.posts.index')
-                ->with('success', "Đã xóa thành công {$deletedCount} bài viết.");
-
+            return redirect()->route('admin.forum.posts.index')->with('success', "Đã xóa thành công {$deletedCount} bài viết.");
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            return redirect()->route('admin.forum.posts.index')
-                ->with('error', 'Đã xảy ra lỗi khi xóa bài viết: ' . $e->getMessage());
+            return redirect()->route('admin.forum.posts.index')->with('error', 'Đã xảy ra lỗi khi xóa bài viết: ' . $e->getMessage());
         }
     }
 }

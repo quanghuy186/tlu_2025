@@ -116,7 +116,7 @@
                                         </select>
                                     </div>
                                     
-                                    <div class="col-md-6 mb-3">
+                                    {{-- <div class="col-md-6 mb-3">
                                         <label for="program" class="form-label">Chương trình học</label>
                                         <select class="form-select" id="program" name="program">
                                             <option value="">-- Chọn chương trình --</option>
@@ -126,9 +126,9 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
                                     
-                                    <div class="col-md-6 mb-3">
+                                    {{-- <div class="col-md-6 mb-3">
                                         <label for="graduation_status" class="form-label">Trạng thái học tập</label>
                                         <select class="form-select" id="graduation_status" name="graduation_status">
                                             <option value="">-- Chọn trạng thái --</option>
@@ -138,7 +138,7 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             

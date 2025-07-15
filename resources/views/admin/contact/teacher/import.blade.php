@@ -143,7 +143,7 @@
                                     <td>G</td>
                                     <td>Học hàm/Học vị</td>
                                     <td><span class="badge bg-secondary">Tùy chọn</span></td>
-                                    <td>VD: Giáo sư, Tiến sĩ, Thạc sĩ...</td>
+                                    <td>VD: GS, TS, Th.s...</td>
                                 </tr>
                                 <tr>
                                     <td>H</td>

@@ -27,9 +27,7 @@ class UserHasPermissionController extends Controller
         $user = User::find($id);
         $list_permissions = Permission::all();
         $list_user_has_permissions = UserHasPermission::where('user_id', $user->id)->pluck('permission_id')->toArray();
-        return view('admin.user_has_permission.create_with_user')
-        ->with('list_permissions', $list_permissions)
-        ->with('id', $id)->with('user', $user)
-        ->with('list_user_has_permissions', $list_user_has_permissions);
+        return view('admin.user_has_permission.create_with_user')->with('list_permissions', $list_permissions)
+        ->with('id', $id)->with('user', $user)->with('list_user_has_permissions', $list_user_has_permissions);
     }
 }

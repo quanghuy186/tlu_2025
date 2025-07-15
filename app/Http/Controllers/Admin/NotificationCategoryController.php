@@ -12,7 +12,6 @@ class NotificationCategoryController extends Controller
     public function index()
     {
         $categories = NotificationCategory::orderBy('display_order')->orderBy('name')->paginate(10);
-        
         return view('admin.notification-category.index', compact('categories'));
     }
 
@@ -41,8 +40,7 @@ class NotificationCategoryController extends Controller
         $category->display_order = $request->display_order ?: 0;
         $category->save();
 
-        return redirect()->route('admin.notification-category.index')
-            ->with('success', 'Danh mục thông báo đã được tạo thành công.');
+        return redirect()->route('admin.notification-category.index')->with('success', 'Danh mục thông báo đã được tạo thành công.');
     }
 
     public function edit($id)

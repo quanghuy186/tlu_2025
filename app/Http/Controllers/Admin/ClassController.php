@@ -55,7 +55,6 @@ class ClassController extends Controller
         ));
     }
 
-
     public function create()
     {
         $departments = Department::all();
@@ -88,7 +87,6 @@ class ClassController extends Controller
         ]);
 
         $class = ClassRoom::create($validated);
-
         return redirect()->route('admin.class.index')
             ->with('success', 'Lớp học đã được tạo thành công!');
     }

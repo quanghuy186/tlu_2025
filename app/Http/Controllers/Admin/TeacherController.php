@@ -104,9 +104,7 @@ class TeacherController extends Controller
         }
 
         $teachers = $query->paginate($perPage);
-
         $teachers->appends($request->all());
-
         $departments = Department::orderBy('name')->get();
         $academicRanks = Teacher::whereNotNull('academic_rank')
                                 ->distinct()
@@ -442,8 +440,8 @@ class TeacherController extends Controller
         }
 
         $sampleData = [
-            ['GV001', 'Nguyễn Văn A', 'nguyenvana@example.com', 'password123', '0901234567', 'CNTT', 'Tiến sĩ', 'Khoa học máy tính', 'Giảng viên chính', 'A5-301', 'Thứ 2-6: 8h-17h'],
-            ['GV002', 'Trần Thị B', 'tranthib@example.com', 'password123', '0902345678', 'KTPM', 'Thạc sĩ', 'Kỹ thuật phần mềm', 'Giảng viên', 'A5-302', 'Thứ 2-6: 8h-17h'],
+            ['GV001', 'Nguyễn Văn A', 'nguyenvana@tlu.edu.vn', 'password123', '0901234567', 'CNPM', 'TS', 'Khoa học máy tính', 'Giảng viên chính', 'A5-301', 'Thứ 2-6: 8h-17h'],
+            ['GV002', 'Trần Thị B', 'tranthib@tlu.edu.vn', 'password123', '0902345678', 'CNPM', 'GS', 'Kỹ thuật phần mềm', 'Giảng viên', 'A5-302', 'Thứ 2-6: 8h-17h'],
         ];
 
         $row = 2;

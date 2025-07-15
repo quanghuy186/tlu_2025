@@ -65,10 +65,10 @@ class UserController extends Controller
         return view('admin.user.department.index')->with('users', $users);
     }
 
-    public function showImportForm()
-    {
-        return view('admin.user.import-excel');
-    }
+    // public function showImportForm()
+    // {
+    //     return view('admin.user.import-excel');
+    // }
 
     public function create(){
         $list_classes = ClassRoom::all();

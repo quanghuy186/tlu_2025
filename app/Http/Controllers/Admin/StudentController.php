@@ -103,8 +103,6 @@ class StudentController extends Controller
             'class_id' => 'nullable|exists:classes,id',
             'student_code' => 'nullable|string|max:20|unique:students',
             'enrollment_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
-            'program' => 'nullable|string|max:50',
-            'graduation_status' => 'nullable|string|max:20',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ],[
             'name.required' => 'Tên sinh viên là bắt buộc',
@@ -359,15 +357,15 @@ class StudentController extends Controller
             'D1' => 'Mật khẩu (*)',
             'E1' => 'Mã lớp',
             'F1' => 'Năm nhập học',
-            'G1' => 'Chương trình',
-            'H1' => 'Trạng thái (studying/graduated/suspended)'
+            // 'G1' => 'Chương trình',
+            // 'H1' => 'Trạng thái (studying/graduated/suspended)'
         ];
 
         foreach ($headers as $cell => $value) {
             $sheet->setCellValue($cell, $value);
         }
 
-        $sheet->getStyle('A1:H1')->applyFromArray([
+        $sheet->getStyle('A1:F1')->applyFromArray([
             'font' => ['bold' => true],
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
@@ -385,8 +383,6 @@ class StudentController extends Controller
         $sheet->setCellValue('D2', 'password123');
         $sheet->setCellValue('E2', 'CNTT1');
         $sheet->setCellValue('F2', '2024');
-        $sheet->setCellValue('G2', 'Công nghệ thông tin');
-        $sheet->setCellValue('H2', 'studying');
 
         $sheet->setCellValue('A4', 'Hướng dẫn:');
         $sheet->setCellValue('A5', '- Các cột có dấu (*) là bắt buộc');
@@ -496,13 +492,13 @@ class StudentController extends Controller
                 } catch (\Exception $e) {
                     $errors[] = "Dòng {$rowNumber}: " . $e->getMessage();
                     $skipped++;
-                    Log::error("Import student error at row {$rowNumber}: " . $e->getMessage());
+                    Log::error("Thêm sinh viên thất bại ở hàng {$rowNumber}: " . $e->getMessage());
                 }
             }
 
             DB::commit();
 
-            $message = "Import hoàn tất: {$imported} sinh viên được thêm thành công";
+            $message = "Thêm hoàn tất: {$imported} sinh viên được thêm thành công";
             if ($skipped > 0) {
                 $message .= ", {$skipped} dòng bị bỏ qua";
             }
@@ -513,11 +509,10 @@ class StudentController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Student import error: ' . $e->getMessage());
+            Log::error('Lỗi: ' . $e->getMessage());
             
             return redirect()->back()
-                ->with('error', 'Lỗi khi import file: ' . $e->getMessage());
+                ->with('error', 'Lỗi khi nhập file: ' . $e->getMessage());
         }
     }
-
 }

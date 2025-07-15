@@ -30,7 +30,6 @@ class UserHasRoleController extends Controller
         ]);
         
         UserHasRole::where('user_id', $request->user_id)->delete();
-        
         if ($request->has('role_id') && is_array($request->role_id)) {
             foreach ($request->role_id as $role_id) {
                 UserHasRole::create([
@@ -61,17 +60,14 @@ class UserHasRoleController extends Controller
         $specialRoles = [1, 2, 3];
         $hasSpecialRole = !empty(array_intersect($list_user_has_roles, $specialRoles));
         $userSpecialRoles = array_intersect($list_user_has_roles, $specialRoles);
-        
         if ($hasSpecialRole) {
             $list_roles = $allRoles->filter(function($role) use ($userSpecialRoles, $specialRoles) {
                 if (in_array($role->id, $userSpecialRoles)) {
                     return true;
                 }
-                
                 if (!in_array($role->id, $specialRoles)) {
                     return true;
                 }
-                
                 return false;
             });
         } else {

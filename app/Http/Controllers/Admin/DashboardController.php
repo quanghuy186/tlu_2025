@@ -21,7 +21,7 @@ class DashboardController extends Controller
         $daysInMonth = Carbon::now()->daysInMonth;
         
         $dailyData = [
-            'approved' => array_fill(0, $daysInMonth, 0),
+            'approved' => array_fill(0, $daysInMonth, 0), //tạo mảng tương ứng với số ngày trong tháng
             'pending' => array_fill(0, $daysInMonth, 0),
             'rejected' => array_fill(0, $daysInMonth, 0),
         ];
@@ -29,7 +29,7 @@ class DashboardController extends Controller
         $approvedPostsByDay = ForumPost::where('status', 'approved')
             ->whereYear('created_at', $currentYear)
             ->whereMonth('created_at', $currentMonth)
-            ->select(DB::raw('DAY(created_at) as day'), DB::raw('COUNT(*) as count'))
+            ->select(DB::raw('DAY(created_at) as day'), DB::raw('COUNT(*) as count')) // [{ day: 3, count: 2 }, { day: 10, count: 5 }, ...]
             ->groupBy(DB::raw('DAY(created_at)'))
             ->get();
         
@@ -48,7 +48,8 @@ class DashboardController extends Controller
             ->get();
         
         foreach ($approvedPostsByDay as $post) {
-            $dailyData['approved'][$post->day - 1] = $post->count;
+            $dailyData['approved'][$post->day - 1] = $post->count;  
+            // [0 => 1, 1 => 2, 2 => 0]
         }
         
         foreach ($pendingPostsByDay as $post) {

@@ -27,15 +27,12 @@ class ForumPostController extends Controller
         if ($request->has('search') && $request->search != '') {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
-        
         $posts = $query->orderBy('created_at', 'desc')->paginate(10);
         $categories = ForumCategory::all();
-
         $toltal_post = ForumPost::all()->count();
         $toltal_post_approved = ForumPost::where('status', 'approved')->count();
         $toltal_post_reject_reason = ForumPost::where('status', 'reject_reason')->count();
         $toltal_pendding = ForumPost::where('status', 'pendding')->count();
-
         return view('admin.forum.posts.index', compact('posts', 'categories', 'toltal_post', 'toltal_post_approved', 'toltal_pendding', 'toltal_post_reject_reason'));
     }
 
@@ -62,14 +59,9 @@ class ForumPostController extends Controller
             'images.*.mimes' => 'Ảnh chỉ được chấp nhận các định dạng: jpeg, png, jpg, gif',
             'images.*.max' => 'Kích thước mỗi ảnh không được vượt quá 2MB',
         ]);
-
-
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         }
-
         $imagesPath = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
@@ -77,7 +69,6 @@ class ForumPostController extends Controller
                 $imagesPath[] = $path;
             }
         }
-
         $post = ForumPost::create([
             'title' => $request->title,
             'category_id' => $request->category_id,
@@ -87,23 +78,17 @@ class ForumPostController extends Controller
             'status' => 'pending',
             'is_anonymous' => $request->has('is_anonymous') ? true : false,
         ]);
-
-        return redirect()->route('admin.forum.posts.index')
-            ->with('success', 'Bài viết đã được tạo và đang chờ phê duyệt!');
+        return redirect()->route('admin.forum.posts.index')->with('success', 'Bài viết đã được tạo và đang chờ phê duyệt!');
     }
 
-   
     public function show($id)
     {
         $post = ForumPost::with(['category', 'author', 'approver', 'comments'])->findOrFail($id);
-        
         $viewKey = "post_viewed_{$post->id}";
-    
-        if (!session()->has($viewKey) && Auth::id() !== $post->user_id) {
-            $post->increment('view_count');
-            session()->put($viewKey, true);
-        }
-        
+        // if (!session()->has($viewKey) && Auth::id() !== $post->user_id) {
+        //     $post->increment('view_count');
+        //     session()->put($viewKey, true);
+        // }
         return view('admin.forum.posts.detail', compact('post'));
     }
 
@@ -111,7 +96,6 @@ class ForumPostController extends Controller
     {
         $post = ForumPost::findOrFail($id);
         $categories = ForumCategory::all();
-        
         return view('admin.forum.posts.edit', compact('post', 'categories'));
     }
 
@@ -119,8 +103,7 @@ class ForumPostController extends Controller
     public function update(Request $request, $id)
     {
         $post = ForumPost::findOrFail($id);
-        
-       $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
             'category_id' => 'nullable|exists:forum_categories,id',
             'content' => 'required',
@@ -134,23 +117,16 @@ class ForumPostController extends Controller
             'images.*.mimes' => 'Ảnh chỉ chấp nhận các định dạng: jpeg, png, jpg, gif',
             'images.*.max' => 'Kích thước mỗi ảnh không được vượt quá 2MB',
         ]);
-
-
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         }
-
         $imagesPath = $post->images ? json_decode($post->images, true) : [];
-        
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('forum/posts', 'public');
                 $imagesPath[] = $path;
             }
         }
-        
         if ($request->has('remove_images')) {
             foreach ($request->remove_images as $index) {
                 if (isset($imagesPath[$index])) {
@@ -160,7 +136,6 @@ class ForumPostController extends Controller
             }
             $imagesPath = array_values($imagesPath);
         }
-
         $post->update([
             'title' => $request->title,
             'category_id' => $request->category_id,
@@ -172,9 +147,7 @@ class ForumPostController extends Controller
             'approved_at' => null,
             'reject_reason' => null,
         ]);
-
-        return redirect()->route('admin.forum.posts.show', $post->id)
-            ->with('success', 'Bài viết đã được cập nhật và đang chờ phê duyệt lại!');
+        return redirect()->route('admin.forum.posts.show', $post->id)->with('success', 'Bài viết đã được cập nhật và đang chờ phê duyệt lại!');
     }
 
     public function destroy($id)
@@ -188,11 +161,9 @@ class ForumPostController extends Controller
         }
         $post->comments()->delete();
         $post->likes()->delete();
-        
         $post->delete();
 
-        return redirect()->route('admin.forum.posts.index')
-            ->with('success', 'Bài viết đã được xóa thành công!');
+        return redirect()->route('admin.forum.posts.index')->with('success', 'Bài viết đã được xóa thành công!');
     }
     
     public function approve($id)
@@ -206,8 +177,7 @@ class ForumPostController extends Controller
         ]);
         $author = $post->author;
         Mail::to($author->email)->send(new PostApprovedMail($post));
-        return redirect()->route('admin.forum.posts.show', $post->id)
-            ->with('success', 'Bài viết đã được phê duyệt!');
+        return redirect()->route('admin.forum.posts.show', $post->id)->with('success', 'Bài viết đã được phê duyệt!');
     }
     
     public function reject(Request $request, $id)
@@ -218,9 +188,7 @@ class ForumPostController extends Controller
         ]);
         
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         }
         
         $post->update([
@@ -229,11 +197,9 @@ class ForumPostController extends Controller
             'approved_at' => now(),
             'reject_reason' => $request->reject_reason,
         ]);
-
         $author = $post->author;
         Mail::to($author->email)->send(new PostApprovedMail($post));
-        return redirect()->route('admin.forum.posts.show', $post->id)
-            ->with('success', 'Bài viết đã bị từ chối!');
+        return redirect()->route('admin.forum.posts.show', $post->id)->with('success', 'Bài viết đã bị từ chối!');
     }
     
     public function togglePin($id)
@@ -264,12 +230,12 @@ class ForumPostController extends Controller
             'post_ids' => 'required|array',
             'post_ids.*' => 'required|exists:forum_posts,id'
         ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Dữ liệu không hợp lệ'
-            ], 422);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Dữ liệu không hợp lệ'
+        //     ], 422);
+        // }
         try {
             $posts = ForumPost::whereIn('id', $request->post_ids)->get();
             $deletedCount = 0;
@@ -283,7 +249,6 @@ class ForumPostController extends Controller
                     $post->delete();
                     $deletedCount++;
             }
-
             return response()->json([
                 'success' => true,
                 'message' => "Đã xóa thành công {$deletedCount} bài viết",
