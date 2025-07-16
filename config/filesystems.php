@@ -59,6 +59,16 @@ return [
             'throw' => false,
             'report' => false,
         ],
+        // 'backup' => [
+        // 'driver' => 'local',
+        // 'root' => storage_path('app/backups'),
+        // 'throw' => false,
+        // ],
+        'backup' => [
+            'driver' => 'local',
+            'root' => 'C:/xampp/htdocs/tlu_2025/storage/app/backups',
+            'throw' => false,
+        ],
 
     ],
 

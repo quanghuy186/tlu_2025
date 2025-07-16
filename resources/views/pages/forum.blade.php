@@ -683,7 +683,7 @@
                     <div class="post-card">
                         <div class="post-header">
                             <div class="d-flex align-items-center flex-grow-1">
-                                @if($p->author->avatar)
+                                @if($p->author->avatar && !$p->is_anonymous)
                                     <img src="{{ asset('storage/avatars/'.$p->author->avatar) }}"
                                         alt="{{ $p->author->name }}" style="border-radius: 50%"
                                         class="unit-logo">
