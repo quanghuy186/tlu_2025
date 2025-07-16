@@ -18,7 +18,6 @@ class MessageController extends Controller
 
     public function getMessages($userId)
     {
-        // Lấy tin nhắn giữa người dùng hiện tại và người dùng đã chọn
         $messages = Message::where(function($query) use ($userId) {
                 $query->where('sender_user_id', Auth::id())
                       ->where('recipient_user_id', $userId);
@@ -47,7 +46,6 @@ class MessageController extends Controller
         $message->recipient_user_id = $request->recipient_id;
         $message->content = $request->content ?? '';
 
-        // Xử lý file nếu có
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $fileName = time() . '_' . $file->getClientOriginalName();
@@ -68,7 +66,6 @@ class MessageController extends Controller
     {
         $message = Message::findOrFail($messageId);
         
-        // Chỉ người nhận mới có thể đánh dấu đã đọc
         if ($message->recipient_user_id == Auth::id()) {
             $message->is_read = true;
             $message->save();

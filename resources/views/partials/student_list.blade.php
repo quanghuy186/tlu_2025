@@ -90,7 +90,18 @@
                             <li>
                                 <i class="fas fa-envelope"></i>
                                 <span class="detail-label">Email:</span>
-                                <span class="detail-value">{{ $student->user->email ?? 'Chưa cập nhật' }}</span>
+                                @if(isset($student->user->email))
+                                    <a 
+                                        href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $student->user->email }}" 
+                                        target="_blank" 
+                                        class="detail-value"
+                                    >
+                                        {{ $student->user->email }}
+                                    </a>
+                                @else
+                                    <span class="detail-value">Chưa cập nhật</span>
+                                @endif
+                                {{-- <span class="detail-value">{{ $student->user->email ?? 'Chưa cập nhật' }}</span> --}}
                             </li>
                             <li>
                                 <i class="fas fa-phone"></i>

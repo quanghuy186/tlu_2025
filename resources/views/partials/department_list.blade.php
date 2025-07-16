@@ -34,8 +34,8 @@
                     <span>Số cán bộ: {{ $department->getTotalTeachersCountAttribute() }}</span>
                 </div>
                 <div class="unit-meta-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Cơ sở: Hà Nội</span>
+                    <i class="fas fa-envelope"></i>
+                    <span class="contact-value">{{ $department->email }}</span>
                 </div>
             </div>
         </div>
@@ -168,7 +168,18 @@
                                 <li class="contact-info-item">
                                     <i class="fas fa-envelope"></i>
                                     <span class="contact-label">Email:</span>
-                                    <span class="contact-value">{{ $department->email }}</span>
+                                    @if(isset($department->email))
+                                        <a 
+                                            href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $department->email }}" 
+                                            target="_blank" 
+                                            class="detail-value contact-value"
+                                        >
+                                            {{ $department->email }}
+                                        </a>
+                                    @else
+                                        <span class="detail-value">Chưa cập nhật</span>
+                                    @endif
+                                    {{-- <span class="contact-value">{{ $department->email }}</span> --}}
                                 </li>
                                 <li class="contact-info-item">
                                     <i class="fas fa-globe"></i>

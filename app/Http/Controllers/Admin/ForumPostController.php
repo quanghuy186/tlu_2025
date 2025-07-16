@@ -60,7 +60,7 @@ class ForumPostController extends Controller
             'images.*.max' => 'Kích thước mỗi ảnh không được vượt quá 2MB',
         ]);
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()->with('error',$validator);
         }
         $imagesPath = [];
         if ($request->hasFile('images')) {
@@ -118,7 +118,7 @@ class ForumPostController extends Controller
             'images.*.max' => 'Kích thước mỗi ảnh không được vượt quá 2MB',
         ]);
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()->with('error', $validator);
         }
         $imagesPath = $post->images ? json_decode($post->images, true) : [];
         if ($request->hasFile('images')) {
@@ -184,11 +184,11 @@ class ForumPostController extends Controller
     {
         $post = ForumPost::findOrFail($id);
         $validator = Validator::make($request->all(), [
-            'reject_reason' => 'required|string'
+            'reject_reason' => 'string'
         ]);
         
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()->with('error',$validator);
         }
         
         $post->update([

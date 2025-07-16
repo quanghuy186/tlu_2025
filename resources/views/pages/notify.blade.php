@@ -323,10 +323,8 @@
         const preview = document.getElementById('imagePreview');
         
         preview.innerHTML = '';
-        
         if (files.length > 0) {
             previewContainer.classList.remove('d-none');
-            
             Array.from(files).forEach(file => {
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
@@ -355,11 +353,9 @@
         }
     });
     </script>
+@endsection
 
-    @endsection
-
-    <style>
-        /* Search and Filter Styles */
+<style>
     .search-filter-container {
         background: #f8f9fa;
         padding: 20px;

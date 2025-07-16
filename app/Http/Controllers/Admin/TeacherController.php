@@ -624,7 +624,8 @@ class TeacherController extends Controller
                         'email' => $email,
                         'password' => Hash::make($password),
                         'phone' => $phone,
-                        'role' => 'teacher',
+                        'is_active' => 1,
+                        'email_verified' => 1,
                     ]);
 
                     if (Schema::hasTable('user_has_roles')) {
@@ -657,7 +658,7 @@ class TeacherController extends Controller
 
             DB::commit();
 
-            $message = "Import hoàn tất: {$imported} giảng viên được thêm thành công";
+            $message = "Nhập hoàn tất: {$imported} giảng viên được thêm thành công";
             if ($skipped > 0) {
                 $message .= ", {$skipped} dòng bị bỏ qua";
             }
@@ -677,5 +678,4 @@ class TeacherController extends Controller
                 ->with('error', 'Lỗi khi import file: ' . $e->getMessage());
         }
     }
-
 }

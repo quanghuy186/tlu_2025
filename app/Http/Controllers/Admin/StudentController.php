@@ -473,6 +473,8 @@ class StudentController extends Controller
                         'name' => $name,
                         'email' => $email,
                         'password' => Hash::make($password),
+                        'is_active' => 1,
+                        'email_verified' => 1,
                     ]);
 
                     DB::table('user_has_roles')->insert([

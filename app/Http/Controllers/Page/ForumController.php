@@ -180,7 +180,7 @@ class ForumController extends Controller
         ]);
         
         if ($validator->fails()) {
-            return redirect()->back()->with('Bài viết chưa được đăng vui lòng kiểm tra lại nội dung');
+            return redirect()->back()->with('error','Bài viết chưa được đăng vui lòng kiểm tra lại nội dung');
         }
 
         $imagesPath = [];
@@ -223,9 +223,7 @@ class ForumController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->back()->with('error','Bài viết chưa được cập nhật vui lòng kiểm tra lại nội dung');
         }
 
         $post = ForumPost::findOrFail($request->post_id);
@@ -261,7 +259,6 @@ class ForumController extends Controller
 
         $post->save();
         return redirect()->route('forum.index')->with('success', 'Bài viết đã được cập nhật và đang chờ phê duyệt lại!');
-    
     }
 
     public function getPostData($id)
@@ -375,7 +372,7 @@ class ForumController extends Controller
 
         if ($validator->fails()) {
             return redirect()->back()
-                ->withErrors($validator)
+                ->with('error',$validator)
                 ->withInput();
         }
 
@@ -441,8 +438,7 @@ class ForumController extends Controller
         
         $post->delete();
         
-        return redirect()->back()
-            ->with('success', 'Bài viết đã được xóa thành công.');
+        return redirect()->back()->with('success', 'Bài viết đã được xóa thành công.');
     }
 
     public function deleteComment(Request $request)
@@ -450,24 +446,18 @@ class ForumController extends Controller
         $validator = Validator::make($request->all(), [
             'comment_id' => 'required|exists:forum_comments,id',
         ]);
-
         if ($validator->fails()) {
             return redirect()->back()
-                ->withErrors($validator)
+                ->with('error',$validator)
                 ->withInput();
         }
-
         $comment = ForumComment::findOrFail($request->comment_id);
-        
         if ($comment->user_id != Auth::id()) {
             return redirect()->back()
                 ->with('error', 'Bạn không có quyền xóa bình luận này.');
         }
-        
         ForumComment::where('parent_id', $comment->id)->delete();
-        
         $comment->delete();
-        
         return redirect()->back()
             ->with('success', 'Bình luận đã được xóa thành công.');
     }
@@ -565,7 +555,6 @@ class ForumController extends Controller
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
-            
             $action = 'liked';
         }
         
@@ -588,14 +577,12 @@ class ForumController extends Controller
             ->count();
         
         $userLiked = false;
-        
         if (Auth::check()) {
             $userLiked = DB::table('forum_likes')
                 ->where('post_id', $postId)
                 ->where('user_id', Auth::id())
                 ->exists();
         }
-        
         return response()->json([
             'success' => true,
             'likeCount' => $likeCount,
@@ -607,12 +594,10 @@ class ForumController extends Controller
         $request->validate([
             'report_reason' => 'required|string|max:1000'
         ]);
-        
         $existingReport = Report::where('post_id', $post->id)
             ->where('user_id', auth()->id())
             ->where('status', 'pending')
             ->first();
-            
         if ($existingReport) {
             return redirect()->back()->with('error', 'Bạn đã báo cáo bài viết này rồi và báo cáo đang được xử lý!');
         }
@@ -626,5 +611,4 @@ class ForumController extends Controller
         
         return redirect()->back()->with('success', 'Báo cáo đã được gửi thành công!');
     }
-
 }

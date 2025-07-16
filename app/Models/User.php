@@ -110,7 +110,7 @@ class User extends Authenticatable
     
     public function isOnline()
     {
-        return $this->last_login && $this->last_login->diffInMinutes(now()) < 30;
+        return $this->last_login && $this->last_login->diffInMinutes(now()) < 10;
     }
 
     public function reports()

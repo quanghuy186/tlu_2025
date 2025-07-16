@@ -49,11 +49,28 @@
                                 <span class="detail-label">Mã cán bộ:</span>
                                 <span class="detail-value">{{ $teacher->teacher_code ?? 'Chưa cập nhật' }}</span>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <i class="fas fa-envelope"></i>
                                 <span class="detail-label">Email:</span>
                                 <span class="detail-value">{{ $teacher->user->email ?? 'Chưa cập nhật' }}</span>
+                            </li> --}}
+
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <span class="detail-label">Email:</span>
+                                @if(isset($teacher->user->email))
+                                    <a 
+                                        href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $teacher->user->email }}" 
+                                        target="_blank" 
+                                        class="detail-value"
+                                    >
+                                        {{ $teacher->user->email }}
+                                    </a>
+                                @else
+                                    <span class="detail-value">Chưa cập nhật</span>
+                                @endif
                             </li>
+
                             <li>
                                 <i class="fas fa-phone"></i>
                                 <span class="detail-label">Điện thoại:</span>

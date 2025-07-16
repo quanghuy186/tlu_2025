@@ -61,11 +61,11 @@
                                     {{ $post->is_pinned ? 'Bỏ ghim' : 'Ghim' }}
                                 </button>
                                 
-                                <button type="button" class="btn btn-{{ $post->is_locked ? 'secondary' : 'outline-secondary' }} btn-sm" 
+                                {{-- <button type="button" class="btn btn-{{ $post->is_locked ? 'secondary' : 'outline-secondary' }} btn-sm" 
                                     onclick="window.location.href='{{ route('admin.forum.posts.toggle-lock', $post->id) }}'">
                                     <i class="bi bi-lock{{ $post->is_locked ? '-fill' : '' }} me-1"></i> 
                                     {{ $post->is_locked ? 'Mở khóa' : 'Khóa' }}
-                                </button>
+                                </button> --}}
                             
                             <a href="{{ route('admin.forum.posts.index') }}" class="btn btn-outline-secondary btn-sm">
                                 <i class="bi bi-arrow-left me-1"></i> Quay lại

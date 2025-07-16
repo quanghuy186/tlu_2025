@@ -219,7 +219,6 @@
                 });
                 
                 replyForm.classList.toggle('d-none');
-                
                 if (!replyForm.classList.contains('d-none')) {
                     replyForm.querySelector('textarea').focus();
                 }

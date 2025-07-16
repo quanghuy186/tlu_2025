@@ -33,12 +33,11 @@
                                             @if($user->isOnline())
                                                 Trực tuyến
                                             @elseif($user->last_login)
-                                                Hoạt động {{ $user->last_login->diffInMinutes(now()) }} phút trước
+                                                {{ $user->last_login->diffForHumans() }}
                                             @else
                                                 Không hoạt động
                                             @endif
                                         </small>
-
 
                                         <div class="ms-auto unread-badge d-none">
                                             <span class="badge bg-danger rounded-pill">0</span>
@@ -53,10 +52,6 @@
             
             <div class="col-md-9">
                 <div class="card">
-                    {{-- <div class="card-header d-flex align-items-center">
-                        <div id="chat-with">Chọn người dùng để bắt đầu trò chuyện</div>
-                    </div> --}}
-
                     <div class="card-header d-flex align-items-center">
                         <div id="chat-with">Chọn người dùng để bắt đầu trò chuyện</div>
                         <div class="ms-auto">
@@ -64,7 +59,6 @@
                                 <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-three-dots-vertical"></i>
                                 </button>
-
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item text-danger" href="#" id="delete-conversation">
                                         <i class="bi bi-trash me-2"></i>Xóa cuộc trò chuyện
@@ -73,7 +67,6 @@
                             </div>
                         </div>
                     </div>
-
 
                     <div class="card-body">
                         <div id="messages-container" class="mb-3" style="height: 400px; overflow-y: auto;">
@@ -115,7 +108,6 @@
             
             if (newUserId) {
                 $(`.user-item[data-id="${newUserId}"]`).click();
-                
                 const url = new URL(window.location);
                 url.searchParams.delete('new_user_id');
                 window.history.replaceState({}, '', url);
@@ -123,21 +115,6 @@
         });
 
         let currentRecipientId = null;
-        // $('.user-item').on('click', function() {
-        //     const userId = $(this).data('id');
-        //     const userName = $(this).find('h6').text();
-        //     currentRecipientId = userId;
-            
-        //     $('#chat-with').text(`Đang trò chuyện với ${userName}`);
-        //     $('#message-form').removeClass('d-none');
-        //     $('#recipient-id').val(userId);
-        //     $('#messages-container').html('<div class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
-        //     loadMessages(userId);
-        //     $('.user-item').removeClass('active');
-        //     $(this).addClass('active');
-            
-        //     $(this).find('.unread-badge').addClass('d-none').find('.badge').text('0');
-        // });
 
         $('.user-item').on('click', function() {
             const userId = $(this).data('id');
@@ -180,14 +157,11 @@
                 container.html('<div class="text-center py-5 text-muted"><p>Chưa có tin nhắn nào. Hãy bắt đầu cuộc trò chuyện!</p></div>');
                 return;
             }
-            
             messages.forEach(function(message) {
                 const isOwnMessage = message.sender_user_id == '{{ Auth::id() }}';
                 const messageClass = isOwnMessage ? 'bg-primary text-white' : 'bg-light';
                 const messageAlign = isOwnMessage ? 'align-self-end' : 'align-self-start';
-                
                 let messageContent = '';
-                
                 if (message.message_type === 'file') {
                     if (isImageFile(message.file_url)) {
                         messageContent = `<div><img src="${message.file_url}" class="img-fluid rounded" style="max-width: 200px;"></div>`;
@@ -196,14 +170,12 @@
                             <i class="bi bi-file-earmark me-2"></i> Tập tin đính kèm
                         </a></div>`;
                     }
-                    
                     if (message.content) {
                         messageContent += `<div>${message.content}</div>`;
                     }
                 } else {
                     messageContent = `<div>${message.content}</div>`;
                 }
-                
                 const messageHtml = `
                     <div class="message ${messageAlign} mb-2" data-id="${message.id}">
                         <div class="message-bubble ${messageClass} p-2 rounded">
@@ -217,7 +189,6 @@
                         </div>
                     </div>
                 `;
-                
                 container.append(messageHtml);
             });
         }
@@ -303,98 +274,37 @@
             $('#file-preview').addClass('d-none');
         });
         
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof window.Echo === 'undefined') {
-                
-                if (typeof Pusher !== 'undefined') {
-                    
-                    Pusher.logToConsole = true;
-                    const pusher = new Pusher('{{ env("PUSHER_APP_KEY") }}', {
-                        cluster: '{{ env("PUSHER_APP_CLUSTER") }}',
-                        encrypted: true
-                    });
-                    
-                    const channel = pusher.subscribe('private-chat.{{ Auth::id() }}');
-                    
-                    channel.bind('message.sent', function(data) {
-                        const message = data.message;
-                        
-                        if (currentRecipientId && currentRecipientId == message.sender_user_id) {
-                            loadMessages(currentRecipientId);
-                            
-                            $.ajax({
-                                url: `/messages/${message.id}/read`,
-                                method: 'PUT',
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                }
-                            });
-                        } else {
-                            const userItem = $(`.user-item[data-id="${message.sender_user_id}"]`);
-                            const unreadBadge = userItem.find('.unread-badge');
-                            const badge = unreadBadge.find('.badge');
-                            
-                            unreadBadge.removeClass('d-none');
-                            badge.text(parseInt(badge.text() || 0) + 1);
-                            
-                            const audio = new Audio('/notification.mp3');
-                            audio.play();
-                            
-                            if (Notification.permission === 'granted') {
-                                const sender = userItem.find('h6').text();
-                                const notification = new Notification('Tin nhắn mới', {
-                                    body: `${sender}: ${message.content}`,
-                                    icon: '/favicon.ico'
-                                });
-                                
-                                notification.onclick = function() {
-                                    window.focus();
-                                    userItem.click();
-                                };
+        document.addEventListener('DOMContentLoaded', function () {
+            // if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            //     Notification.requestPermission().then(function (permission) {
+            //         if (permission === 'granted') {
+            //             console.log('Thông báo đã được cấp phép!');
+            //         }
+            //     });
+            // }
+            window.Echo.private('chat.{{ Auth::id() }}')
+                .listen('.message.sent', function (e) {
+                    const message = e.message;
+                    // Nếu đang trò chuyện với người gửi -> tải lại tin nhắn
+                    if (currentRecipientId && currentRecipientId == message.sender_user_id) {
+                        loadMessages(currentRecipientId);
+                        $.ajax({
+                            url: `/messages/${message.id}/read`,
+                            method: 'PUT',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             }
-                        }
-                    });
-                } else {
-                    console.error('Cả Laravel Echo và Pusher JS đều không được tải!');
-                }
-            } else {
-                window.Echo.private('chat.{{ Auth::id() }}')
-                    .listen('.message.sent', (e) => {
-                        const message = e.message;
-                        if (currentRecipientId && currentRecipientId == message.sender_user_id) {
-                            loadMessages(currentRecipientId);
-                            $.ajax({
-                                url: `/messages/${message.id}/read`,
-                                method: 'PUT',
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                }
-                            });
-                        } else {
-                            const userItem = $(`.user-item[data-id="${message.sender_user_id}"]`);
-                            const unreadBadge = userItem.find('.unread-badge');
-                            const badge = unreadBadge.find('.badge');
-                            
-                            unreadBadge.removeClass('d-none');
-                            badge.text(parseInt(badge.text() || 0) + 1);
-                            const audio = new Audio('/notification.mp3');
-                            audio.play();
-                            
-                            if (Notification.permission === 'granted') {
-                                const sender = userItem.find('h6').text();
-                                const notification = new Notification('Tin nhắn mới', {
-                                    body: `${sender}: ${message.content}`,
-                                    icon: '/favicon.ico'
-                                });
-                                
-                                notification.onclick = function() {
-                                    window.focus();
-                                    userItem.click();
-                                };
-                            }
-                        }
-                    });
-            }
+                        });
+                    } else {
+                        const userItem = $(`.user-item[data-id="${message.sender_user_id}"]`);
+                        const unreadBadge = userItem.find('.unread-badge');
+                        const badge = unreadBadge.find('.badge');
+                        unreadBadge.removeClass('d-none');
+                        badge.text(parseInt(badge.text() || 0) + 1);
+                        const audio = new Audio('/notification.mp3');
+                        audio.play();
+                    }
+                });
         });
 
         function showChatActions() {
@@ -433,7 +343,5 @@
                 });
             }
         });
-
-        
     </script>
 @endsection

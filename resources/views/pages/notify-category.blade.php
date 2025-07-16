@@ -79,7 +79,13 @@
                                         <div class="announcement-author">
                                             @if($notification->user)
                                                 <img src="{{ $notification->user->avatar ?? asset('user_default.jpg') }}" alt="Author">
-                                                <span>{{ $notification->user->name }}</span>
+                                                <span>
+                                                    @if($notification->user->managedDepartment)
+                                                        {{ $notification->user->managedDepartment->name }}
+                                                    @else
+                                                        {{ $notification->user->name }}
+                                                    @endif
+                                                </span>
                                             @endif
                                         </div>
                                         <a href="{{ route('notification.show', $notification->id) }}" class="read-more">

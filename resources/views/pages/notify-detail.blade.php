@@ -35,13 +35,12 @@
                         <div class="d-flex">
                             <h1 class="notification-detail-title">{{ $notification->title }}</h1>
                             <form method="POST" action="{{ route('notification.delete') }}" class="delete-form mb-0 flex-end">
-                                    @csrf
-                                    @method('DELETE')
-                                        <input type="hidden" name="id" value="{{ $notification->id }}">
-                                        <button type="submit" class="dropdown-item text-danger" 
-                                                onclick="return confirm('Bạn có chắc muốn xóa thông báo này?')">
-                                            <i class="bi bi-trash me-2"></i>Xóa thông báo
-                                        </button>
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="id" value="{{ $notification->id }}">
+                                <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Bạn có chắc muốn xóa thông báo này?')">
+                                    <i class="bi bi-trash me-2"></i>Xóa thông báo
+                                </button>
                             </form>
                         </div>
                        
@@ -59,13 +58,17 @@
                             @if($notification->user)
                                 <div class="meta-item">
                                     <i class="fas fa-user"></i>
-                                    <span>{{ $notification->user->name }}</span>
+                                    <span>
+                                        @if($notification->user->managedDepartment)
+                                            {{ $notification->user->managedDepartment->name }}
+                                        @else
+                                            {{ $notification->user->name }}
+                                        @endif
+                                    </span>
                                 </div>
                             @endif
                         </div>
                     </div>
-
-                    
 
                     @if($notification->images)
                         <div class="notification-images">
@@ -245,143 +248,143 @@
 </section>
 
 <style>
-.notification-detail {
-    background: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.notification-detail-title {
-    font-size: 32px;
-    color: #333;
-    margin-bottom: 20px;
-    line-height: 1.4;
-}
-
-.notification-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 30px;
-}
-
-.meta-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #666;
-    font-size: 14px;
-}
-
-.meta-item i {
-    color: #007bff;
-}
-
-.meta-item a {
-    color: #666;
-    text-decoration: none;
-}
-
-.meta-item a:hover {
-    color: #007bff;
-}
-
-.notification-images {
-    margin-bottom: 30px;
-}
-
-.notification-images .carousel {
-    max-height: 500px;
-    overflow: hidden;
-}
-
-.notification-content {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #444;
-    margin-bottom: 30px;
-}
-
-.share-section {
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    margin-top: 30px;
-}
-
-.share-buttons {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 15px;
-}
-
-.share-buttons .btn {
-    padding: 8px 16px;
-    border-radius: 5px;
-    text-decoration: none;
-    color: #fff;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.related-section {
-    margin-top: 50px;
-}
-
-.related-title {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.related-card {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 15px;
-    height: 100%;
-    transition: all 0.3s ease;
-}
-
-.related-card:hover {
-    background: #e9ecef;
-}
-
-.related-card-title {
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.related-card-title a {
-    color: #333;
-    text-decoration: none;
-}
-
-.related-card-title a:hover {
-    color: #007bff;
-}
-
-.related-card-date {
-    font-size: 13px;
-    color: #666;
-    margin: 0;
-}
-
-.action-buttons .btn-block {
-    width: 100%;
-    text-align: left;
-}
-
-@media print {
-    .sidebar-card, .share-section, .related-section, .page-title {
-        display: none;
+    .notification-detail {
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-}
+
+    .notification-detail-title {
+        font-size: 32px;
+        color: #333;
+        margin-bottom: 20px;
+        line-height: 1.4;
+    }
+
+    .notification-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 30px;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .meta-item i {
+        color: #007bff;
+    }
+
+    .meta-item a {
+        color: #666;
+        text-decoration: none;
+    }
+
+    .meta-item a:hover {
+        color: #007bff;
+    }
+
+    .notification-images {
+        margin-bottom: 30px;
+    }
+
+    .notification-images .carousel {
+        max-height: 500px;
+        overflow: hidden;
+    }
+
+    .notification-content {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #444;
+        margin-bottom: 30px;
+    }
+
+    .share-section {
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-top: 30px;
+    }
+
+    .share-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
+
+    .share-buttons .btn {
+        padding: 8px 16px;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #fff;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .related-section {
+        margin-top: 50px;
+    }
+
+    .related-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .related-card {
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 15px;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .related-card:hover {
+        background: #e9ecef;
+    }
+
+    .related-card-title {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .related-card-title a {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .related-card-title a:hover {
+        color: #007bff;
+    }
+
+    .related-card-date {
+        font-size: 13px;
+        color: #666;
+        margin: 0;
+    }
+
+    .action-buttons .btn-block {
+        width: 100%;
+        text-align: left;
+    }
+
+    @media print {
+        .sidebar-card, .share-section, .related-section, .page-title {
+            display: none;
+        }
+    }
 </style>
 
 <script>

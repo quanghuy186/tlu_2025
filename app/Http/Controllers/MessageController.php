@@ -36,12 +36,12 @@ class MessageController extends Controller
         
         $filteredMessages = $messages->reject(function($message) use ($currentUserId) {
             return $message->isDeletedBy($currentUserId);
-        });
+        }); //lọc những tin nhắn đã bị xóa
         
         $userIds = $filteredMessages->flatMap(function($message) use ($currentUserId) {
             return [$message->sender_user_id, $message->recipient_user_id];
         })->unique()->reject(function($userId) use ($currentUserId) {
-            return $userId == $currentUserId;
+            return $userId == $currentUserId;  //[1, 2, 2, 1, 4, 1] -> 1 -> [2, 4]
         });
         
         return User::whereIn('id', $userIds)->get();
