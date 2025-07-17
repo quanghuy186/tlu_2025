@@ -84,7 +84,7 @@
                       </select>
                     </div>
                   </div>
-                  <div class="col-md-3">
+                  {{-- <div class="col-md-3">
                     <div class="form-group">
                       <label for="sort_direction" class="form-label">Thứ tự</label>
                       <select class="form-select" id="sort_direction" name="sort_direction">
@@ -92,7 +92,7 @@
                         <option value="asc" {{ request('sort_direction') == 'asc' ? 'selected' : '' }}>Tăng dần</option>
                       </select>
                     </div>
-                  </div>
+                  </div> --}}
                   <div class="col-12 text-end">
                     <button type="submit" class="btn btn-primary">
                       <i class="bi bi-search me-1"></i>Tìm kiếm

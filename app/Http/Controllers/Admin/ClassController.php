@@ -61,7 +61,7 @@ class ClassController extends Controller
         $teachers = Teacher::with('user')->get();
         $academicYears = $this->getAcademicYears();
         
-        return view('admin.contact.class.create', compact('departments', 'teachers', 'academicYears', 'semesters'));
+        return view('admin.contact.class.create', compact('departments', 'teachers', 'academicYears'));
     }
     
     public function store(Request $request)

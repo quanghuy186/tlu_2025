@@ -245,7 +245,7 @@
         </li>
       @endif
 
-      @if(hasRole(999, Auth()->user()))
+      @if(hasRole(999, Auth()->user()) || tluHasPermission(Auth()->user(), 'manager-contact'))
       
         <li class="nav-item">
           <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">

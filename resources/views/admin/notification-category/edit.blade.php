@@ -61,7 +61,7 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <label for="icon" class="col-md-2 col-form-label">Icon</label>
                                 <div class="col-md-10">
                                     <div class="input-group">
@@ -74,9 +74,9 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
+                            </div> --}}
 
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <label for="display_order" class="col-md-2 col-form-label">Thứ tự hiển thị</label>
                                 <div class="col-md-10">
                                     <input type="number" class="form-control @error('display_order') is-invalid @enderror" id="display_order" name="display_order" value="{{ old('display_order', $category->display_order) }}">
@@ -85,7 +85,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="row mb-3">
                                 <div class="col-md-10 offset-md-2">

@@ -37,7 +37,7 @@
                       <th>Slug</th>
                       <th>Mô tả</th>
                       <!-- <th class="text-center">Icon</th> -->
-                      <th class="text-center">Thứ tự hiển thị</th>
+                      {{-- <th class="text-center">Thứ tự hiển thị</th> --}}
                       <th class="text-center">Số thông báo</th>
                       <th class="text-center" width="15%">Hành động</th>
                     </tr>
@@ -61,7 +61,7 @@
                           <span class="text-muted">-</span>
                         @endif
                       </td> -->
-                      <td class="text-center">{{ $category->display_order }}</td>
+                      {{-- <td class="text-center">{{ $category->display_order }}</td> --}}
                       <td class="text-center">
                         <span class="badge bg-info rounded-pill px-3">{{ $category->notifications->count() }}</span>
                       </td>
