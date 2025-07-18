@@ -95,8 +95,7 @@ class StudentSeeder extends Seeder
             }
         }
         
-        echo "\nBắt đầu insert dữ liệu...\n";
-        
+        //thêm data
         echo "Inserting " . count($users) . " users...\n";
         $userChunks = array_chunk($users, 500);
         foreach ($userChunks as $index => $chunk) {

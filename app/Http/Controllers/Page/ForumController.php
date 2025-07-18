@@ -206,8 +206,7 @@ class ForumController extends Controller
             'is_anonymous' => $request->has('is_anonymous') ? true : false,
         ]);
 
-        return redirect()->route('forum.index')
-            ->with('success', 'Bài viết đã được tạo và đang chờ phê duyệt!');
+        return redirect()->route('forum.index')->with('success', 'Bài viết đã được đăng và đang chờ phê duyệt!');
     }
 
     public function update(Request $request)

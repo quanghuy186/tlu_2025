@@ -65,11 +65,9 @@ class ClassSeeder extends Seeder
 
             foreach ($majors as $major) {
                 $numberOfClasses = $this->getNumberOfClasses($major['code']);
-                
                 for ($classNumber = 1; $classNumber <= $numberOfClasses; $classNumber++) {
                     $className = $grade . ' ' . $major['name'] . ' ' . $classNumber;
                     $classCode = $grade . $major['code'] . sprintf('%02d', $classNumber);
-                    
                     if (strlen($classCode) > 20) {
                         $classCode = $grade . substr($major['code'], 0, 15 - strlen($grade)) . sprintf('%02d', $classNumber);
                     }
@@ -77,7 +75,6 @@ class ClassSeeder extends Seeder
                     if (strlen($className) > 100) {
                         $className = substr($className, 0, 100);
                     }
-
                     $classes[] = [
                         'id' => $classId++,
                         'class_code' => $classCode,

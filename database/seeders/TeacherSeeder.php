@@ -73,43 +73,34 @@ class TeacherSeeder extends Seeder
             17 => ['Kinh tế số', 'Kinh doanh số', 'Chuyển đổi số'],
             18 => ['Logistics', 'Quản lý chuỗi cung ứng', 'Vận tải đa phương thức'],
             19 => ['Nghiên cứu kinh tế', 'Ứng dụng quản lý', 'Phân tích kinh tế'],
-            
             20 => ['Kỹ thuật môi trường', 'Quản lý môi trường', 'Xử lý nước thải'],
             21 => ['Kỹ thuật hóa học', 'Công nghệ hóa học', 'Hóa công nghiệp'],
             22 => ['Công nghệ sinh học', 'Sinh học phân tử', 'Công nghệ gen'],
-            
             23 => ['Ngôn ngữ Anh', 'Văn học Anh', 'Phương pháp giảng dạy tiếng Anh'],
             24 => ['Ngôn ngữ Trung Quốc', 'Văn hóa Trung Quốc', 'Hán ngữ hiện đại'],
-            
             25 => ['Kế toán tài chính', 'Kế toán quản trị', 'Kế toán thuế'],
             26 => ['Kiểm toán', 'Kiểm toán nội bộ', 'Kiểm toán báo cáo tài chính'],
             27 => ['Tài chính ngân hàng', 'Đầu tư tài chính', 'Quản lý rủi ro'],
             28 => ['Quản trị kinh doanh', 'Chiến lược kinh doanh', 'Marketing'],
-            
             41 => ['Kỹ thuật xây dựng công trình thủy', 'Thủy lực công trình', 'Thiết kế đập'],
             42 => ['Xây dựng dân dụng', 'Kết cấu công trình', 'Công nghệ xây dựng'],
             43 => ['Xây dựng cầu đường', 'Thiết kế cầu', 'Kỹ thuật giao thông'],
             44 => ['Vật liệu xây dựng', 'Công nghệ bê tông', 'Vật liệu mới'],
-            
             45 => ['Thủy văn học', 'Dự báo thủy văn', 'Mô hình thủy văn'],
             46 => ['Cấp thoát nước', 'Xử lý nước cấp', 'Mạng lưới cấp thoát nước'],
             47 => ['Kỹ thuật tài nguyên nước', 'Quản lý tài nguyên nước', 'Quy hoạch thủy lợi'],
-            
             48 => ['Kỹ thuật cơ khí', 'Thiết kế máy', 'Cơ học ứng dụng'],
             49 => ['Công nghệ chế tạo máy', 'Gia công cơ khí', 'CAD/CAM'],
             50 => ['Kỹ thuật ô tô', 'Động cơ đốt trong', 'Công nghệ ô tô hiện đại'],
             51 => ['Cơ điện tử', 'Điều khiển tự động', 'Robot công nghiệp'],
-            
             52 => ['Kỹ thuật điện', 'Hệ thống điện', 'Máy điện'],
             53 => ['Điện tử viễn thông', 'Xử lý tín hiệu số', 'Thông tin vô tuyến'],
             54 => ['Tự động hóa', 'Điều khiển quá trình', 'PLC và SCADA'],
             55 => ['Robot và AI', 'Học máy', 'Thị giác máy tính'],
-            
             56 => ['Công nghệ phần mềm', 'Kiến trúc phần mềm', 'Phát triển ứng dụng'],
             57 => ['Hệ thống thông tin', 'Cơ sở dữ liệu', 'Phân tích hệ thống'],
             58 => ['An toàn thông tin', 'Bảo mật mạng', 'Mã hóa dữ liệu'],
             59 => ['Khoa học máy tính', 'Thuật toán', 'Trí tuệ nhân tạo'],
-            
             60 => ['Luật hiến pháp', 'Luật hành chính', 'Luật dân sự'],
             61 => ['Luật kinh tế', 'Luật thương mại', 'Luật doanh nghiệp'],
             62 => ['Lý luận chính trị', 'Triết học', 'Kinh tế chính trị']

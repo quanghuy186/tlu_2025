@@ -184,8 +184,8 @@ class ForumPostController extends Controller
     {
         $post = ForumPost::findOrFail($id);
         $validator = Validator::make($request->all(), [
-            'reject_reason' => 'string'
-        ]);
+            'reject_reason' => 'required|string'
+        ],['reject_reason.required' => "Vui lòng nhập lý do từ chối"]);
         
         if ($validator->fails()) {
             return redirect()->back()->with('error',$validator);

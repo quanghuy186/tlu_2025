@@ -134,7 +134,7 @@
               <div class="d-flex justify-content-between align-items-center">
                 <h5 class="card-title">Danh sách báo cáo</h5>
                 
-                <div class="filter-container d-flex gap-2">
+                <div class="filter-container d-flex mb-3">
                   <div class="filter">
                     <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       @if($status == 'pending')
@@ -154,14 +154,17 @@
                       <li><a class="dropdown-item" href="{{ route('admin.reports.index', ['status' => 'rejected']) }}">Từ chối</a></li>
                     </ul>
                   </div>
-                  
-                  <form action="{{ route('admin.reports.index') }}" method="GET" class="d-flex">
+
+                  <!-- Search Form -->
+                  {{-- <form action="{{ route('admin.reports.index') }}" method="GET" class="d-flex flex-grow-1">
                     <input type="hidden" name="status" value="{{ $status }}">
-                    <input type="text" class="form-control form-control-sm me-2" name="search" value="{{ $search }}" placeholder="Tìm kiếm...">
-                    <button type="submit" class="btn btn-sm btn-primary">
-                      <i class="bi bi-search"></i>
-                    </button>
-                  </form>
+                    <div class="input-group input-group-sm">
+                      <input type="text" class="form-control" name="search" value="{{ $search }}" placeholder="Tìm kiếm...">
+                      <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i>
+                      </button>
+                    </div>
+                  </form> --}}
                 </div>
               </div>
 
@@ -215,3 +218,4 @@
   </div>
 </section>
 @endsection
+

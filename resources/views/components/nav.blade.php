@@ -22,12 +22,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start">
-                    <span><i class="fas fa-envelope me-2"></i> info@tlu.edu.vn</span>
+                    <span><i class="fas fa-envelope me-2"></i> phonghcth@tlu.edu.vn</span>
                     <span class="ms-3"><i class="fas fa-phone me-2"></i> (024) 3852 2201</span>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <a href="#" class="me-3"><i class="fas fa-globe me-1"></i> tlu.edu.vn</a>
-                    <a href="#"><i class="fas fa-map-marker-alt me-1"></i> 175 Tây Sơn, Đống Đa, Hà Nội</a>
+                    <a href="#"><i class="fas fa-map-marker-alt me-1"></i> 175 Tây Sơn, Phường Kim Liên, Tp. Hà Nội</a>
                 </div>
             </div>
         </div>
@@ -355,7 +355,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="email_department"><i class="fas fa-envelope"></i> Email đơn vị</label>
-                                    <input type="email" class="form-control" id="email_department" name="department[email]" 
+                                    <input readonly type="email" class="form-control" id="email_department" name="department[email]" 
                                            value="{{ Auth::user()->managedDepartment->email ?? '' }}">
                                 </div>
                             </div>

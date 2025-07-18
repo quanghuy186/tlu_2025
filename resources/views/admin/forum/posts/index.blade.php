@@ -159,9 +159,9 @@
                                 <button type="button" class="btn btn-sm btn-success me-2" onclick="bulkUpdateStatus('approved')">
                                     <i class="bi bi-check-circle me-1"></i>Duyệt
                                 </button>
-                                <button type="button" class="btn btn-sm btn-warning me-2" onclick="showRejectModal()">
+                                {{-- <button type="button" class="btn btn-sm btn-warning me-2" onclick="showRejectModal()">
                                     <i class="bi bi-x-circle me-1"></i>Từ chối
-                                </button>
+                                </button> --}}
                                 <button type="button" class="btn btn-sm btn-danger" onclick="showBulkDeleteModal()">
                                     <i class="bi bi-trash me-1"></i>Xóa
                                 </button>
@@ -449,17 +449,17 @@
         });
     }
 
-    function showRejectModal() {
-        if (selectedPosts.length === 0) {
-            showAlert('warning', 'Vui lòng chọn ít nhất một bài viết để từ chối');
-            return;
-        }
+    // function showRejectModal() {
+    //     if (selectedPosts.length === 0) {
+    //         showAlert('warning', 'Vui lòng chọn ít nhất một bài viết để từ chối');
+    //         return;
+    //     }
         
-        document.getElementById('bulkRejectCount').textContent = selectedPosts.length;
-        document.getElementById('bulkRejectReason').value = '';
-        const modal = new bootstrap.Modal(document.getElementById('bulkRejectModal'));
-        modal.show();
-    }
+    //     document.getElementById('bulkRejectCount').textContent = selectedPosts.length;
+    //     document.getElementById('bulkRejectReason').value = '';
+    //     const modal = new bootstrap.Modal(document.getElementById('bulkRejectModal'));
+    //     modal.show();
+    // }
 
     function confirmBulkReject() {
         const rejectReason = document.getElementById('bulkRejectReason').value.trim();
