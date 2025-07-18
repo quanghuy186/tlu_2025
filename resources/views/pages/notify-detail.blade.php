@@ -34,14 +34,26 @@
                     <div class="notification-detail-header">
                         <div class="d-flex">
                             <h1 class="notification-detail-title">{{ $notification->title }}</h1>
-                            <form method="POST" action="{{ route('notification.delete') }}" class="delete-form mb-0 flex-end">
+                            {{-- <form method="POST" action="{{ route('notification.delete') }}" class="delete-form mb-0 flex-end">
                                 @csrf
                                 @method('DELETE')
                                 <input type="hidden" name="id" value="{{ $notification->id }}">
+
                                 <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Bạn có chắc muốn xóa thông báo này?')">
                                     <i class="bi bi-trash me-2"></i>Xóa thông báo
                                 </button>
-                            </form>
+                            </form> --}}
+
+                            @if(auth()->check() && (auth()->user()->id === $notification->user_id))
+                                <form method="POST" action="{{ route('notification.delete') }}" class="delete-form mb-0 flex-end">                                 
+                                    @csrf                                 
+                                    @method('DELETE')                                 
+                                    <input type="hidden" name="id" value="{{ $notification->id }}">                                                                  
+                                    <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Bạn có chắc muốn xóa thông báo này?')">                                     
+                                        <i class="bi bi-trash me-2"></i>Xóa thông báo                                 
+                                    </button>                             
+                                </form>
+                            @endif
                         </div>
                        
                         <div class="notification-meta">
